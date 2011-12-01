@@ -65,7 +65,7 @@ URL: http://hadoop.apache.org/zookeeper/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
-Source0: zookeeper-%{zookeeper_base_version}.tar.gz
+Source0: zookeeper-%{zookeeper_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_zookeeper.sh
 Source3: hadoop-zookeeper.sh
@@ -120,7 +120,7 @@ Requires: redhat-lsb
 This package starts the zookeeper server on startup
 
 %prep
-%setup -n zookeeper-%{zookeeper_base_version}
+%setup -n zookeeper-%{zookeeper_patched_version}
 
 %build
 bash %{SOURCE1} -Dversion=%{version}
