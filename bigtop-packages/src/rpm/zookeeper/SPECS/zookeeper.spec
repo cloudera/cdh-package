@@ -123,7 +123,7 @@ This package starts the zookeeper server on startup
 %setup -n zookeeper-%{zookeeper_patched_version}
 
 %build
-bash %{SOURCE1} -Dversion=%{version}
+env FULL_VERSION=%{zookeeper_patched_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
