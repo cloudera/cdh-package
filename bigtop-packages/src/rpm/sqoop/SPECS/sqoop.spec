@@ -36,12 +36,11 @@ URL: http://incubator.apache.org/sqoop/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
-Source0: %{name}-%{sqoop_base_version}.tar.gz
+Source0: %{name}-%{sqoop_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: sqoop-metastore.sh
 Source4: sqoop-metastore.sh.suse
-Patch0: patch
 Buildarch: noarch
 BuildRequires: asciidoc, xmlto
 Requires: hadoop, bigtop-utils
@@ -79,16 +78,15 @@ Shared metadata repository for Sqoop. This optional package hosts a metadata
 server for Sqoop clients across a network to use.
 
 %prep
-%setup -n apache-sqoop-1bf7cbf
-%patch0 -p0
+%setup -n sqoop-%{sqoop_patched_version}
 
 %build
-bash %{SOURCE1} -Dversion=%{version}
+bash %{SOURCE1} -Dversion=%{sqoop_patched_version}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
-          --build-dir=build/sqoop-%{version} \
+          --build-dir=. \
           --doc-dir=%{doc_sqoop} \
           --prefix=$RPM_BUILD_ROOT
 

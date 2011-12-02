@@ -16,6 +16,13 @@
 
 set -ex
 
-ant -f build.xml package "$@"
+IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
+
+ant -f build.xml clean tar -Dreactor.repo=file://${HOME}/.m2/repository -Drepo.maven.org=$IVY_MIRROR_PROP "$@"
+
+# Change to cloudera/maven directory, and install
+# (and if called from CDH nightly build, deploy) artifacts into Maven repository
+cd cloudera/maven-packaging
+mvn -Dnot.cdh.release.build=false install $DO_MAVEN_DEPLOY
 
 
