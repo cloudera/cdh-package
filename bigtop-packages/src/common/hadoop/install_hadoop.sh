@@ -36,6 +36,7 @@ OPTS=$(getopt \
   -o '' \
   -l 'prefix:' \
   -l 'distro-dir:' \
+  -l 'source-dir:' \
   -l 'build-dir:' \
   -l 'native-build-string:' \
   -l 'installed-lib-dir:' \
@@ -78,6 +79,9 @@ while true ; do
         ;;
         --build-dir)
         BUILD_DIR=$2 ; shift 2
+        ;;
+        --source-dir)
+        SOURCE_DIR=$2 ; shift 2
         ;;
         --native-build-string)
         NATIVE_BUILD_STRING=$2 ; shift 2
@@ -193,7 +197,6 @@ install -d -m 0755 ${HADOOP_DIR}
 cp ${BUILD_DIR}/modules/*.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/share/hadoop/common/*.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/share/hadoop/hdfs/*.jar ${HADOOP_DIR}/
-cp ${BUILD_DIR}/../hadoop-mapreduce-project/build/hadoop-mapreduce-examples-${HADOOP_VERSION}.jar ${HADOOP_DIR}/
 mv ${HADOOP_LIB_DIR}/hadoop*.jar ${HADOOP_DIR}/
 chmod 644 ${HADOOP_DIR}/*.jar
 
@@ -205,7 +208,7 @@ for library in libhdfs.so.0.0.0; do
   ldconfig -vlN ${SYSTEM_LIB_DIR}/${library}
 done
 install -d -m 0755 ${SYSTEM_INCLUDE_DIR}
-cp ${BUILD_DIR}/../hadoop-hdfs-project/hadoop-hdfs/src/main/native/hdfs.h ${SYSTEM_INCLUDE_DIR}/
+cp ${SOURCE_DIR}/hadoop-hdfs-project/hadoop-hdfs/src/main/native/hdfs.h ${SYSTEM_INCLUDE_DIR}/
 
 cp ${BUILD_DIR}/lib/*.a ${HADOOP_NATIVE_LIB_DIR}/
 for library in libhadoop.so.1.0.0; do
@@ -230,13 +233,13 @@ cp $DISTRO_DIR/mrapp-generated-classpath $YARN_ETC_DIR/conf.empty
 
 # docs
 install -d -m 0755 ${DOC_DIR}
-pushd  ${BUILD_DIR}/../
+pushd  ${SOURCE_DIR}
   cp hadoop-common-project/hadoop-common/CHANGES.txt target/staging/hadoop-project/hadoop-project-dist/hadoop-common
   cp hadoop-hdfs-project/hadoop-hdfs/CHANGES.txt target/staging/hadoop-project/hadoop-project-dist/hadoop-hdfs
-  mkdir target/staging/hadoop-project/hadoop-project-dist/hadoop-mapreduce
+  mkdir  target/staging/hadoop-project/hadoop-project-dist/hadoop-mapreduce || :
   cp hadoop-mapreduce-project/CHANGES.txt target/staging/hadoop-project/hadoop-project-dist/hadoop-mapreduce
 popd
-cp -r ${BUILD_DIR}/../target/staging/hadoop-project/* ${DOC_DIR}/
+cp -r ${SOURCE_DIR}/target/staging/hadoop-project/* ${DOC_DIR}/
 
 # man pages
 mkdir -p $MAN_DIR/man1

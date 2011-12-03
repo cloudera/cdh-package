@@ -114,7 +114,7 @@ Summary: Hadoop is a software platform for processing vast amounts of data
 License: Apache License v2.0
 URL: http://hadoop.apache.org/core/
 Group: Development/Libraries
-Source0: %{name}-%{hadoop_base_version}.tar.gz
+Source0: %{name}-%{hadoop_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: hadoop.default
@@ -268,14 +268,14 @@ AutoReq: no
 Hadoop Filesystem Library
 
 %prep
-%setup -n apache-hadoop-common-61572bb
+%setup -n %{name}-%{hadoop_patched_version}
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME
 # This assumes that you installed Java JDK 5 and set JAVA5_HOME
 # This assumes that you installed Forrest and set FORREST_HOME
 
-env HADOOP_VERSION=%{hadoop_version} HADOOP_ARCH=%{hadoop_arch} bash %{SOURCE1}
+env FULL_VERSION=%{hadoop_patched_version} HADOOP_VERSION=%{hadoop_version} HADOOP_ARCH=%{hadoop_arch} bash src/cloudera/do-release-build
 
 %clean
 %__rm -rf $RPM_BUILD_ROOT
@@ -290,7 +290,8 @@ env HADOOP_VERSION=%{hadoop_version} HADOOP_ARCH=%{hadoop_arch} bash %{SOURCE1}
 
 bash %{SOURCE2} \
   --distro-dir=$RPM_SOURCE_DIR \
-  --build-dir=$PWD/build \
+  --source-dir=$PWD/src \
+  --build-dir=$PWD/src/build/%{name}-%{hadoop_patched_version} \
   --system-include-dir=$RPM_BUILD_ROOT%{_includedir} \
   --system-lib-dir=$RPM_BUILD_ROOT%{_libdir} \
   --system-libexec-dir=$RPM_BUILD_ROOT%{libexecdir} \
