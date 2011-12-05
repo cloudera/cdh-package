@@ -23,7 +23,7 @@ fi
 
 # Build artifacts
 MAVEN_SKIP_TESTS="-DskipTests -DskipTest -DskipITs"
-mvn -Pdist -Pnative -Psrc -Dtar ${MAVEN_SKIP_TESTS} install "$@" $DO_MAVEN_DEPLOY
+JAVA_OPTS="-Xmx768m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx768m -Xms256m -XX:MaxPermSize=256m" mvn -Pdist -Pnative -Psrc -Dtar ${MAVEN_SKIP_TESTS} install "$@" $DO_MAVEN_DEPLOY
 
 # Build documentation
 pushd hadoop-mapreduce-project/hadoop-yarn/hadoop-yarn-site
