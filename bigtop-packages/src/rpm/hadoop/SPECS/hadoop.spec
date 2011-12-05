@@ -125,6 +125,7 @@ Source7: hadoop-fuse-dfs.1
 Source8: hadoop-fuse.default
 Source9: hadoop.nofiles.conf
 Source10: yarn-init.tmpl
+Source11: %{name}-bigtop-packaging.tar.gz
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils
@@ -269,6 +270,7 @@ Hadoop Filesystem Library
 
 %prep
 %setup -n %{name}-%{hadoop_patched_version}
+tar -C `dirname %{SOURCE11}` -xzf %{SOURCE11}
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME
