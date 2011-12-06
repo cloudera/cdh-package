@@ -60,7 +60,7 @@ URL: http://hadoop.apache.org/hbase/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
-Source0: hbase-%{hbase_base_version}.tar.gz
+Source0: hbase-%{hbase_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_hbase.sh
 Source3: hadoop-hbase.sh
@@ -182,10 +182,10 @@ Documentation for Hbase
 
 
 %prep
-%setup -n apache-hbase-81bb705
+%setup -n hbase-%{hbase_patched_version} 
 
 %build
-env HBASE_VERSION=%{version} bash %{SOURCE1}
+env FULL_VERSION=%{hbase_patched_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT

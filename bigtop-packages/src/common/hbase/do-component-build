@@ -16,5 +16,11 @@
 
 set -ex
 
-mvn clean -DskipTests -Dhbase.version=${HBASE_VERSION} -Dhadoop.profile=23 install site assembly:assembly "$@"
-tar --strip-components=2 -xzf target/hbase*.tar.gz
+mvn clean -Dzookeeper.version=3.4.0 -DskipTests -Dhadoop.profile=23 source:jar install site javadoc:javadoc assembly:assembly $DO_MAVEN_DEPLOY "$@"
+
+mkdir -p build
+for x in target/*.tar.gz ; do
+  tar -C build -xzf $x
+done
+cp -r target/site/apidocs build/hbase-${FULL_VERSION}/docs
+(cd build && tar -czf hbase-${FULL_VERSION}.tar.gz hbase-${FULL_VERSION})
