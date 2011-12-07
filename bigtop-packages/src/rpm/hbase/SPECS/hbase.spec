@@ -208,8 +208,8 @@ env FULL_VERSION=%{hbase_patched_version} bash %{SOURCE1}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
-	--build-dir=. \
-   --doc-dir=%{doc_hbase} \
+	--build-dir=build/hbase-%{hbase_patched_version} \
+        --doc-dir=%{doc_hbase} \
 	--prefix=$RPM_BUILD_ROOT
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/

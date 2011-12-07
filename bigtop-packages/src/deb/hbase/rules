@@ -36,7 +36,7 @@ clean:
 
 build:
 	dh_testdir
-	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository  
+	env FULL_VERSION=${HBASE_PATCHED_VERSION} bash debian/do-component-build 
 
 	
 install: build
@@ -46,7 +46,7 @@ install: build
 	dh_installdirs
 	cp debian/hbase.default debian/hadoop-hbase/etc/default/hbase
 	sh -x debian/install_hbase.sh \
-		--build-dir=. \
+		--build-dir=build/hbase-${HBASE_PATCHED_VERSION} \
 		--doc-dir=usr/share/doc/hadoop-hbase-doc \
 		--prefix=debian/tmp
 	mkdir -p debian/tmp/etc/security/limits.d

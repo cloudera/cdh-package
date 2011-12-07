@@ -37,7 +37,7 @@ clean:
 
 build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
-	bash debian/do-component-build -Divy.home=`pwd`/debian/.ivy 
+	env FULL_VERSION=${ZOOKEEPER_PATCHED_VERSION} bash debian/do-component-build
 	mkdir -p debian/tmp
 	tar cf - --exclude=debian/\* . | (cd debian/tmp && tar xf -)
 	touch $@
@@ -48,8 +48,9 @@ install-indep:
 	dh_testroot
 	cp debian/zookeeper.1 debian/zoo.cfg .
 	sh -x debian/install_zookeeper.sh \
-	  --build-dir=build/zookeeper-${ZOOKEEPER_BASE_VERSION} \
-	  --prefix=debian/hadoop-zookeeper 
+	  --build-dir=build/zookeeper-${ZOOKEEPER_PATCHED_VERSION} \
+	  --doc-dir=usr/share/doc/zookeeper \
+	  --prefix=debian/tmp 
 	dh_install -i
 
 binary-common:	

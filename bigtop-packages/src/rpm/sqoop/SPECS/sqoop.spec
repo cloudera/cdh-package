@@ -81,12 +81,12 @@ server for Sqoop clients across a network to use.
 %setup -n sqoop-%{sqoop_patched_version}
 
 %build
-bash %{SOURCE1} -Dversion=%{sqoop_patched_version}
+env FULL_VERSION=%{sqoop_patched_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
-          --build-dir=. \
+          --build-dir=build/sqoop-%{sqoop_patched_version} \
           --doc-dir=%{doc_sqoop} \
           --prefix=$RPM_BUILD_ROOT
 

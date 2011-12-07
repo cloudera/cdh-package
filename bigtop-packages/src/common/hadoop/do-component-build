@@ -16,6 +16,9 @@
 
 set -ex
 
+# FIXME: this needs to go away once we start using an actuall source tarball
+[ -f pom.xml ] || cd src
+
 if [ ! -d build/hadoop-${FULL_VERSION}/src ]; then
     mkdir -p build/hadoop-${FULL_VERSION}/src 
     tar --exclude='build/*' -cf - . | (cd build/hadoop-${FULL_VERSION}/src ; tar xf -)

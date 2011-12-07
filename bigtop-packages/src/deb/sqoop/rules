@@ -25,7 +25,6 @@ export DH_OPTIONS
 
 patch: patch-stamp
 patch-stamp:	
-	patch -p0 < debian/patch
 	touch $@
 
 clean:	
@@ -38,7 +37,7 @@ clean:
 
 build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
-	bash debian/do-component-build -Dversion=${SQOOP_VERSION} -Divy.home=`pwd`/debian/.ivy
+	env FULL_VERSION=${SQOOP_PATCHED_VERSION} bash debian/do-component-build
 	touch $@
 
 install: install-indep
@@ -46,8 +45,9 @@ install-indep:
 	dh_testdir
 	dh_testroot
 	sh -x debian/install_sqoop.sh \
-	  --build-dir=build/sqoop-${SQOOP_VERSION} \
-	  --prefix=debian/sqoop
+	  --build-dir=build/sqoop-${SQOOP_PATCHED_VERSION} \
+	  --doc-dir=usr/share/doc/sqoop \
+	  --prefix=debian/tmp
 	dh_install -i
 
 binary-common:	
