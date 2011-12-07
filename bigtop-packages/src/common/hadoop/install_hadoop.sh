@@ -38,6 +38,7 @@ OPTS=$(getopt \
   -l 'distro-dir:' \
   -l 'source-dir:' \
   -l 'build-dir:' \
+  -l 'hadoop-version:' \
   -l 'native-build-string:' \
   -l 'installed-lib-dir:' \
   -l 'hadoop-dir:' \
@@ -67,6 +68,9 @@ while true ; do
         ;;
         --hadoop-dir)
         HADOOP_DIR=$2 ; shift 2
+        ;;
+        --hadoop-version)
+        HADOOP_VERSION=$2 ; shift 2
         ;;
         --system-include-dir)
         SYSTEM_INCLUDE_DIR=$2 ; shift 2
@@ -140,7 +144,6 @@ HADOOP_SBIN_DIR=${HADOOP_DIR}/sbin
 HADOOP_LIB_DIR=${HADOOP_DIR}/lib
 HADOOP_NATIVE_LIB_DIR=${HADOOP_LIB_DIR}/native
 
-HADOOP_VERSION=0.23.0-SNAPSHOT
 
 ##Needed for some distros to find ldconfig
 export PATH="/sbin/:$PATH"

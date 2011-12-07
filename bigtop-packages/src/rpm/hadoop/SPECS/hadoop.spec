@@ -294,6 +294,7 @@ bash %{SOURCE2} \
   --distro-dir=$RPM_SOURCE_DIR \
   --source-dir=$PWD/src \
   --build-dir=$PWD/src/build/%{name}-%{hadoop_patched_version} \
+  --hadoop-version=%{hadoop_patched_version} \
   --system-include-dir=$RPM_BUILD_ROOT%{_includedir} \
   --system-lib-dir=$RPM_BUILD_ROOT%{_libdir} \
   --system-libexec-dir=$RPM_BUILD_ROOT%{libexecdir} \
