@@ -16,7 +16,7 @@
 
 set -ex
 
-mvn clean -Dzookeeper.version=3.4.0 -DskipTests -Dhadoop.profile=23 source:jar install site javadoc:javadoc assembly:assembly $DO_MAVEN_DEPLOY "$@"
+mvn clean -DskipTests -Dhadoop.profile=23 source:jar install site javadoc:javadoc assembly:assembly $DO_MAVEN_DEPLOY "$@"
 
 mkdir -p build
 for x in target/*.tar.gz ; do
