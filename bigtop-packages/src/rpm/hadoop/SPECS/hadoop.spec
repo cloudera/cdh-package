@@ -277,7 +277,7 @@ tar -C `dirname %{SOURCE11}` -xzf %{SOURCE11}
 # This assumes that you installed Java JDK 5 and set JAVA5_HOME
 # This assumes that you installed Forrest and set FORREST_HOME
 
-env FULL_VERSION=%{hadoop_patched_version} HADOOP_VERSION=%{hadoop_version} HADOOP_ARCH=%{hadoop_arch} bash src/cloudera/do-release-build
+env FULL_VERSION=%{hadoop_patched_version} HADOOP_VERSION=%{hadoop_version} HADOOP_ARCH=%{hadoop_arch} bash %{SOURCE1}
 
 %clean
 %__rm -rf $RPM_BUILD_ROOT
