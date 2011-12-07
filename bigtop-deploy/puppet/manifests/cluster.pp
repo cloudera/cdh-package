@@ -126,9 +126,9 @@ class hadoop_head_node inherits hadoop_cluster_node {
         kerberos_realm => $kerberos_realm, 
   }
 
-  hadoop-oozie::server { "oozie server":
-        kerberos_realm => $kerberos_realm, 
-  }
+  #hadoop-oozie::server { "oozie server":
+  #      kerberos_realm => $kerberos_realm, 
+  #}
 
   hadoop-zookeeper::server { "zookeeper":
         myid => "0",
@@ -157,21 +157,21 @@ class hadoop_gateway_node inherits hadoop_head_node {
     jobtracker_port => $hadoop_jobtracker_port,
     # auth => $hadoop_security_authentication,
   }
-  mahout::client { "mahout client":
-  }
-  hadoop-pig::client { "pig client":
-  }
-  hadoop-hive::client { "hive client":
-     hbase_zookeeper_quorum => $hadoop_hbase_zookeeper_quorum,
-  }
+  #mahout::client { "mahout client":
+  #}
+  #hadoop-pig::client { "pig client":
+  #}
+  #hadoop-hive::client { "hive client":
+  #   hbase_zookeeper_quorum => $hadoop_hbase_zookeeper_quorum,
+  #}
   hadoop-sqoop::client { "sqoop client":
   }
-  hadoop-oozie::client { "oozie client":
-  }
+  #hadoop-oozie::client { "oozie client":
+  #}
   hadoop-hbase::client { "hbase client":
   }
   hadoop-zookeeper::client { "zookeeper client":
   }
-  hadoop-flume::client { "flume client":
-  }
+  #hadoop-flume::client { "flume client":
+  #}
 }
