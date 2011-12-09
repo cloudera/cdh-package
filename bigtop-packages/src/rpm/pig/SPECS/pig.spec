@@ -75,13 +75,12 @@ URL: http://hadoop.apache.org/pig/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch
-Source0: pig-%{pig_base_version}.tar.gz
+Source0: pig-%{pig_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_pig.sh
 Source3: log4j.properties
 Source4: pig.1
 Source5: pig.properties
-Patch0: patch
 Requires: hadoop, bigtop-utils
 
 %description 
@@ -108,11 +107,10 @@ language called Pig Latin, which has the following key properties:
 
 
 %prep
-%setup -n apache-pig-ec01b30
-%patch0
+%setup -n pig-%{pig_patched_version}
 
 %build
-env PIG_BASE_VERSION=%{pig_base_version} bash %{SOURCE1}
+env FULL_VERSION=%{pig_patched_version} bash %{SOURCE1}
 
 
 #########################
@@ -125,7 +123,7 @@ cp $RPM_SOURCE_DIR/log4j.properties .
 cp $RPM_SOURCE_DIR/pig.1 .
 cp $RPM_SOURCE_DIR/pig.properties .
 sh -x %{SOURCE2} \
-          --build-dir=build/pig-%{pig_base_version} \
+          --build-dir=build/pig-%{pig_patched_version} \
           --doc-dir=$RPM_BUILD_ROOT%{doc_pig} \
           --prefix=$RPM_BUILD_ROOT
 

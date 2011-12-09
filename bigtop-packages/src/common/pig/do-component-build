@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -15,7 +15,35 @@
 # limitations under the License.
 
 set -ex
+IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
 
-ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_BASE_VERSION} -Dhadoopversion=23 package "$@"
+if ! [ -e $FORREST_HOME/bin/forrest ]; then
+  echo No FORREST_HOME set. Forrest documentation requires Forrest to be 1>&2
+  echo installed. 1>&2
+  exit 1
+fi
 
+# Build pig jars.
+ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Dreactor.repo=file://${HOME}/.m2/repository \
+    -Dhadoopversion=23 -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP -propertyfile cloudera/build.properties clean jar "$@"
 
+# Build zebra
+ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Dreactor.repo=file://${HOME}/.m2/repository \
+    -Dhadoopversion=23 -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP -propertyfile cloudera/build.properties \
+    -buildfile contrib/zebra/build.xml clean jar"$@"
+
+# Build piggybank
+# Commented out - piggybank can't compile against 0.23. See PIG-2410.
+#ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Dreactor.repo=file://${HOME}/.m2/repository \
+#    -Dhadoopversion=23 -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP -propertyfile cloudera/build.properties \
+#    -buildfile contrib/piggybank/java/build.xml clean jar "$@"
+
+# Build pig tar and pigunit..
+ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Dreactor.repo=file://${HOME}/.m2/repository \
+    -Dhadoopversion=23 -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP -propertyfile cloudera/build.properties \
+    tar pigunit-jar "$@"
+
+# Change to cloudera/maven directory, and install
+# (and if called from CDH nightly build, deploy) artifacts into Maven repository
+cd cloudera/maven-packaging
+mvn -Dnot.cdh.release.build=false install -Dmaven.repo.local=${HOME}/.m2/repository $DO_MAVEN_DEPLOY
