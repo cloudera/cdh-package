@@ -39,6 +39,14 @@ pushd hadoop-mapreduce-project/hadoop-yarn/hadoop-yarn-site
 popd
 JAVA_OPTS="-Xmx768m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx768m -Xms256m -XX:MaxPermSize=256m" mvn site site:stage ${MAVEN_SKIP_TESTS} $@
 
+# Build the non-standard jars, such as hadoop-mapreduce-tools
+pushd hadoop-mapreduce-project
+JAVA_OPTS="-Xmx768m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx768m -Xms256m -XX:MaxPermSize=256m" ant veryclean all-jars -Dversion=${FULL_VERSION} -Dresolvers=internal $@
+popd
+
+# Rebuild and now mvn deploy the tarball - note the '-pl hadoop-dist' - if we chdir into hadoop-dist and build, it fails.
+JAVA_OPTS="-Xmx768m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx768m -Xms256m -XX:MaxPermSize=256m" mvn -pl hadoop-dist -Pdist -Psrc -Dtar ${MAVEN_SKIP_TESTS} -Dmaven.deploy.skip=false install "$@" $DO_MAVEN_DEPLOY
+
 (cd build/hadoop-${FULL_VERSION} ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${FULL_VERSION}.tar.gz)
 # (cd build/hadoop-${FULL_VERSION}/src ; tar --strip-components=1 -xzvf  ../../../hadoop-dist/target/hadoop-${FULL_VERSION}-src.tar.gz)
 (cd build/hadoop-${FULL_VERSION} ; cp -r ../../cloudera .)
