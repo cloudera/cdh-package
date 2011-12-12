@@ -21,7 +21,7 @@ set -ex
 
 if [ ! -d build/hadoop-${FULL_VERSION}/src ]; then
     mkdir -p build/hadoop-${FULL_VERSION}/src 
-    tar --exclude='build/*' -cf - . | (cd build/hadoop-${FULL_VERSION}/src ; tar xf -)
+    tar --exclude='./build/*' -cf - . | (cd build/hadoop-${FULL_VERSION}/src ; tar xf -)
 fi
 
 if [ -z "$BUNDLE_SNAPPY" ] ; then
