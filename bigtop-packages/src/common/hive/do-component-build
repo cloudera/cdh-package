@@ -16,4 +16,13 @@
 
 set -ex
 # -f src/build.xml
-ant -Dhadoop.version=0.23.0 -Dhadoop.security.version=0.23.0 -Dhadoop.security.version.prefix=0.23 package "$@"
+IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
+
+ant -Dhadoop.version=0.23.0-cdh4a1-SNAPSHOT -Dhadoop.security.version=0.23.0-cdh4a1-SNAPSHOT -Dhadoop.security.version.prefix=0.23 \
+    -Dreactor.repo=file://${HOME}/.m2/repository -Drepo.maven.org=${IVY_MIRROR_PROP} \
+    tar "$@"
+
+# Change to cloudera/maven directory, and install
+# (and if called from CDH nightly build, deploy) artifacts into Maven repository
+cd cloudera/maven-packaging
+mvn -Dnot.cdh.release.build=false -Dmaven.repo.local=${HOME}/.m2/repository  install $DO_MAVEN_DEPLOY
