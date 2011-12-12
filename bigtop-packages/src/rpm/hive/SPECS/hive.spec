@@ -22,7 +22,7 @@
 %define man_dir %{_mandir}
 %define hive_services server metastore
 # After we run "ant package" we'll find the distribution here
-%define hive_dist build/dist
+%define hive_dist src/build/dist
 
 %if  %{!?suse_version:1}0
 
@@ -61,7 +61,7 @@ URL: http://hadoop.apache.org/hive/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch
-Source0: hive-%{hive_base_version}.tar.gz
+Source0: hive-%{hive_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_hive.sh
 Source3: hadoop-hive.sh
@@ -70,7 +70,6 @@ Source5: hadoop-hive-server.default
 Source6: hadoop-hive-metastore.default
 Source7: hive.1
 Source8: hive-site.xml
-Patch0: patch
 Requires: hadoop >= 0.20.2, bigtop-utils
 Obsoletes: %{name}-webinterface
 
@@ -115,8 +114,7 @@ This optional package hosts a metadata server for Hive clients across a network 
 
 
 %prep
-%setup -n apache-hive-4910f33
-%patch0 -p0 
+%setup -n hive-%{hive_patched_version}
 
 %build
 bash %{SOURCE1}
