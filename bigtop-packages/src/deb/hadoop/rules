@@ -91,9 +91,6 @@ install-indep: namenode secondarynamenode jobtracker tasktracker datanode
 
 	dh_install --sourcedir=debian/tmp -i
 
-	rm -Rf debian/hadoop/usr/lib/hadoop/lib/native
-	rm -Rf debian/hadoop/usr/lib/hadoop/sbin
-
 	rm -Rf debian/hadoop/usr/lib/hadoop/bin/fuse_dfs 
 #	rm -Rf debian/hadoop/usr/bin/hadoop-fuse-dfs
 	rm -Rf debian/hadoop/usr/lib/hadoop/contrib/fuse-dfs
