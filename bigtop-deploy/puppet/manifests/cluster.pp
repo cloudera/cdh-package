@@ -159,11 +159,11 @@ class hadoop_gateway_node inherits hadoop_head_node {
   }
   #mahout::client { "mahout client":
   #}
-  #hadoop-pig::client { "pig client":
-  #}
-  #hadoop-hive::client { "hive client":
-  #   hbase_zookeeper_quorum => $hadoop_hbase_zookeeper_quorum,
-  #}
+  hadoop-pig::client { "pig client":
+  }
+  hadoop-hive::client { "hive client":
+     hbase_zookeeper_quorum => $hadoop_hbase_zookeeper_quorum,
+  }
   hadoop-sqoop::client { "sqoop client":
   }
   #hadoop-oozie::client { "oozie client":
