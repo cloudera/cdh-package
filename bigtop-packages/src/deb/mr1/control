@@ -1,0 +1,56 @@
+Source: hadoop-0.20
+Section: misc
+Priority: extra
+Maintainer: Todd Lipcon <todd@cloudera.com>
+Build-Depends: debhelper (>= 6), ant, ant-optional, liblzo2-dev, python, libz-dev,automake, autoconf (>= 2.61), sharutils, g++ (>= 4), git-core, libfuse-dev
+Standards-Version: 3.8.0
+Homepage: http://hadoop.apache.org/core/
+
+Package: hadoop-0.20
+Provides: hadoop
+Architecture: i386 amd64 
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser
+Recommends: hadoop-0.20-native
+Description: A software platform for processing vast amounts of data
+ Hadoop is a software platform that lets one easily write and
+ run applications that process vast amounts of data.
+ .
+ Here's what makes Hadoop especially useful:
+  * Scalable: Hadoop can reliably store and process petabytes.
+  * Economical: It distributes the data and processing across clusters
+                of commonly available computers. These clusters can number
+                into the thousands of nodes.
+  * Efficient: By distributing the data, Hadoop can process it in parallel
+               on the nodes where the data is located. This makes it
+               extremely rapid.
+  * Reliable: Hadoop automatically maintains multiple copies of data and
+              automatically redeploys computing tasks based on failures.
+ .
+ Hadoop implements MapReduce, using the Hadoop Distributed File System (HDFS).
+ MapReduce divides applications into many small blocks of work. HDFS creates
+ multiple replicas of data blocks for reliability, placing them on compute
+ nodes around the cluster. MapReduce can then process the data where it is
+ located.
+
+Package: hadoop-0.20-tasktracker
+Provides: hadoop-tasktracker
+Architecture: all
+Depends: hadoop-0.20 (= ${source:Version})
+Replaces: hadoop-0.20 (<< 0.20.2+737-1)
+Breaks: hadoop-0.20 (<< 0.20.2+737-1)
+Description: Task Tracker for Hadoop
+ The Task Tracker is the Hadoop service that accepts MapReduce tasks and
+ computes results. Each node in a Hadoop cluster that should be doing
+ computation should run a Task Tracker.
+
+Package: hadoop-0.20-jobtracker
+Provides: hadoop-jobtracker
+Architecture: all
+Depends: hadoop-0.20 (= ${source:Version})
+Replaces: hadoop-0.20 (<< 0.20.2+737-1)
+Breaks: hadoop-0.20 (<< 0.20.2+737-1)
+Description: Job Tracker for Hadoop
+ The jobtracker is a central service which is responsible for managing
+ the tasktracker services running on all nodes in a Hadoop Cluster.
+ The jobtracker allocates work to the tasktracker nearest to the data
+ with an available work slot.

@@ -1,0 +1,26 @@
+#!/bin/sh
+# postinst script for hadoop
+
+set -e
+
+case "$1" in
+    configure)
+	chgrp -R hadoop /var/log/hadoop-0.20 /var/run/hadoop-0.20
+	chmod g+w /var/run/hadoop-0.20 /var/log/hadoop-0.20 
+
+        # We don't want to do this recursively since we may be reinstalling, in which case
+        # users have their own cache/<username> directories which shouldn't be stolen
+        chown root:hadoop /var/lib/hadoop-0.20/ /var/lib/hadoop-0.20/cache/ /var/lib/hadoop-0.20/cache/hadoop/
+        chmod 1777 /var/lib/hadoop-0.20/cache/
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
