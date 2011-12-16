@@ -41,10 +41,9 @@ Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0 
-Source0: %{name}-distribution-%{mahout_base_version}-src.tar.gz
+Source0: mahout-%{mahout_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{name}.sh
-Patch0: patch
 Requires: hadoop >= 0.20.2, bigtop-utils
 
 
@@ -66,16 +65,15 @@ diverse community to facilitate discussions not only on the project itself but
 also on potential use cases. Come to the mailing lists to find out more.
     
 %prep
-%setup -n apache-mahout-dc3dcf5
-%patch0 -p0
+%setup -n mahout-%{mahout_patched_version}
 
 %build
-bash $RPM_SOURCE_DIR/do-component-build
+env FULL_VERSION=%{mahout_patched_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh $RPM_SOURCE_DIR/install_mahout.sh \
-          --build-dir=build \
+          --build-dir=build/mahout-%{mahout_patched_version} \
           --prefix=$RPM_BUILD_ROOT \
           --doc-dir=%{doc_mahout} 
 rm -f $RPM_BUILD_ROOT/usr/lib/mahout/lib/hadoop*.jar
