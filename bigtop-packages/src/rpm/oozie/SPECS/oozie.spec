@@ -34,10 +34,13 @@ URL: http://incubator.apache.org/oozie/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
-Source0: %{name}-%{oozie_base_version}.tar.gz
+Source0: %{name}-%{oozie_patched_version}.tar.gz
 Source1: do-component-build
 Source2: create-package-layout
-Patch0: patch
+Source3: oozie.1
+Source4: oozie-examples.sh
+Source5: oozie.init
+Source6: oozie-env.sh
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig, hadoop
 Requires(preun): /sbin/chkconfig, /sbin/service
@@ -105,19 +108,15 @@ Requires: bigtop-utils
 
 
 %prep
-%setup -n apache-oozie-135dcce
-%patch0 -p0
+%setup -n oozie-%{oozie_patched_version}
 
 %build
-    M2_CACHE=`mktemp -d /tmp/oozie.m2.XXXXX`
     mkdir -p distro/downloads
-    # curl --retry 5 -# -L -k -o distro/downloads/tomcat.tar.gz http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.29/bin/apache-tomcat-6.0.29.tar.gz    
-    (export DO_MAVEN_DEPLOY="";export FULL_VERSION=%{version};cp %{SOURCE1} bin; sh -x bin/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository -DskipTests)
-    rm -rf ${M2_CACHE}
+    cd src ; env DO_MAVEN_DEPLOY="" FULL_VERSION=%{oozie_patched_version} bash -x %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-    sh %{SOURCE2} --extra-dir=$RPM_SOURCE_DIR --build-dir=. --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{doc_oozie} --initd-dir=$RPM_BUILD_ROOT%{initd_dir}
+    sh %{SOURCE2} --extra-dir=$RPM_SOURCE_DIR --build-dir=src --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{doc_oozie} --initd-dir=$RPM_BUILD_ROOT%{initd_dir}
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 

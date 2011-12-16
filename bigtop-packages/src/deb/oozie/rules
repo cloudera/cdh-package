@@ -23,15 +23,8 @@ export DH_VERBOSE=1
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
-ifneq "$(wildcard ${HOME}/.m2/settings.xml)" ""
-	m2_settings_flag=--settings ${HOME}/.m2/settings.xml
-else
-	m2_settings_flag=
-endif
-
 patch: patch-stamp
 patch-stamp:	
-	patch -p0 < debian/patch
 	touch $@
 
 clean:	
@@ -48,10 +41,8 @@ clean:
 
 build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
-#	M2_CACHE=`mktemp -d /tmp/oozie.m2.XXXXX`
 	mkdir -p distro/downloads
-	(export DO_MAVEN_DEPLOY=""; export FULL_VERSION=2.3.1; sh -x debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository ${m2_settings_flag} -DskipTests)
-#	rm -rf ${M2_CACHE}
+	cd src ; env DO_MAVEN_DEPLOY="" FULL_VERSION=${OOZIE_PATCHED_VERSION} bash -x ../debian/do-component-build
 	mkdir -p debian/tmp
 	tar cf - --exclude=debian/\* . | (cd debian/tmp && tar xf -)
 	touch $@
@@ -60,7 +51,7 @@ install: install-indep
 install-indep:
 	dh_testdir
 	dh_testroot
-	sh -x debian/create-package-layout --extra-dir=debian/ --build-dir=. --server-dir=./debian/oozie --client-dir=./debian/oozie-client --docs-dir=./debian/oozie-client/usr/share/doc/oozie --initd-dir=./debian/oozie/etc/init.d
+	sh -x debian/create-package-layout --extra-dir=debian/ --build-dir=src --server-dir=./debian/oozie --client-dir=./debian/oozie-client --docs-dir=./debian/oozie-client/usr/share/doc/oozie --initd-dir=./debian/oozie/etc/init.d
 	dh_install -i
 
 binary-common:
