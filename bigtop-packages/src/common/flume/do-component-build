@@ -1,10 +1,11 @@
-#!/bin/sh
-# Licensed to the Apache Software Foundation (ASF) under one or more
-# contributor license agreements.  See the NOTICE file distributed with
-# this work for additional information regarding copyright ownership.
-# The ASF licenses this file to You under the Apache License, Version 2.0
-# (the "License"); you may not use this file except in compliance with
-# the License.  You may obtain a copy of the License at
+#!/bin/bash
+# Licensed to Cloudera, Inc. under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  Cloudera, Inc. licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
 #
@@ -13,7 +14,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+set -x
 
-set -ex
+if [ -z ${THRIFT_HOME} ] ; then
+  echo "THRIFT_HOME not set"
+  exit 1
+fi
 
-ant -Dversion=${FLUME_VERSION} tar "$@" 
+if [ ! -f "${THRIFT_HOME}/bin/thrift" ] ; then
+  echo "Thrift compiler not found at : ${THRIFT_HOME}/bin"
+  exit 1
+fi
+
+# Add -Pfull-build to include documentation build
+mvn clean source:jar install javadoc:javadoc -Dbuild.revision=${FLUME_BUILD_REF} -Dthrift.executable=${THRIFT_HOME}/bin/thrift -DskipTests -Pfull-build ${DO_MAVEN_DEPLOY}
+
+mkdir build
+cp flume-distribution/target/flume-distribution-${FULL_VERSION}-project.tar.gz build/flume-${FULL_VERSION}.tar.gz

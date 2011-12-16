@@ -59,7 +59,7 @@ Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch
 License: APL2
-Source0: flume-%{flume_base_version}.tar.gz
+Source0: flume-%{flume_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: init.d
@@ -134,10 +134,10 @@ Requires: redhat-lsb
 Flume is a reliable, scalable, and manageable distributed data collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.  It can efficiently collect, aggregate, and move large amounts of log data.  It has a simple, but flexible, architecture based on streaming data flows.  It is robust and fault tolerant with tunable reliability mechanisms and many failover and recovery mechanisms.  The system is centrally managed and allows for intelligent dynamic management. It uses a simple extensible data model that allows for online analytic applications.
 
 %prep
-%setup -n %{name}-%{flume_base_version}
+%setup -n %{name}-%{flume_patched_version}
 
 %build
-env FLUME_VERSION=%{version} sh %{SOURCE1}
+env FULL_VERSION=%{flume_patched_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
