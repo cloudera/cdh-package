@@ -48,6 +48,8 @@ class hadoop_cluster_node {
   $mapred_data_dirs = ["/mnt/mapred"]
   $yarn_data_dirs = ["/mnt/yarn"]
 
+  $mapred1_data_dirs = ["/mnt/mapred1"]
+
   if ($hadoop_security_authentication == "kerberos") {
     $kerberos_domain = "compute-1.internal"
     $kerberos_realm = "EXAMPLE.COM"
@@ -77,6 +79,15 @@ class hadoop_worker_node inherits hadoop_cluster_node {
         rt_port => $hadoop_rt_port,
         dirs => $yarn_data_dirs,
         auth => $hadoop_security_authentication,
+  }
+
+  hadoop::tasktracker-mr1 { "mr1 tasktracker":
+        jobtracker_host => $hadoop_jobtracker_host,
+        jobtracker_port => $hadoop_jobtracker_port,
+        namenode_host => $hadoop_namenode_host,
+        namenode_port => $hadoop_namenode_port,
+        auth => $hadoop_security_authentication,
+        dirs => $mapred1_data_dirs,
   }
 
   hadoop-hbase::server { "hbase region server":
@@ -131,15 +142,25 @@ class hadoop_head_node inherits hadoop_cluster_node {
         auth => $hadoop_security_authentication,
   }
 
+  hadoop::jobtracker-mr1 { "mr1 jobtracker":
+        host => $hadoop_jobtracker_host,
+        port => $hadoop_jobtracker_port,
+        # thrift_port => $hadoop_jobtracker_thrift_port,
+        namenode_host => $hadoop_namenode_host,
+        namenode_port => $hadoop_namenode_port,
+        auth => $hadoop_security_authentication,
+        dirs => $mapred1_data_dirs,
+  }
+
   hadoop-hbase::master { "hbase master":
         rootdir => $hadoop_hbase_rootdir,
         zookeeper_quorum => $hadoop_hbase_zookeeper_quorum,
         kerberos_realm => $kerberos_realm, 
   }
 
-  #hadoop-oozie::server { "oozie server":
-  #      kerberos_realm => $kerberos_realm, 
-  #}
+  hadoop-oozie::server { "oozie server":
+        kerberos_realm => $kerberos_realm, 
+  }
 
   hadoop-zookeeper::server { "zookeeper":
         myid => "0",
@@ -168,8 +189,8 @@ class hadoop_gateway_node inherits hadoop_head_node {
     jobtracker_port => $hadoop_jobtracker_port,
     # auth => $hadoop_security_authentication,
   }
-  #mahout::client { "mahout client":
-  #}
+  mahout::client { "mahout client":
+  }
   hadoop-pig::client { "pig client":
   }
   hadoop-hive::client { "hive client":
@@ -177,8 +198,8 @@ class hadoop_gateway_node inherits hadoop_head_node {
   }
   hadoop-sqoop::client { "sqoop client":
   }
-  #hadoop-oozie::client { "oozie client":
-  #}
+  hadoop-oozie::client { "oozie client":
+  }
   hadoop-hbase::client { "hbase client":
   }
   hadoop-zookeeper::client { "zookeeper client":

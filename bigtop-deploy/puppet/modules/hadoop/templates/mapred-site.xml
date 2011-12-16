@@ -116,6 +116,11 @@
   </property>
 
   <property>
+    <name>mapred.job.tracker</name>
+    <value><%= hadoop_jobtracker_host %>:<%= hadoop_jobtracker_port%></value>
+  </property>
+
+  <property>
     <name>mapreduce.jobtracker.address</name>
     <value><%= hadoop_jobtracker_host %>:<%= hadoop_jobtracker_port%></value>
   </property>

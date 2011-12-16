@@ -225,7 +225,7 @@ done
 %__install -d -m 0775 $RPM_BUILD_ROOT/var/run/%{name}
 %__install -d -m 0775 $RPM_BUILD_ROOT/%{log_hadoop}
 
-#%pre
+%pre
 getent group mapred >/dev/null || groupadd -r mapred
 getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapred -G hadoop --home %{lib_hadoop} mapred
 

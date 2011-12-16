@@ -78,6 +78,14 @@ class hadoop {
     }
   }
 
+
+  class common-mapred-mr1 inherits common-mapred-app {
+    package { "hadoop-0.20":
+      ensure => latest,
+      require => Package["jdk"],
+    }
+  }
+
   define datanode ($namenode_host, $namenode_port, $port = "50075", $auth = "simple", $dirs = ["/tmp/data"]) {
 
     $hadoop_namenode_host = $namenode_host
@@ -274,6 +282,67 @@ class hadoop {
     }
   }
 
+  define jobtracker-mr1 ($namenode_host, $namenode_port, $host = $fqdn, $port = "8021", $thrift_port = "9290", $auth = "simple", $dirs = ["/tmp/mr"]) {
+
+    $hadoop_namenode_host = $namenode_host
+    $hadoop_namenode_port = $namenode_port
+    $hadoop_jobtracker_thrift_port = $thrift_port
+    $hadoop_jobtracker_host = $host
+    $hadoop_jobtracker_port = $port
+    $hadoop_security_authentication = $auth
+
+    include common-mapred-mr1
+
+    package { "hadoop-0.20-jobtracker":
+      ensure => latest,
+      require => Package["jdk"],
+    }
+
+    service { "hadoop-0.20-jobtracker":
+      ensure => running,
+      hasstatus => true,
+      subscribe => [Package["hadoop-0.20-jobtracker"], File["/etc/hadoop/conf/core-site.xml"], 
+                    File["/etc/hadoop/conf/mapred-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
+      require => [ Package["hadoop-0.20-jobtracker"] ]
+    } <- file { $dirs:
+      ensure => directory,
+      owner => mapred,
+      group => hadoop,
+      mode => 755,
+      require => [Package["hadoop-0.20"]],
+    }
+  }
+
+
+  define tasktracker-mr1 ($namenode_host, $namenode_port, $jobtracker_host, $jobtracker_port, $auth = "simple", $dirs = ["/tmp/mr"]){
+    $hadoop_namenode_host = $namenode_host
+    $hadoop_namenode_port = $namenode_port
+    $hadoop_jobtracker_host = $jobtracker_host
+    $hadoop_jobtracker_port = $jobtracker_port
+    $hadoop_security_authentication = $auth
+
+    include common-mapred-mr1
+
+    package { "hadoop-0.20-tasktracker":
+      ensure => latest,
+      require => Package["jdk"],
+    }
+ 
+    service { "hadoop-0.20-tasktracker":
+      ensure => running,
+      hasstatus => true,
+      subscribe => [Package["hadoop-0.20-tasktracker"], File["/etc/hadoop/conf/core-site.xml"], 
+                    File["/etc/hadoop/conf/mapred-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
+      require => [ Package["hadoop-0.20-tasktracker"], File["/etc/hadoop/conf/taskcontroller.cfg"] ],
+    } <- file { $dirs:
+      ensure => directory,
+      owner => mapred,
+      group => hadoop,
+      mode => 755,
+      require => [Package["hadoop-0.20"]],
+    }
+  }
+
   define client ($namenode_host, $namenode_port, $jobtracker_host, $jobtracker_port, $auth = "simple") {
       $hadoop_namenode_host = $namenode_host
       $hadoop_namenode_port = $namenode_port
@@ -282,6 +351,7 @@ class hadoop {
       $hadoop_security_authentication = $auth
 
       include common-mapred-app
+      include common-mapred-mr1
   
       # FIXME: "hadoop-source", "hadoop-fuse", "hadoop-pipes"
       package { ["hadoop-doc", "hadoop-debuginfo", "hadoop-libhdfs"]:
