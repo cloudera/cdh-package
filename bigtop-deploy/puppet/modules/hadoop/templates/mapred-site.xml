@@ -162,12 +162,6 @@
     <name>mapred.child.ulimit</name>
     <value><%= hadoop_config_mapred_child_ulimit %></value>
   </property>
-<% else %>
-  <property>
-    <!-- set this to ~1.5x the heap size in mapred.child.java.opts -->
-    <name>mapred.child.ulimit</name>
-    <value>unlimited</value>
-  </property>
 <% end %>
 
 <% if has_variable?("hadoop_config_io_sort_mb") %>
