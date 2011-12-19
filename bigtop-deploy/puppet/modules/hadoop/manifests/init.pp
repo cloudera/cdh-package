@@ -325,8 +325,10 @@ class hadoop {
       hasstatus => true,
       subscribe => [Package["hadoop-0.20-jobtracker"], File["/etc/hadoop/conf/core-site.xml"], 
                     File["/etc/hadoop/conf/mapred-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [ Package["hadoop-0.20-jobtracker"] ]
-    } <- file { $dirs:
+      require => [ Package["hadoop-0.20-jobtracker"], File[$dirs] ]
+    } 
+    
+    file { $dirs:
       ensure => directory,
       owner => mapred,
       group => hadoop,
@@ -355,8 +357,11 @@ class hadoop {
       hasstatus => true,
       subscribe => [Package["hadoop-0.20-tasktracker"], File["/etc/hadoop/conf/core-site.xml"], 
                     File["/etc/hadoop/conf/mapred-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [ Package["hadoop-0.20-tasktracker"], File["/etc/hadoop/conf/taskcontroller.cfg"] ],
-    } <- file { $dirs:
+      require => [ Package["hadoop-0.20-tasktracker"], File["/etc/hadoop/conf/taskcontroller.cfg"],
+                   File[$dirs] ],
+    } 
+
+    file { $dirs:
       ensure => directory,
       owner => mapred,
       group => hadoop,
