@@ -91,9 +91,9 @@ Source5: do-component-build
 Source6: install_hadoop.sh
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -n -u)
 BuildRequires: lzo-devel, python >= 2.4, git, automake, autoconf
-Requires: sh-utils, textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
-Provides: hadoop
+Requires: hadoop, sh-utils, textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
 
+BuildArch: i386 amd64 x86_64
 
 %if  %{?suse_version:1}0
 BuildRequires: libopenssl-devel, gcc-c++, ant, ant-nodeps, ant-trax
