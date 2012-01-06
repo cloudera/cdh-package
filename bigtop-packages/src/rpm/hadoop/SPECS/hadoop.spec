@@ -194,18 +194,6 @@ into a checkpoint.  This compaction ensures that Name Node restarts
 do not incur unnecessary downtime.
 
 
-%package jobtracker
-Summary: Hadoop Job Tracker
-Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
-
-%description jobtracker
-The jobtracker is a central service which is responsible for managing
-the tasktracker services running on all nodes in a Hadoop Cluster.
-The jobtracker allocates work to the tasktracker nearest to the data
-with an available work slot.
-
-
 %package datanode
 Summary: Hadoop Data Node
 Group: System/Daemons
@@ -299,7 +287,6 @@ bash %{SOURCE2} \
   --system-lib-dir=$RPM_BUILD_ROOT%{_libdir} \
   --system-libexec-dir=$RPM_BUILD_ROOT%{libexecdir} \
   --hadoop-etc-dir=$RPM_BUILD_ROOT%{etc_hadoop} \
-  --yarn-etc-dir=$RPM_BUILD_ROOT%{etc_yarn} \
   --prefix=$RPM_BUILD_ROOT \
   --doc-dir=$RPM_BUILD_ROOT%{doc_hadoop} \
   --example-dir=$RPM_BUILD_ROOT%{doc_hadoop}/examples \
@@ -370,7 +357,7 @@ getent passwd yarn >/dev/null || /usr/sbin/useradd --comment "Hadoop Yarn" --she
 
 %post
 %{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.empty 10
-%{alternatives_cmd} --install %{config_yarn} yarn-conf %{etc_yarn}/conf.empty 10
+#%{alternatives_cmd} --install %{config_yarn} yarn-conf %{etc_yarn}/conf.empty 10
 %{alternatives_cmd} --install %{bin_hadoop}/%{hadoop_name} %{hadoop_name}-default %{bin_hadoop}/%{name} 20 \
   --slave %{log_hadoop_dirname}/%{hadoop_name} %{hadoop_name}-log %{log_hadoop} \
   --slave %{lib_hadoop_dirname}/%{hadoop_name} %{hadoop_name}-lib %{lib_hadoop} \
@@ -399,7 +386,7 @@ fi
 %files
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty
-%config(noreplace) %{etc_yarn}/conf.empty
+#%config(noreplace) %{etc_yarn}/conf.empty
 %config(noreplace) /etc/default/hadoop
 %config(noreplace) /etc/default/yarn
 %config(noreplace) /etc/security/limits.d/hadoop.nofiles.conf
@@ -451,7 +438,7 @@ fi
 # Pseudo-distributed Hadoop installation
 %post conf-pseudo
 %{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.pseudo 30
-%{alternatives_cmd} --install %{config_yarn} yarn-conf %{etc_yarn}/conf.pseudo 30
+#%{alternatives_cmd} --install %{config_yarn} yarn-conf %{etc_yarn}/conf.pseudo 30
 
 %preun conf-pseudo
 if [ "$1" = 0 ]; then
@@ -462,7 +449,7 @@ fi
 %files conf-pseudo
 %defattr(-,root,root)
 %config(noreplace) %attr(755,root,root) %{etc_hadoop}/conf.pseudo
-%config(noreplace) %attr(755,root,root) %{etc_yarn}/conf.pseudo
+#%config(noreplace) %attr(755,root,root) %{etc_yarn}/conf.pseudo
 %dir %attr(0755,root,hadoop) /var/lib/%{name}
 %dir %attr(1777,root,hadoop) /var/lib/%{name}/cache
 
