@@ -146,7 +146,7 @@ export PATH="/sbin/:$PATH"
 # Make bin wrappers
 mkdir -p $BIN_DIR
 
-for bin_wrapper in hadoop yarn hdfs mapred; do
+for bin_wrapper in yarn hdfs mapred; do
   wrapper=$BIN_DIR/$bin_wrapper
   cat > $wrapper <<EOF
 #!/bin/sh
@@ -162,10 +162,29 @@ fi
 . /etc/default/hadoop
 . /etc/default/yarn
 
-# FIXME: this might need to be fixed upstream
-HADOOP_CLASSPATH="\${HADOOP_CLASSPATH}:\${YARN_CONF_DIR}"
-
 exec $INSTALLED_HADOOP_DIR/bin/$bin_wrapper "\$@"
+EOF
+  chmod 755 $wrapper
+done
+
+# FIXME: the following needs to go away ASAP
+for bin_wrapper in hadoop; do
+  wrapper=$BIN_DIR/$bin_wrapper
+  cat > $wrapper <<EOF
+#!/bin/sh
+
+
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+. /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
+. /etc/default/hadoop
+. /etc/default/yarn
+
+exec \${HADOOP_HOME:-$INSTALLED_HADOOP_DIR}/bin/$bin_wrapper "\$@"
 EOF
   chmod 755 $wrapper
 done
