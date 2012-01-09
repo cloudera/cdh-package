@@ -285,7 +285,7 @@ bash %{SOURCE2} \
   --hadoop-version=%{hadoop_patched_version} \
   --system-include-dir=$RPM_BUILD_ROOT%{_includedir} \
   --system-lib-dir=$RPM_BUILD_ROOT%{_libdir} \
-  --system-libexec-dir=$RPM_BUILD_ROOT%{libexecdir} \
+  --system-libexec-dir=$RPM_BUILD_ROOT%{lib_hadoop}/libexec \
   --hadoop-etc-dir=$RPM_BUILD_ROOT%{etc_hadoop} \
   --prefix=$RPM_BUILD_ROOT \
   --doc-dir=$RPM_BUILD_ROOT%{doc_hadoop} \
@@ -391,10 +391,6 @@ fi
 %config(noreplace) /etc/default/yarn
 %config(noreplace) /etc/security/limits.d/hadoop.nofiles.conf
 %{lib_hadoop}
-%{libexecdir}/hadoop-config.sh
-%{libexecdir}/hdfs-config.sh
-%{libexecdir}/mapred-config.sh
-%{libexecdir}/yarn-config.sh
 %{bin_hadoop}/%{name}
 %{bin_hadoop}/yarn
 %{bin_hadoop}/hdfs

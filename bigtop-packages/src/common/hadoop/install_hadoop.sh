@@ -262,6 +262,10 @@ for conf in conf.pseudo ; do
 done
 cp ${BUILD_DIR}/etc/hadoop/log4j.properties $HADOOP_ETC_DIR/conf.pseudo
 
+# Provide a convenience link for configuration
+install -d -m 0755 ${HADOOP_DIR}/etc
+ln -s ${HADOOP_ETC_DIR##${PREFIX}}/conf ${HADOOP_DIR}/etc/hadoop
+
 # Remove all hadoop test jars
 rm -fv ${HADOOP_DIR}/*test*.jar
 
