@@ -60,7 +60,7 @@ install: build
 	  --prefix=debian/tmp/ \
 	  --distro-dir=debian \
           --source-dir=$$PWD/src \
-          --build-dir=$$PWD/src/hadoop-dist/target/hadoop-${HADOOP_PATCHED_VERSION} \
+          --build-dir=$$PWD/build
           --hadoop-version=${HADOOP_PATCHED_VERSION} \
 	  --system-lib-dir=debian/tmp/usr/lib/ \
 	  --system-libexec-dir=debian/tmp/usr/lib/hadoop/libexec/ \
