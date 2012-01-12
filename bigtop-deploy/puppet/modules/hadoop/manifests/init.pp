@@ -50,7 +50,7 @@ class hadoop {
     }
  
     file {
-      "/etc/yarn/conf/yarn-site.xml":
+      "/etc/hadoop/conf/yarn-site.xml":
         content => template('hadoop/yarn-site.xml'),
         require => [Package["hadoop"]],
     }
@@ -96,7 +96,7 @@ class hadoop {
 
 
   class common-mapred-mr1 inherits common-mapred-app {
-    package { "hadoop-0.20":
+    package { "hadoop-0.20-mapreduce":
       ensure => latest,
       require => Package["jdk"],
     }
@@ -226,7 +226,7 @@ class hadoop {
     service { "hadoop-yarn-resourcemanager":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-yarn-resourcemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/yarn/conf/yarn-site.xml"]],
+      subscribe => [Package["hadoop-yarn-resourcemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/hadoop/conf/yarn-site.xml"]],
       require => [ Package["hadoop-yarn-resourcemanager"] ]
     }
   }
@@ -268,7 +268,7 @@ class hadoop {
     service { "hadoop-yarn-nodemanager":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-yarn-nodemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/yarn/conf/yarn-site.xml"]],
+      subscribe => [Package["hadoop-yarn-nodemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/hadoop/conf/yarn-site.xml"]],
       require => [ Package["hadoop-yarn-nodemanager"], File[$dirs] ],
     }
 
@@ -315,17 +315,17 @@ class hadoop {
 
     include common-mapred-mr1
 
-    package { "hadoop-0.20-jobtracker":
+    package { "hadoop-0.20-mapreduce-jobtracker":
       ensure => latest,
       require => Package["jdk"],
     }
 
-    service { "hadoop-0.20-jobtracker":
+    service { "hadoop-0.20-mapreduce-jobtracker":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-0.20-jobtracker"], File["/etc/hadoop/conf/core-site.xml"], 
+      subscribe => [Package["hadoop-0.20-mapreduce-jobtracker"], File["/etc/hadoop/conf/core-site.xml"], 
                     File["/etc/hadoop/conf/mapred-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [ Package["hadoop-0.20-jobtracker"], File[$dirs] ]
+      require => [ Package["hadoop-0.20-mapreduce-jobtracker"], File[$dirs] ]
     } 
     
     file { $dirs:
@@ -333,7 +333,7 @@ class hadoop {
       owner => mapred,
       group => hadoop,
       mode => 755,
-      require => [Package["hadoop-0.20"]],
+      require => [Package["hadoop-0.20-mapreduce"]],
     }
   }
 
@@ -347,17 +347,17 @@ class hadoop {
 
     include common-mapred-mr1
 
-    package { "hadoop-0.20-tasktracker":
+    package { "hadoop-0.20-mapreduce-tasktracker":
       ensure => latest,
       require => Package["jdk"],
     }
  
-    service { "hadoop-0.20-tasktracker":
+    service { "hadoop-0.20-mapreduce-tasktracker":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-0.20-tasktracker"], File["/etc/hadoop/conf/core-site.xml"], 
+      subscribe => [Package["hadoop-0.20-mapreduce-tasktracker"], File["/etc/hadoop/conf/core-site.xml"], 
                     File["/etc/hadoop/conf/mapred-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [ Package["hadoop-0.20-tasktracker"], File["/etc/hadoop/conf/taskcontroller.cfg"],
+      require => [ Package["hadoop-0.20-mapreduce-tasktracker"], File["/etc/hadoop/conf/taskcontroller.cfg"],
                    File[$dirs] ],
     } 
 
@@ -366,7 +366,7 @@ class hadoop {
       owner => mapred,
       group => hadoop,
       mode => 755,
-      require => [Package["hadoop-0.20"]],
+      require => [Package["hadoop-0.20-mapreduce"]],
     }
   }
 
