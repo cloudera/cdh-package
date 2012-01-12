@@ -181,9 +181,9 @@ install -d -m 0755 $ETC_DIR/conf.empty
 rm -rf $LIB_DIR/conf
 ln -s ${ETC_DIR#$PREFIX}/conf $LIB_DIR/conf
 rm -rf $LIB_DIR/logs
-ln -s /var/log/hadoop-$APACHE_BRANCH $LIB_DIR/logs
+ln -s /var/log/hadoop-$APACHE_BRANCH-mapreduce $LIB_DIR/logs
 rm -rf $LIB_DIR/pids
-ln -s /var/run/hadoop-$APACHE_BRANCH $LIB_DIR/pids
+ln -s /var/run/hadoop-$APACHE_BRANCH-mapreduce $LIB_DIR/pids
 
 # Make the pseudo-distributed config
 for conf in conf.pseudo ; do

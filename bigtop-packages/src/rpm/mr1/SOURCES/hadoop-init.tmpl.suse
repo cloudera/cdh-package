@@ -31,7 +31,7 @@
 ### END INIT INFO
 
 source /lib/lsb/init-functions
-source /etc/default/hadoop-0.20
+source /etc/default/hadoop-0.20-mapreduce
 
 source @HADOOP_COMMON_ROOT@/bin/hadoop-config.sh 
 

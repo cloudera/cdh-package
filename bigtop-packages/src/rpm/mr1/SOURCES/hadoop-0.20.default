@@ -1,4 +1,4 @@
-export HADOOP_HOME=/usr/lib/hadoop-0.20
+export HADOOP_HOME=/usr/lib/hadoop-0.20-mapreduce
 export HADOOP_JOBTRACKER_USER=mapred
 export HADOOP_TASKTRACKER_USER=mapred
 export HADOOP_IDENT_STRING=hadoop

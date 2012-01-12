@@ -213,7 +213,7 @@ do
        chmod 755 $init_file
 done
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
-%__cp $RPM_SOURCE_DIR/hadoop-0.20.default $RPM_BUILD_ROOT/etc/default/%{hadoop_name}
+%__cp $RPM_SOURCE_DIR/hadoop-0.20.default $RPM_BUILD_ROOT/etc/default/%{hadoop_name}-mapreduce
 
 #%__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
 #%__install -m 0644 $RPM_SOURCE_DIR/hadoop.nofiles.conf $RPM_BUILD_ROOT/etc/security/limits.d/hadoop.nofiles.conf
@@ -251,7 +251,7 @@ fi
 %files
 %defattr(-,root,root)
 # %config(noreplace) %{etc_hadoop}/conf.empty
-%config(noreplace) /etc/default/%{hadoop_name}
+%config(noreplace) /etc/default/%{hadoop_name}-mapreduce
 # %config(noreplace) /etc/security/limits.d/hadoop.nofiles.conf
 %{lib_hadoop}
 %{bin_hadoop}/hadoop-0.20

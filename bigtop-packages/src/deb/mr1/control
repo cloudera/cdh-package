@@ -1,4 +1,4 @@
-Source: hadoop-0.20
+Source: hadoop-0.20-mapreduce
 Section: misc
 Priority: extra
 Maintainer: Todd Lipcon <todd@cloudera.com>
@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 6), ant, ant-optional, liblzo2-dev, python, libz-de
 Standards-Version: 3.8.0
 Homepage: http://hadoop.apache.org/core/
 
-Package: hadoop-0.20
+Package: hadoop-0.20-mapreduce
 Architecture: i386 amd64 
 Depends: ${shlibs:Depends}, ${misc:Depends}, hadoop, adduser
 Description: A software platform for processing vast amounts of data
@@ -30,21 +30,21 @@ Description: A software platform for processing vast amounts of data
  nodes around the cluster. MapReduce can then process the data where it is
  located.
 
-Package: hadoop-0.20-tasktracker
+Package: hadoop-0.20-mapreduce-tasktracker
 Architecture: all
-Depends: hadoop-0.20 (= ${source:Version})
-Replaces: hadoop-0.20 (<< 0.20.2+737-1)
-Breaks: hadoop-0.20 (<< 0.20.2+737-1)
+Depends: hadoop-0.20-mapreduce (= ${source:Version})
+Replaces: hadoop-0.20-mapreduce (<< 0.20.2+737-1)
+Breaks: hadoop-0.20-mapreduce (<< 0.20.2+737-1)
 Description: Task Tracker for Hadoop
  The Task Tracker is the Hadoop service that accepts MapReduce tasks and
  computes results. Each node in a Hadoop cluster that should be doing
  computation should run a Task Tracker.
 
-Package: hadoop-0.20-jobtracker
+Package: hadoop-0.20-mapreduce-jobtracker
 Architecture: all
-Depends: hadoop-0.20 (= ${source:Version})
-Replaces: hadoop-0.20 (<< 0.20.2+737-1)
-Breaks: hadoop-0.20 (<< 0.20.2+737-1)
+Depends: hadoop-0.20-mapreduce (= ${source:Version})
+Replaces: hadoop-0.20-mapreduce (<< 0.20.2+737-1)
+Breaks: hadoop-0.20-mapreduce (<< 0.20.2+737-1)
 Description: Job Tracker for Hadoop
  The jobtracker is a central service which is responsible for managing
  the tasktracker services running on all nodes in a Hadoop Cluster.

@@ -362,7 +362,7 @@ orig_init_file=$RPM_SOURCE_DIR/hadoop-init.tmpl
 yarn_orig_init_file=$RPM_SOURCE_DIR/yarn-init.tmpl
 
 # Generate the init.d scripts
-for service in %{hdfs_services} %{mapreduce_services}
+for service in %{hdfs_services}
 do
        init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
        %__cp $orig_init_file $init_file
@@ -372,12 +372,12 @@ do
        %__sed -i -e 's|@HADOOP_DAEMON_USER@|hdfs|' $init_file
        chmod 755 $init_file
 done
-for service in %{yarn_services}
+for service in %{yarn_services} %{mapreduce_services}
 do
        init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
        %__cp $yarn_orig_init_file $init_file
        %__sed -i -e 's|@YARN_COMMON_ROOT@|%{lib_hadoop}|' $init_file
-       %__sed -i -e "s|@YARN_DAEMON@|${service#yarn-}|" $init_file
+       %__sed -i -e "s|@YARN_DAEMON@|${service#*-}|" $init_file
        %__sed -i -e 's|@YARN_CONF_DIR@|%{config_hadoop}|' $init_file
        %__sed -i -e 's|@YARN_DAEMON_USER@|yarn|' $init_file
        chmod 755 $init_file

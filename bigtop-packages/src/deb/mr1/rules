@@ -45,15 +45,15 @@ install: build
 	bash debian/install_hadoop.sh \
 	  --cloudera-source-dir=cloudera/files \
 	  --build-dir=build/hadoop-${HADOOP_MR1_PATCHED_VERSION} \
-	  --src-dir=debian/tmp/usr/src/hadoop-0.20 \
-	  --lib-dir=debian/tmp/usr/lib/hadoop-0.20 \
+	  --src-dir=debian/tmp/usr/src/hadoop-0.20-mapreduce \
+	  --lib-dir=debian/tmp/usr/lib/hadoop-0.20-mapreduce \
 	  --etc-dir=debian/tmp/etc/hadoop \
 	  --prefix=debian/tmp \
 	  --apache-branch=0.20 \
-	  --doc-dir=debian/tmp/usr/share/doc/hadoop-0.20-doc \
-	  --example-dir=debian/tmp/usr/share/doc/hadoop-0.20/examples \
+	  --doc-dir=debian/tmp/usr/share/doc/hadoop-0.20-mapreduce-doc \
+	  --example-dir=debian/tmp/usr/share/doc/hadoop-0.20-mapreduce/examples \
 	  --native-build-string=${native_dir} \
-	  --installed-lib-dir=/usr/lib/hadoop-0.20
+	  --installed-lib-dir=/usr/lib/hadoop-0.20-mapreduce
 
 # Run dh_lintian if we've got it - this doesn't exist on debhelper 6 (eg Ubuntu Hardy)
 	(dh_lintian) || /bin/true
@@ -64,9 +64,9 @@ install-indep:
 
 install-arch:
 	mkdir -p debian/tmp/etc/default
-	cp debian/hadoop-0.20.default debian/tmp/etc/default/hadoop-0.20
+	cp debian/hadoop-0.20-mapreduce.default debian/tmp/etc/default/hadoop-0.20
 	dh_install --sourcedir=debian/tmp -s
-#	chmod 6754 debian/hadoop-0.20/usr/lib/hadoop-0.20/sbin/${native_dir}/task-controller
+#	chmod 6754 debian/hadoop-0.20-mapreduce/usr/lib/hadoop-0.20/sbin/${native_dir}/task-controller
 
 # Must not depend on anything. This is to be called by
 # binary-arch/binary-indep

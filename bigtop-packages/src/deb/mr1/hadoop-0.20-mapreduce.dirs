@@ -3,5 +3,5 @@
 /usr/bin
 /var/run/hadoop-0.20
 /var/lib/hadoop-0.20
-/var/lib/hadoop-0.20/cache/hadoop
+/var/lib/hadoop-0.20-mapreduce/cache/hadoop
 /usr/share/doc/hadoop-0.20

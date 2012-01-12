@@ -20,7 +20,7 @@ case "$1" in
             adduser \
                 --system \
                 --group \
-                --home /usr/lib/hadoop-0.20 \
+                --home /usr/lib/hadoop-0.20-mapreduce \
                 --gecos "Hadoop MapReduce" \
                 --shell /bin/bash \
                 mapred >/dev/null 2>/dev/null || :
