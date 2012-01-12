@@ -59,8 +59,8 @@ install: build
 	bash debian/install_hadoop.sh \
 	  --prefix=debian/tmp/ \
 	  --distro-dir=debian \
-          --source-dir=$$PWD/src \
-          --build-dir=$$PWD/build
+          --source-dir=${PWD}/src \
+          --build-dir=${PWD}/build \
           --hadoop-version=${HADOOP_PATCHED_VERSION} \
 	  --system-lib-dir=debian/tmp/usr/lib/ \
 	  --system-libexec-dir=debian/tmp/usr/lib/hadoop/libexec/ \
@@ -70,7 +70,7 @@ install: build
 	  --native-build-string=${native_dir} \
 	  --installed-lib-dir=/usr/lib/hadoop
 
-# Run dh_lintian if we've got it - this doesn't exist on debhelper 6 (eg Ubuntu Hardy)
+	# Run dh_lintian if we've got it - this doesn't exist on debhelper 6 (eg Ubuntu Hardy)
 	(dh_lintian) || /bin/true
 
 
