@@ -75,7 +75,7 @@
 # like thrift so disable this
 %define _use_internal_dependency_generator 0
 
-Name: %{hadoop_name}
+Name: %{hadoop_name}-mapreduce
 Version: %{package_version}
 Release: %{release_version}
 Summary: Hadoop is a software platform for processing vast amounts of data
@@ -254,7 +254,7 @@ fi
 %config(noreplace) /etc/default/%{hadoop_name}
 # %config(noreplace) /etc/security/limits.d/hadoop.nofiles.conf
 %{lib_hadoop}
-%{bin_hadoop}/%{name}
+%{bin_hadoop}/hadoop-0.20
 %{man_hadoop}/man1/%{hadoop_name}.1.gz
 %attr(0775,root,hadoop) /var/run/%{name}
 %attr(0775,root,hadoop) %{log_hadoop}

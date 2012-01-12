@@ -45,9 +45,9 @@ JAVA_OPTS="-Xmx2048m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx2048m -Xms25
 (cd build/hadoop-${FULL_VERSION} ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${FULL_VERSION}.tar.gz)
 # (cd build/hadoop-${FULL_VERSION}/src ; tar --strip-components=1 -xzvf  ../../../hadoop-dist/target/hadoop-${FULL_VERSION}-src.tar.gz)
 (cd build/hadoop-${FULL_VERSION} ; cp -r ../../cloudera .)
-(cd build && tar -czf hadoop-${FULL_VERSION}.tar.gz hadoop-${FULL_VERSION})
 
 # Copy generated docs
-mkdir -p build/share/doc/
-cp -r target/site/* build/share/doc/
+mkdir -p build/hadoop-${FULL_VERSION}/share/doc/
+cp -r target/site/* build/hadoop-${FULL_VERSION}/share/doc/
 
+(cd build && tar -czf hadoop-${FULL_VERSION}.tar.gz hadoop-${FULL_VERSION})

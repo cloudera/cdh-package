@@ -160,7 +160,7 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
 fi
 
 . /etc/default/hadoop
-. /etc/default/yarn
+[ -f /etc/default/${bin_wrapper/hadoop/yarn} ] && . /etc/default/${bin_wrapper/hadoop/yarn}
 
 exec $INSTALLED_HADOOP_DIR/bin/$bin_wrapper "\$@"
 EOF
@@ -262,9 +262,20 @@ for conf in conf.pseudo ; do
 done
 cp ${BUILD_DIR}/etc/hadoop/log4j.properties $HADOOP_ETC_DIR/conf.pseudo
 
-# Provide a convenience link for configuration
+# FIXME: Provide a convenience link for configuration (HADOOP-7939)
 install -d -m 0755 ${HADOOP_DIR}/etc
 ln -s ${HADOOP_ETC_DIR##${PREFIX}}/conf ${HADOOP_DIR}/etc/hadoop
+
+# FIXME: Provide convenience links for log/run in hdfs and mapreduce (HADOOP-7939)
+install -d -m 0755 $PREFIX/var/log/ $PREFIX/var/run/
+ln -s hadoop $PREFIX/var/log/hdfs
+ln -s hadoop $PREFIX/var/run/hdfs
+ln -s hadoop $PREFIX/var/log/mapreduce
+ln -s hadoop $PREFIX/var/run/mapreduce
+
+# FIXME: The following needs to be untangled upstream (HADOOP-7939)
+cp ${BUILD_DIR}/share/hadoop/mapreduce/hadoop-mapreduce-client-shuffle*.jar ${HADOOP_DIR}/lib/
+cp ${BUILD_DIR}/share/hadoop/mapreduce/hadoop-mapreduce-client-core*.jar ${HADOOP_DIR}/lib/
 
 # Remove all hadoop test jars
 rm -fv ${HADOOP_DIR}/*test*.jar
