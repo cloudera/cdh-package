@@ -200,8 +200,8 @@ cp ${CLOUDERA_SOURCE_DIR}/hadoop-$APACHE_BRANCH.1.gz $MAN_DIR/man1/
 
 if [ ! -z "$NATIVE_BUILD_STRING" ]; then
   # Native compression libs
-  #mkdir -p $LIB_DIR/lib/native/
-  #cp -r ${BUILD_DIR}/lib/native/${NATIVE_BUILD_STRING} $LIB_DIR/lib/native/
+  mkdir -p $LIB_DIR/lib/native/
+  ln -s /usr/lib/hadoop/lib/native $LIB_DIR/lib/native/${NATIVE_BUILD_STRING}
 
   # Pipes
   mkdir -p $PREFIX/$SYSTEM_LIB_DIR $PREFIX/usr/include
