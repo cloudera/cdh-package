@@ -13,10 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+require bigtop_util
+$puppet_confdir = get_setting("confdir")
+$default_yumrepo = "http://repos.jenkins.sf.cloudera.com/cdh4-nightly/redhat/5/x86_64/cdh/4/"
+$extlookup_datadir="$puppet_confdir/config"
+$extlookup_precedence = ["site", "default"]
+
 stage {"pre": before => Stage["main"]}
 
 yumrepo { "Bigtop":
-    baseurl => "http://repos.jenkins.sf.cloudera.com/cdh4-nightly/redhat/5/x86_64/cdh/4/",
+    baseurl => extlookup("bigtop_yumrepo_uri", $default_yumrepo),
     descr => "Bigtop packages",
     enabled => 1,
     gpgcheck => 0,
@@ -32,6 +38,11 @@ package { "jdk":
 import "cluster.pp"
 
 node default {
+  # Fails if hadoop_head_node is unset
+  if (!$::hadoop_head_node) {
+    $hadoop_head_node = extlookup("hadoop_head_node") 
+  }
+
   if ($hadoop_head_node == $fqdn) {
     include hadoop_gateway_node
   } else {
