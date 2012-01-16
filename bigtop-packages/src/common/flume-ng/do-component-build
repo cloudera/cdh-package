@@ -19,4 +19,4 @@ set -ex
 mvn clean install -DskipTests -Dhadoop.profile=23 "$@" 
 
 mkdir build
-cp flume-ng-dist/target/flume-ng-dist-1.1.0-incubating-SNAPSHOT-dist.tar.gz build/flume-${FULL_VERSION}.tar.gz
+cp flume-ng-dist/target/flume-ng-dist-1.0.0-incubating-dist.tar.gz build/flume-ng-${FULL_VERSION}.tar.gz
