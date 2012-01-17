@@ -23,7 +23,7 @@ export DH_VERBOSE=1
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
-build_version=${FLUME_VERSION}
+build_version=${FLUME_NG_PATCHED_VERSION}
 
 patch: patch-stamp
 patch-stamp:	
@@ -45,7 +45,7 @@ build-indep-stamp: patch-stamp
 	# I could not find a way to add debian/ to RAT exclude list through cmd line
 	# or to unbind rat:check goal
 	# So I am redirecting its attention with a decoy
-	env FLUME_VERSION=$(build_version) \
+	env FULL_VERSION=$(build_version) \
 		sh debian/do-component-build -Drat.basedir=${PWD}/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository
 	touch $@
 
