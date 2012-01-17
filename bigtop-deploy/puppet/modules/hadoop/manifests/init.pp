@@ -54,6 +54,11 @@ class hadoop {
         content => template('hadoop/yarn-site.xml'),
         require => [Package["hadoop"]],
     }
+
+    file { "/etc/hadoop/conf/container-executor.cfg":
+      content => template('hadoop/container-executor.cfg'), 
+      require => [Package["hadoop"]],
+    }
   }
 
   class common-hdfs inherits common {
