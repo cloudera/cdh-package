@@ -45,4 +45,13 @@ JAVA_OPTS="-Xmx2048m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx2048m -Xms25
 mkdir -p build/hadoop-${FULL_VERSION}/share/doc/
 cp -r target/site/* build/hadoop-${FULL_VERSION}/share/doc/
 
+# FIXME: this a workaround for HDFS-2303 (see BIGTOP-349 for details)
+rm -rf commons-daemon-1.0.8-src
+curl --retry 5 -s -L -k  http://mirrors.axint.net/apache/commons/daemon/source/commons-daemon-1.0.8-src.tar.gz | tar xzf -
+pushd commons-daemon-1.0.8-src/src/native/unix
+  ./configure --prefix=/usr
+  make
+  cp -f jsvc ../../../../build/libexec/jsvc || cp -f jsvc ../../../../build/hadoop*/libexec/jsvc
+popd
+
 (cd build && tar -czf hadoop-${FULL_VERSION}.tar.gz hadoop-${FULL_VERSION})
