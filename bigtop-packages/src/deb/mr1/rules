@@ -1,5 +1,6 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
+SHELL=/bin/bash
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
@@ -13,6 +14,9 @@ endif
 ifeq (${DEB_BUILD_ARCH},i386)
   native_dir=Linux-i386-32
 endif
+
+hadoop23_home=/usr/lib/hadoop
+jar_deps_hadoop=hadoop-annotations,hadoop-auth,hadoop-common,hadoop-hdfs,hadoop-common*-tests
 
 
 #Architecture
@@ -54,6 +58,9 @@ install: build
 	  --example-dir=debian/tmp/usr/share/doc/hadoop-0.20-mapreduce/examples \
 	  --native-build-string=${native_dir} \
 	  --installed-lib-dir=/usr/lib/hadoop-0.20-mapreduce
+	# We need to link to the jar files provided by Hadoop 0.23 implementation
+	rm -f debian/tmp/usr/lib/hadoop-0.20-mapreduce/lib/{${jar_deps_hadoop}}*.jar
+	ln -f -s ${hadoop23_home}/{${jar_deps_hadoop}}.jar debian/tmp/usr/lib/hadoop-0.20-mapreduce/lib/
 
 # Run dh_lintian if we've got it - this doesn't exist on debhelper 6 (eg Ubuntu Hardy)
 	(dh_lintian) || /bin/true

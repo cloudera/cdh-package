@@ -21,6 +21,8 @@
 %define package_version %{mr1_version}
 %define apache_branch 0.20
 %define hadoop_build_path build/hadoop-%{cloudera_version}
+%define hadoop23_home /usr/lib/hadoop
+%define jar_deps_hadoop hadoop-annotations,hadoop-auth,hadoop-common,hadoop-hdfs,hadoop-common*-tests
 
 %ifarch i386
 %global hadoop_arch Linux-i386-32
@@ -91,7 +93,7 @@ Source5: do-component-build
 Source6: install_hadoop.sh
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -n -u)
 BuildRequires: lzo-devel, python >= 2.4, git, automake, autoconf
-Requires: hadoop, sh-utils, textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
+Requires: hadoop, hadoop-hdfs, sh-utils, textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
 
 BuildArch: i386 amd64 x86_64
 
@@ -215,9 +217,6 @@ done
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
 %__cp $RPM_SOURCE_DIR/hadoop-0.20.default $RPM_BUILD_ROOT/etc/default/%{hadoop_name}-mapreduce
 
-#%__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
-#%__install -m 0644 $RPM_SOURCE_DIR/hadoop.nofiles.conf $RPM_BUILD_ROOT/etc/security/limits.d/hadoop.nofiles.conf
-
 # /var/lib/hadoop/cache
 %__install -d -m 1777 $RPM_BUILD_ROOT/var/lib/%{name}/cache
 # /var/log/hadoop
@@ -225,34 +224,27 @@ done
 %__install -d -m 0775 $RPM_BUILD_ROOT/var/run/%{name}
 %__install -d -m 0775 $RPM_BUILD_ROOT/%{log_hadoop}
 
+# We need to link to the jar files provided by Hadoop 0.23 implementation
+rm -f $RPM_BUILD_ROOT/%{lib_hadoop}/lib/{%{jar_deps_hadoop}}*.jar
+ln -f -s %{hadoop23_home}/{%{jar_deps_hadoop}}.jar $RPM_BUILD_ROOT/%{lib_hadoop}/lib/
+
 %pre
 getent group mapred >/dev/null || groupadd -r mapred
 getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapred -G hadoop --home %{lib_hadoop} mapred
-
-#%post
-# %{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.empty 10
-#%{alternatives_cmd} --install %{bin_hadoop}/%{hadoop_name} %{hadoop_name}-default %{bin_hadoop}/%{name} 20 \
-#  --slave %{log_hadoop_dirname}/%{hadoop_name} %{hadoop_name}-log %{log_hadoop} \
-#  --slave %{lib_hadoop_dirname}/%{hadoop_name} %{hadoop_name}-lib %{lib_hadoop} \
-#  --slave /etc/%{hadoop_name} %{hadoop_name}-etc %{etc_hadoop} \
-#  --slave %{man_hadoop}/man1/%{hadoop_name}.1.gz %{hadoop_name}-man %{man_hadoop}/man1/%{name}.1.gz
 
 %preun
 if [ "$1" = 0 ]; then
   # Stop any services that might be running
   for service in %{hadoop_services}
   do
-     service hadoop-$service stop 1>/dev/null 2>/dev/null || :
+     service %{name}-${service} stop 1>/dev/null 2>/dev/null || :
   done
-#  %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.empty || :
-#  %{alternatives_cmd} --remove %{hadoop_name}-default %{bin_hadoop}/%{name} || :
 fi
 
 %files
 %defattr(-,root,root)
-# %config(noreplace) %{etc_hadoop}/conf.empty
 %config(noreplace) /etc/default/%{hadoop_name}-mapreduce
-# %config(noreplace) /etc/security/limits.d/hadoop.nofiles.conf
+%attr(4754,root,mapred) %{lib_hadoop}/sbin/%{hadoop_arch}/task-controller
 %{lib_hadoop}
 %{bin_hadoop}/hadoop-0.20
 %{man_hadoop}/man1/%{hadoop_name}.1.gz
