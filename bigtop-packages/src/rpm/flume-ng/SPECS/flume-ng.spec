@@ -107,7 +107,7 @@ Flume is a reliable, scalable, and manageable distributed data collection applic
 %setup -n flume-%{flume_ng_base_version}-incubating
 
 %build
-env FLUME_VERSION=%{version} sh %{SOURCE1}
+env FULL_VERSION=%{flume_ng_patched_version} sh %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
