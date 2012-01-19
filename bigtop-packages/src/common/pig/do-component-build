@@ -25,7 +25,7 @@ fi
 
 # Build pig jars.
 ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Dreactor.repo=file://${HOME}/.m2/repository \
-    -Dhadoopversion=23 -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP -propertyfile cloudera/build.properties clean jar "$@"
+    -Dhadoopversion=23 -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP -propertyfile cloudera/build.properties clean jar jar-withouthadoop "$@"
 
 # Build zebra
 ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Dreactor.repo=file://${HOME}/.m2/repository \
