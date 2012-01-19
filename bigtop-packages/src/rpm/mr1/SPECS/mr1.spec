@@ -22,7 +22,7 @@
 %define apache_branch 0.20
 %define hadoop_build_path build/hadoop-%{cloudera_version}
 %define hadoop23_home /usr/lib/hadoop
-%define jar_deps_hadoop hadoop-annotations,hadoop-auth,hadoop-common,hadoop-hdfs,hadoop-common*-tests
+%define jar_deps_hadoop hadoop-annotations,hadoop-auth,hadoop-common,hadoop-hdfs
 
 %ifarch i386
 %global hadoop_arch Linux-i386-32

@@ -16,7 +16,7 @@ ifeq (${DEB_BUILD_ARCH},i386)
 endif
 
 hadoop23_home=/usr/lib/hadoop
-jar_deps_hadoop=hadoop-annotations,hadoop-auth,hadoop-common,hadoop-hdfs,hadoop-common*-tests
+jar_deps_hadoop=hadoop-annotations,hadoop-auth,hadoop-common,hadoop-hdfs
 
 
 #Architecture
