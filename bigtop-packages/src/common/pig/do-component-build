@@ -33,10 +33,9 @@ ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME
     -buildfile contrib/zebra/build.xml clean jar "$@"
 
 # Build piggybank
-# Commented out - piggybank can't compile against 0.23. See PIG-2410.
-#ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Dreactor.repo=file://${HOME}/.m2/repository \
-#    -Dhadoopversion=23 -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP -propertyfile cloudera/build.properties \
-#    -buildfile contrib/piggybank/java/build.xml clean jar "$@"
+ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Dreactor.repo=file://${HOME}/.m2/repository \
+    -Dhadoopversion=23 -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP -propertyfile cloudera/build.properties \
+    -buildfile contrib/piggybank/java/build.xml clean jar "$@"
 
 # Build pig tar and pigunit..
 ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Dreactor.repo=file://${HOME}/.m2/repository \
