@@ -77,11 +77,21 @@ hive_start() {
       exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE`\""
     fi
 
-    log_success_msg "Starting $desc (${NAME}): "
-    start_daemon -u $HIVE_USER -p $PID_FILE -n $NICENESS  /bin/sh -c "cd $HIVE_HOME ; $exec_env nohup \
-           $EXE_FILE --service $service_name $PORT \
-             > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PID_FILE"
+export PID_FILE
+export HIVE_USER
 
+USER="hive"
+
+    if [ -x /sbin/runuser ]; then
+      SU="runuser -s /bin/bash $USER"
+    else
+      SU="su -s /bin/sh $USER"
+    fi
+
+    log_success_msg "Starting $desc (${NAME}): "
+      $SU -c "cd $HIVE_HOME ; $exec_env nohup \
+               $EXE_FILE --service $service_name $PORT \
+             > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PID_FILE"
     RETVAL=$?
     [ $RETVAL -eq $RETVAL_SUCCESS ] && touch $LOCKFILE
     return $RETVAL
