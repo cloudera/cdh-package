@@ -77,9 +77,6 @@ hive_start() {
       exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE`\""
     fi
 
-export PID_FILE
-export HIVE_USER
-
 USER="hive"
 
     if [ -x /sbin/runuser ]; then
