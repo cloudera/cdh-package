@@ -17,7 +17,7 @@ endif
 
 hadoop23_home=/usr/lib/hadoop
 jar_deps_hadoop=hadoop-annotations,hadoop-auth,hadoop-common,hadoop-hdfs
-
+conf_pseudo=README,hadoop-metrics.properties,core-site.xml,hdfs-site.xml,mapred-site.xml,log4j.properties
 
 #Architecture
 build: build-stamp
@@ -61,6 +61,8 @@ install: build
 	# We need to link to the jar files provided by Hadoop 0.23 implementation
 	rm -f debian/tmp/usr/lib/hadoop-0.20-mapreduce/lib/{${jar_deps_hadoop}}*.jar
 	ln -f -s ${hadoop23_home}/{${jar_deps_hadoop}}.jar debian/tmp/usr/lib/hadoop-0.20-mapreduce/lib/
+	mkdir -p debian/tmp/etc/hadoop/conf.pseudo.mr1
+	cp -f debian/{$(conf_pseudo)} debian/tmp/etc/hadoop/conf.pseudo.mr1
 
 # Run dh_lintian if we've got it - this doesn't exist on debhelper 6 (eg Ubuntu Hardy)
 	(dh_lintian) || /bin/true

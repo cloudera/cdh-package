@@ -91,6 +91,12 @@ Source3: hadoop-init.tmpl.suse
 Source4: hadoop.nofiles.conf
 Source5: do-component-build
 Source6: install_hadoop.sh
+Source7: README
+Source8: hadoop-metrics.properties
+Source9: core-site.xml
+Source10: hdfs-site.xml
+Source11: mapred-site.xml
+Source12: log4j.properties
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -n -u)
 BuildRequires: lzo-devel, python >= 2.4, git, automake, autoconf
 Requires: hadoop, hadoop-hdfs, sh-utils, textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
@@ -152,6 +158,18 @@ BuildArch: noarch
 The tasktracker has a fixed number of work slots.  The jobtracker
 assigns MapReduce work to the tasktracker that is nearest the data
 with an available work slot.
+
+%package -n hadoop-0.20-conf-pseudo
+Summary: Hadoop installation in pseudo-distributed mode with MRv1
+Group: System/Daemons
+Requires: hadoop, hadoop-hdfs-namenode, hadoop-hdfs-datanode, hadoop-hdfs-secondarynamenode, %{name}-tasktracker = %{version}-%{release}, %{name}-jobtracker = %{version}-%{release}
+Conflicts: hadoop-conf-pseudo
+
+%description -n hadoop-0.20-conf-pseudo
+Installation of this RPM will setup your machine to run in pseudo-distributed mode
+where each Hadoop daemon runs in a separate Java process. You will be getting old
+style daemons (MRv1) for Hadoop jobtracker and Hadoop tasktracker instead of new
+YARN (MRv2) ones.
 
 %prep
 %setup -n hadoop-%{cloudera_version}
@@ -230,6 +248,12 @@ done
 rm -f $RPM_BUILD_ROOT/%{lib_hadoop}/lib/{%{jar_deps_hadoop}}*.jar
 ln -f -s %{hadoop23_home}/{%{jar_deps_hadoop}}.jar $RPM_BUILD_ROOT/%{lib_hadoop}/lib/
 
+# Install files for hadoop-0.20-conf-pseudo
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{etc_hadoop}/conf.pseudo.mr1
+%__cp %{SOURCE7} %{SOURCE8} %{SOURCE9} %{SOURCE10} %{SOURCE11} %{SOURCE12} $RPM_BUILD_ROOT/%{etc_hadoop}/conf.pseudo.mr1
+%__install -d -m 0755 $RPM_BUILD_ROOT/var/lib/hadoop/cache
+%__install -d -m 0755 $RPM_BUILD_ROOT/var/lib/hdfs/cache
+
 %pre
 getent group mapred >/dev/null || groupadd -r mapred
 getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapred -G hadoop --home %{lib_hadoop} mapred
@@ -242,6 +266,23 @@ if [ "$1" = 0 ]; then
      service %{name}-${service} stop 1>/dev/null 2>/dev/null || :
   done
 fi
+
+# Pseudo-distributed Hadoop installation
+%post -n hadoop-0.20-conf-pseudo
+%{alternatives_cmd} --install %{config_hadoop} hadoop-conf %{etc_hadoop}/conf.pseudo.mr1 30
+
+%preun -n hadoop-0.20-conf-pseudo
+if [ "$1" = 0 ]; then
+        %{alternatives_cmd} --remove hadoop-conf %{etc_hadoop}/conf.pseudo.mr1
+fi
+
+%files -n hadoop-0.20-conf-pseudo
+%defattr(-,root,root)
+%config(noreplace) %attr(755,root,root) %{etc_hadoop}/conf.pseudo.mr1
+%dir %attr(0755,root,hadoop) /var/lib/hadoop
+%dir %attr(1777,root,hadoop) /var/lib/hadoop/cache
+%dir %attr(0755,root,hdfs) /var/lib/hdfs
+%dir %attr(1777,root,hdfs) /var/lib/hdfs/cache
 
 %files
 %defattr(-,root,root)

@@ -1,0 +1,3 @@
+/etc/hadoop/conf.pseudo.mr1
+/var/lib/hadoop/cache
+/var/lib/hdfs/cache
