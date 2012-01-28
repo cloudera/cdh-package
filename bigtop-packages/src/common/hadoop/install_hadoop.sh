@@ -182,7 +182,7 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
 fi
 
 . /etc/default/hadoop
-. /etc/default/yarn
+[ -f /etc/default/yarn ] && . /etc/default/yarn
 
 exec \${HADOOP_HOME:-$INSTALLED_HADOOP_DIR}/bin/$bin_wrapper "\$@"
 EOF
