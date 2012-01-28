@@ -132,6 +132,7 @@ located.
 Summary: Hadoop Job Tracker
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
+Conflicts: hadoop-0.20-jobtracker
 BuildArch: noarch
 
 %description jobtracker
@@ -144,6 +145,7 @@ with an available work slot.
 Summary: Hadoop Task Tracker
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
+Conflicts: hadoop-0.20-tasktracker
 BuildArch: noarch
 
 %description tasktracker

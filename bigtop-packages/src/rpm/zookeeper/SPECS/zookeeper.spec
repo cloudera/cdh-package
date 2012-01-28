@@ -80,6 +80,7 @@ Requires(pre): coreutils, shadow-utils, /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): %{alternatives_dep}
 Requires(preun): %{alternatives_dep}
 Requires: bigtop-utils
+Conflicts: hadoop-zookeeper
 
 %description 
 ZooKeeper is a centralized service for maintaining configuration information, 
