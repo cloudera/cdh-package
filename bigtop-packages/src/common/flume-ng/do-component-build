@@ -16,7 +16,7 @@
 
 set -ex
 
-mvn clean install -DskipTests -Dhadoop.profile=23 -Dhadoop.version=0.23.0-cdh4b1-SNAPSHOT "$@" 
+mvn clean install -DskipTests -Dhadoop.profile=23 -Dhadoop.version=0.23.0-cdh4b1-SNAPSHOT ${DO_MAVEN_DEPLOY} "$@" 
 
 mkdir build
 cp flume-ng-dist/target/flume-ng-dist-${FULL_VERSION}-dist.tar.gz build/flume-ng-${FULL_VERSION}.tar.gz
