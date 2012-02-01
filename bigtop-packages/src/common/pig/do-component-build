@@ -42,6 +42,9 @@ ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME
     -Dhadoopversion=23 -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP -propertyfile cloudera/build.properties \
     tar pigunit-jar smoketests-jar "$@"
 
+# Clean up after piggybank.
+rm -rf contrib/piggybank/java/build
+
 # Change to cloudera/maven directory, and install
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository
 cd cloudera/maven-packaging
