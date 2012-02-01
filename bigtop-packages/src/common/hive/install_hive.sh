@@ -165,3 +165,7 @@ install -d -m 1777 $PREFIX/var/lib/hive/metastore/
 
 # We need to get rid of jars that happen to be shipped in other CDH packages
 rm -f ${LIB_DIR}/lib/hbase-*.jar ${LIB_DIR}/lib/zookeeper-*.jar
+
+# We need to remove the .war files. No longer supported.
+rm -f ${LIB_DIR}/lib/hive-hwi*.war
+
