@@ -31,15 +31,15 @@ fi
 
 # Build artifacts
 MAVEN_SKIP_TESTS="-DskipTests -DskipTest -DskipITs"
-JAVA_OPTS="-Xmx1024m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1024m -Xms256m -XX:MaxPermSize=256m" mvn $BUNDLE_SNAPPY -Dcontainer-executor.conf.dir=/etc/hadoop/conf -Pdist -Pnative -Psrc -Dtar ${MAVEN_SKIP_TESTS} install "$@" $DO_MAVEN_DEPLOY
-JAVA_OPTS="-Xmx1024m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1024m -Xms256m -XX:MaxPermSize=256m" mvn site site:stage ${MAVEN_SKIP_TESTS} $@
+JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn $BUNDLE_SNAPPY -Dcontainer-executor.conf.dir=/etc/hadoop/conf -Pdist -Pnative -Psrc -Dtar ${MAVEN_SKIP_TESTS} install "$@" $DO_MAVEN_DEPLOY
+JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn site site:stage ${MAVEN_SKIP_TESTS} $@
 
 # Copy generated docs
 mkdir -p build/hadoop-${FULL_VERSION}/share/doc/
 cp -r target/staging/hadoop-project/* build/hadoop-${FULL_VERSION}/share/doc/
 
 # Rebuild and now mvn deploy the tarball - note the '-pl hadoop-dist' - if we chdir into hadoop-dist and build, it fails.
-JAVA_OPTS="-Xmx1024m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1024m -Xms256m -XX:MaxPermSize=256m" mvn -pl hadoop-dist -Pdist -Psrc -Dtar ${MAVEN_SKIP_TESTS} -Dmaven.deploy.skip=false install "$@" $DO_MAVEN_DEPLOY
+JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -pl hadoop-dist -Pdist -Psrc -Dtar ${MAVEN_SKIP_TESTS} -Dmaven.deploy.skip=false install "$@" $DO_MAVEN_DEPLOY
 
 (cd build/hadoop-${FULL_VERSION} ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${FULL_VERSION}.tar.gz)
 # (cd build/hadoop-${FULL_VERSION}/src ; tar --strip-components=1 -xzvf  ../../../hadoop-dist/target/hadoop-${FULL_VERSION}-src.tar.gz)
