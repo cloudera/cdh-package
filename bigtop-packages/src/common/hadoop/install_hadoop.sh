@@ -42,10 +42,12 @@ OPTS=$(getopt \
   -l 'native-build-string:' \
   -l 'installed-lib-dir:' \
   -l 'hadoop-dir:' \
+  -l 'httpfs-dir:' \
   -l 'system-include-dir:' \
   -l 'system-lib-dir:' \
   -l 'system-libexec-dir:' \
   -l 'hadoop-etc-dir:' \
+  -l 'httpfs-etc-dir:' \
   -l 'doc-dir:' \
   -l 'man-dir:' \
   -l 'example-dir:' \
@@ -64,6 +66,9 @@ while true ; do
         ;;
         --distro-dir)
         DISTRO_DIR=$2 ; shift 2
+        ;;
+        --httpfs-dir)
+        HTTPFS_DIR=$2 ; shift 2
         ;;
         --hadoop-dir)
         HADOOP_DIR=$2 ; shift 2
@@ -95,6 +100,9 @@ while true ; do
         --hadoop-etc-dir)
         HADOOP_ETC_DIR=$2 ; shift 2
         ;;
+        --httpfs-etc-dir)
+        HTTPFS_ETC_DIR=$2 ; shift 2
+        ;;
         --installed-lib-dir)
         INSTALLED_LIB_DIR=$2 ; shift 2
         ;;
@@ -123,6 +131,7 @@ for var in PREFIX BUILD_DIR; do
 done
 
 HADOOP_DIR=${HADOOP_DIR:-$PREFIX/usr/lib/hadoop}
+HTTPFS_DIR=${HTTPFS_DIR:-$PREFIX/usr/lib/hadoop-httpfs}
 SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/hadoop}
@@ -131,6 +140,7 @@ SYSTEM_INCLUDE_DIR=${SYSTEM_INCLUDE_DIR:-$PREFIX/usr/include}
 SYSTEM_LIBEXEC_DIR=${SYSTEM_LIBEXEC_DIR:-$PREFIX/usr/libexec}
 EXAMPLE_DIR=${EXAMPLE_DIR:-$DOC_DIR/examples}
 HADOOP_ETC_DIR=${HADOOP_ETC_DIR:-$PREFIX/etc/hadoop}
+HTTPFS_ETC_DIR=${HTTPFS_ETC_DIR:-$PREFIX/etc/hadoop-httpfs}
 
 INSTALLED_HADOOP_DIR=${INSTALLED_HADOOP_DIR:-/usr/lib/hadoop}
 
@@ -252,6 +262,16 @@ cp -r ${BUILD_DIR}/share/doc/* ${DOC_DIR}/
 mkdir -p $MAN_DIR/man1
 gzip -c < $DISTRO_DIR/hadoop.1 > $MAN_DIR/man1/hadoop.1.gz
 chmod 644 $MAN_DIR/man1/hadoop.1.gz
+
+# HTTPFS
+install -d -m 0755 ${HTTPFS_DIR}/sbin
+mv ${HADOOP_SBIN_DIR}/httpfs.sh ${HTTPFS_DIR}/sbin/
+install -d -m 0755 ${HTTPFS_DIR}/libexec
+mv ${SYSTEM_LIBEXEC_DIR}/httpfs-config.sh ${HTTPFS_DIR}/libexec/
+cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/* ${HTTPFS_DIR}/
+chmod 644 ${HTTPFS_DIR}/conf/*
+install -d -m 0755 $HTTPFS_ETC_DIR/conf.empty
+mv $HADOOP_ETC_DIR/conf.empty/httpfs* $HTTPFS_ETC_DIR/conf.empty
 
 # Make the pseudo-distributed config
 for conf in conf.pseudo ; do

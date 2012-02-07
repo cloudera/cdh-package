@@ -42,7 +42,8 @@ class hadoop_cluster_node {
   # $hadoop_mapred_jobtracker_plugins="org.apache.hadoop.thriftfs.ThriftJobTrackerPlugin"
   # $hadoop_mapred_tasktracker_plugins="org.apache.hadoop.mapred.TaskTrackerCmonInst"
 
-  $hadoop_core_proxyusers = { oozie => { groups => 'root,hadoop,jenkins,oozie,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" } }
+  $hadoop_core_proxyusers = { oozie => { groups => 'root,hadoop,jenkins,oozie,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" },
+                             httpfs => { groups => 'root,hadoop,jenkins,oozie,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" } }
 
   $hbase_relative_rootdir        = extlookup("hadoop_hbase_rootdir", "/hbase")
   $hadoop_hbase_rootdir = "hdfs://$hadoop_namenode_host:$hadoop_namenode_port/$hbase_relative_rootdir"
@@ -66,8 +67,9 @@ class hadoop_cluster_node {
     $kerberos_kdc_server = extlookup("hadoop_kerberos_kdc_server")
 
     include kerberos::client
-    kerberos::client::host_keytab { ["hdfs", "yarn", "mapred", "hbase", "oozie"]:
+    kerberos::client::host_keytab { ["hdfs", "httpfs", "yarn", "mapred", "hbase", "oozie"]:
       princs_map => { hdfs   => [ "host", "hdfs" ],
+                      httpfs => [ "httpfs" ],
                       yarn   => [ "yarn"   ],
                       mapred => [ "mapred" ],
                       hbase  => [ "hbase"  ],
@@ -162,6 +164,12 @@ class hadoop_head_node inherits hadoop_cluster_node {
         namenode_port => $hadoop_namenode_port,
         auth => $hadoop_security_authentication,
         dirs => $mapred1_data_dirs,
+  }
+
+  hadoop::httpfs { "httpfs":
+        namenode_host => $hadoop_namenode_host,
+        namenode_port => $hadoop_namenode_port,
+        auth => $hadoop_security_authentication,
   }
 
   hadoop-hbase::master { "hbase master":
