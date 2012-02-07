@@ -18,6 +18,11 @@
 
 <configuration>
 
+<property>
+  <name>mapred.local.dir</name>
+  <value><%= mapred1_data_dirs.join(",") %></value>
+</property>
+
 <% if hadoop_security_authentication == "kerberos" %>
   <!-- HistoryServer security configs -->
   <property>
