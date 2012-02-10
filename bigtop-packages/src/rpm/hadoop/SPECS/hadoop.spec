@@ -547,6 +547,7 @@ fi
 %defattr(-,root,root)
 %{lib_hadoop}/hadoop-mapreduce*.jar
 %{lib_hadoop}/hadoop-streaming*.jar
+%{lib_hadoop}/hadoop-extras*.jar
 %{lib_hadoop}/libexec/mapred-config.sh
 %{lib_hadoop}/bin/mapred
 %{bin_hadoop}/mapred
