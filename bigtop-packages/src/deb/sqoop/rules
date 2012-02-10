@@ -47,6 +47,7 @@ install-indep:
 	sh -x debian/install_sqoop.sh \
 	  --build-dir=build/sqoop-${SQOOP_PATCHED_VERSION} \
 	  --doc-dir=usr/share/doc/sqoop \
+	  --conf-dir=/etc/sqoop/conf.dist \
 	  --prefix=debian/tmp
 	dh_install -i
 
