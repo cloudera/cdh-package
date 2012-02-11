@@ -19,7 +19,23 @@ class hadoop {
    * Common definitions for hadoop nodes.
    * They all need these files so we can access hdfs/jobs from any node
    */
+   
+  class kerberos {
+    require kerberos::client
+    
+    kerberos::host_keytab { "hdfs":
+      princs => [ "host", "hdfs" ],
+    }
+   
+    kerberos::host_keytab { [ "yarn", "mapred" ]:
+    }
+  }
+
   class common {
+    if ($auth == "kerberos") {
+      include hadoop::kerberos
+    }
+
     file {
       "/etc/hadoop/conf/hadoop-env.sh":
         content => template('hadoop/hadoop-env.sh'),
@@ -134,13 +150,14 @@ class hadoop {
       subscribe => [Package["hadoop-hdfs-datanode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [ Package["hadoop-hdfs-datanode"], File[$dirs] ],
     }
+    Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-hdfs-datanode"]
 
     file { $dirs:
       ensure => directory,
       owner => hdfs,
       group => hdfs,
       mode => 755,
-      require => [Package["hadoop-hdfs"]],
+      require => [ Package["hadoop-hdfs"] ],
     }
   }
 
@@ -177,11 +194,27 @@ class hadoop {
       subscribe => [Package["hadoop-httpfs"], File["/etc/hadoop-httpfs/conf/httpfs-site.xml"], File["/etc/hadoop-httpfs/conf/httpfs-env.sh"], File["/etc/hadoop-httpfs/conf/httpfs-signature.secret"]],
       require => [ Package["hadoop-httpfs"] ],
     }
+    Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-httpfs"]
   }
 
-  define create_hdfs_dirs($hdfs_dirs_meta) {
+  class kinit {
+    include hadoop::kerberos
+
+    exec { "HDFS kinit":
+      command => "/usr/bin/kinit -kt /etc/hdfs.keytab hdfs/$fqdn && /usr/bin/kinit -R",
+      user    => "hdfs",
+      require => Kerberos::Host_keytab["hdfs"],
+    }
+  }
+
+  define create_hdfs_dirs($hdfs_dirs_meta, $auth="simple") {
     $user = $hdfs_dirs_meta[$title][user]
     $perm = $hdfs_dirs_meta[$title][perm]
+
+    if ($auth == "kerberos") {
+      require hadoop::kinit
+      Exec["HDFS kinit"] -> Exec["HDFS init $title"]
+    }
 
     exec { "HDFS init $title":
       user => "hdfs",
@@ -211,6 +244,7 @@ class hadoop {
       subscribe => [Package["hadoop-hdfs-namenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [Package["hadoop-hdfs-namenode"], Exec["namenode format"]],
     } 
+    Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-hdfs-namenode"]
 
     exec { "namenode format":
       user => "hdfs",
@@ -246,6 +280,7 @@ class hadoop {
       subscribe => [Package["hadoop-hdfs-secondarynamenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [Package["hadoop-hdfs-secondarynamenode"]],
     }
+    Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-hdfs-secondarynamenode"]
   }
 
 
@@ -266,9 +301,11 @@ class hadoop {
     service { "hadoop-yarn-resourcemanager":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-yarn-resourcemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/hadoop/conf/yarn-site.xml"]],
-      require => [ Package["hadoop-yarn-resourcemanager"] ]
+      subscribe => [Package["hadoop-yarn-resourcemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], 
+                    File["/etc/hadoop/conf/yarn-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
+      require => [ Package["hadoop-yarn-resourcemanager"] ],
     }
+    Kerberos::Host_keytab <| title == "yarn" |> -> Service["hadoop-yarn-resourcemanager"]
   }
 
   define historyserver ($host = $fqdn, $port = "10020", $webapp_port = "19888", $auth = "simple") {
@@ -287,9 +324,11 @@ class hadoop {
     service { "hadoop-mapreduce-historyserver":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-mapreduce-historyserver"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/hadoop/conf/mapred-site.xml"]],
+      subscribe => [Package["hadoop-mapreduce-historyserver"], File["/etc/hadoop/conf/hadoop-env.sh"], 
+                    File["/etc/hadoop/conf/yarn-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
       require => [Package["hadoop-mapreduce-historyserver"]],
     }
+    Kerberos::Host_keytab <| title == "yarn" |> -> Service["hadoop-mapreduce-historyserver"]
   }
 
 
@@ -308,9 +347,11 @@ class hadoop {
     service { "hadoop-yarn-nodemanager":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-yarn-nodemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/hadoop/conf/yarn-site.xml"]],
+      subscribe => [Package["hadoop-yarn-nodemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], 
+                    File["/etc/hadoop/conf/yarn-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
       require => [ Package["hadoop-yarn-nodemanager"], File[$dirs] ],
     }
+    Kerberos::Host_keytab <| title == "yarn" |> -> Service["hadoop-yarn-nodemanager"]
 
     file { $dirs:
       ensure => directory,
@@ -367,6 +408,7 @@ class hadoop {
                     File["/etc/hadoop/conf/mapred-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [ Package["hadoop-0.20-mapreduce-jobtracker"], File[$dirs] ]
     } 
+    Kerberos::Host_keytab <| title == "mapred" |> -> Service["hadoop-0.20-mapreduce-jobtracker"]
     
     file { $dirs:
       ensure => directory,
@@ -400,6 +442,7 @@ class hadoop {
       require => [ Package["hadoop-0.20-mapreduce-tasktracker"], File["/etc/hadoop/conf/taskcontroller.cfg"],
                    File[$dirs] ],
     } 
+    Kerberos::Host_keytab <| title == "mapred" |> -> Service["hadoop-0.20-mapreduce-tasktracker"]
 
     file { $dirs:
       ensure => directory,
