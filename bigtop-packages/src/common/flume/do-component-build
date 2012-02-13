@@ -32,6 +32,7 @@ mvn clean \
 	source:jar \
 	install \
 	javadoc:javadoc \
+        -Phadoop-0.23 \
 	-Dbuild.revision=${FLUME_BUILD_REF} \
 	-Dthrift.executable=${THRIFT_HOME}/bin/thrift \
 	-DskipTests \
