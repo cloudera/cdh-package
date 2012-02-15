@@ -17,7 +17,7 @@
 set -ex
 
 mvn clean install source:jar javadoc:jar -Dmahout.skip.distribution=false \
-    -Dhadoop.version=0.23.0-cdh4a1-SNAPSHOT -Phadoop-0.23 -DskipTests \
+    -Dhadoop.profile=23 -DskipTests \
     $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
 
 mkdir -p build/mahout-${FULL_VERSION}
