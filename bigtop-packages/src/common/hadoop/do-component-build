@@ -46,9 +46,9 @@ JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms25
 (cd build/hadoop-${FULL_VERSION} ; cp -r ../../cloudera .)
 
 # FIXME: this a workaround for HDFS-2303 (see BIGTOP-349 for details)
-rm -rf commons-daemon-1.0.8-src
-curl --retry 5 -s -L -k  http://archive.cloudera.com/tarballs/commons-daemon-1.0.8-src.tar.gz | tar xzf -
-pushd commons-daemon-1.0.8-src/src/native/unix
+rm -rf commons-daemon-1.0.9-src
+curl --retry 5 -s -L -k  http://www.apache.org/dist/commons/daemon/source/commons-daemon-1.0.9-src.tar.gz | tar xzf -
+pushd commons-daemon-1.0.9-src/src/native/unix
   ./configure --prefix=/usr
   make
   cp -f jsvc ../../../../build/libexec/jsvc || cp -f jsvc ../../../../build/hadoop*/libexec/jsvc
