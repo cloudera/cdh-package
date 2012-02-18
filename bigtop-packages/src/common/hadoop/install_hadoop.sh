@@ -213,8 +213,6 @@ cp ${BUILD_DIR}/sbin/* ${HADOOP_SBIN_DIR}/
 
 # jars
 install -d -m 0755 ${HADOOP_LIB_DIR}
-# FIXME
-rm ${BUILD_DIR}/share/hadoop/common/lib/hadoop-mapreduce*.jar ${BUILD_DIR}/share/hadoop/common/lib/hadoop-yarn*.jar
 cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/*.jar ${HADOOP_LIB_DIR}/
 cp ${BUILD_DIR}/share/hadoop/common/lib/*.jar ${HADOOP_LIB_DIR}/
 cp ${BUILD_DIR}/share/hadoop/hdfs/lib/*.jar ${HADOOP_LIB_DIR}/
