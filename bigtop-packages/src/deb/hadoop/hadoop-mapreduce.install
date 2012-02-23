@@ -4,6 +4,7 @@
 /usr/lib/hadoop/hadoop-extras*.jar
 /usr/lib/hadoop/libexec/mapred-config.sh
 /usr/lib/hadoop/bin/mapred
+/usr/lib/hadoop/sbin/mr-jobhistory-daemon.sh
 /usr/bin/mapred
 # FIXME: HADOOP-7939
 /var/log/mapreduce
