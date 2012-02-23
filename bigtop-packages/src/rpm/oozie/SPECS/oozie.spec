@@ -163,6 +163,7 @@ fi
 %{lib_oozie}/bin/oozie-sys.sh
 %{lib_oozie}/bin/oozie-env.sh
 %{lib_oozie}/bin/oozied.sh
+%{lib_oozie}/bin/ooziedb.sh
 %{lib_oozie}/oozie.war
 %{lib_oozie}/oozie-sharelib.tar.gz
 %{lib_oozie}/oozie-server
