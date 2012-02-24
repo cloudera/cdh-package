@@ -537,7 +537,7 @@ fi
 %{lib_hadoop}/hadoop-streaming*.jar
 %{lib_hadoop}/hadoop-extras*.jar
 %{lib_hadoop}/hadoop-distcp*.jar
-%{lib_hadoop}/hadoop-rumen*.jar
+# %{lib_hadoop}/hadoop-rumen*.jar
 %{lib_hadoop}/libexec/mapred-config.sh
 %{lib_hadoop}/bin/mapred
 %{lib_hadoop}/sbin/mr-jobhistory-daemon.sh
