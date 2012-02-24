@@ -151,8 +151,6 @@ install -d -m 0755 ${OOZIE_MAN_DIR}
 failIfNotOK
 gzip -c ${EXTRADIR}/oozie.1 > ${OOZIE_MAN_DIR}/oozie.1.gz
 failIfNotOK
-cp -R ${EXTRADIR}/oozie-examples.sh ${OOZIE_CLIENT_DIR}/bin
-failIfNotOK
 
 # Create the /usr/bin/oozie wrapper
 install -d -m 0755 $BIN_DIR
@@ -202,8 +200,9 @@ failIfNotOK
 install -d -m 0755 ${OOZIE_DATA}
 failIfNotOK
 cp -R ${OOZIE_BUILD_DIR}/bin/*.sh ${OOZIE_SERVER_DIR}/bin
-
 failIfNotOK
+mv -f ${OOZIE_SERVER_DIR}/bin/oozie-examples.sh ${OOZIE_CLIENT_DIR}/bin
+
 install -d -m 0755 ${OOZIE_CONF}
 failIfNotOK
 cp -R ${OOZIE_BUILD_DIR}/conf/* ${OOZIE_CONF}
@@ -218,8 +217,6 @@ if [ "${OOZIE_INITD}" != "" ]; then
 fi
 cp -R ${OOZIE_BUILD_DIR}/oozie-sharelib*.tar.gz ${OOZIE_SERVER_DIR}/oozie-sharelib.tar.gz
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/oozie.war ${OOZIE_SERVER_DIR}
-failIfNotOK
 cp -R ${OOZIE_BUILD_DIR}/oozie-server ${OOZIE_SERVER_DIR}
 failIfNotOK
 install -d -m 0755 ${OOZIE_DATA}/oozie-server
@@ -233,3 +230,17 @@ failIfNotOK
 chmod 755 ${OOZIE_SERVER_DIR}/bin/oozie-env.sh
 failIfNotOK
 
+# Create an exploded-war oozie deployment
+sed -i -e 's#<Context#<Context allowLinking="true"#g' ${OOZIE_DATA}/oozie-server/conf/context.xml 
+ln -s /usr/lib/hadoop/lib ${OOZIE_DATA}/oozie-server/lib
+OOZIE_WEBAPP=${OOZIE_DATA}/oozie-server/webapps/oozie
+mkdir ${OOZIE_WEBAPP}
+unzip -d ${OOZIE_WEBAPP} ${OOZIE_BUILD_DIR}/oozie.war
+DEPS="hadoop-auth hadoop-common hadoop-hdfs hadoop-mapreduce-client-core \
+      hadoop-mapreduce-client-common hadoop-mapreduce-client-app         \
+      hadoop-mapreduce-client-jobclient hadoop-mapreduce-client-shuffle  \
+      hadoop-yarn-common hadoop-yarn-api hadoop-yarn-server-common"
+for i in $DEPS ; do
+  ln -s /usr/lib/hadoop/$i.jar ${OOZIE_WEBAPP}/WEB-INF/lib/$i.jar
+done
+touch ${OOZIE_WEBAPP}.war

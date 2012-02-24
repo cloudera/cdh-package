@@ -24,6 +24,22 @@
   %define initd_dir %{_sysconfdir}/rc.d/init.d
   %define alternatives_cmd alternatives
 %else
+
+# Only tested on openSUSE 11.4. le'ts update it for previous release when confirmed
+%if 0%{suse_version} > 1130
+%define suse_check \# Define an empty suse_check for compatibility with older sles
+%endif
+
+# SLES is more strict anc check all symlinks point to valid path
+# But we do point to a hadoop jar which is not there at build time
+# (but would be at install time).
+# Since our package build system does not handle dependencies,
+# these symlink checks are deactivated
+%define __os_install_post \
+    %{suse_check} ; \
+    /usr/lib/rpm/brp-compress ; \
+    %{nil}
+
   %define doc_oozie %{_docdir}/oozie
   %define initd_dir %{_sysconfdir}/rc.d
   %define alternatives_cmd update-alternatives
@@ -131,7 +147,7 @@ getent group oozie >/dev/null || /usr/sbin/groupadd -r oozie >/dev/null
 getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --shell /bin/false -M -r -g oozie --home /var/run/oozie oozie >/dev/null
 
 %post 
-%{lib_oozie}/bin/oozie-setup.sh -hadoop 0.20.200 /usr/lib/hadoop
+# %{lib_oozie}/bin/oozie-setup.sh -hadoop 0.20.200 /usr/lib/hadoop
 /sbin/chkconfig --add oozie 
 
 %preun
@@ -164,7 +180,7 @@ fi
 %{lib_oozie}/bin/oozie-env.sh
 %{lib_oozie}/bin/oozied.sh
 %{lib_oozie}/bin/ooziedb.sh
-%{lib_oozie}/oozie.war
+# %{lib_oozie}/oozie.war
 %{lib_oozie}/oozie-sharelib.tar.gz
 %{lib_oozie}/oozie-server
 %{initd_dir}/oozie
