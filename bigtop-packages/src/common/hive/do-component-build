@@ -19,6 +19,11 @@ set -ex
 IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
 
 ln -s src/build .
+
+if [ -f cloudera/build.properties ]; then
+    cp -r cloudera/* src/cloudera
+fi
+
 cd src
 
 ant -Dhadoop.security.version.prefix=0.23 \
