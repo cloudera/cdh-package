@@ -128,20 +128,10 @@ hadoop_stop_pidfile() {
 
 start() {
     $HADOOP_HOME/bin/hadoop-daemon.sh start @HADOOP_DAEMON@ $DAEMON_FLAGS
-
-    if [ "@HADOOP_DAEMON@" = "datanode" ]; then
-      # Some processes are slow to start
-      sleep $SLEEP_TIME
-    fi
-
 }
+
 stop() {
     $HADOOP_HOME/bin/hadoop-daemon.sh stop @HADOOP_DAEMON@
-
-    if [ "@HADOOP_DAEMON@" = "datanode" ]; then
-      # Some processes are slow to stop
-      sleep $SLEEP_TIME
-    fi
 }
 
 check_for_root() {
@@ -213,18 +203,8 @@ hadoop_service() {
             ;;
         *)
             N=/etc/init.d/$NAME
-            if [ "@HADOOP_DAEMON@" = "namenode" ]; then
-              if [ "$1" = "upgrade" -o "$1" = "rollback" ]; then
-                DAEMON_FLAGS=-$1 $0 start
-                exit $?
-              else
-                echo "Usage: $N {start|stop|restart|force-reload|status|force-stop|upgrade|rollback}" >&2
-                exit 1
-              fi
-            else
-              echo "Usage: $N {start|stop|restart|force-reload|status|force-stop}" >&2
-              exit 1
-            fi
+            echo "Usage: $N {start|stop|restart|force-reload|status|force-stop}" >&2
+            exit 1
             ;;
     esac
 }

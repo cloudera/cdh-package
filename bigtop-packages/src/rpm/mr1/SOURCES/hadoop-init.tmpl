@@ -32,7 +32,7 @@ STATUS_DEAD_AND_LOCK=2
 STATUS_NOT_RUNNING=3
 
 RETVAL=0
-HADOOP_PID_DIR=${HADOOP_PID_DIR:-/var/run/hadoop-0.20}
+HADOOP_PID_DIR=${HADOOP_PID_DIR:-/var/run/hadoop-0.20-mapreduce}
 PIDFILE="$HADOOP_PID_DIR/hadoop-$HADOOP_IDENT_STRING-@HADOOP_DAEMON@.pid"
 LOCKFILE="/var/lock/subsys/hadoop-@HADOOP_DAEMON@"
 desc="Hadoop @HADOOP_DAEMON@ daemon"
@@ -42,13 +42,6 @@ start() {
   echo -n $"Starting $desc (hadoop-@HADOOP_DAEMON@): "
   daemon @HADOOP_COMMON_ROOT@/bin/hadoop-daemon.sh --config "@HADOOP_CONF_DIR@" start @HADOOP_DAEMON@ $DAEMON_FLAGS
   RETVAL=$?
-
-  if [ "@HADOOP_DAEMON@" = "datanode" ]; then
-    # Some processes are slow to start
-    sleep $SLEEP_TIME
-    checkstatus
-    RETVAL=$?
-  fi
 
   [ $RETVAL -eq $RETVAL_SUCCESS ] && touch $LOCKFILE
   return $RETVAL
@@ -60,17 +53,6 @@ stop() {
   RETVAL=$?
 
   [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE
-
-  if [ "@HADOOP_DAEMON@" = "datanode" ]; then
-    # Some processes are slow to stop
-    sleep $SLEEP_TIME
-    checkstatus
-
-    # Stopping a non running process should be a success
-    if [ $RETVAL -eq $STATUS_NOT_RUNNING ]; then
-        RETVAL=0
-    fi
-  fi
 }
 
 restart() {
@@ -117,18 +99,8 @@ hadoopservice() {
       condrestart
       ;;
     *)
-      if [ "@HADOOP_DAEMON@" = "namenode" ]; then
-        if [ "$1" = "upgrade" -o "$1" = "rollback" ]; then
-          DAEMON_FLAGS=-$1 $0 start
-          RETVAL=$?
-        else
-          echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart|upgrade|rollback}"
-          exit 1
-        fi
-      else
-        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart}"
-        exit 1
-      fi
+      echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart}"
+      exit 1
   esac
 }
 
