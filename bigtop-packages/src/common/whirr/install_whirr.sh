@@ -99,9 +99,9 @@ INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/whirr}
 EXAMPLES_DIR=${EXAMPLES_DIR:-$DOC_DIR/examples}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 
-# First we'll move everything into lib
+# Move things into lib
 install -d -m 0755 $LIB_DIR
-(cd $BUILD_DIR && tar -cf - .) | (cd $LIB_DIR && tar -xf -)
+cp -fr $BUILD_DIR/{bin,conf,contrib,lib,recipes,scripts} $LIB_DIR
 
 # Copy in the /usr/bin/whirr wrapper
 install -d -m 0755 $BIN_DIR
@@ -124,5 +124,5 @@ gzip -c whirr.1 > $MAN_DIR/whirr.1.gz
 
 # Move the docs, but leave a symlink in place for compat. reasons
 install -d -m 0755 $DOC_DIR
-mv $LIB_DIR/docs/* $DOC_DIR
+cp -fr $BUILD_DIR/docs/* $DOC_DIR
 ln -s /${DOC_DIR/#$PREFIX/} $LIB_DIR/docs
