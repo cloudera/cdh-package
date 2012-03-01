@@ -1,0 +1,90 @@
+Source: hue
+Section: misc
+Priority: extra
+Maintainer: Cloudera, inc. <cdh-dev@cloudera.org>
+Build-Depends: debhelper (>= 7), ant, python2.4-dev | python2.5-dev | python2.6-dev, libxml2-dev, libxslt1-dev, zlib1g-dev, libsqlite3-dev, libldap2-dev, libsasl2-dev, libmysqlclient-dev, make, python-setuptools
+Depends: libsasl2, libsqlite3, zlib1g, libxslt1, libxml2
+Standards-Version: 3.8.0
+Homepage: http://github.com/cloudera/hue
+
+Package: hue-common
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${build:SYS-PYTHON}, libsasl2-modules-gssapi-mit, libxslt1.1, make
+Conflicts: cloudera-desktop
+Recommends: hadoop, hue-useradmin, hue-about, hue-help, hue-filebrowser, hue-jobbrowser, hue-jobsub, hue-beeswax, hue-proxy
+Description: A browser-based desktop interface for Hadoop
+ Hue is a browser-based desktop interface for interacting with Hadoop.
+ It supports a file browser, job tracker interface, cluster health monitor, and more.
+
+Package: hue-plugins
+Architecture: all
+Depends: hadoop, bigtop-utils
+Conflicts: cloudera-desktop-plugins
+Description: Plug-ins for Hadoop to enable integration with Hue
+ These plug-ins enable the Hadoop Daemons to communicate with Hue.
+ This package must be installed on every node in the Hadoop cluster.
+
+Package: hue
+Architecture: all
+Depends: hadoop, bigtop-utils, hue-plugins (= ${source:Version}), hue-common (= ${source:Version}), hue-user, hue-about (= ${source:Version}), hue-help (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-jobsub (= ${source:Version}), hue-beeswax (= ${source:Version}), hue-proxy (= ${source:Version}), hue-shell (= ${source:Version})
+Description: The hue metapackage
+ .
+
+Package: hue-about
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hadoop, bigtop-utils
+Description: Show version and configuration information about Hue
+ Displays the current version and configuration information about your Hue installation.
+
+Package: hue-beeswax
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-jobsub (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version}), hive
+Description: A UI for Hive on Hue
+ Beeswax is a web interface for Hive.
+ .
+ It allows users to construct and run queries on Hive, manage tables,
+ and import and export data.
+
+Package: hue-filebrowser
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hadoop, bigtop-utils, hue-help (= ${source:Version})
+Description: A UI for the Hadoop Distributed File System (HDFS)
+ Filebrowser is a graphical web interface that lets you browse and interact with the Hadoop Distributed File System (HDFS).
+ 
+Package: hue-help
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hadoop, bigtop-utils
+Description: Display help documentation for various Hue apps
+ Displays help documentation for various Hue apps.
+
+Package: hue-jobbrowser
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hadoop, bigtop-utils, hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version})
+Description: A UI for viewing Hadoop map-reduce jobs
+ Jobbrowser is a web interface for viewing Hadoop map-reduce jobs running on your cluster.
+
+Package: hue-jobsub
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hadoop, bigtop-utils, hue-jobbrowser (= ${source:Version}), hue-help (= ${source:Version})
+Description: A UI for designing and submitting map-reduce jobs to Hadoop
+ Jobsub is a web interface for designing and submitting map-reduce jobs to Hadoop.
+
+Package: hue-proxy
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hadoop, bigtop-utils
+Description: Reverse proxy for the Hue server
+ Proxies HTTP requests through the Hue server. This is intended to be used for "built-in" UIs.
+
+Package: hue-shell
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-help (= ${source:Version})
+Description: A shell for console based Hadoop applications
+ The Shell application lets the user connect to various backend shells (e.g. Pig, HBase, Flume).
+
+Package: hue-useradmin
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hadoop, bigtop-utils, hue-filebrowser (= ${source:Version}), hue-about (= ${source:Version}), hue-help (= ${source:Version})
+Description: Create/delete users, update user information
+ Create/delete Hue users, and update user information (name, email, superuser status, etc.)
+Provides: hue-user
+

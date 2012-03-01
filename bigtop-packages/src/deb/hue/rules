@@ -1,0 +1,138 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# Implicit targets
+SHELL := /bin/bash
+
+HUE_DIR ?= /usr/share/hue
+PKG_DESKTOP=$(CURDIR)/debian/hue-common
+PKG_PLUGINS=$(CURDIR)/debian/hue-plugins
+
+PKG_DESKTOP_DIR=$(PKG_DESKTOP)/usr/share/hue
+PKG_HADOOP_LIB_DIR=$(PKG_PLUGINS)/usr/lib/hadoop/lib
+
+PKG_ROOT=$(CURDIR)/debian
+
+export MAVEN_OPTIONS=-Dmaven.repo.local='${HOME}/.m2/repository'
+
+# We require sun java6 because it just works better
+export JAVA_HOME=/usr/lib/jvm/java-6-sun
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	touch configure-stamp
+
+
+build: build-stamp
+
+build-stamp: configure-stamp
+	dh_testdir
+	#make parent-pom desktop
+	#mvn -f desktop/libs/hadoop/java/pom.xml -DskipTests install
+	make apps
+	touch $@
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp debian/substvars
+
+	make clean
+
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+
+	mvn -f maven/pom.xml install $(MAVEN_OPTIONS)
+
+	PREFIX=$(PKG_DESKTOP)/usr/share/ \
+	  make install-core-structure install-desktop
+
+	sed -e 's,^,build:,;' ${PKG_DESKTOP_DIR}/Makefile.buildvars \
+	  | tr _ - >> debian/hue-common.substvars
+
+	@# Conf in etc
+	mkdir -p $(PKG_DESKTOP)/etc/
+	mv $(PKG_DESKTOP_DIR)/desktop/conf $(PKG_DESKTOP)/etc/hue
+	ln -s /etc/hue $(PKG_DESKTOP_DIR)/desktop/conf
+
+
+	@# Plugins
+	mkdir -p $(PKG_HADOOP_LIB_DIR)
+	cp $(PKG_DESKTOP_DIR)/desktop/libs/hadoop/java-lib/*plugin*jar \
+	   $(PKG_PLUGINS)/usr/lib/hadoop/lib/
+
+	@# Hue Apps
+	mkdir -p $(PKG_DESKTOP)/$(HUE_DIR)/apps
+
+	for app in about beeswax filebrowser help jobbrowser jobsub proxy shell useradmin; \
+	do \
+	  mkdir -p $(PKG_ROOT)/hue-$${app}/$(HUE_DIR)/apps/$${app}; \
+	  ROOT=$(PKG_DESKTOP_DIR) \
+	  INSTALL_DIR=$(PKG_ROOT)/hue-$${app}/$(HUE_DIR)/apps/$${app} \
+	  INSTALL_CONF_DIR=$(PKG_ROOT)/hue-$${app}/$(HUE_DIR)/desktop/conf \
+	    make -C apps/$${app} \
+	         install-bdist; \
+	done
+
+	# Beeswax specific
+	mkdir -p $(PKG_ROOT)/hue-beeswax/etc/hue
+	mv $(PKG_ROOT)/hue-beeswax/$(HUE_DIR)/apps/beeswax/conf/hue-beeswax.ini $(PKG_ROOT)/hue-beeswax/etc/hue
+	rmdir $(PKG_ROOT)/hue-beeswax/$(HUE_DIR)/apps/beeswax/conf
+
+	# Hue Shell specific
+	mkdir -p $(PKG_ROOT)/hue-shell/etc/hue
+	mv $(PKG_ROOT)/hue-shell/$(HUE_DIR)/apps/shell/conf/hue-shell.ini $(PKG_ROOT)/hue-shell/etc/hue
+	rmdir $(PKG_ROOT)/hue-shell/$(HUE_DIR)/apps/shell/conf
+	mkdir -p $(PKG_ROOT)/hue-shell/$(HUE_DIR)/apps/shell/src/shell/build/
+	cp -f apps/shell/src/shell/build/setuid $(PKG_ROOT)/hue-shell/$(HUE_DIR)/apps/shell/src/shell/build/
+
+	# Remove Hue database
+	rm -f $(PKG_DESKTOP)/$(HUE_DIR)/desktop/desktop.db
+
+
+# Build architecture-independent files here.
+binary-indep: install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_installdocs
+	dh_installexamples
+#	dh_install
+#	dh_installmenu
+#	dh_installdebconf
+#	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+#	dh_python
+	dh_installinit --no-start --name=hue
+#	dh_installcron
+#	dh_installinfo
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+#	dh_perl
+#	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure

@@ -1,0 +1,18 @@
+#!/bin/bash
+# Copyright (c) 2011 Cloudera, inc
+#
+# Performs a release build
+
+set -ex
+
+pushd maven
+  mvn -N install
+popd
+
+MAVEN_OPTIONS=$DO_MAVEN_DEPLOY make prod
+pushd build/release/prod/
+  mv hue-2.0.0 hue-${FULL_VERSION}
+  tar -czf hue-${FULL_VERSION}.tar.gz hue-${FULL_VERSION}
+popd
+
+cp build/release/prod/hue-${FULL_VERSION}.tar.gz build/
