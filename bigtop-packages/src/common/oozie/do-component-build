@@ -117,10 +117,6 @@ fi
 cd ${EXPDIR}
 rm -rf ${EXPDIR}/oozie-client-*.tar.gz
 
-# creating the examples installer script for TAR distros, if doing DEB/RPM the script
-# is overriden in the create-package-layout directory
-cp ${RELEASE_DIR}/cloudera/oozie-examples.sh ${EXPDIR}/bin/
-
 SRCDIR=${EXPDIR}/src
 mkdir -p ${SRCDIR}
 for srcfile in ${WORKDIR}/*

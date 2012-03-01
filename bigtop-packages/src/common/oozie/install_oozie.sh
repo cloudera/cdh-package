@@ -137,8 +137,6 @@ cp -R ${OOZIE_BUILD_DIR}/LICENSE.txt ${DOC_DIR}
 failIfNotOK
 cp -R ${OOZIE_BUILD_DIR}/NOTICE.txt ${DOC_DIR}
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/oozie-examples.tar.gz ${DOC_DIR}
-failIfNotOK
 cp -R ${OOZIE_BUILD_DIR}/readme.txt ${DOC_DIR}
 failIfNotOK
 cp -R ${OOZIE_BUILD_DIR}/release-log.txt ${DOC_DIR}
@@ -201,7 +199,6 @@ install -d -m 0755 ${OOZIE_DATA}
 failIfNotOK
 cp -R ${OOZIE_BUILD_DIR}/bin/*.sh ${OOZIE_SERVER_DIR}/bin
 failIfNotOK
-mv -f ${OOZIE_SERVER_DIR}/bin/oozie-examples.sh ${OOZIE_CLIENT_DIR}/bin
 
 install -d -m 0755 ${OOZIE_CONF}
 failIfNotOK

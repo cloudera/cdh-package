@@ -57,9 +57,8 @@ Source0: %{name}-%{oozie_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_oozie.sh
 Source3: oozie.1
-Source4: oozie-examples.sh
+Source4: oozie-env.sh
 Source5: oozie.init
-Source6: oozie-env.sh
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig, hadoop
 Requires(preun): /sbin/chkconfig, /sbin/service
@@ -195,7 +194,6 @@ fi
 %{usr_bin}/oozie
 %dir %{lib_oozie}/bin
 %{lib_oozie}/bin/oozie
-%{lib_oozie}/bin/oozie-examples.sh
 %{lib_oozie}/lib
 %doc %{doc_oozie}
 %{man_dir}/man1/oozie.1.*
