@@ -60,9 +60,9 @@ Source3: oozie.1
 Source4: oozie-env.sh
 Source5: oozie.init
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
-Requires(post): /sbin/chkconfig, hadoop
+Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
-Requires: zip, unzip, oozie-client = %{version}
+Requires: oozie-client = %{version}, hadoop, bigtop-tomcat
 BuildArch: noarch
 
 %description 
@@ -135,6 +135,8 @@ Requires: bigtop-utils
 %install
 %__rm -rf $RPM_BUILD_ROOT
     sh %{SOURCE2} --extra-dir=$RPM_SOURCE_DIR --build-dir=src --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{doc_oozie} --initd-dir=$RPM_BUILD_ROOT%{initd_dir} --conf-dir=$RPM_BUILD_ROOT%{conf_oozie_dist}
+
+%__ln_s -f /usr/lib/bigtop-tomcat $RPM_BUILD_ROOT/usr/lib/oozie/oozie-server
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
