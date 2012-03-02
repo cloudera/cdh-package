@@ -146,7 +146,6 @@ getent group oozie >/dev/null || /usr/sbin/groupadd -r oozie >/dev/null
 getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --shell /bin/false -M -r -g oozie --home /var/run/oozie oozie >/dev/null
 
 %post 
-# %{lib_oozie}/bin/oozie-setup.sh -hadoop 0.20.200 /usr/lib/hadoop
 /sbin/chkconfig --add oozie 
 
 %preun
@@ -179,7 +178,8 @@ fi
 %{lib_oozie}/bin/oozie-env.sh
 %{lib_oozie}/bin/oozied.sh
 %{lib_oozie}/bin/ooziedb.sh
-# %{lib_oozie}/oozie.war
+%{lib_oozie}/webapps
+%{lib_oozie}/libtools
 %{lib_oozie}/oozie-sharelib.tar.gz
 %{lib_oozie}/oozie-server
 %{initd_dir}/oozie
