@@ -33,6 +33,7 @@ Requires: %{name}-user
 %description -n hue
 Will install the entire set of hue and its plugins/applications
 
+%files -n hue
 
 %description
 The hue metapackage, including hue-common and all hue applications.
