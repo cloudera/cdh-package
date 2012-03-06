@@ -27,6 +27,7 @@ Requires: %{name}-jobbrowser = %{version}-%{release}
 Requires: %{name}-beeswax = %{version}-%{release}
 Requires: %{name}-proxy = %{version}-%{release}
 Requires: %{name}-shell = %{version}-%{release}
+Requires: %{name}-server = %{version}-%{release}
 # hue-user is a virtual package
 Requires: %{name}-user
 
@@ -279,11 +280,6 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
 getent group %{username} 2>/dev/null >/dev/null || /usr/sbin/groupadd -r %{username}
 getent passwd %{username} 2>&1 > /dev/null || /usr/sbin/useradd -c "Hue" -s /sbin/nologin -g %{username} -r -d %{hue_dir} %{username} 2> /dev/null || :
 
-# Stop any running Hue
-if [ "$1" != 1 ]; then \
-  echo "Stopping any running Hue..."
-  /sbin/service hue stop || :
-fi
 
 # If there is an old DB in place, make a backup.
 if [ -e %{hue_dir}/desktop/desktop.db ]; then
@@ -326,17 +322,6 @@ $DO "DESKTOP_LOG_DIR=$DESKTOP_LOG_DIR DESKTOP_LOGLEVEL=WARN build/env/bin/hue sy
 # Delete all pyc files since they contain the wrong path ()
 find %{hue_dir} -iname \*.py[co]  -exec rm -f {} \;
 
-# Install and start init scripts
-chkconfig --add hue
-
-########################################
-# Pre-uninstall
-########################################
-%preun -n %{name}-common -p /bin/bash
-/sbin/service hue stop > /dev/null ; \
-if [ "$1" = 0 ]; then \
-  chkconfig --del hue ; \
-fi
 
 ########################################
 # Post-uninstall
@@ -409,6 +394,39 @@ fi
 # No-arch packages - plugins and conf
 ############################################################
 
+#### Service Scripts ######
+%package -n %{name}-server
+Summary: Service Scripts for Hue
+Requires: %{name}-common = %{version}-%{release}
+Requires: /sbin/chkconfig
+Requires(pre): %{name} = %{version}-%{release}
+Group: Applications/Engineering
+
+%description -n %{name}-server
+
+This package provides the service scripts for Hue server.
+
+%files -n %{name}-server
+%attr(0755,root,root) %{initd_dir}/hue
+
+# Install and start init scripts
+
+%post -n %{name}  
+/sbin/chkconfig --add hue
+
+########################################
+# Pre-uninstall
+########################################
+
+%preun  -n %{name}-server 
+if [ $1 = 0 ] ; then 
+        service %{name} stop > /dev/null 2>&1 
+        chkconfig --del %{name} 
+fi 
+%postun  -n %{name}-server
+if [ $1 -ge 1 ]; then 
+        service %{name} condrestart >/dev/null 2>&1 
+fi
 
 #### PLUGINS ######
 %package -n %{name}-plugins

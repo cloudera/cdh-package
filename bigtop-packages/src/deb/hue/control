@@ -36,6 +36,12 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), mak
 Description: Show version and configuration information about Hue
  Displays the current version and configuration information about your Hue installation.
 
+Package: hue-server
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, hue-common (= ${source:Version})
+Description: The server scripts for Hue.
+ This only has the initscript.
+
 Package: hue-beeswax
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-jobsub (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version}), hive
