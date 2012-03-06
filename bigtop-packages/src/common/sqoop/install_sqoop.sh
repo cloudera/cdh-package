@@ -157,3 +157,7 @@ install -d -m 0755 $PREFIX/$CONF_DIR
 
 unlink $PREFIX/$LIB_DIR/conf || /bin/true
 ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
+
+# Cloudera specific
+install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/

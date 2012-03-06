@@ -315,3 +315,7 @@ for j in hadoop-*.jar; do
   fi
 done)
 
+
+# Cloudera specific
+install -d -m 0755 $HADOOP_DIR/cloudera
+cp cloudera/cdh_version.properties $HADOOP_DIR/cloudera/

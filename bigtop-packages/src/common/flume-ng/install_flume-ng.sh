@@ -144,3 +144,6 @@ ln -s /etc/flume-ng/conf $PREFIX/$FLUME_DIR/conf
 install -d -m 0755 $PREFIX/${DOC_DIR}
 cp -r CHANGELOG DEVNOTES DISCLAIMER LICENSE NOTICE README RELEASE-NOTES $PREFIX/${DOC_DIR}
 
+# Cloudera specific
+install -d -m 0755 $PREFIX/$FLUME_DIR/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$FLUME_DIR/cloudera/

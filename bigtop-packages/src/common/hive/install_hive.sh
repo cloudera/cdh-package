@@ -169,3 +169,6 @@ rm -f ${LIB_DIR}/lib/hbase-*.jar ${LIB_DIR}/lib/zookeeper-*.jar
 # We need to remove the .war files. No longer supported.
 rm -f ${LIB_DIR}/lib/hive-hwi*.war
 
+# Cloudera specific
+install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/

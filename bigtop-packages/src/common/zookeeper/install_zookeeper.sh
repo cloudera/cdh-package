@@ -181,3 +181,7 @@ gzip -c zookeeper.1 > $MAN_DIR/zookeeper.1.gz
 # Zookeeper log and tx log directory
 install -d -m 1766 $PREFIX/var/log/zookeeper
 install -d -m 1766 $PREFIX/var/log/zookeeper/txlog
+
+# Cloudera specific
+install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/

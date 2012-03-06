@@ -240,6 +240,11 @@ do
   sed -i -e "s|${RPM_BUILD_ROOT}||" ${file}
 done
 
+
+# Cloudera specific
+install -d -m 0755 $RPM_BUILD_ROOT/%{hue_dir}/cloudera
+cp cloudera/cdh_version.properties $RPM_BUILD_ROOT/%{hue_dir}/cloudera/
+
 #### PLUGINS ######
 
 %package -n %{name}-common

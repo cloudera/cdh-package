@@ -98,6 +98,9 @@ install: build
 	# Remove Hue database
 	rm -f $(PKG_DESKTOP)/$(HUE_DIR)/desktop/desktop.db
 
+	# Cloudera specific
+	install -d -m 0755 $(PKG_DESKTOP_DIR)/cloudera
+	cp cloudera/cdh_version.properties $(PKG_DESKTOP_DIR)/cloudera/
 
 # Build architecture-independent files here.
 binary-indep: install

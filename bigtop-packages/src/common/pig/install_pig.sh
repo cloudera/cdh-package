@@ -155,3 +155,7 @@ rm -f $LIB_DIR/lib/hadoop*jar
 
 # Pig log directory
 install -d -m 1777 $PREFIX/var/log/pig
+
+# Cloudera specific
+install -d -m 0755 $LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $LIB_DIR/cloudera/

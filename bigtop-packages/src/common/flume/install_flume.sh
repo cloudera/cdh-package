@@ -147,3 +147,6 @@ cp -r docs/* $PREFIX/${DOC_DIR}
 # man pages
 install -d -m 0755 $PREFIX/$MAN_DIR
 
+# Cloudera specific
+install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/

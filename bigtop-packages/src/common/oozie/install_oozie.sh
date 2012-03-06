@@ -246,3 +246,7 @@ ln -s /var/lib/oozie/oozie-libs ${OOZIE_WEBAPP}/WEB-INF/lib
 for i in `cd ${OOZIE_SERVER_DIR} ; echo lib/* libtools/*` ; do
    ln -fs /usr/lib/oozie/$i ${OOZIE_DATA}/oozie-libs/${i#*/}
 done
+
+# Cloudera specific
+install -d -m 0755 $OOZIE_CLIENT_DIR/cloudera
+cp $OOZIE_BUILD_DIR/cloudera/cdh_version.properties $OOZIE_CLIENT_DIR/

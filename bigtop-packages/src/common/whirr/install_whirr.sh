@@ -126,3 +126,7 @@ gzip -c whirr.1 > $MAN_DIR/whirr.1.gz
 install -d -m 0755 $DOC_DIR
 cp -fr $BUILD_DIR/docs/* $DOC_DIR
 ln -s /${DOC_DIR/#$PREFIX/} $LIB_DIR/docs
+
+# Cloudera specific
+install -d -m 0755 $LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $LIB_DIR/cloudera/

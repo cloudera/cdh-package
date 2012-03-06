@@ -210,3 +210,7 @@ if [ ! -z "$NATIVE_BUILD_STRING" ]; then
       $PREFIX/$SYSTEM_LIB_DIR
   cp -r ${BUILD_DIR}/c++/${NATIVE_BUILD_STRING}/include/hadoop $PREFIX/usr/include/
 fi
+
+# Cloudera specific
+install -d -m 0755 $LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $LIB_DIR/

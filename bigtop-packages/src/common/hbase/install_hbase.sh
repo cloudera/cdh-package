@@ -145,3 +145,8 @@ EOF
 chmod 755 $wrapper
 
 install -d -m 0755 $PREFIX/usr/bin
+
+
+# Cloudera specific
+install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
