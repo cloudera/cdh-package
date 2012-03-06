@@ -137,6 +137,8 @@ cp -R ${OOZIE_BUILD_DIR}/LICENSE.txt ${DOC_DIR}
 failIfNotOK
 cp -R ${OOZIE_BUILD_DIR}/NOTICE.txt ${DOC_DIR}
 failIfNotOK
+cp -R ${OOZIE_BUILD_DIR}/oozie-examples.tar.gz ${DOC_DIR}
+failIfNotOK
 cp -R ${OOZIE_BUILD_DIR}/readme.txt ${DOC_DIR}
 failIfNotOK
 cp -R ${OOZIE_BUILD_DIR}/release-log.txt ${DOC_DIR}
