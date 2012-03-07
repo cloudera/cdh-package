@@ -171,4 +171,4 @@ rm -f ${LIB_DIR}/lib/hive-hwi*.war
 
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
-cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
+cp src/cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
