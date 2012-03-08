@@ -157,7 +157,7 @@ HADOOP_HOME=%{build_hadoop_home} \
   PREFIX=$RPM_BUILD_ROOT/usr/share/ \
   make install
 
-$RPM_BUILD_ROOT/usr/share/hue/tools/relocatable.sh
+bash -x $RPM_BUILD_ROOT/usr/share/hue/tools/relocatable.sh
 
 %if  %{?suse_version:1}0
 orig_init_file=$RPM_SOURCE_DIR/%{name}.init.suse
