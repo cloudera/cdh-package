@@ -197,5 +197,6 @@ fi
 %dir %{lib_oozie}/bin
 %{lib_oozie}/bin/oozie
 %{lib_oozie}/lib
+%{lib_oozie}/cloudera/
 %doc %{doc_oozie}
 %{man_dir}/man1/oozie.1.*

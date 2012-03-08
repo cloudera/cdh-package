@@ -249,4 +249,4 @@ done
 
 # Cloudera specific
 install -d -m 0755 $OOZIE_CLIENT_DIR/cloudera
-cp $OOZIE_BUILD_DIR/cloudera/cdh_version.properties $OOZIE_CLIENT_DIR/
+cp $OOZIE_BUILD_DIR/cloudera/cdh_version.properties $OOZIE_CLIENT_DIR/cloudera/
