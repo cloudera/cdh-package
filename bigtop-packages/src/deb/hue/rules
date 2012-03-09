@@ -8,15 +8,14 @@
 SHELL := /bin/bash
 
 HUE_DIR ?= /usr/share/hue
-PKG_DESKTOP=$(CURDIR)/debian/hue-common
-PKG_PLUGINS=$(CURDIR)/debian/hue-plugins
+PKG_DESKTOP=$(CURDIR)/debian/tmp
 
 PKG_DESKTOP_DIR=$(PKG_DESKTOP)/usr/share/hue
-PKG_HADOOP_LIB_DIR=$(PKG_PLUGINS)/usr/lib/hadoop/lib
+PKG_HADOOP_LIB_DIR=$(PKG_DESKTOP)/usr/lib/hadoop/lib
 
 PKG_ROOT=$(CURDIR)/debian
 
-export MAVEN_OPTIONS=-Dmaven.repo.local='${HOME}/.m2/repository'
+export MAVEN_OPTIONS=-Dmaven.repo.local=${HOME}/.m2/repository
 
 # We require sun java6 because it just works better
 export JAVA_HOME=/usr/lib/jvm/java-6-sun
@@ -54,7 +53,7 @@ install: build
 	mvn -f maven/pom.xml install $(MAVEN_OPTIONS)
 
 	PREFIX=$(PKG_DESKTOP)/usr/share/ \
-	  make install-core-structure install-desktop
+	  make install
 
 	bash -x $(PKG_DESKTOP)/usr/share/hue/tools/relocatable.sh
 
@@ -64,38 +63,25 @@ install: build
 	@# Conf in etc
 	mkdir -p $(PKG_DESKTOP)/etc/
 	mv $(PKG_DESKTOP_DIR)/desktop/conf $(PKG_DESKTOP)/etc/hue
-	ln -s /etc/hue $(PKG_DESKTOP_DIR)/desktop/conf
+	(cd $(PKG_DESKTOP_DIR)/desktop; ln -s ../../../../etc/hue conf)
 
 
 	@# Plugins
 	mkdir -p $(PKG_HADOOP_LIB_DIR)
 	cp $(PKG_DESKTOP_DIR)/desktop/libs/hadoop/java-lib/*plugin*jar \
-	   $(PKG_PLUGINS)/usr/lib/hadoop/lib/
-
-	@# Hue Apps
-	mkdir -p $(PKG_DESKTOP)/$(HUE_DIR)/apps
-
-	for app in about beeswax filebrowser help jobbrowser jobsub proxy shell useradmin; \
-	do \
-	  mkdir -p $(PKG_ROOT)/hue-$${app}/$(HUE_DIR)/apps/$${app}; \
-	  ROOT=$(PKG_DESKTOP_DIR) \
-	  INSTALL_DIR=$(PKG_ROOT)/hue-$${app}/$(HUE_DIR)/apps/$${app} \
-	  INSTALL_CONF_DIR=$(PKG_ROOT)/hue-$${app}/$(HUE_DIR)/desktop/conf \
-	    make -C apps/$${app} \
-	         install-bdist; \
-	done
+	   $(PKG_HADOOP_LIB_DIR)
 
 	# Beeswax specific
-	mkdir -p $(PKG_ROOT)/hue-beeswax/etc/hue
-	mv $(PKG_ROOT)/hue-beeswax/$(HUE_DIR)/apps/beeswax/conf/hue-beeswax.ini $(PKG_ROOT)/hue-beeswax/etc/hue
-	rmdir $(PKG_ROOT)/hue-beeswax/$(HUE_DIR)/apps/beeswax/conf
+	mkdir -p $(PKG_DESKTOP)/etc/hue
+	mv $(PKG_DESKTOP)/$(HUE_DIR)/apps/beeswax/conf/hue-beeswax.ini $(PKG_DESKTOP)/etc/hue
+	rmdir $(PKG_DESKTOP)/$(HUE_DIR)/apps/beeswax/conf
 
 	# Hue Shell specific
-	mkdir -p $(PKG_ROOT)/hue-shell/etc/hue
-	mv $(PKG_ROOT)/hue-shell/$(HUE_DIR)/apps/shell/conf/hue-shell.ini $(PKG_ROOT)/hue-shell/etc/hue
-	rmdir $(PKG_ROOT)/hue-shell/$(HUE_DIR)/apps/shell/conf
-	mkdir -p $(PKG_ROOT)/hue-shell/$(HUE_DIR)/apps/shell/src/shell/build/
-	cp -f apps/shell/src/shell/build/setuid $(PKG_ROOT)/hue-shell/$(HUE_DIR)/apps/shell/src/shell/build/
+	mkdir -p $(PKG_DESKTOP)/etc/hue
+	mv $(PKG_DESKTOP)/$(HUE_DIR)/apps/shell/conf/hue-shell.ini $(PKG_DESKTOP)/etc/hue
+	rmdir $(PKG_DESKTOP)/$(HUE_DIR)/apps/shell/conf
+	mkdir -p $(PKG_DESKTOP)/$(HUE_DIR)/apps/shell/src/shell/build/
+	cp -f apps/shell/src/shell/build/setuid $(PKG_DESKTOP)/$(HUE_DIR)/apps/shell/src/shell/build/
 
 	# Remove Hue database
 	rm -f $(PKG_DESKTOP)/$(HUE_DIR)/desktop/desktop.db
@@ -103,6 +89,8 @@ install: build
 	# Cloudera specific
 	install -d -m 0755 $(PKG_DESKTOP_DIR)/cloudera
 	cp cloudera/cdh_version.properties $(PKG_DESKTOP_DIR)/cloudera/
+
+	dh_install --sourcedir=debian/tmp --list-missing
 
 # Build architecture-independent files here.
 binary-indep: install
