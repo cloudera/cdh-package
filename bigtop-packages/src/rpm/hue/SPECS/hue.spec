@@ -157,8 +157,6 @@ HADOOP_HOME=%{build_hadoop_home} \
   PREFIX=$RPM_BUILD_ROOT/usr/share/ \
   make install
 
-bash -x $RPM_BUILD_ROOT/usr/share/hue/tools/relocatable.sh
-
 %if  %{?suse_version:1}0
 orig_init_file=$RPM_SOURCE_DIR/%{name}.init.suse
 %else
@@ -205,6 +203,7 @@ for file in $HUE_BIN_SCRIPTS $HUE_EGG_SCRIPTS;
 do
   if [ -f ${file} ]
   then
+      echo "replacing ${RPM_BUILD_ROOT} in ${file}"
     sed -i -e "s|${RPM_BUILD_ROOT}||" ${file}
   fi
 done

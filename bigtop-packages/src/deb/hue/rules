@@ -55,8 +55,6 @@ install: build
 	PREFIX=$(PKG_DESKTOP)/usr/share/ \
 	  make install
 
-	bash -x $(PKG_DESKTOP)/usr/share/hue/tools/relocatable.sh
-
 	sed -e 's,^,build:,;' ${PKG_DESKTOP_DIR}/Makefile.buildvars \
 	  | tr _ - >> debian/hue-common.substvars
 
