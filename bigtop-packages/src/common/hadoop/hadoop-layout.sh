@@ -1,5 +1,3 @@
-#!/bin/sh
-#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -14,29 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# postinst script for hadoop
-
-set -e
-
-case "$1" in
-    configure)
-	chown root:yarn /usr/lib/hadoop-yarn/bin/container-executor
-	chmod 6050 /usr/lib/hadoop-yarn/bin/container-executor
-	mkdir -p /var/log/hadoop-yarn /var/run/hadoop-yarn /var/lib/hadoop-yarn/cache || :
-	chgrp -R hadoop /var/log/hadoop-yarn /var/run/hadoop-yarn
-	chmod g+w /var/log/hadoop-yarn /var/run/hadoop-yarn
-	chown yarn:hadoop /var/lib/hadoop-yarn/ /var/lib/hadoop-yarn/cache
-	chmod 1777 /var/lib/hadoop-yarn/cache
-    ;;
-
-    abort-upgrade|abort-remove|abort-deconfigure)
-    ;;
-
-    *)
-        echo "postinst called with unknown argument \`$1'" >&2
-        exit 1
-    ;;
-esac
-
-#DEBHELPER#
+HADOOP_COMMON_DIR="./"
+HADOOP_COMMON_LIB_JARS_DIR="lib"
+HADOOP_COMMON_LIB_NATIVE_DIR="lib/native"
+HDFS_DIR="./"
+HDFS_LIB_JARS_DIR="lib"
+YARN_DIR="./"
+YARN_LIB_JARS_DIR="lib"
+MAPRED_DIR="./"
+MAPRED_LIB_JARS_DIR="lib"
