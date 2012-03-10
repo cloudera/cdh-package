@@ -372,6 +372,7 @@ fi
 ##  postinstall should generate this see: CDH-3820
 %exclude %{hue_dir}/app.reg
 %{hue_dir}/apps/Makefile
+%{hue_dir}/cloudera/cdh_version.properties
 %dir %{hue_dir}/apps
 %attr(0755,root,root) %{initd_dir}/hue
 
