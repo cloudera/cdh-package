@@ -7,6 +7,9 @@
 # Setup
 #
 set -ex
+IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
+
+IVY_EXTRA_ARGS="-Dmvnrepo=$IVY_MIRROR_PROP -Drepo.maven.org=$IVY_MIRROR_PROP"
 
 if [ $(uname -m) != "x86_64" -a -z "$SKIP_EXTRA_NATIVE" ]; then
   echo Release build should be done on a 64-bit box to generate 1>&2
@@ -108,6 +111,7 @@ JAVA_HOME=$JAVA32_HOME \
   -Dcompile.native=true -Dcompile.c++=true \
   -Dhadoop.conf.dir=/etc/hadoop-0.20/conf \
   -propertyfile cloudera/build.properties \
+  ${IVY_EXTRA_ARGS} \
   task-controller package-native
 
 JAVA_HOME=$JAVA64_HOME
@@ -119,6 +123,7 @@ ant \
   -Djdiff.stable=0.20.1 \
   -Djdiff.build.dir=build/docs/jdiff-cloudera \
   -propertyfile build.properties \
+  ${IVY_EXTRA_ARGS} \
   -propertyfile cloudera/build.properties api-report
 fi
 
@@ -132,6 +137,7 @@ ant \
   -Dcompile.native=true -Dcompile.c++=true \
   -Dhadoop.conf.dir=/etc/hadoop-0.20/conf \
   -propertyfile cloudera/build.properties \
+  ${IVY_EXTRA_ARGS} \
   compile-c++ compile-c++-examples task-controller tar
 
 cp build/hadoop-$FULL_VERSION.tar.gz build/mr1-$FULL_VERSION.tar.gz
