@@ -191,6 +191,7 @@ fi
 %config(noreplace) %{etc_zookeeper}/conf.dist
 %{lib_zookeeper}
 %{bin_zookeeper}/zookeeper-server
+%{bin_zookeeper}/zookeeper-server-initialize
 %{bin_zookeeper}/zookeeper-client
 %doc %{doc_zookeeper}
 %{man_dir}/man1/zookeeper.1.*

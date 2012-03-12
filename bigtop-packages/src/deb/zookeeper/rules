@@ -52,7 +52,7 @@ install-indep:
 	sh -x debian/install_zookeeper.sh \
 	  --build-dir=build/zookeeper-${ZOOKEEPER_PATCHED_VERSION} \
 	  --doc-dir=usr/share/doc/zookeeper \
-	  --prefix=debian/tmp 
+	  --prefix=debian/$(zookeeper_pkg_name)
 	dh_install -i
 
 binary-common:	
