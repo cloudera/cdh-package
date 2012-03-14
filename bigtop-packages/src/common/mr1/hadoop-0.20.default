@@ -1,4 +1,5 @@
 export HADOOP_HOME=/usr/lib/hadoop-0.20-mapreduce
+export HADOOP_CLASSPATH=/usr/lib/hadoop/*:/usr/lib/hadoop/lib/*:/usr/lib/hadoop-hdfs/*:/usr/lib/hadoop-hdfs/lib/*
 export HADOOP_JOBTRACKER_USER=mapred
 export HADOOP_TASKTRACKER_USER=mapred
 export HADOOP_IDENT_STRING=hadoop

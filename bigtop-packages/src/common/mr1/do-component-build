@@ -42,61 +42,6 @@ mkdir ${BUILDDIR}
 failIfNotOK
 
 #
-# Building Snappy
-#
-
-echo "Downloading Snappy"
-
-SNAPPY_VERSION=1.0.3
-SNAPPY_JAVA_VERSION=1.0.3.1
-
-# Get Snappy source
-#
-sh -x ${RELEASE_DIR}/cloudera/getsnappysource.sh ${SNAPPY_VERSION} ${SNAPPY_JAVA_VERSION} ${RELEASE_DIR}/cloudera ${BUILDDIR}
-failIfNotOK
-
-echo "Building Snappy"
-
-SNAPPY_DIR=${BUILDDIR}/snappy-${SNAPPY_VERSION}
-cd ${SNAPPY_DIR}
-failIfNotOK
-
-./configure
-failIfNotOK
-
-# Disable rpath
-# TODO: find the correct way of disabling RPATH when running configure
-#
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
-
-SNAPPY_BUILDDIR=${SNAPPY_DIR}/build
-mkdir ${SNAPPY_BUILDDIR}
-
-LIBTOOL_VAR="LIBTOOL=libtool"
-if [ -f "/etc/SuSE-release" ]; then
-  LIBTOOL_VAR=""
-fi
-
-make install CXXFLAGS="-O2 -DNDEBUG" DESTDIR=${SNAPPY_BUILDDIR} ${LIBTOOL_VAR}
-failIfNotOK
-
-echo "Building snappy-java"
-
-cd ${BUILDDIR}/snappy-java-${SNAPPY_JAVA_VERSION}
-failIfNotOK
-
-SNAPPY_ARCHIVE=${BUILDDIR}/snappy-${SNAPPY_VERSION}.tar.gz
-mkdir target
-mvn compile
-make SNAPPY_OUT=target SNAPPY_ARCHIVE=${SNAPPY_ARCHIVE} \
-     SNAPPY_UNPACKED=${SNAPPY_ARCHIVE} SNAPPY_SRC_DIR=${SNAPPY_DIR} native
-failIfNotOK
-
-cp target/libsnappyjava.so ${SNAPPY_BUILDDIR}/usr/local/lib
-failIfNotOK
-
-#
 # Building Hadoop
 #
 cd $RELEASE_DIR
@@ -130,7 +75,6 @@ fi
 # Copy them into the main build directory to be included in the tarball
 mkdir -p build/hadoop-$FULL_VERSION/docs/
 
-# FIXME: -Dsnappy.prefix=${SNAPPY_BUILDDIR}/usr/local -Dbundle.snappy=true compile-core-native
 ant \
   -Dreactor.repo=file://$HOME/.m2/repository \
   -Dforrest.home=$FORREST_HOME \
@@ -141,6 +85,10 @@ ant \
   compile-c++ compile-c++-examples task-controller tar
 
 cp build/hadoop-$FULL_VERSION.tar.gz build/mr1-$FULL_VERSION.tar.gz
+
+# Create a manifest for the hadoop-0.20-client
+(cd cloudera/maven-packaging/hadoop-client ; mvn assembly:single)
+(cd cloudera/maven-packaging/hadoop-client/target/hadoop-client*/client ; ls) > build/hadoop-$FULL_VERSION/hadoop-client.list
 
 if [ -z "$SKIP_MVN_EXPLICIT" ]; then
 # Change to cloudera/maven directory, and install

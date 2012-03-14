@@ -15,7 +15,6 @@ ifeq (${DEB_BUILD_ARCH},i386)
   native_dir=Linux-i386-32
 endif
 
-hadoop23_home=/usr/lib/hadoop
 jar_deps_hadoop=hadoop-annotations,hadoop-auth,hadoop-common,hadoop-hdfs
 conf_pseudo=README,hadoop-metrics.properties,core-site.xml,hdfs-site.xml,mapred-site.xml,log4j.properties
 
@@ -60,7 +59,6 @@ install: build
 	  --installed-lib-dir=/usr/lib/hadoop-0.20-mapreduce
 	# We need to link to the jar files provided by Hadoop 0.23 implementation
 	rm -f debian/tmp/usr/lib/hadoop-0.20-mapreduce/lib/{${jar_deps_hadoop}}*.jar
-	ln -f -s ${hadoop23_home}/{${jar_deps_hadoop}}.jar debian/tmp/usr/lib/hadoop-0.20-mapreduce/lib/
 	mkdir -p debian/tmp/etc/hadoop/conf.pseudo.mr1
 	cp -f debian/{$(conf_pseudo)} debian/tmp/etc/hadoop/conf.pseudo.mr1
 
@@ -73,9 +71,9 @@ install-indep:
 
 install-arch:
 	mkdir -p debian/tmp/etc/default
-	cp debian/hadoop-0.20-mapreduce.default debian/tmp/etc/default/hadoop-0.20
+	cp debian/hadoop-0.20.default debian/tmp/etc/default/hadoop-0.20
 	dh_install --sourcedir=debian/tmp -s
-#	chmod 6754 debian/hadoop-0.20-mapreduce/usr/lib/hadoop-0.20/sbin/${native_dir}/task-controller
+#	chmod 6754 debian/hadoop-0.20-mapreduce/usr/lib/hadoop-0.20-mapreduce/sbin/${native_dir}/task-controller
 
 # Must not depend on anything. This is to be called by
 # binary-arch/binary-indep

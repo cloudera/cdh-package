@@ -27,6 +27,7 @@ OPTS=$(getopt \
   -l 'native-build-string:' \
   -l 'installed-lib-dir:' \
   -l 'lib-dir:' \
+  -l 'client-dir:' \
   -l 'system-lib-dir:' \
   -l 'src-dir:' \
   -l 'etc-dir:' \
@@ -51,6 +52,9 @@ while true ; do
         ;;
         --lib-dir)
         LIB_DIR=$2 ; shift 2
+        ;;
+        --hadoop-dir)
+        CLIENT_DIR=$2 ; shift 2
         ;;
         --system-lib-dir)
         SYSTEM_LIB_DIR=$2 ; shift 2
@@ -101,6 +105,7 @@ for var in CLOUDERA_SOURCE_DIR PREFIX BUILD_DIR APACHE_BRANCH; do
 done
 
 LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/hadoop-$APACHE_BRANCH}
+CLIENT_DIR=${CLIENT_DIR:-$PREFIX/usr/lib/hadoop/client-0.20}
 SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/hadoop-$APACHE_BRANCH}
@@ -210,6 +215,15 @@ if [ ! -z "$NATIVE_BUILD_STRING" ]; then
       $PREFIX/$SYSTEM_LIB_DIR
   cp -r ${BUILD_DIR}/c++/${NATIVE_BUILD_STRING}/include/hadoop $PREFIX/usr/include/
 fi
+
+# Creating hadoop-0.20-client
+install -d -m 0755 ${CLIENT_DIR}
+for file in `cat ${BUILD_DIR}/hadoop-client.list` ; do
+  for target in ${LIB_DIR}/{,lib}/$file ; do
+    [ -e $target ] && ln -fs ${target#$PREFIX}  ${CLIENT_DIR}/$file && continue 2
+  done
+  ln -s ../client/$file ${CLIENT_DIR}/$file
+done
 
 # Cloudera specific
 install -d -m 0755 $LIB_DIR/cloudera

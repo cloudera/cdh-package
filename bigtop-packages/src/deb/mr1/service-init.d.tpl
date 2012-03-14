@@ -29,7 +29,7 @@
 # Support ephemeral /var/run. We need to create this directory before
 # hadoop-config.sh is sourced below since it sets HADOOP_PID_DIR if
 # this directory exists.
-install -d -m 0775 -o root -g hadoop /var/run/hadoop-0.20
+install -d -m 0775 -o root -g hadoop /var/run/hadoop-0.20-mapreduce
 
 # Include hadoop defaults if available
 if [ -f /etc/default/hadoop-@HADOOP_MAJOR_VERSION@ ] ; then

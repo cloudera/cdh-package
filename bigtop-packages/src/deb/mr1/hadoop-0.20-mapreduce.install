@@ -1,4 +1,5 @@
 /usr/bin
+/usr/lib/hadoop/client-0.20
 /usr/lib/hadoop-0.20-mapreduce
 /etc/default/hadoop-0.20
 /usr/share/doc/hadoop-0.20-mapreduce

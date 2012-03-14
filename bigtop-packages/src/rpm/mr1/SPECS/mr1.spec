@@ -6,6 +6,7 @@
 %define config_hadoop %{etc_hadoop}/conf
 %define lib_hadoop_dirname /usr/lib
 %define lib_hadoop %{lib_hadoop_dirname}/%{name}
+%define lib_client %{lib_hadoop_dirname}/hadoop/client-0.20
 %define log_hadoop_dirname /var/log
 %define log_hadoop %{log_hadoop_dirname}/%{name}
 %define bin_hadoop %{_bindir}
@@ -21,7 +22,6 @@
 %define package_version %{mr1_version}
 %define apache_branch 0.20
 %define hadoop_build_path build/hadoop-%{cloudera_version}
-%define hadoop23_home /usr/lib/hadoop
 %define jar_deps_hadoop hadoop-annotations,hadoop-auth,hadoop-common,hadoop-hdfs
 
 %ifarch i386
@@ -246,7 +246,6 @@ done
 
 # We need to link to the jar files provided by Hadoop 0.23 implementation
 rm -f $RPM_BUILD_ROOT/%{lib_hadoop}/lib/{%{jar_deps_hadoop}}*.jar
-ln -f -s %{hadoop23_home}/{%{jar_deps_hadoop}}.jar $RPM_BUILD_ROOT/%{lib_hadoop}/lib/
 
 # Install files for hadoop-0.20-conf-pseudo
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{etc_hadoop}/conf.pseudo.mr1
@@ -289,6 +288,7 @@ fi
 %config(noreplace) /etc/default/%{hadoop_name}-mapreduce
 %attr(4754,root,mapred) %{lib_hadoop}/sbin/%{hadoop_arch}/task-controller
 %{lib_hadoop}
+%{lib_client}
 %{bin_hadoop}/hadoop-0.20
 %{man_hadoop}/man1/%{hadoop_name}.1.gz
 %attr(0775,root,hadoop) /var/run/%{name}
