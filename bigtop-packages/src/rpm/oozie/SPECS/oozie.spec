@@ -59,6 +59,8 @@ Source2: install_oozie.sh
 Source3: oozie.1
 Source4: oozie-env.sh
 Source5: oozie.init
+Source6: catalina.properties
+Source7: context.xml
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
