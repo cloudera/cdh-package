@@ -396,12 +396,6 @@ bash %{SOURCE2} \
   --installed-lib-dir=%{lib_hadoop} \
   --man-dir=$RPM_BUILD_ROOT%{man_hadoop} \
 
-# Replace the bundled jsvc with a link to a bigtop-jsvc one
-%__ln_s -f %{libexecdir}/bigtop-utils/jsvc $RPM_BUILD_ROOT/%{lib_hadoop}/libexec/jsvc
-
-# Provide a symlink to the bigtop-tomcat
-%__ln_s -f /usr/lib/bigtop-tomcat/bin $RPM_BUILD_ROOT/%{lib_httpfs}/bin
-
 # Init.d scripts
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
@@ -511,7 +505,6 @@ fi
 %config(noreplace) /etc/security/limits.d/hdfs.conf
 %{lib_hdfs}
 %{lib_hadoop}/libexec/hdfs-config.sh
-%{lib_hadoop}/libexec/jsvc
 %{bin_hadoop}/hdfs
 %attr(0775,hdfs,hadoop) %{run_hdfs}
 %attr(0775,hdfs,hadoop) %{log_hdfs}
