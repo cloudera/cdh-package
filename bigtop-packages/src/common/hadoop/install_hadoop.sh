@@ -191,28 +191,6 @@ EOF
   chmod 755 $wrapper
 done
 
-# FIXME: the following needs to go away ASAP
-for bin_wrapper in hadoop; do
-  wrapper=$BIN_DIR/$bin_wrapper
-  cat > $wrapper <<EOF
-#!/bin/sh
-
-
-# Autodetect JAVA_HOME if not defined
-if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-. /usr/libexec/bigtop-detect-javahome
-elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-. /usr/lib/bigtop-utils/bigtop-detect-javahome
-fi
-
-. /etc/default/hadoop
-[ -f /etc/default/yarn ] && . /etc/default/yarn
-
-exec \${HADOOP_HOME:-$INSTALLED_HADOOP_DIR}/bin/$bin_wrapper "\$@"
-EOF
-  chmod 755 $wrapper
-done
-
 #libexec
 install -d -m 0755 ${SYSTEM_LIBEXEC_DIR}
 cp ${BUILD_DIR}/libexec/* ${SYSTEM_LIBEXEC_DIR}/

@@ -553,6 +553,7 @@ fi
 %{lib_hadoop}/sbin
 %{lib_hadoop}/bin
 %{lib_hadoop}/etc
+%{lib_hadoop}/cloudera
 %{lib_hadoop}/libexec/hadoop-config.sh
 %{lib_hadoop}/libexec/hadoop-layout.sh
 %{bin_hadoop}/hadoop

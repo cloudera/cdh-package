@@ -64,7 +64,7 @@ Source7: context.xml
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
-Requires: oozie-client = %{version}, hadoop, bigtop-tomcat
+Requires: oozie-client = %{version}, hadoop-client, bigtop-tomcat
 BuildArch: noarch
 
 %description 
