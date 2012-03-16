@@ -184,7 +184,7 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-export HADOOP_LIBEXEC_DIR=${SYSTEM_LIBEXEC_DIR#${PREFIX}}
+export HADOOP_LIBEXEC_DIR=/${SYSTEM_LIBEXEC_DIR#${PREFIX}}
 
 exec ${component#${PREFIX}} "\$@"
 EOF
