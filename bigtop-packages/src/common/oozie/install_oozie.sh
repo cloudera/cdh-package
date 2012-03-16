@@ -236,7 +236,7 @@ failIfNotOK
 touch ${OOZIE_SERVER_DIR}/webapps/oozie.war
 failIfNotOK
 
-# Create an exploded-war oozie deployment in /var/lib/oozie
+# Create an exploded-war oozie deployment in /usr/lib/oozie/oozie-server for MR2
 install -d -m 0755 ${OOZIE_SERVER_DIR}/oozie-server
 failIfNotOK
 cp -R ${OOZIE_BUILD_DIR}/oozie-server/conf ${OOZIE_SERVER_DIR}/oozie-server/conf
@@ -246,6 +246,12 @@ failIfNotOK
 cp ${EXTRADIR}/catalina.properties ${OOZIE_SERVER_DIR}/oozie-server/conf/
 failIfNotOK
 ln -s ../webapps ${OOZIE_SERVER_DIR}/oozie-server/webapps
+failIfNotOK
+
+# Create an exploded-war oozie deployment in /usr/lib/oozie/oozie-server-0.20 for MR1
+cp -r ${OOZIE_SERVER_DIR}/oozie-server ${OOZIE_SERVER_DIR}/oozie-server-0.20
+failIfNotOK
+cp -f ${EXTRADIR}/catalina.properties.mr1 ${OOZIE_SERVER_DIR}/oozie-server-0.20/conf/catalina.properties
 failIfNotOK
 
 # Cloudera specific

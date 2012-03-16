@@ -61,6 +61,7 @@ Source4: oozie-env.sh
 Source5: oozie.init
 Source6: catalina.properties
 Source7: context.xml
+Source8: catalina.properties.mr1
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
@@ -189,6 +190,7 @@ fi
 %{lib_oozie}/server-core
 %{lib_oozie}/oozie-sharelib.tar.gz
 %{lib_oozie}/oozie-server
+%{lib_oozie}/oozie-server-0.20
 %{initd_dir}/oozie
 %defattr(-, oozie, oozie)
 %dir %{_localstatedir}/log/oozie

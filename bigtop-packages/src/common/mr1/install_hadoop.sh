@@ -137,7 +137,8 @@ for j in hadoop-*.jar; do
 done)
 
 # Take out things we've installed elsewhere
-for x in docs lib/native c++ src conf usr/bin/fuse_dfs contrib/fuse ; do
+for x in docs lib/native c++ src conf usr/bin/fuse_dfs contrib/fuse \
+         lib/hadoop-{annotations,auth,common,hdfs}* ; do
   rm -rf $LIB_DIR/$x 
 done
 
