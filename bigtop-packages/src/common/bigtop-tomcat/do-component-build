@@ -23,9 +23,9 @@ mv .build build
 
 rm -rf dl
 mkdir dl
-ant -Dbase.path=dl clean download
-ant -Dbase.path=dl
-ant -Dbase.path=dl -Dskip.installer=true -f dist.xml dist-static package-tgz 
+ant -Dbase.path=dl clean download -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
+ant -Dbase.path=dl -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
+ant -Dbase.path=dl -Dskip.installer=true -f dist.xml dist-static package-tgz -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
 
 tar -C build --strip-components=1 -xzf output/release/v*/bin/apache-tomcat-*[0-9].tar.gz
 
