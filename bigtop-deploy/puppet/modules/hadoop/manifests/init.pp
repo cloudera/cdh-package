@@ -22,7 +22,7 @@ class hadoop {
    
   class kerberos {
     require kerberos::client
-    
+
     kerberos::host_keytab { "hdfs":
       princs => [ "host", "hdfs", "HTTP" ],
     }
@@ -168,6 +168,11 @@ class hadoop {
     $hadoop_httpfs_port = $port
     $hadoop_security_authentication = $auth
 
+    if ($auth == "kerberos") {
+      kerberos::host_keytab { "httpfs":
+      }
+    }
+
     package { "hadoop-httpfs":
       ensure => latest,
       require => Package["jdk"],
@@ -175,17 +180,17 @@ class hadoop {
 
     file { "/etc/hadoop-httpfs/conf/httpfs-site.xml":
       content => template('hadoop/httpfs-site.xml'),
-      require => [Package["hadoop-hdfs"]],
+      require => [Package["hadoop-httpfs"]],
     }
 
     file { "/etc/hadoop-httpfs/conf/httpfs-env.sh":
       content => template('hadoop/httpfs-env.sh'),
-      require => [Package["hadoop-hdfs"]],
+      require => [Package["hadoop-httpfs"]],
     }
 
     file { "/etc/hadoop-httpfs/conf/httpfs-signature.secret":
       content => inline_template("<%= secret %>"),
-      require => [Package["hadoop-hdfs"]],
+      require => [Package["hadoop-httpfs"]],
     }
 
     service { "hadoop-httpfs":
@@ -194,7 +199,7 @@ class hadoop {
       subscribe => [Package["hadoop-httpfs"], File["/etc/hadoop-httpfs/conf/httpfs-site.xml"], File["/etc/hadoop-httpfs/conf/httpfs-env.sh"], File["/etc/hadoop-httpfs/conf/httpfs-signature.secret"]],
       require => [ Package["hadoop-httpfs"] ],
     }
-    Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-httpfs"]
+    Kerberos::Host_keytab <| title == "httpfs" |> -> Service["hadoop-httpfs"]
   }
 
   class kinit {
