@@ -177,4 +177,9 @@
   </property>
 <% end %>
 
+  <property>
+    <name>dfs.webhdfs.enabled</name>
+    <value>true</value>
+  </property>
+
 </configuration>
