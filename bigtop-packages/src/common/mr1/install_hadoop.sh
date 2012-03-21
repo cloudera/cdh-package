@@ -227,5 +227,6 @@ for file in `cat ${BUILD_DIR}/hadoop-client.list` ; do
 done
 
 # Cloudera specific
+rm -rf $LIB_DIR/cloudera*
 install -d -m 0755 $LIB_DIR/cloudera
-cp cloudera/cdh_version.properties $LIB_DIR/
+cp cloudera/cdh_version.properties $LIB_DIR/cloudera
