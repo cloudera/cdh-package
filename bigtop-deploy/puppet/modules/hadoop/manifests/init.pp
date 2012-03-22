@@ -30,10 +30,6 @@ class hadoop {
     kerberos::host_keytab { [ "yarn", "mapred" ]:
       tag    => "mapreduce",
     }
-
-    # Principal for MR1
-    kerberos::host_keytab { "mapred":
-    }
   }
 
   class common {
