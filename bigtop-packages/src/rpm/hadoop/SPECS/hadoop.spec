@@ -468,8 +468,8 @@ getent group yarn >/dev/null   || groupadd -r yarn
 getent passwd yarn >/dev/null || /usr/sbin/useradd --comment "Hadoop Yarn" --shell /bin/bash -M -r -g yarn -G hadoop --home %{state_yarn} yarn
 
 %pre mapreduce
-getent group mapreduce >/dev/null   || groupadd -r mapreduce
-getent passwd mapreduce >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapreduce -G hadoop --home %{state_mapreduce} mapreduce
+getent group mapred >/dev/null   || groupadd -r mapred
+getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapred -G hadoop --home %{state_mapreduce} mapred
 
 %post
 %{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.empty 10
@@ -534,10 +534,10 @@ fi
 %{lib_mapreduce}
 %{lib_hadoop}/libexec/mapred-config.sh
 %{bin_hadoop}/mapred
-%attr(0775,mapreduce,hadoop) %{run_mapreduce}
-%attr(0775,mapreduce,hadoop) %{log_mapreduce}
-%attr(0775,mapreduce,hadoop) %{state_mapreduce}
-%attr(1777,mapreduce,hadoop) %{state_mapreduce}/cache
+%attr(0775,mapred,hadoop) %{run_mapreduce}
+%attr(0775,mapred,hadoop) %{log_mapreduce}
+%attr(0775,mapred,hadoop) %{state_mapreduce}
+%attr(1777,mapred,hadoop) %{state_mapreduce}/cache
 
 
 %files
