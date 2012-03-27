@@ -126,11 +126,6 @@ chmod 755 $init_file
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
-# Get rid of hadoop jar, and instead link to installed hadoop
-rm $RPM_BUILD_ROOT/usr/lib/flume-ng/lib/hadoop-*
-ln -s /usr/lib/hadoop/hadoop-common.jar $RPM_BUILD_ROOT/usr/lib/flume-ng/lib/hadoop-common.jar
-ln -s /usr/lib/hadoop/hadoop-auth.jar $RPM_BUILD_ROOT/usr/lib/flume-ng/lib/hadoop-auth.jar
-
 %pre
 getent group flume >/dev/null || groupadd -r flume
 getent passwd flume >/dev/null || useradd -c "Flume" -s /sbin/nologin -g flume -r -d /var/run/flume-ng flume 2> /dev/null || :
