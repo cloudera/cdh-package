@@ -86,13 +86,12 @@ ant \
 
 cp build/hadoop-$FULL_VERSION.tar.gz build/mr1-$FULL_VERSION.tar.gz
 
-# Create a manifest for the hadoop-0.20-client
-(cd cloudera/maven-packaging/hadoop-client ; mvn assembly:single)
-(cd cloudera/maven-packaging/hadoop-client/target/hadoop-client*/client ; ls) > build/hadoop-$FULL_VERSION/hadoop-client.list
-
 if [ -z "$SKIP_MVN_EXPLICIT" ]; then
 # Change to cloudera/maven directory, and install
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository
-cd cloudera/maven-packaging
-mvn -Dnot.cdh.release.build=false install $DO_MAVEN_DEPLOY
+(cd cloudera/maven-packaging ; mvn -Dnot.cdh.release.build=false install $DO_MAVEN_DEPLOY)
 fi
+
+# Create a manifest for the hadoop-0.20-client
+(cd cloudera/maven-packaging/hadoop-client ; mvn assembly:single)
+(cd cloudera/maven-packaging/hadoop-client/target/hadoop-client*/client ; ls) > build/hadoop-$FULL_VERSION/hadoop-client.list
