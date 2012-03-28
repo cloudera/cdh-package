@@ -44,7 +44,7 @@ License: ASL 2.0
 Source0: mahout-%{mahout_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{name}.sh
-Requires: hadoop >= 0.20.2, bigtop-utils
+Requires: hadoop-client, bigtop-utils
 
 
 %description 

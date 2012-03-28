@@ -70,7 +70,7 @@ Source5: hive-server.default
 Source6: hive-metastore.default
 Source7: hive.1
 Source8: hive-site.xml
-Requires: hadoop-mapreduce, hadoop-hdfs, bigtop-utils
+Requires: hadoop-client, bigtop-utils
 Conflicts: hadoop-hive
 Obsoletes: %{name}-webinterface
 

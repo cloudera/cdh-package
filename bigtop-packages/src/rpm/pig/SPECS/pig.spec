@@ -81,7 +81,7 @@ Source2: install_pig.sh
 Source3: log4j.properties
 Source4: pig.1
 Source5: pig.properties
-Requires: hadoop-mapreduce, hadoop-hdfs, bigtop-utils
+Requires: hadoop-client, bigtop-utils
 Conflicts: hadoop-pig
 
 %description 
