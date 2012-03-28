@@ -171,3 +171,7 @@ rm -f ${LIB_DIR}/lib/hive-hwi*.war
 # Cloudera specific
 install -d -m 0755 $LIB_DIR/cloudera
 cp src/cloudera/cdh_version.properties $LIB_DIR/cloudera/
+
+# Remove some source which gets installed
+rm -rf ${LIB_DIR}/lib/php/ext
+
