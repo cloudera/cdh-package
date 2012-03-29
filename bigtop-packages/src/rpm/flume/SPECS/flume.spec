@@ -64,7 +64,7 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: init.d
 Source4: init.d.suse
-Requires: coreutils, /usr/sbin/useradd, zookeeper >= 3.3.1, hadoop-hdfs
+Requires: coreutils, /usr/sbin/useradd, zookeeper >= 3.3.1, hadoop-client
 Requires: bigtop-utils
 BuildRequires: ant xml-commons xml-commons-apis
 
@@ -166,7 +166,6 @@ done
 
 # Get rid of hadoop jar, and instead link to installed hadoop
 rm $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-*
-ln -s /usr/lib/hadoop/hadoop-core.jar $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-core.jar
 
 %pre
 getent group flume >/dev/null || groupadd -r flume

@@ -128,6 +128,8 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
+export FLUME_CLASSPATH="${FLUME_CLASSPATH}:/usr/lib/hadoop/client/*"
+
 exec /usr/lib/flume/bin/flume "\$@"
 EOF
 chmod 755 $wrapper
