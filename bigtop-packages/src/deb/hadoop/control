@@ -195,6 +195,6 @@ Package: hadoop-client
 Provides: hadoop-client
 Architecture: all
 Depends: hadoop (= ${source:Version}), hadoop-hdfs (= ${source:Version}),
-         hadoop-yarn (= ${source:Version}), hadoop-mapreduce (= ${source:Version})
+         hadoop-yarn (= ${source:Version}), hadoop-mapreduce (= ${source:Version}), hadoop-0.20-mapreduce
 Description: Hadoop client side dependencies
  Installation of this package will provide you with all the dependencies for Hadoop clients.

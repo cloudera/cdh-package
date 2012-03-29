@@ -54,7 +54,7 @@ JAVA_HOME=$JAVA32_HOME \
   -Dreactor.repo=file://$HOME/.m2/repository \
   -Dforrest.home=$FORREST_HOME \
   -Dcompile.native=true -Dcompile.c++=true \
-  -Dhadoop.conf.dir=/etc/hadoop-0.20/conf \
+  -Dhadoop.conf.dir=/etc/hadoop/conf \
   -propertyfile cloudera/build.properties \
   ${IVY_EXTRA_ARGS} \
   task-controller package-native
@@ -79,7 +79,7 @@ ant \
   -Dreactor.repo=file://$HOME/.m2/repository \
   -Dforrest.home=$FORREST_HOME \
   -Dcompile.native=true -Dcompile.c++=true \
-  -Dhadoop.conf.dir=/etc/hadoop-0.20/conf \
+  -Dhadoop.conf.dir=/etc/hadoop/conf \
   -propertyfile cloudera/build.properties \
   ${IVY_EXTRA_ARGS} \
   compile-c++ compile-c++-examples task-controller tar

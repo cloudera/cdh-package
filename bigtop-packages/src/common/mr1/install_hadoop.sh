@@ -112,7 +112,7 @@ DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/hadoop-$APACHE_BRANCH}
 MAN_DIR=${MAN_DIR:-$PREFIX/usr/man}
 EXAMPLE_DIR=${EXAMPLE_DIR:-$DOC_DIR/examples}
 SRC_DIR=${SRC_DIR:-$PREFIX/usr/src/hadoop-$APACHE_BRANCH}
-ETC_DIR=${ETC_DIR:-$PREFIX/etc/hadoop-$APACHE_BRANCH}
+ETC_DIR=${ETC_DIR:-$PREFIX/etc/hadoop}
 
 INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/hadoop-$APACHE_BRANCH}
 
@@ -137,8 +137,8 @@ for j in hadoop-*.jar; do
 done)
 
 # Take out things we've installed elsewhere
-for x in docs lib/native c++ src conf usr/bin/fuse_dfs contrib/fuse \
-         lib/hadoop-{annotations,auth,common,hdfs}* ; do
+for x in docs lib/native c++ src conf usr/bin/fuse_dfs contrib/fuse contrib/hod \
+         hadoop-client.list pids lib/hadoop-{annotations,auth,common,hdfs}* ; do
   rm -rf $LIB_DIR/$x 
 done
 
@@ -151,14 +151,17 @@ for bin_wrapper in hadoop-$APACHE_BRANCH ; do
 #!/bin/sh
 
 export HADOOP_HOME=$INSTALLED_LIB_DIR
+export HADOOP_MAPRED_HOME=$INSTALLED_LIB_DIR
+export HADOOP_LIBEXEC_DIR=$SYSTEM_LIB_DIR/hadoop/libexec
+export HADOOP_CONF_DIR=/etc/hadoop/conf
+
 exec $INSTALLED_LIB_DIR/bin/hadoop "\$@"
 EOF
   chmod 755 $wrapper
 done
 
-# Fix some bad permissions in HOD
-chmod 755 $LIB_DIR/contrib/hod/support/checklimits.sh || /bin/true
-chmod 644 $LIB_DIR/contrib/hod/bin/VERSION || /bin/true
+# Provide a mapred link for MR2 hadoop launcher script
+ln -s hadoop $LIB_DIR/bin/mapred
 
 # Link examples to /usr/share
 mkdir -p $EXAMPLE_DIR
@@ -173,32 +176,6 @@ cp -a $HADOOP_SRC_DIR/examples/* $EXAMPLE_DIR/src
 # Install docs
 mkdir -p $DOC_DIR
 cp -r ${BUILD_DIR}/../../docs/* $DOC_DIR
-
-# Install source
-mkdir -p $SRC_DIR
-
-cp -a ${HADOOP_SRC_DIR}/* $SRC_DIR/
-
-# Make the empty config
-install -d -m 0755 $ETC_DIR/conf.empty
-(cd ${BUILD_DIR}/conf && tar cf - .) | (cd $ETC_DIR/conf.empty && tar xf -)
-
-# Link the HADOOP_HOME conf, log and pid dir to installed locations
-rm -rf $LIB_DIR/conf
-ln -s ${ETC_DIR#$PREFIX}/conf $LIB_DIR/conf
-rm -rf $LIB_DIR/logs
-ln -s /var/log/hadoop-$APACHE_BRANCH-mapreduce $LIB_DIR/logs
-rm -rf $LIB_DIR/pids
-ln -s /var/run/hadoop-$APACHE_BRANCH-mapreduce $LIB_DIR/pids
-
-# Make the pseudo-distributed config
-for conf in conf.pseudo ; do
-  install -d -m 0755 $ETC_DIR/$conf
-  # Install the default configurations
-  (cd ${BUILD_DIR}/conf && tar -cf - .) | (cd $ETC_DIR/$conf && tar -xf -)
-  # Overlay the -site files
-  (cd ${BUILD_DIR}/../../example-confs/$conf && tar -cf - .) | (cd $ETC_DIR/$conf && tar -xf -)
-done
 
 # man pages
 mkdir -p $MAN_DIR/man1

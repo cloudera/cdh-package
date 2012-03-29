@@ -26,5 +26,5 @@ HADOOP_LIBEXEC_DIR=${HADOOP_LIBEXEC_DIR:-"/usr/lib/hadoop/libexec"}
 HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-"/etc/hadoop/conf"}
 HADOOP_COMMON_HOME=${HADOOP_COMMON_HOME:-"/usr/lib/hadoop"}
 HADOOP_HDFS_HOME=${HADOOP_HDFS_HOME:-"/usr/lib/hadoop-hdfs"}
-HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME:-"/usr/lib/hadoop-mapreduce"}
+HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME:-"/usr/lib/hadoop-0.20-mapreduce"}
 YARN_HOME=${YARN_HOME:-"/usr/lib/hadoop-yarn"}

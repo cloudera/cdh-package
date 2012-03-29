@@ -334,7 +334,7 @@ The History server keeps records of the different activities being performed on 
 Summary: Hadoop client side dependencies
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}, %{name}-hdfs = %{version}-%{release}
-Requires: %{name}-yarn = %{version}-%{release}, %{name}-mapreduce = %{version}-%{release}
+Requires: %{name}-yarn = %{version}-%{release}, %{name}-mapreduce = %{version}-%{release}, %{name}-0.20-mapreduce
 
 %description client
 Installation of this package will provide you with all the dependencies for Hadoop clients.

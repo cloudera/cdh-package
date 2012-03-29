@@ -81,7 +81,7 @@ install-arch:
 binary-common:  
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs CHANGES.txt -phadoop-0.20
+	dh_installchangelogs CHANGES.txt -phadoop-0.20-mapreduce
 	dh_installdocs
 	sh debian/append_licenses.sh
 #	dh_installexamples

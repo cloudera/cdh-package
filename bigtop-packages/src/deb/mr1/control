@@ -55,7 +55,7 @@ Package: hadoop-0.20-conf-pseudo
 Provides: hadoop-0.20-conf-pseudo
 Architecture: all
 Depends: hadoop, hadoop-hdfs-namenode, hadoop-hdfs-datanode, hadoop-hdfs-secondarynamenode, hadoop-0.20-mapreduce-jobtracker (= ${source:Version}), hadoop-0.20-mapreduce-tasktracker (= ${source:Version})
-Breaks: hadoop-conf-pseudo, hadoop-yarn, hadoop-mapreduce
+Breaks: hadoop-conf-pseudo
 Description: Hadoop installation in pseudo-distributed mode with MRv1
  Installation of this RPM will setup your machine to run in pseudo-distributed mode
  where each Hadoop daemon runs in a separate Java process. You will be getting old
