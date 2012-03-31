@@ -254,6 +254,9 @@ failIfNotOK
 ln -s ../webapps ${OOZIE_SERVER_DIR}/oozie-server/webapps
 failIfNotOK
 
+# Provide a convenience symlink to be more consistent with tarball deployment
+ln -s ${OOZIE_DATA#${SERVERDIR}} ${OOZIE_SERVER_DIR}/libext
+
 # Create an exploded-war oozie deployment in /usr/lib/oozie/oozie-server-0.20 for MR1
 cp -r ${OOZIE_SERVER_DIR}/oozie-server ${OOZIE_SERVER_DIR}/oozie-server-0.20
 failIfNotOK

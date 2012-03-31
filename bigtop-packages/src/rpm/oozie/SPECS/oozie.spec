@@ -193,6 +193,7 @@ fi
 %{lib_oozie}/oozie-sharelib.tar.gz
 %{lib_oozie}/oozie-server
 %{lib_oozie}/oozie-server-0.20
+%{lib_oozie}/libext
 %{initd_dir}/oozie
 %defattr(-, oozie, oozie)
 %dir %{_localstatedir}/log/oozie
