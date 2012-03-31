@@ -329,5 +329,7 @@ for file in `cat ${BUILD_DIR}/hadoop-client.list` ; do
 done
 
 # Cloudera specific
-install -d -m 0755 $HADOOP_DIR/cloudera
-cp cloudera/cdh_version.properties $HADOOP_DIR/cloudera/
+for dir in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} ; do
+  install -d -m 0755 $dir/cloudera
+  cp cloudera/cdh_version.properties $dir/cloudera/
+done
