@@ -138,12 +138,7 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-if [ -n "\$FLUME_PID_FILE" ]; then
-  echo \$$ > \$FLUME_PID_FILE
-fi
-
-# See FLUME-920
-exec bash /usr/lib/flume-ng/bin/flume-ng "\$@"
+exec /usr/lib/flume-ng/bin/flume-ng "\$@"
 EOF
 chmod 755 $wrapper
 
