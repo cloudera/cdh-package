@@ -62,6 +62,7 @@ Source5: oozie.init
 Source6: catalina.properties
 Source7: context.xml
 Source8: catalina.properties.mr1
+Source9: hive.xml
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
