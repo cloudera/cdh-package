@@ -163,10 +163,12 @@ fi
 %dir %{lib_flume}
 %dir %{lib_flume}/bin
 %dir %{lib_flume}/lib
+%dir %{lib_flume}/cloudera
 
 %config(noreplace) %{etc_flume}.empty/*
 %attr(0755,root,root) %{bin_flume}/flume-ng
 %attr(0755,root,root) %{lib_flume}/bin/flume-ng
+%{lib_flume}/cloudera/cdh_version.properties
 %{lib_flume}/lib/*.jar
 %{lib_flume}/conf
 

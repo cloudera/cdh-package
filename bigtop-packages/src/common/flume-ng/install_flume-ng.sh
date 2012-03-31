@@ -117,7 +117,11 @@ for x in flume-ng-* \
           README \
           RELEASE-NOTES \
           bin/ia64 \
-          bin/amd64; do
+          bin/amd64 \
+          cloudera/CHANGES.cloudera.txt \
+          cloudera/apply-patches \
+          cloudera/build.properties \
+          cloudera/patches; do
   rm -rf ${PREFIX}/$FLUME_DIR/$x 
 done
 
