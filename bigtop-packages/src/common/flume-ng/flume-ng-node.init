@@ -84,9 +84,9 @@ stop() {
 
   FLUME_PID=`cat $FLUME_PID_FILE`
   if [ -n $FLUME_PID ]; then
-    kill -TERM -${FLUME_PID} &>/dev/null
+    kill -TERM ${FLUME_PID} &>/dev/null
     sleep 5
-    kill -KILL -${FLUME_PID} &>/dev/null
+    kill -KILL ${FLUME_PID} &>/dev/null
   fi
   rm -f $LOCKFILE $FLUME_PID_FILE
   return 0
