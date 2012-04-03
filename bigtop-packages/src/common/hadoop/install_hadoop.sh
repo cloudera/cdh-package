@@ -233,6 +233,7 @@ install -d -m 0755 ${YARN_DIR}/bin
 cp -a ${BUILD_DIR}/bin/{yarn,container-executor} ${YARN_DIR}/bin
 install -d -m 0755 ${MAPREDUCE_DIR}/bin
 cp -a ${BUILD_DIR}/bin/mapred ${MAPREDUCE_DIR}/bin
+cp -a ${BUILD_DIR}/examples/bin/* ${MAPREDUCE_DIR}/bin
 # FIXME: MAPREDUCE-3980
 cp -a ${BUILD_DIR}/bin/mapred ${YARN_DIR}/bin
 

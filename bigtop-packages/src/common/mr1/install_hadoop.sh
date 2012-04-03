@@ -29,6 +29,7 @@ OPTS=$(getopt \
   -l 'lib-dir:' \
   -l 'client-dir:' \
   -l 'system-lib-dir:' \
+  -l 'system-include-dir:' \
   -l 'src-dir:' \
   -l 'etc-dir:' \
   -l 'doc-dir:' \
@@ -58,6 +59,9 @@ while true ; do
         ;;
         --system-lib-dir)
         SYSTEM_LIB_DIR=$2 ; shift 2
+        ;;
+        --system-include-dir)
+        SYSTEM_INCLUDE_DIR=$2 ; shift 2
         ;;
         --build-dir)
         BUILD_DIR=$2 ; shift 2
@@ -107,6 +111,7 @@ done
 LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/hadoop-$APACHE_BRANCH}
 CLIENT_DIR=${CLIENT_DIR:-$PREFIX/usr/lib/hadoop/client-0.20}
 SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
+SYSTEM_INCLUDE_DIR=${SYSTEM_INCLUDE_DIR:-/usr/include}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/hadoop-$APACHE_BRANCH}
 MAN_DIR=${MAN_DIR:-$PREFIX/usr/man}
@@ -187,11 +192,12 @@ if [ ! -z "$NATIVE_BUILD_STRING" ]; then
   ln -s /usr/lib/hadoop/lib/native $LIB_DIR/lib/native/${NATIVE_BUILD_STRING}
 
   # Pipes
-  mkdir -p $PREFIX/$SYSTEM_LIB_DIR $PREFIX/usr/include
+  mkdir -p $PREFIX/$SYSTEM_LIB_DIR $PREFIX/$SYSTEM_INCLUDE_DIR
   cp ${BUILD_DIR}/c++/${NATIVE_BUILD_STRING}/lib/libhadooppipes.a \
       ${BUILD_DIR}/c++/${NATIVE_BUILD_STRING}/lib/libhadooputils.a \
       $PREFIX/$SYSTEM_LIB_DIR
-  cp -r ${BUILD_DIR}/c++/${NATIVE_BUILD_STRING}/include/hadoop $PREFIX/usr/include/
+  cp -r ${BUILD_DIR}/c++/${NATIVE_BUILD_STRING}/include/hadoop $PREFIX/$SYSTEM_INCLUDE_DIR
+  cp ${BUILD_DIR}/c++/${NATIVE_BUILD_STRING}/bin/* $LIB_DIR/bin
 fi
 
 # Creating hadoop-0.20-client

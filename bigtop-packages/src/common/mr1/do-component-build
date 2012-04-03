@@ -82,7 +82,7 @@ ant \
   -Dhadoop.conf.dir=/etc/hadoop/conf \
   -propertyfile cloudera/build.properties \
   ${IVY_EXTRA_ARGS} \
-  compile-c++ compile-c++-examples task-controller tar
+  task-controller package-native tar
 
 cp build/hadoop-$FULL_VERSION.tar.gz build/mr1-$FULL_VERSION.tar.gz
 

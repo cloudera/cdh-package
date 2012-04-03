@@ -202,7 +202,8 @@ bash -x %{SOURCE6} \
   --build-dir=%{hadoop_build_path} \
   --src-dir=$RPM_BUILD_ROOT%{src_hadoop} \
   --lib-dir=$RPM_BUILD_ROOT%{lib_hadoop} \
-  --system-lib-dir=%{_libdir} \
+  --system-lib-dir=%{lib_hadoop}/lib/native \
+  --system-include-dir=%{lib_hadoop}/include \
   --etc-dir=$RPM_BUILD_ROOT%{etc_hadoop} \
   --prefix=$RPM_BUILD_ROOT \
   --doc-dir=$RPM_BUILD_ROOT%{doc_hadoop} \
