@@ -70,6 +70,7 @@ install: build
 
 install-indep:
 	sh debian/install_init_scripts.sh
+	dh_install --sourcedir=debian/tmp -i
 
 install-arch:
 	mkdir -p debian/tmp/etc/default
