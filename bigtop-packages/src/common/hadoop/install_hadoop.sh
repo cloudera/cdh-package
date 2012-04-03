@@ -239,11 +239,11 @@ cp -a ${BUILD_DIR}/bin/mapred ${YARN_DIR}/bin
 
 # sbin
 install -d -m 0755 ${HADOOP_DIR}/sbin
-cp -a ${BUILD_DIR}/sbin/{hadoop-daemon,hadoop-daemons,slaves,start-all,stop-all}.sh ${HADOOP_DIR}/sbin
+cp -a ${BUILD_DIR}/sbin/{hadoop-daemon,hadoop-daemons,slaves}.sh ${HADOOP_DIR}/sbin
 install -d -m 0755 ${HDFS_DIR}/sbin
-cp -a ${BUILD_DIR}/sbin/{distribute-exclude,refresh-namenodes,start-balancer,start-dfs,start-secure-dns,stop-balancer,stop-dfs,stop-secure-dns}.sh ${HDFS_DIR}/sbin
+cp -a ${BUILD_DIR}/sbin/{distribute-exclude,refresh-namenodes}.sh ${HDFS_DIR}/sbin
 install -d -m 0755 ${YARN_DIR}/sbin
-cp -a ${BUILD_DIR}/sbin/*yarn* ${BUILD_DIR}/sbin/slaves.sh  ${YARN_DIR}/sbin
+cp -a ${BUILD_DIR}/sbin/{yarn-daemon,yarn-daemons}.sh ${YARN_DIR}/sbin
 install -d -m 0755 ${MAPREDUCE_DIR}/sbin
 cp -a ${BUILD_DIR}/sbin/mr-jobhistory-daemon.sh ${MAPREDUCE_DIR}/sbin
 
