@@ -43,7 +43,8 @@ case "$1" in
         chown $USER /usr/share/hue
         cd /usr/share/hue
         chown $USER *
-        chown $USER apps
+        chown -R $USER apps
+        chown -R $USER build
         chown -R $USER ext
         chown -R $USER tools
         chown -R $USER desktop
