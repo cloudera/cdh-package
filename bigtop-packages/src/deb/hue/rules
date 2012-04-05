@@ -69,15 +69,7 @@ install: build
 	cp $(PKG_DESKTOP_DIR)/desktop/libs/hadoop/java-lib/*plugin*jar \
 	   $(PKG_HADOOP_LIB_DIR)
 
-	# Beeswax specific
-	mkdir -p $(PKG_DESKTOP)/etc/hue
-	mv $(PKG_DESKTOP)/$(HUE_DIR)/apps/beeswax/conf/hue-beeswax.ini $(PKG_DESKTOP)/etc/hue
-	rmdir $(PKG_DESKTOP)/$(HUE_DIR)/apps/beeswax/conf
-
 	# Hue Shell specific
-	mkdir -p $(PKG_DESKTOP)/etc/hue
-	mv $(PKG_DESKTOP)/$(HUE_DIR)/apps/shell/conf/hue-shell.ini $(PKG_DESKTOP)/etc/hue
-	rmdir $(PKG_DESKTOP)/$(HUE_DIR)/apps/shell/conf
 	mkdir -p $(PKG_DESKTOP)/$(HUE_DIR)/apps/shell/src/shell/build/
 	cp -f apps/shell/src/shell/build/setuid $(PKG_DESKTOP)/$(HUE_DIR)/apps/shell/src/shell/build/
 

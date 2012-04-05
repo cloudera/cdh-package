@@ -211,15 +211,6 @@ done
 #Installing plug-ins configuration files
 mkdir -p $RPM_BUILD_ROOT/etc/hue
 
-# Beeswax
-mv $RPM_BUILD_ROOT/%{hue_dir}/apps/beeswax/conf/hue-beeswax.ini $RPM_BUILD_ROOT/etc/hue
-rmdir $RPM_BUILD_ROOT/%{hue_dir}/apps/beeswax/conf
-
-# Shell
-SHELL_DIR=$RPM_BUILD_ROOT/%{hue_dir}/apps/shell
-mv $SHELL_DIR/conf/hue-shell.ini $RPM_BUILD_ROOT/etc/hue
-rmdir $SHELL_DIR/conf
-
 # Make binary scripts executables
 for file in $RPM_BUILD_ROOT/%{hue_dir}/build/env/bin/ ;
 do
@@ -392,8 +383,6 @@ fi
 %exclude %{useradmin_app_dir}
 
 %exclude %{shell_app_dir}
-%exclude /etc/hue/hue-shell.ini
-%exclude /etc/hue/hue-beeswax.ini
 
 
 ############################################################
@@ -495,8 +484,6 @@ and import and export data.
 %files -n %{name}-beeswax
 %defattr(-, %{username}, %{username})
 %{beeswax_app_dir}
-%config /etc/hue/hue-beeswax.ini
-%attr(0755,root,root) /etc/hue/hue-beeswax.ini
 
 
 #### HUE-FILEBROWSER PLUGIN ######
@@ -657,6 +644,5 @@ chmod 4750 %{shell_app_dir}/src/shell/build/setuid
 %files -n %{name}-shell
 %defattr(-, %{username}, %{username})
 %{shell_app_dir}
-%attr(0755,root,root) %config(noreplace) /etc/hue/hue-shell.ini
 %attr(4750,root,hue) %{shell_app_dir}/src/shell/build/setuid
 
