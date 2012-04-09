@@ -63,6 +63,8 @@ install: build
 	rm -f debian/tmp/usr/lib/hadoop-0.20-mapreduce/lib/{${jar_deps_hadoop}}*.jar
 	mkdir -p debian/tmp/etc/hadoop/conf.pseudo.mr1
 	cp -f debian/{$(conf_pseudo)} debian/tmp/etc/hadoop/conf.pseudo.mr1
+	mkdir -p debian/tmp/etc/security/limits.d
+	cp debian/mapred.conf debian/tmp/etc/security/limits.d
 
 # Run dh_lintian if we've got it - this doesn't exist on debhelper 6 (eg Ubuntu Hardy)
 	(dh_lintian) || /bin/true

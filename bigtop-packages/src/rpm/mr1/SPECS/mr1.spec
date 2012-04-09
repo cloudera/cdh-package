@@ -97,6 +97,7 @@ Source9: core-site.xml
 Source10: hdfs-site.xml
 Source11: mapred-site.xml
 Source12: log4j.properties
+Source13: mapred.conf
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -n -u)
 BuildRequires: lzo-devel, python >= 2.4, git, automake, autoconf
 Requires: hadoop, hadoop-hdfs, sh-utils, textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
@@ -251,6 +252,8 @@ rm -f $RPM_BUILD_ROOT/%{lib_hadoop}/lib/{%{jar_deps_hadoop}}*.jar
 # Install files for hadoop-0.20-conf-pseudo
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{etc_hadoop}/conf.pseudo.mr1
 %__cp %{SOURCE7} %{SOURCE8} %{SOURCE9} %{SOURCE10} %{SOURCE11} %{SOURCE12} $RPM_BUILD_ROOT/%{etc_hadoop}/conf.pseudo.mr1
+%__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
+%__cp %{SOURCE13} $RPM_BUILD_ROOT/etc/security/limits.d
 %__install -d -m 0755 $RPM_BUILD_ROOT/var/lib/hadoop/cache
 %__install -d -m 0755 $RPM_BUILD_ROOT/var/lib/hdfs/cache
 
@@ -286,6 +289,7 @@ fi
 
 %files
 %defattr(-,root,root)
+%config(noreplace) /etc/security/limits.d/mapred.conf
 %config(noreplace) /etc/default/%{hadoop_name}-mapreduce
 %attr(4754,root,mapred) %{lib_hadoop}/sbin/%{hadoop_arch}/task-controller
 %{lib_hadoop}
