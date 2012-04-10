@@ -16,7 +16,7 @@
 
 set -ex
 
-mvn -DskipTests clean install "$@"
+mvn -DskipTests clean install $DO_MAVEN_DEPLOY "$@"
 mvn -DskipTests -Pjavadoc site source:jar package assembly:assembly "$@" 
 
 mkdir build
