@@ -55,7 +55,7 @@ JAVA_HOME=$JAVA32_HOME \
   -Dforrest.home=$FORREST_HOME \
   -Dcompile.native=true -Dcompile.c++=true \
   -Dhadoop.conf.dir=/etc/hadoop/conf \
-  -propertyfile cloudera/build.properties \
+  -propertyfile cloudera/build.properties -Drepo.maven.org=${IVY_MIRROR_PROP} -Dmvnrepo=${IVY_MIRROR_PROP} \
   ${IVY_EXTRA_ARGS} \
   task-controller package-native
 
@@ -67,7 +67,7 @@ ant \
   -Dreactor.repo=file://$HOME/.m2/repository \
   -Djdiff.stable=0.20.1 \
   -Djdiff.build.dir=build/docs/jdiff-cloudera \
-  -propertyfile build.properties \
+  -propertyfile build.properties -Drepo.maven.org=${IVY_MIRROR_PROP} -Dmvnrepo=${IVY_MIRROR_PROP} \
   ${IVY_EXTRA_ARGS} \
   -propertyfile cloudera/build.properties api-report
 fi
@@ -80,7 +80,7 @@ ant \
   -Dforrest.home=$FORREST_HOME \
   -Dcompile.native=true -Dcompile.c++=true \
   -Dhadoop.conf.dir=/etc/hadoop/conf \
-  -propertyfile cloudera/build.properties \
+  -propertyfile cloudera/build.properties -Drepo.maven.org=${IVY_MIRROR_PROP} -Dmvnrepo=${IVY_MIRROR_PROP} \
   ${IVY_EXTRA_ARGS} \
   task-controller package-native tar
 
