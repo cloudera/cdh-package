@@ -226,7 +226,7 @@ cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HDFS_DIR}/
 
 # bin
 install -d -m 0755 ${HADOOP_DIR}/bin
-cp -a ${BUILD_DIR}/bin/{hadoop,rcc} ${HADOOP_DIR}/bin
+cp -a ${BUILD_DIR}/bin/{hadoop,rcc,fuse_dfs,fuse_dfs_wrapper.sh} ${HADOOP_DIR}/bin
 install -d -m 0755 ${HDFS_DIR}/bin
 cp -a ${BUILD_DIR}/bin/hdfs ${HDFS_DIR}/bin
 install -d -m 0755 ${YARN_DIR}/bin
@@ -265,6 +265,46 @@ for library in `cd ${BUILD_DIR}/lib/native ; ls libsnappy.so.1.* 2>/dev/null` li
   ldconfig -vlN ${HADOOP_NATIVE_LIB_DIR}/${library}
   ln -s ${library} ${HADOOP_NATIVE_LIB_DIR}/${library/.so.*/}.so
 done
+
+# Install fuse wrapper
+fuse_wrapper=${BIN_DIR}/hadoop-fuse-dfs
+cat > $fuse_wrapper << EOF
+#!/bin/bash
+
+/sbin/modprobe fuse
+
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+. /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
+export HADOOP_HOME=\${HADOOP_HOME:-${HADOOP_DIR#${PREFIX}}}
+
+if [ -f /etc/default/hadoop-fuse ]
+then . /etc/default/hadoop-fuse
+fi
+
+export HADOOP_LIBEXEC_DIR=${SYSTEM_LIBEXEC_DIR#${PREFIX}}
+
+if [ "\${LD_LIBRARY_PATH}" = "" ]; then
+  export LD_LIBRARY_PATH=/usr/lib
+  for f in \`find \${JAVA_HOME} -name client -prune -o -name libjvm.so -exec dirname {} \;\`; do
+    export LD_LIBRARY_PATH=\$f:\${LD_LIBRARY_PATH}
+  done
+fi
+
+# Pulls all jars from hadoop client package
+for jar in \${HADOOP_HOME}/client/*.jar; do
+  CLASSPATH+="\$jar:"
+done
+
+env CLASSPATH="\${CLASSPATH}" \${HADOOP_HOME}/bin/fuse_dfs \$@
+EOF
+
+chmod 755 $fuse_wrapper
+
 
 # conf
 install -d -m 0755 $HADOOP_ETC_DIR/conf.empty
