@@ -61,7 +61,7 @@ License: APL2
 Source0: %{name}-%{flume_ng_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
-Source3: %{name}-node.init
+Source3: %{name}-agent.init
 Requires: coreutils, /usr/sbin/useradd, hadoop-hdfs
 Requires: bigtop-utils
 BuildRequires: ant xml-commons xml-commons-apis
@@ -75,8 +75,8 @@ Requires: sh-utils
 %description 
 Flume is a reliable, scalable, and manageable distributed data collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.  It can efficiently collect, aggregate, and move large amounts of log data.  It has a simple, but flexible, architecture based on streaming data flows.  It is robust and fault tolerant with tunable reliability mechanisms and many failover and recovery mechanisms.  The system is centrally managed and allows for intelligent dynamic management. It uses a simple extensible data model that allows for online analytic applications.
 
-%package node
-Summary: The flume node daemon is a core element of flume's data path and is responsible for generating, processing, and delivering data.
+%package agent
+Summary: The flume agent daemon is a core element of flume's data path and is responsible for generating, processing, and delivering data.
 Group: Development/Libraries
 BuildArch: noarch
 Requires: %{name} = %{version}-%{release}, /sbin/service
@@ -100,7 +100,7 @@ Requires: initscripts
 Requires: redhat-lsb
 %endif
 
-%description node
+%description agent
 Flume is a reliable, scalable, and manageable distributed data collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.  It can efficiently collect, aggregate, and move large amounts of log data.  It has a simple, but flexible, architecture based on streaming data flows.  It is robust and fault tolerant with tunable reliability mechanisms and many failover and recovery mechanisms.  The system is centrally managed and allows for intelligent dynamic management. It uses a simple extensible data model that allows for online analytic applications.
 
 %prep
@@ -119,7 +119,7 @@ sh %{SOURCE2} \
 
 
 # Install init script
-init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-node
+init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-agent
 %__cp %{SOURCE3} $init_file
 chmod 755 $init_file
 
@@ -141,17 +141,17 @@ if [ "$1" = 0 ]; then
         %{alternatives_cmd} --remove %{name}-conf %{etc_flume}.empty || :
 fi
 
-%post node
-chkconfig --add %{name}-node
+%post agent
+chkconfig --add %{name}-agent
 
-%preun node
+%preun agent
 if [ $1 = 0 ] ; then
-        service %{name}-node stop > /dev/null 2>&1
-        chkconfig --del %{name}-node
+        service %{name}-agent stop > /dev/null 2>&1
+        chkconfig --del %{name}-agent
 fi
-%postun node
+%postun agent
 if [ $1 -ge 1 ]; then
-        service %{name}-node condrestart >/dev/null 2>&1
+        service %{name}-agent condrestart >/dev/null 2>&1
 fi
 
 
@@ -172,5 +172,5 @@ fi
 %{lib_flume}/lib/*.jar
 %{lib_flume}/conf
 
-%files node
-%attr(0755,root,root)/%{initd_dir}/%{name}-node
+%files agent
+%attr(0755,root,root)/%{initd_dir}/%{name}-agent
