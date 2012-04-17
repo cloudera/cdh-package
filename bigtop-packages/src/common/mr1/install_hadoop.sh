@@ -166,7 +166,7 @@ EOF
 done
 
 # Provide a mapred link for MR2 hadoop launcher script
-ln -s hadoop $LIB_DIR/bin/mapred
+ln -fs hadoop $LIB_DIR/bin/mapred
 
 # Link examples to /usr/share
 mkdir -p $EXAMPLE_DIR
@@ -213,3 +213,7 @@ done
 rm -rf $LIB_DIR/cloudera*
 install -d -m 0755 $LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $LIB_DIR/cloudera
+
+# The following is an unfortunate side effect of how task-controller finds its configs (CDH-5282)
+rm -rf $LIB_DIR/conf
+ln -s ${ETC_DIR#$PREFIX}/conf $LIB_DIR/conf
