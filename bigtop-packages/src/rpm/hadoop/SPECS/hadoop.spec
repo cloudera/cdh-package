@@ -671,5 +671,4 @@ fi
 %files hdfs-fuse
 %defattr(-,root,root)
 %attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs
-%attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs_wrapper.sh
 %attr(0755,root,root) %{bin_hadoop}/hadoop-fuse-dfs
