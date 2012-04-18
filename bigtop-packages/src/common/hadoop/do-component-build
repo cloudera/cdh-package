@@ -59,4 +59,4 @@ JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms25
 (cd hadoop-client/target/hadoop-client-*/share/hadoop/client/lib ; ls) > build/hadoop-${FULL_VERSION}/hadoop-client.list
 
 # Copy fuse output to the build directory
-cp hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/target/fuse-dfs/src/{fuse_dfs,fuse_dfs_wrapper.sh} build/hadoop-${FULL_VERSION}/bin/
+cp hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/target/fuse-dfs/src/fuse_dfs build/hadoop-${FULL_VERSION}/bin/
