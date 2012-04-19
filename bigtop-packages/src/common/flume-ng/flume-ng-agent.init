@@ -52,14 +52,17 @@ FLUME_CONF_DIR=/etc/flume-ng/conf
 FLUME_RUN=/var/run/flume-ng
 FLUME_HOME=/usr/lib/flume-ng
 
-LOCKFILE="/var/lock/subsys/flume-ng-agent"
+LOCKDIR="/var/lock/subsys/"
+LOCKFILE="${LOCKDIR}/flume-ng-agent"
 desc="Flume NG agent daemon"
 
 FLUME_CONF_FILE=${FLUME_CONF_FILE:-${FLUME_CONF_DIR}/flume.conf}
 EXEC_PATH=/usr/bin/flume-ng
 FLUME_PID_FILE=${FLUME_RUN}/flume-agent.pid
 
-install -d -m 0755 -o flume -g flume ${FLUME_RUN} 
+install -d -m 0755 -o flume -g flume ${FLUME_RUN}
+install -d -m 0755 -o flume -g flume ${LOCKDIR}
+install -d -m 0755 -o flume -g flume ${FLUME_LOG_DIR}
 USER=flume
 
 DEFAULT_FLUME_AGENT_NAME="agent"
