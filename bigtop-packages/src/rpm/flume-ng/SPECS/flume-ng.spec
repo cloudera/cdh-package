@@ -103,6 +103,16 @@ Requires: redhat-lsb
 %description agent
 Flume is a reliable, scalable, and manageable distributed data collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.  It can efficiently collect, aggregate, and move large amounts of log data.  It has a simple, but flexible, architecture based on streaming data flows.  It is robust and fault tolerant with tunable reliability mechanisms and many failover and recovery mechanisms.  The system is centrally managed and allows for intelligent dynamic management. It uses a simple extensible data model that allows for online analytic applications.
 
+
+%package doc
+Summary: Flume NG Documentation
+Group: Documentation
+BuildArch: noarch
+
+%description doc
+Documentation for Flume NG
+
+
 %prep
 %setup -n flume-%{flume_ng_patched_version}
 
@@ -157,7 +167,6 @@ fi
 
 %files 
 %defattr(644,root,root,755)
-%doc %{doc_flume}
 
 %dir %{etc_flume}.empty
 %dir %{lib_flume}
@@ -174,3 +183,8 @@ fi
 
 %files agent
 %attr(0755,root,root)/%{initd_dir}/%{name}-agent
+
+%files doc
+%defattr(644,root,root,755)
+%doc %{doc_flume}/
+

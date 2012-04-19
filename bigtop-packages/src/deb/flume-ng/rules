@@ -55,6 +55,8 @@ install-indep:
 	dh_testroot
 	sh -x debian/install_flume-ng.sh \
 	  --build-dir=${PWD} \
+	  --doc-dir=/usr/share/doc/flume-ng-doc \
+	  --doc-dir-prefix=debian/flume-ng-doc \
 	  --prefix=debian/flume-ng
 	dh_install -i
 

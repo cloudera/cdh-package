@@ -40,3 +40,11 @@ Depends: flume-ng (= ${source:Version})
 Description: core element of Flume's data path that collects and delivers data
  The Flume agent daemon is a core element of flume's data path and is
  responsible for generating, processing, and delivering data.
+
+Package: flume-ng-doc
+Architecture: all
+Section: doc
+Description: Documentation for Flume NG
+ This package contains Flume NG documentation.
+
+
