@@ -72,13 +72,13 @@ flume_check_pidfile() {
 
 start() {
   echo -n $"Starting $desc (flume-@FLUME_DAEMON@): "
-  su -s /bin/sh  flume -c '${FLUME_HOME}/bin/flume-daemon.sh start @FLUME_DAEMON@'
+  su -s /bin/sh  flume -c "/usr/bin/env FLUME_CLASSPATH=':/usr/lib/hadoop/client/*' ${FLUME_HOME}/bin/flume-daemon.sh start @FLUME_DAEMON@"
   echo
 }
 
 stop() {
   echo -n $"Stopping $desc (flume-@FLUME_DAEMON@): "
-  su -s /bin/sh  flume -c '${FLUME_HOME}/bin/flume-daemon.sh stop @FLUME_DAEMON@'
+  su -s /bin/sh  flume -c "/usr/bin/env FLUME_CLASSPATH=':/usr/lib/hadoop/client/*' ${FLUME_HOME}/bin/flume-daemon.sh stop @FLUME_DAEMON@"
   [ $? -eq 0 ] && rm -f $FLUME_PID
   echo
 }
