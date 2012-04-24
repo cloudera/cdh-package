@@ -62,9 +62,10 @@ Source0: %{name}-%{flume_ng_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: %{name}-agent.init
-Requires: coreutils, /usr/sbin/useradd, hadoop-hdfs
+Requires: /usr/sbin/useradd
+Requires: coreutils
+Requires: hadoop-hdfs
 Requires: bigtop-utils
-BuildRequires: ant xml-commons xml-commons-apis
 
 %if  0%{?mgaversion}
 Requires: bsh-utils
@@ -79,7 +80,8 @@ Flume is a reliable, scalable, and manageable distributed data collection applic
 Summary: The flume agent daemon is a core element of flume's data path and is responsible for generating, processing, and delivering data.
 Group: Development/Libraries
 BuildArch: noarch
-Requires: %{name} = %{version}-%{release}, /sbin/service
+Requires: %{name} = %{version}-%{release}
+Requires: /sbin/service
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig
 
