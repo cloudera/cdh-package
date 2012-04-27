@@ -77,7 +77,6 @@ sh $RPM_SOURCE_DIR/install_mahout.sh \
           --prefix=$RPM_BUILD_ROOT \
           --doc-dir=%{doc_mahout} 
 rm -f $RPM_BUILD_ROOT/usr/lib/mahout/lib/hadoop*.jar
-ln -s /usr/lib/hadoop/hadoop-core.jar $RPM_BUILD_ROOT/usr/lib/mahout/lib/hadoop-core.jar
 
 %post
 %{alternatives_cmd} --install %{config_mahout} %{mahout_name}-conf %{config_mahout}.dist 30
