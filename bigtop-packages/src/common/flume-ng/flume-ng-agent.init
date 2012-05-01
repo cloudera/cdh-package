@@ -58,7 +58,7 @@ desc="Flume NG agent daemon"
 
 FLUME_CONF_FILE=${FLUME_CONF_FILE:-${FLUME_CONF_DIR}/flume.conf}
 EXEC_PATH=/usr/bin/flume-ng
-FLUME_PID_FILE=${FLUME_RUN}/flume-agent.pid
+FLUME_PID_FILE=${FLUME_RUN}/flume-ng-agent.pid
 
 install -d -m 0755 -o flume -g flume ${FLUME_RUN}
 install -d -m 0755 -o flume -g flume ${LOCKDIR}
