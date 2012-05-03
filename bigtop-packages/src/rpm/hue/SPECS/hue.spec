@@ -439,6 +439,7 @@ This package should be installed on each node in the Hadoop cluster.
 
 %files -n %{name}-plugins
 %{hadoop_lib}/
+%{hadoop_home}/cloudera/
 
 
 

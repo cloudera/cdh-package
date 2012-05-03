@@ -375,7 +375,10 @@ for file in `cat ${BUILD_DIR}/hadoop-client.list` ; do
 done
 
 # Cloudera specific
-for dir in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} ; do
-  install -d -m 0755 $dir/cloudera
-  cp cloudera/cdh_version.properties $dir/cloudera/
+for map in hadoop_${HADOOP_DIR} hadoop-hdfs_${HDFS_DIR} hadoop-yarn_${YARN_DIR} \
+           hadoop-mapreduce_${MAPREDUCE_DIR} hadoop-httpfs_${HTTPFS_DIR} ; do
+  dir=${map#*_}/cloudera
+  install -d -m 0755 $dir
+  grep -v 'cloudera.pkg.name=' cloudera/cdh_version.properties > $dir/cdh_version.properties
+  echo "cloudera.pkg.name=${map%%_*}" >> $dir/cdh_version.properties
 done
