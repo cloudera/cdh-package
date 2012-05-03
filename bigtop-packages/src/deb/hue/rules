@@ -79,6 +79,9 @@ install: build
 	# Cloudera specific
 	install -d -m 0755 $(PKG_DESKTOP_DIR)/cloudera
 	cp cloudera/cdh_version.properties $(PKG_DESKTOP_DIR)/cloudera/
+	install -d -m 0755 $(PKG_HADOOP_LIB_DIR)/../cloudera
+	grep -v 'cloudera.pkg.name=' < cloudera/cdh_version.properties > $(PKG_HADOOP_LIB_DIR)/../cloudera/cm_version.properties
+	echo 'cloudera.pkg.name=hue-plugins' >> $(PKG_HADOOP_LIB_DIR)/../cloudera/cm_version.properties
 
 	dh_install --sourcedir=debian/tmp --list-missing
 

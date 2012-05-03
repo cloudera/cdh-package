@@ -236,6 +236,9 @@ done
 # Cloudera specific
 install -d -m 0755 $RPM_BUILD_ROOT/%{hue_dir}/cloudera
 cp cloudera/cdh_version.properties $RPM_BUILD_ROOT/%{hue_dir}/cloudera/
+install -d -m 0755 %{buildroot}%{hadoop_lib}/../cloudera
+grep -v 'cloudera.pkg.name=' < cloudera/cdh_version.properties > %{buildroot}%{hadoop_lib}/../cloudera/cm_version.properties
+echo 'cloudera.pkg.name=hue-plugins' >> %{buildroot}%{hadoop_lib}/../cloudera/cm_version.properties
 
 #### PLUGINS ######
 
