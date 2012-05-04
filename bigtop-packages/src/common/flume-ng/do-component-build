@@ -16,7 +16,7 @@
 
 set -ex
 
-mvn clean install -DskipTests -Dhadoop.profile=23 ${DO_MAVEN_DEPLOY} "$@" 
+mvn clean source:jar javadoc:javadoc install -DskipTests -Dhadoop.profile=23 ${DO_MAVEN_DEPLOY} "$@" 
 
 mkdir build
 cp flume-ng-dist/target/flume-ng-dist-${FULL_VERSION}-dist.tar.gz build/flume-ng-${FULL_VERSION}.tar.gz
