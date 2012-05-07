@@ -27,7 +27,6 @@ Requires: %{name}-jobbrowser = %{version}-%{release}
 Requires: %{name}-beeswax = %{version}-%{release}
 Requires: %{name}-proxy = %{version}-%{release}
 Requires: %{name}-shell = %{version}-%{release}
-Requires: %{name}-server = %{version}-%{release}
 # hue-user is a virtual package
 Requires: %{name}-user
 
@@ -395,7 +394,7 @@ fi
 #### Service Scripts ######
 %package -n %{name}-server
 Summary: Service Scripts for Hue
-Requires: %{name}-common = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}
 Requires: /sbin/chkconfig
 Requires(pre): %{name} = %{version}-%{release}
 Group: Applications/Engineering
