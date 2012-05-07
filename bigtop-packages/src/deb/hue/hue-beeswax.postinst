@@ -24,8 +24,10 @@ export DESKTOP_LOGLEVEL=WARN
 export DESKTOP_LOG_DIR=/var/log/hue
 
 mkdir -p $DESKTOP_LOG_DIR
+chown $USER:$USER $DESKTOP_LOG_DIR/
 touch $DESKTOP_LOG_DIR/beeswax_server.log
 touch $DESKTOP_LOG_DIR/beeswax_server.out
+chown $USER:$USER $DESKTOP_LOG_DIR/beeswax_server.*
 
 case "$1" in
     configure)

@@ -19,10 +19,11 @@ export ROOT=/usr/share/hue
 APP_DIR=$ROOT/apps/jobsub
 export DESKTOP_LOGLEVEL=WARN
 export DESKTOP_LOG_DIR=/var/log/hue
-
 mkdir -p $DESKTOP_LOG_DIR
+chown $USER:$USER $DESKTOP_LOG_DIR/
 touch $DESKTOP_LOG_DIR/jobsubd.log
 touch $DESKTOP_LOG_DIR/jobsubd.out
+chown $USER:$USER $DESKTOP_LOG_DIR/jobsubd.*
 
 case "$1" in
     configure)
