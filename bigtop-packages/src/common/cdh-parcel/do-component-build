@@ -16,8 +16,22 @@
 
 set -ex
 
-PKG_ARCHIVE=${PKG_ARCHIVE:-"http://repos.jenkins.sf.cloudera.com/cdh4-nightly/"}
+[ -f cdh-parcel.props ] && . cdh-parcel.props
+
+PKG_ARCHIVE=${PKG_ARCHIVE:-"http://repos.jenkins.cloudera.com/cdh4-nightly/"}
 CDH_VERSION=${CDH_VERSION:-"4"}
+
+# If PKG_FORMAT not specified assume tarballs
+if [ -z "$PKG_FORMAT" ] ; then
+  rm -rf build
+  mkdir build
+  cat > build/cdh-parcel.props <<__EOT__
+PKG_ARCHIVE="$PKG_ARCHIVE"
+CDH_VERSION="$CDH_VERSION"
+__EOT__
+  tar -C build -czf build/cdh-parcel-${FULL_VERSION}.tar.gz cdh-parcel.props
+  exit 0
+fi
 
 REDHAT_RELEASES="rhel|redhat|centos|red.hat"
 SUSE_RELEASES="suse|sles"
@@ -36,14 +50,14 @@ fi
 if egrep -i $UBUNTU_RELEASES /etc/*release ;then
   for release in `echo $UBUNTU_RELEASES | tr '|' ' '` ; do
     if fgrep -q $release /etc/*release ; then
-      PKGS="`curl ${PKG_ARCHIVE}/debian/dists/${release}-cdh${CDH_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
-             sed -ne '/^Filename:/s#^Filename: #'"${PKG_ARCHIVE}"'/debian/#p'`"
+      PKGS="`curl ${PKG_ARCHIVE}/ubuntu/${release}/${DEB_ARC}/cdh/dists/${release}-cdh${CDH_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
+             sed -ne '/^Filename:/s#^Filename: #'"${PKG_ARCHIVE}/ubuntu/${release}/${DEB_ARC}/cdh/"'#p'`"
     fi
   done
 elif [ -f /etc/debian_version ] ;then
   release=squeeze
-  PKGS="`curl ${PKG_ARCHIVE}/debian/dists/${release}-cdh${CDH_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
-         sed -ne '/^Filename:/s#^Filename: #'"${PKG_ARCHIVE}"'/debian/#p'`"
+  PKGS="`curl ${PKG_ARCHIVE}/debian/${release}/${DEB_ARC}/cdh/dists/${release}-cdh${CDH_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
+         sed -ne '/^Filename:/s#^Filename: #'"${PKG_ARCHIVE}/debian/${release}/${DEB_ARC}/cdh/"'#p'`"
 elif egrep -i $REDHAT_RELEASES /etc/*release ;then
   if fgrep "6." /etc/*release ;then
     PKGS="${PKG_ARCHIVE}/redhat/6/${ARC}/cdh/${CDH_VERSION}/RPMS"
@@ -61,16 +75,26 @@ fi
 # Download the packages
 rm -rf dl
 mkdir dl
-(cd dl ; wget -r -l2 --no-parent $PKGS)
+(cd dl ; wget -N -r -l2 --no-parent $PKGS)
+
+# Make sure we filter out the most recent versions of the packages
+#RPMS=`find dl -name \*.rpm -printf '%p\t'  -exec rpm -q --qf '%{NAME}\n' -p {} \; 2>/dev/null`
+#DEBS=`find dl -name \*.deb -printf '%p\t'  -exec bash -c 'dpkg -I {} | grep Package: | cut -f3 -d\  ' \; 2>/dev/null` 
 
 # Unpack the bits
 rm -rf build
 mkdir build
-for pkg in `find dl -type f` ; do
+echo 'cdh-parcel' > build/seen_deb 
+echo 'cdh-parcel' > build/seen_rpm
+for pkg in $(ls -t `find dl -type f`) ; do
   case $pkg in
-     *.deb) dpkg -x $pkg ./build
+     *.deb) PKG_NAME=`dpkg -I $pkg | grep Package: | cut -f3 -d\  `
+            grep -q '^'$PKG_NAME'$' build/seen_deb || dpkg -x $pkg ./build
+            echo $PKG_NAME >> build/seen_deb
             ;;
-     *.rpm) rpm2cpio $pkg | (cd build ; cpio -i --make-directories)
+     *.rpm) PKG_NAME=`rpm -q --qf '%{NAME}' -p $pkg`
+            grep -q '^'$PKG_NAME'$' build/seen_rpm || rpm2cpio $pkg | (cd build ; cpio -i --make-directories)
+            echo $PKG_NAME >> build/seen_rpm
             ;;
   esac
   rm $pkg

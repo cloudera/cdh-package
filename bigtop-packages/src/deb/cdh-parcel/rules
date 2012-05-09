@@ -35,7 +35,7 @@ patch-stamp:
 build:
 	dh_testdir
 	dh_clean -k
-	bash debian/do-component-build
+	PKG_FORMAT=deb bash debian/do-component-build
 
 build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
@@ -51,10 +51,11 @@ clean:
 
 install: debian/cdh-parcel-client-$(version)/opt/cdh-parcel-$(version)
 debian/cdh-parcel-client-$(version)/opt/cdh-parcel-$(version): debian/cdh-parcel-$(version)/opt/cdh-parcel-$(version)
-	mkdir -p $@/{lib,share/doc}
-	mv $</share/doc/{pig,hive,sqoop,mahout}* $@/share/doc
-	mv $</lib/{pig,hive,mahout}* $@/lib
-	echo /opt > debian/cdh-parcel-client-$(version).install
+	@echo building client
+#	mkdir -p $@/{lib,share/doc}
+#	mv $</share/doc/{pig,hive,sqoop,mahout}* $@/share/doc
+#	mv $</lib/{pig,hive,mahout}* $@/lib
+#	echo /opt > debian/cdh-parcel-client-$(version).install
 
 debian/cdh-parcel-$(version)/opt/cdh-parcel-$(version):
 	mkdir -p $@
@@ -71,7 +72,6 @@ binary-common:
 	dh_makeshlibs
 	dh_installdocs
 	dh_installdeb
-	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb

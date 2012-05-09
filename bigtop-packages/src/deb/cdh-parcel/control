@@ -29,9 +29,3 @@ Description: All the server side CDH java bits in one relocatable package
  useful in cases where you would want to do rolling upgrades of your cluster
  and you have some other mechanism for managing orchestration.
 
-Package: cdh-parcel-client-
-Architecture: all
-Depends: ${misc:Depends}, cdh-parcel-
-Description: All the client side CDH java bits in one relocatable package 
- This package delivers all the client side java bits for CDH and can be 
- installed side-by-side with different versions of the same package. 
