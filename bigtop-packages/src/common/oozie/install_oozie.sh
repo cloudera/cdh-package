@@ -226,7 +226,11 @@ if [ "${OOZIE_INITD}" != "" ]; then
   chmod 755 ${OOZIE_INITD}/oozie
  failIfNotOK
 fi
-cp -R ${OOZIE_BUILD_DIR}/oozie-sharelib*.tar.gz ${OOZIE_SERVER_DIR}/oozie-sharelib.tar.gz
+cp -R ${OOZIE_BUILD_DIR}/oozie-sharelib*yarn.tar.gz ${OOZIE_SERVER_DIR}/oozie-sharelib-yarn.tar.gz
+failIfNotOK
+cp -R ${OOZIE_BUILD_DIR}/oozie-*sharelib.tar.gz ${OOZIE_SERVER_DIR}/oozie-sharelib-mr1.tar.gz
+failIfNotOK
+ln -s oozie-sharelib-mr1.tar.gz ${OOZIE_SERVER_DIR}/oozie-sharelib.tar.gz
 failIfNotOK
 cp -R ${OOZIE_BUILD_DIR}/oozie-server/webapps ${OOZIE_SERVER_DIR}/webapps
 failIfNotOK
