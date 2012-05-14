@@ -59,6 +59,8 @@ install: build
 	  --system-lib-dir=/usr/lib/hadoop-0.20-mapreduce/lib/native \
 	  --system-include-dir=/usr/lib/hadoop-0.20-mapreduce/include \
 	  --installed-lib-dir=/usr/lib/hadoop-0.20-mapreduce
+	# Workaround for BIGTOP-583
+	rm -f debian/tmp/usr/lib/hadoop-0.20-mapreduce/lib/slf4j-log4j12-*.jar
 	# We need to link to the jar files provided by Hadoop 0.23 implementation
 	rm -f debian/tmp/usr/lib/hadoop-0.20-mapreduce/lib/{${jar_deps_hadoop}}*.jar
 	mkdir -p debian/tmp/etc/hadoop/conf.pseudo.mr1

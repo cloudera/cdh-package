@@ -246,6 +246,9 @@ done
 %__install -d -m 0775 $RPM_BUILD_ROOT/var/run/%{name}
 %__install -d -m 0775 $RPM_BUILD_ROOT/%{log_hadoop}
 
+# Workaround for BIGTOP-583
+rm -f $RPM_BUILD_ROOT/%{lib_hadoop}/lib/slf4j-log4j12-*.jar
+
 # We need to link to the jar files provided by Hadoop 0.23 implementation
 rm -f $RPM_BUILD_ROOT/%{lib_hadoop}/lib/{%{jar_deps_hadoop}}*.jar
 
