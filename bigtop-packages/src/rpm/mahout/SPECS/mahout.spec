@@ -76,7 +76,8 @@ sh $RPM_SOURCE_DIR/install_mahout.sh \
           --build-dir=build/mahout-%{mahout_patched_version} \
           --prefix=$RPM_BUILD_ROOT \
           --doc-dir=%{doc_mahout} 
-rm -f $RPM_BUILD_ROOT/usr/lib/mahout/lib/hadoop*.jar
+%__rm -rf $RPM_BUILD_ROOT/usr/lib/mahout/lib/slf4j-log4j12-*.jar $RPM_BUILD_ROOT/usr/lib/mahout/lib/hadoop
+%__ln_s -f /usr/lib/hadoop/client $RPM_BUILD_ROOT/usr/lib/mahout/lib/hadoop
 
 %post
 %{alternatives_cmd} --install %{config_mahout} %{mahout_name}-conf %{config_mahout}.dist 30

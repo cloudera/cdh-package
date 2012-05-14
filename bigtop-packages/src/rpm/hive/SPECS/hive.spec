@@ -145,6 +145,9 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 %__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/zookeeper-*.jar
 %__ln_s  /usr/lib/hbase/hbase.jar /usr/lib/zookeeper/zookeeper.jar  $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
 
+# Workaround for BIGTOP-583
+%__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/slf4j-log4j12-*.jar
+
 for service in %{hive_services}
 do
         init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
