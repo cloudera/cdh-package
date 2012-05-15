@@ -33,6 +33,7 @@ mvn clean \
 	install \
 	javadoc:javadoc \
         -Phadoop-0.23 \
+        -Dhadoop.profile=23 \
 	-Dbuild.revision=${FLUME_BUILD_REF} \
 	-Dthrift.executable=${THRIFT_HOME}/bin/thrift \
 	-DskipTests \
