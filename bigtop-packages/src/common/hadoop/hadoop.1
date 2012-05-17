@@ -276,6 +276,12 @@ Service script for starting and stopping the Hadoop Secondary NameNode
 .IP "/etc/init.d/hadoop\-hdfs\-zkfc" 4
 .IX Item "/etc/init.d/hadoop-secondarynamenode"
 Service script for starting and stopping the Hadoop HDFS failover controller
+.IP "/etc/init.d/hadoop\-0.20\-mapreduce\-jobtracker" 4
+.IX Item "/etc/init.d/hadoop-0.20-mapreduce-jobtracker"
+Service script for starting and stopping the Hadoop MR1 JobTracker
+.IP "/etc/init.d/hadoop\-0.20\-mapreduce\-tasktracker" 4
+.IX Item "/etc/init.d/hadoop-0.20-mapreduce-tasktracker"
+Service script for starting and stopping the Hadoop MR1 TaskTracker
 .IP "/etc/init.d/hadoop\-yarn\-resourcemanager" 4
 .IX Item "/etc/init.d/hadoop-yarn-resourcemanager"
 Service script for starting and stopping the Hadoop YARN Resource Manager
@@ -300,7 +306,7 @@ The location of the Hadoop configuration files.  Defaults to \f(CW\*(C`/etc/hado
 see the \f(CW\*(C`FILES\*(C'\fR section.
 .IP "\s-1HADOOP_MAPRED_HOME\s0" 4
 .IX Item "HADOOP_MAPRED_HOME"
-The location of the Hadoop MapReduce implementation jar files are by default in \f(CW\*(C`/usr/lib/hadoop-mapred\*(C'\fR.  You can change the location with this environment variable.
+The location of the Hadoop MapReduce implementation jar files are by default in \f(CW\*(C`/usr/lib/hadoop-0.20-mapreduce\*(C'\fR.  You can change the location with this environment variable in order to switch between MR1 and MR2(YARN) alternative implementations of the MapReduce framework. Set it to \f(CW\*(C`/usr/lib/hadoop-mapreduce\*(C'\fR if you want Hadoop to utilize MR2(YARN) and to \f(CW\*(C`/usr/lib/hadoop-0.20-mapreduce\*(C'\fR if you want MR1 APIs.
 .IP "\s-1HADOOP_COMMON_HOME\s0" 4
 .IX Item "HADOOP_COMMON_HOME"
 The location of the Hadoop common jar files are by default in \f(CW\*(C`/usr/lib/hadoop\*(C'\fR.  You can change the location 
@@ -318,7 +324,7 @@ with this environment variable (not recommeded).
 .Vb 4
 \& $ mkdir input
 \& $ cp <txt files> input
-\& $ hadoop jar /usr/lib/hadoop-mapreduce/*example*.jar input output 'grep string'
+\& $ hadoop jar /usr/lib/hadoop-0.20-mapreduce/hadoop-examples.jar input output 'grep string'
 \& $ cat output/*
 .Ve
 .SH "COPYRIGHT"
