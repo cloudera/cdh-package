@@ -62,6 +62,7 @@ Source0: %{name}-%{flume_ng_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: %{name}-agent.init
+Source4: flume-ng-agent.default
 Requires: /usr/sbin/useradd
 Requires: coreutils
 Requires: hadoop-hdfs
@@ -138,6 +139,10 @@ chmod 755 $init_file
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
+%__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
+%__cp %{SOURCE4} $RPM_BUILD_ROOT/etc/default/%{name}-agent
+
+
 %pre
 getent group flume >/dev/null || groupadd -r flume
 getent passwd flume >/dev/null || useradd -c "Flume" -s /sbin/nologin -g flume -r -d /var/run/flume-ng flume 2> /dev/null || :
@@ -185,6 +190,7 @@ fi
 
 %files agent
 %attr(0755,root,root)/%{initd_dir}/%{name}-agent
+%attr(0644,root,root) %config(noreplace) /etc/default/%{name}-agent
 
 %files doc
 %defattr(644,root,root,755)
