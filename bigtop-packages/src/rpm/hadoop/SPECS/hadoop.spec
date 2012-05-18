@@ -667,6 +667,7 @@ fi
 %files client
 %defattr(-,root,root)
 %{lib_hadoop}/client
+%{lib_hadoop}/client-0.20
 
 %files libhdfs
 %defattr(-,root,root)

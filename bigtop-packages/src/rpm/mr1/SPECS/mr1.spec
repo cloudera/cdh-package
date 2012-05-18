@@ -6,7 +6,6 @@
 %define config_hadoop %{etc_hadoop}/conf
 %define lib_hadoop_dirname /usr/lib
 %define lib_hadoop %{lib_hadoop_dirname}/%{name}
-%define lib_client %{lib_hadoop_dirname}/hadoop/client-0.20
 %define log_hadoop_dirname /var/log
 %define log_hadoop %{log_hadoop_dirname}/%{name}
 %define bin_hadoop %{_bindir}
@@ -296,7 +295,6 @@ fi
 %config(noreplace) /etc/default/%{hadoop_name}-mapreduce
 %attr(4754,root,mapred) %{lib_hadoop}/sbin/%{hadoop_arch}/task-controller
 %{lib_hadoop}
-%{lib_client}
 %{bin_hadoop}/hadoop-0.20
 %{man_hadoop}/man1/%{hadoop_name}.1.gz
 %attr(0775,root,hadoop) /var/run/%{name}

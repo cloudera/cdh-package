@@ -89,8 +89,14 @@ while true ; do
         --mapreduce-dir)
         MAPREDUCE_DIR=$2 ; shift 2
         ;;
+        --mapreduce-mr1-dir)
+        MAPREDUCE_MR1_DIR=$2 ; shift 2
+        ;;
         --client-dir)
         CLIENT_DIR=$2 ; shift 2
+        ;;
+        --client-mr1-dir)
+        CLIENT_MR1_DIR=$2 ; shift 2
         ;;
         --system-include-dir)
         SYSTEM_INCLUDE_DIR=$2 ; shift 2
@@ -150,7 +156,9 @@ HADOOP_DIR=${HADOOP_DIR:-$PREFIX/usr/lib/hadoop}
 HDFS_DIR=${HDFS_DIR:-$PREFIX/usr/lib/hadoop-hdfs}
 YARN_DIR=${YARN_DIR:-$PREFIX/usr/lib/hadoop-yarn}
 MAPREDUCE_DIR=${MAPREDUCE_DIR:-$PREFIX/usr/lib/hadoop-mapreduce}
+MAPREDUCE_MR1_DIR=${MAPREDUCE_MR1_DIR:-/usr/lib/hadoop-0.20-mapreduce}
 CLIENT_DIR=${CLIENT_DIR:-$PREFIX/usr/lib/hadoop/client}
+CLIENT_MR1_DIR=${CLIENT_MR1_DIR:-$PREFIX/usr/lib/hadoop/client-0.20}
 HTTPFS_DIR=${HTTPFS_DIR:-$PREFIX/usr/lib/hadoop-httpfs}
 SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
@@ -374,6 +382,19 @@ for file in `cat ${BUILD_DIR}/hadoop-client.list` ; do
     [ -e $dir/$file ] && ln -fs ${dir#$PREFIX}/$file ${CLIENT_DIR}/$file && continue 2
   done
   exit 1
+done
+
+# Now create a MR1 client installation area full of symlinks
+install -d -m 0755 ${CLIENT_MR1_DIR}
+for file in `cat ${BUILD_DIR}/hadoop-mr1-client.list` ; do
+  for dir in ${HADOOP_DIR}/{lib,} ${HDFS_DIR}/{lib,} ; do
+    [ -e $dir/$file ] && ln -fs ${dir#$PREFIX}/$file ${CLIENT_MR1_DIR}/$file && continue 2
+  done
+  if [[ $file =~ hadoop-core ]] ; then
+    ln -fs $MAPREDUCE_MR1_DIR/$file ${CLIENT_MR1_DIR}/$file
+  else
+    ln -fs $MAPREDUCE_MR1_DIR/lib/$file ${CLIENT_MR1_DIR}/$file
+  fi
 done
 
 # Cloudera specific
