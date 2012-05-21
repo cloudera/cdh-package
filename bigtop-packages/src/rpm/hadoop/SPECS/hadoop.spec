@@ -350,7 +350,8 @@ Requires: %{name} = %{version}-%{release}
 Requires: %{name}-hdfs = %{version}-%{release}
 Requires: %{name}-yarn = %{version}-%{release}
 Requires: %{name}-mapreduce = %{version}-%{release}
-Requires: %{name}-0.20-mapreduce
+Requires: %{name}-0.20-mapreduce >= 0.20.2+1213
+Requires(pre): %{name}-0.20-mapreduce >= 0.20.2+1213
 
 %description client
 Installation of this package will provide you with all the dependencies for Hadoop clients.
