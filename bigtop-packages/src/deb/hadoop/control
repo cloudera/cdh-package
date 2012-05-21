@@ -205,7 +205,8 @@ Description: HTTPFS for Hadoop
 Package: hadoop-client
 Provides: hadoop-client
 Architecture: all
+Replaces: hadoop-0.20-mapreduce (<< 0.20.2+1213)
 Depends: hadoop (= ${source:Version}), hadoop-hdfs (= ${source:Version}),
-         hadoop-yarn (= ${source:Version}), hadoop-mapreduce (= ${source:Version}), hadoop-0.20-mapreduce
+         hadoop-yarn (= ${source:Version}), hadoop-mapreduce (= ${source:Version}), hadoop-0.20-mapreduce (>= 0.20.2+1213)
 Description: Hadoop client side dependencies
  Installation of this package will provide you with all the dependencies for Hadoop clients.
