@@ -394,7 +394,7 @@ fi
 #### Service Scripts ######
 %package -n %{name}-server
 Summary: Service Scripts for Hue
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}-common = %{version}-%{release}
 Requires: /sbin/chkconfig
 Requires(pre): %{name} = %{version}-%{release}
 Group: Applications/Engineering
