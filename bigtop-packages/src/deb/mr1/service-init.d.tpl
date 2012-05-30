@@ -21,8 +21,8 @@
 # Required-Stop:
 # Should-Start:      $named
 # Should-Stop:
-# Default-Start:     3 5
-# Default-Stop:      0 1 2 4 6
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
 # Short-Description: Hadoop @HADOOP_DAEMON@ daemon
 ### END INIT INFO
 
