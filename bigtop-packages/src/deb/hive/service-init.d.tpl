@@ -25,7 +25,7 @@
 #
 # Starts a Hive @HIVE_DAEMON@
 #
-# chkconfig: 345 85 15
+# chkconfig: 2345 85 15
 # description: Starts a Hive @HIVE_DAEMON@
 # processname: hive
 #
@@ -35,8 +35,8 @@
 # Should-Start:
 # Required-Stop:     $syslog $remote_fs
 # Should-Stop:
-# Default-Start:     3 4 5
-# Default-Stop:      0 1 2 6
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
 # Short-Description: Starts a Hive @HIVE_DAEMON@
 ### END INIT INFO
 

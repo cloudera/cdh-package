@@ -17,7 +17,7 @@
 #
 # Starts Oozie Server
 #
-# chkconfig: 345 90 10
+# chkconfig: 2345 90 10
 # description: Oozie Server
 #
 ### BEGIN INIT INFO
