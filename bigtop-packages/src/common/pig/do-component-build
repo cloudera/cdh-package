@@ -23,24 +23,20 @@ if ! [ -e $FORREST_HOME/bin/forrest ]; then
   exit 1
 fi
 
+BUILD_OPTS="-Djavac.version=1.6 -Dforrest.home=${FORREST_HOME}  -Dhadoopversion=23   \
+            -Dreactor.repo=file://${HOME}/.m2/repository -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP \
+            -propertyfile cloudera/build.properties"
+
 # Build pig jars.
-ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Dreactor.repo=file://${HOME}/.m2/repository \
-    -Dhadoopversion=23 -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP -propertyfile cloudera/build.properties clean jar jar-withouthadoop "$@"
+ant $BUILD_OPTS clean jar jar-withouthadoop "$@"
 
-# Build zebra
-ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Dreactor.repo=file://${HOME}/.m2/repository \
-    -Dhadoopversion=23 -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP -propertyfile cloudera/build.properties \
-    -buildfile contrib/zebra/build.xml clean jar "$@"
-
-# Build piggybank
-ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Dreactor.repo=file://${HOME}/.m2/repository \
-    -Dhadoopversion=23 -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP -propertyfile cloudera/build.properties \
-    -buildfile contrib/piggybank/java/build.xml clean jar "$@"
+# Build piggybank, penny, zebra
+for build_file in contrib/piggybank/java/build.xml contrib/penny/java/build.xml contrib/zebra/build.xml ; do
+  ant $BUILD_OPTS -buildfile $build_file clean jar "$@"
+done
 
 # Build pig tar and pigunit..
-ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Dreactor.repo=file://${HOME}/.m2/repository \
-    -Dhadoopversion=23 -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP -propertyfile cloudera/build.properties \
-    tar pigunit-jar smoketests-jar "$@"
+ant $BUILD_OPTS tar pigunit-jar smoketests-jar "$@"
 
 # Clean up after piggybank.
 rm -rf contrib/piggybank/java/build
