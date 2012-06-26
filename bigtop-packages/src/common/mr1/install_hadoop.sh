@@ -139,6 +139,7 @@ done)
 
 # Take out things we've installed elsewhere
 for x in docs lib/native c++ src conf usr/bin/fuse_dfs contrib/fuse contrib/hod \
+         contrib/datajoin contrib/failmon contrib/index contrib/thriftfs contrib/vaidya \
          hadoop-client.list pids lib/hadoop-{annotations,auth,common,hdfs}* ; do
   rm -rf $LIB_DIR/$x 
 done
