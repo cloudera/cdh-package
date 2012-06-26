@@ -22,3 +22,4 @@ export OOZIE_CATALINA_HOME=/usr/lib/bigtop-tomcat
 export CATALINA_TMPDIR=/var/tmp/oozie
 export CATALINA_PID=/var/run/oozie/oozie.pid
 export CATALINA_BASE=/usr/lib/oozie/oozie-server-0.20
+export CATALINA_OPTS=-Xmx1024m
