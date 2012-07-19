@@ -156,6 +156,19 @@ FLUME_NG_TARBALL_SRC=flume-$(FLUME_NG_BASE_VERSION).tar.gz
 FLUME_NG_SITE=$(APACHE_MIRROR)/incubator/flume/flume-$(FLUME_NG_BASE_VERSION)/
 $(eval $(call PACKAGE,flume-ng,FLUME_NG))
 
+# DataFu 
+DATAFU_NAME=datafu
+DATAFU_RELNOTES_NAME=Collection of user-defined functions
+DATAFU_PKG_NAME=pig-udf-datafu
+DATAFU_BASE_VERSION=0.0.4
+DATAFU_PKG_VERSION=0.0.4
+DATAFU_RELEASE_VERSION=1
+DATAFU_TARBALL_DST=datafu-$(DATAFU_BASE_VERSION).tar.gz
+DATAFU_TARBALL_SRC=$(DATAFU_TARBALL_DST)
+DATAFU_SITE=https://github.com/downloads/linkedin/datafu
+DATAFU_ARCHIVE=$(DATAFU_SITE)
+$(eval $(call PACKAGE,datafu,DATAFU))
+
 # Bigtop-utils
 BIGTOP_UTILS_NAME=bigtop-utils
 BIGTOP_UTILS__RELNOTES_NAME=Bigtop-utils
