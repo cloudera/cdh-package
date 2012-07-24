@@ -30,9 +30,15 @@ BUILD_OPTS="-Djavac.version=1.6 -Dforrest.home=${FORREST_HOME}  -Dhadoopversion=
 # Build pig jars.
 ant $BUILD_OPTS clean jar jar-withouthadoop "$@"
 
-# Build piggybank, penny, zebra
-for build_file in contrib/piggybank/java/build.xml contrib/penny/java/build.xml contrib/zebra/build.xml ; do
+# Build piggybank, penny
+for build_file in contrib/piggybank/java/build.xml contrib/penny/java/build.xml ; do
   ant $BUILD_OPTS -buildfile $build_file clean jar "$@"
+done
+
+# Additional JARs needed for Avro integration
+IVY_LIB=build/ivy/lib/Pig
+for jar_file in avro-1.5.4 jackson-core-asl-1.7.3 jackson-mapper-asl-1.7.3 json-simple-1.1 snappy-java-1.0.3.2 ; do
+	cp $IVY_LIB/$jar_file.jar contrib/piggybank/java/lib/
 done
 
 # Build pig tar and pigunit..
