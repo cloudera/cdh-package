@@ -118,7 +118,7 @@ Documentation for Flume NG
 
 
 %prep
-%setup -n flume-%{flume_ng_patched_version}
+%setup -n apache-flume-%{flume_ng_patched_version}
 
 %build
 env FULL_VERSION=%{flume_ng_patched_version} sh %{SOURCE1}
