@@ -101,7 +101,7 @@ BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 
 # Move things into lib
 install -d -m 0755 $LIB_DIR
-cp -fr $BUILD_DIR/{bin,conf,contrib,lib,recipes,scripts} $LIB_DIR
+cp -fr $BUILD_DIR/{bin,conf,contrib,lib,recipes} $LIB_DIR
 
 # Copy in the /usr/bin/whirr wrapper
 install -d -m 0755 $BIN_DIR
