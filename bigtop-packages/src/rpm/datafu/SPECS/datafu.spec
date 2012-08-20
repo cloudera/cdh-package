@@ -70,8 +70,8 @@ sh $RPM_SOURCE_DIR/install_datafu.sh \
 %files 
 %defattr(-,root,root,755)
 %{lib_datafu}
-%{lib_datafu}/datafu
-%{lib_datafu}/datafu/cloudera
+%dir %{lib_datafu}/datafu
+%dir %{lib_datafu}/datafu/cloudera
 %{lib_datafu}/datafu/cloudera/cdh_version.properties
 
 
