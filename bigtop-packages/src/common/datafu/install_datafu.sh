@@ -100,6 +100,8 @@ install -d -m 0755 $LIB_DIR
 cp $BUILD_DIR/datafu-*.jar $LIB_DIR
 
 # Cloudera specific
+install -d -m 0755 $PREFIX/$LIB_DIR/datafu
 install -d -m 0755 $PREFIX/$LIB_DIR/datafu/cloudera
+
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/datafu/cloudera/
 
