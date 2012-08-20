@@ -53,10 +53,10 @@ Convenience utility functions (e.g., assertions, easier writing of EvalFuncs)
 and more...
 
 %prep
-%setup -n %{datafu_name}-%{datafu_base_version}
+%setup -n %{datafu_name}-%{datafu_patched_version}
 
 %build
-bash $RPM_SOURCE_DIR/do-component-build
+env FULL_VERSION=%{datafu_patched_version} bash $RPM_SOURCE_DIR/do-component-build
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
