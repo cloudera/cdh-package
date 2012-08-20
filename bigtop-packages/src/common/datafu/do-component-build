@@ -21,6 +21,7 @@ ant release "$@"
 mkdir -p build
 
 mv dist/*.tar.gz build/datafu-$FULL_VERSION.tar.gz
+cp dist/datafu-$FULL_VERSION.jar build
 
 # Change to cloudera/maven directory, and install
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository

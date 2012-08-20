@@ -46,7 +46,7 @@ install-indep:
 	dh_testdir
 	dh_testroot
 	sh -x debian/install_datafu.sh \
-	  --build-dir=dist \
+	  --build-dir=build \
 	  --prefix=debian/tmp/pig-udf-datafu
 	dh_install --sourcedir=debian/tmp/pig-udf-datafu -i
 
