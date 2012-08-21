@@ -56,7 +56,7 @@
 %define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define httpfs_services httpfs
 %define mapreduce_services mapreduce-historyserver
-%define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc
+%define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode
 %define yarn_services yarn-resourcemanager yarn-nodemanager yarn-proxyserver
 %define hadoop_services %{hdfs_services} %{mapreduce_services} %{yarn_services} %{httpfs_services}
 # Hadoop outputs built binaries into %{hadoop_build}
@@ -163,7 +163,8 @@ Source20: hdfs.default
 Source21: yarn.default
 Source22: hadoop-layout.sh
 Source23: hadoop-hdfs-zkfc.svc
-Source24: %{name}-bigtop-packaging.tar.gz
+Source24: hadoop-hdfs-journalnode.svc
+Source25: %{name}-bigtop-packaging.tar.gz
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils, zookeeper >= 3.4.0
@@ -291,6 +292,17 @@ which runs a NameNode also runs a ZKFC, and that ZKFC is responsible
 for: Health monitoring, ZooKeeper session management, ZooKeeper-based
 election.
 
+%package hdfs-journalnode
+Summary: Hadoop HDFS JournalNode
+Group: System/Daemons
+Requires: %{name}-hdfs = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
+
+%description hdfs-journalnode
+The HDFS JournalNode is responsible for persisting NameNode edit logs. 
+In a typical deployment the JournalNode daemon runs on at least three 
+separate machines in the cluster.
+
 %package hdfs-datanode
 Summary: Hadoop Data Node
 Group: System/Daemons
@@ -414,7 +426,7 @@ These projects (enumerated below) allow HDFS to be mounted (on most flavors of U
 
 %prep
 %setup -n %{name}-%{hadoop_patched_version}
-tar -C `dirname %{SOURCE24}` -xzf %{SOURCE24}
+tar -C `dirname %{SOURCE25}` -xzf %{SOURCE25}
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME
@@ -654,6 +666,7 @@ fi
 %service_macro hdfs-namenode
 %service_macro hdfs-secondarynamenode
 %service_macro hdfs-zkfc
+%service_macro hdfs-journalnode
 %service_macro hdfs-datanode
 %service_macro yarn-resourcemanager
 %service_macro yarn-nodemanager
