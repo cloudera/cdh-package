@@ -83,18 +83,26 @@ mkdir dl
 
 # Unpack the bits
 rm -rf build
-mkdir build
-echo 'cdh-parcel' > build/seen_deb 
-echo 'cdh-parcel' > build/seen_rpm
+mkdir -p build/seen
+
+# We don't want to recurse into ourselves 
+rm -rf `find dl -type f -name cdh-parcel\*`
+
 for pkg in $(ls -t `find dl -type f`) ; do
   case $pkg in
      *.deb) PKG_NAME=`dpkg -I $pkg | grep Package: | cut -f3 -d\  `
-            grep -q '^'$PKG_NAME'$' build/seen_deb || dpkg -x $pkg ./build
-            echo $PKG_NAME >> build/seen_deb
+            if [ ! -f build/seen/$PKG_NAME ] ; then
+              PKG_VERSION=`dpkg -I $pkg | grep Version: | cut -f2 -d:`
+              dpkg -x $pkg ./build
+              echo $PKG_VERSION > build/seen/${PKG_NAME}
+            fi
             ;;
      *.rpm) PKG_NAME=`rpm -q --qf '%{NAME}' -p $pkg`
-            grep -q '^'$PKG_NAME'$' build/seen_rpm || rpm2cpio $pkg | (cd build ; cpio -i --make-directories)
-            echo $PKG_NAME >> build/seen_rpm
+            if [ ! -f build/seen/$PKG_NAME ] ; then
+              PKG_VERSION=`rpm -q --qf '%{VERSION}' -p $pkg`
+              rpm2cpio $pkg | (cd build ; cpio -i --make-directories)
+              echo $PKG_VERSION > build/seen/$PKG_NAME
+            fi
             ;;
   esac
   rm $pkg
@@ -116,3 +124,168 @@ for link in `find build/usr/lib/ -type l` ; do
                 ;;
   esac
 done
+
+# Create a bunch of metadata
+mkdir -p build/meta
+(cat <<__EOT__
+{
+  "name":               "CDH",
+  "version":            "$FULL_VERSION",
+  "minPrevVersion":     "$CDH_MIN_PREV_VERSION",
+  "maxPrevVersion":     "$CDH_MAX_PREV_VERSION",
+
+  "scripts": {
+    "defines": "cdh_env.sh",
+    "alternatives": "cdh_alternatives.sh",
+  },
+
+  "packages": {
+__EOT__
+
+for pkg in build/seen/* ; do
+  cat <<__EOT__
+    { "name":    "`basename $pkg`",
+      "version": "`cat $pkg`",
+    },
+__EOT__
+done
+
+cat <<__EOT__
+  },
+
+  "components": {
+__EOT__
+
+for comp in build/usr/lib/*/cloudera/cdh_version.properties ; do
+  cat <<__EOT__
+    { "name":     "`sed -ne 's/^cloudera.pkg.name=//p' $comp`",
+      "version":  "`sed -ne 's/^version=//p' $comp`",
+    },
+__EOT__
+done
+
+cat <<__EOT__
+  },
+
+  "users": {
+     "flume": {
+       "longname"    : "Flume",
+       "home"        : "/var/run/flume",
+       "shell"       : "/bin/false",
+     },
+     "httpfs": {
+       "longname"    : "Hadoop HTTPFS",
+       "home"        : "/var/run/hadoop-httpfs",
+       "shell"       : "/bin/bash",
+     },
+     "hdfs": {
+       "longname"    : "Hadoop HDFS",
+       "home"        : "/var/lib/hadoop-hdfs",
+       "shell"       : "/bin/bash",
+       "extra_groups": [ "hadoop" ],
+     },
+     "yarn": {
+       "longname"    : "Hadoop Yarn",
+       "home"        : "/var/lib/hadoop-yarn",
+       "shell"       : "/bin/bash",
+       "extra_groups": [ "hadoop" ],
+     },
+     "mapred": {
+       "longname"    : "Hadoop MapReduce",
+       "home"        : "/var/lib/hadoop-mapreduce",
+       "shell"       : "/bin/bash",
+       "extra_groups": [ "hadoop" ],
+     },
+     "hbase": {
+       "longname"    : "HBase",
+       "home"        : "/var/run/hbase",
+       "shell"       : "/bin/false",
+     },
+     "hive": {
+       "longname"    : "Hive",
+       "home"        : "/var/lib/hive",
+       "shell"       : "/bin/false",
+     },
+     "hue": {
+       "longname"    : "Hue",
+       "home"        : "/usr/share/hue",
+       "shell"       : "/bin/false",
+     },
+     "oozie": {
+       "longname"    : "Oozie User",
+       "home"        : "/var/lib/oozie",
+       "shell"       : "/bin/false",
+     },
+     "sqoop": {
+       "longname"    : "Sqoop",
+       "home"        : "/var/lib/sqoop",
+       "shell"       : "/bin/false",
+     },
+     "zookeeper": {
+       "longname"    : "ZooKeeper",
+       "home"        : "/var/run/zookeeper",
+       "shell"       : "/bin/false",
+     },
+  },
+
+  "groups": [
+     "hadoop",
+  ],
+}
+__EOT__
+) > build/meta/parcel.json
+
+# Now take care of permissions
+cat > build/meta/permissions.json <<__EOT__
+{
+  "/usr/lib/hadoop-0.20-mapreduce/sbin/Linux-amd64-64/task-controller": {
+    "user":  "root",
+    "group": "mapred",
+    "permissions": "4754",
+  },
+  "/usr/lib/hadoop-yarn/bin/container-executor": {
+    "user":  "root",
+    "group": "yarn",
+    "permissions": "6050",
+  },
+  "/usr/share/hue/apps/shell/src/shell/build/setuid": {
+    "user":  "root",
+    "group": "hue",
+    "permissions": "4750",
+  },
+}
+__EOT__
+
+# cdh_env.sh
+(echo "#!/bin/bash"
+#cat build/etc/default/* | grep -v '^[ 	]*#' |\
+#                          grep -v '^[ 	]*$' |\
+#                          grep -v '_HOME='   |\
+#                          grep -v '/etc'     | sort -u
+#echo
+cat <<__EOT__
+export CMF_AGENT_CDH_HADOOP_HOME=\$PARCEL_HOME/CDH/$FULL_VERSION/lib/hadoop
+export CMF_AGENT_CDH_MR1_HOME=\$PARCEL_HOME/CDH/$FULL_VERSION/lib/hadoop-0.20-mapreduce
+export CMF_AGENT_CDH_HDFS_HOME=\$PARCEL_HOME/CDH/$FULL_VERSION/lib/hadoop-hdfs
+export CMF_AGENT_CDH_HTTPFS_HOME=\$PARCEL_HOME/CDH/$FULL_VERSION/lib/hadoop-httpfs
+export CMF_AGENT_CDH_MR2_HOME=\$PARCEL_HOME/CDH/$FULL_VERSION/lib/hadoop-mapreduce
+export CMF_AGENT_CDH_YARN_HOME=\$PARCEL_HOME/CDH/$FULL_VERSION/lib/hadoop-yarn
+export CMF_AGENT_CDH_HBASE_HOME=\$PARCEL_HOME/CDH/$FULL_VERSION/lib/hbase
+export CMF_AGENT_CDH_ZOOKEEPER_HOME=\$PARCEL_HOME/CDH/$FULL_VERSION/lib/zookeeper
+export CMF_AGENT_CDH_HIVE_HOME=\$PARCEL_HOME/CDH/$FULL_VERSION/lib/hive
+export CMF_AGENT_CDH_HUE_HOME=\$PARCEL_HOME/CDH/$FULL_VERSION/share/hue
+export CMF_AGENT_CDH_OOZIE_HOME=\$PARCEL_HOME/CDH/$FULL_VERSION/lib/oozie
+export CMF_AGENT_TOMCAT_HOME=\$PARCEL_HOME/CDH/$FULL_VERSION/lib/bigtop-tomcat
+export CMF_AGENT_JSVC_HOME=\$PARCEL_HOME/CDH/$FULL_VERSION/libexec/bigtop-utils
+export CMF_AGENT_CDH_HUE_PLUGINS_HOME=\$PARCEL_HOME/CDH/$FULL_VERSION/lib/hadoop
+export CMF_AGENT_CDH_FLUME_HOME=\$PARCEL_HOME/CDH/$FULL_VERSION/lib/flume-ng
+__EOT__
+) > build/meta/cdh_env.sh
+
+# cdh_alternatives.sh
+cat > build/meta/cdh_alternatives.sh <<__EOT__
+#!/bin/bash
+echo "This script does nothing for now, since the location of the only alternatives that the"
+echo "packages support (/etc/<component>/conf) are not given to us by CM, and the"
+echo "/usr/bin/<component> alternatives need to be implemented by CDH."
+__EOT__

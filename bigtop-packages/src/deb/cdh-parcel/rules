@@ -35,7 +35,7 @@ patch-stamp:
 build:
 	dh_testdir
 	dh_clean -k
-	PKG_FORMAT=deb bash debian/do-component-build
+	PKG_FORMAT=deb FULL_VERSION=$(version) bash debian/do-component-build
 
 build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
@@ -49,18 +49,12 @@ clean:
 	dh_clean
 	find debian -name .\*swp -exec rm -f {} \;
 
-install: debian/cdh-parcel-client-$(version)/opt/cdh-parcel-$(version)
-debian/cdh-parcel-client-$(version)/opt/cdh-parcel-$(version): debian/cdh-parcel-$(version)/opt/cdh-parcel-$(version)
+install: debian/cdh-parcel-$(version)/opt/CDH/$(version)
 	@echo building client
-#	mkdir -p $@/{lib,share/doc}
-#	mv $</share/doc/{pig,hive,sqoop,mahout}* $@/share/doc
-#	mv $</lib/{pig,hive,mahout}* $@/lib
-#	echo /opt > debian/cdh-parcel-client-$(version).install
 
-debian/cdh-parcel-$(version)/opt/cdh-parcel-$(version):
+debian/cdh-parcel-$(version)/opt/CDH/$(version):
 	mkdir -p $@
-	mv build/usr/* $@
-	rm -rf $@/bin
+	mv build/usr/{bin,share,lib}* build/meta $@
 	sed -e 's#@VERSION@#$(version)#' < debian/cdh-parcel.postinst > debian/cdh-parcel-$(version).postinst
 	echo /opt > debian/cdh-parcel-$(version).install
 

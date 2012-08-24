@@ -59,14 +59,17 @@ and you have some other mechanism for managing orchestration.
 %setup -c
 
 %build
-PKG_FORMAT=rpm bash -x %{SOURCE1}
+PKG_FORMAT=rpm FULL_VERSION=%{cdh_parcel_base_version} bash -x %{SOURCE1}
 
 %install
-mkdir -p $RPM_BUILD_ROOT/opt
-mv $PWD/build/usr $RPM_BUILD_ROOT/opt/%{name}
-chmod 555 $RPM_BUILD_ROOT/opt/%{name}/lib/hadoop-yarn/bin/container-executor
-chmod 555 $RPM_BUILD_ROOT/opt/%{name}/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
-rm -rf $RPM_BUILD_ROOT/opt/%{name}/lib/debug $RPM_BUILD_ROOT/opt/%{name}/src
+# the following stops rpm from complaining
+chmod 555 $PWD/build/usr/lib/hadoop-yarn/bin/container-executor
+chmod 555 $PWD/build/usr/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
+chmod 555 $PWD/build/usr/share/hue/apps/shell/src/shell/build/setuid
+
+DEST=$RPM_BUILD_ROOT/opt/CDH/%{cdh_parcel_base_version}
+mkdir -p $DEST
+mv $PWD/build/usr/lib* $PWD/build/usr/share $PWD/build/usr/bin $PWD/build/meta $DEST
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -75,8 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 /opt
-%attr(6050,root,yarn) /opt/%{name}/lib/hadoop-yarn/bin/container-executor
-%attr(4754,root,mapred) /opt/%{name}/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
+%attr(6050,root,yarn)   /opt/CDH/%{cdh_parcel_base_version}/lib/hadoop-yarn/bin/container-executor
+%attr(4754,root,mapred) /opt/CDH/%{cdh_parcel_base_version}/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
+%attr(4750,root,hue)    /opt/CDH/%{cdh_parcel_base_version}/share/hue/apps/shell/src/shell/build/setuid
 
 %changelog
 
