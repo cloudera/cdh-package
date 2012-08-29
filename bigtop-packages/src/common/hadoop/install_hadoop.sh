@@ -215,7 +215,7 @@ cp ${BUILD_DIR}/share/hadoop/tools/lib/*.jar ${MAPREDUCE_DIR}
 install -d -m 0755 ${HDFS_DIR}
 cp ${BUILD_DIR}/share/hadoop/hdfs/*.jar ${HDFS_DIR}/
 install -d -m 0755 ${YARN_DIR}
-cp ${BUILD_DIR}/share/hadoop/mapreduce/hadoop-yarn*.jar ${YARN_DIR}/
+cp ${BUILD_DIR}/share/hadoop/yarn/hadoop-yarn*.jar ${YARN_DIR}/
 chmod 644 ${HADOOP_DIR}/*.jar ${MAPREDUCE_DIR}/*.jar ${HDFS_DIR}/*.jar ${YARN_DIR}/*.jar
 
 # lib jars
@@ -226,7 +226,7 @@ cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/*.jar ${MAPREDUCE_DIR}/lib
 install -d -m 0755 ${HDFS_DIR}/lib 
 cp ${BUILD_DIR}/share/hadoop/hdfs/lib/*.jar ${HDFS_DIR}/lib
 install -d -m 0755 ${YARN_DIR}/lib
-cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/*.jar ${YARN_DIR}/lib
+cp ${BUILD_DIR}/share/hadoop/yarn/lib/*.jar ${YARN_DIR}/lib
 chmod 644 ${HADOOP_DIR}/lib/*.jar ${MAPREDUCE_DIR}/lib/*.jar ${HDFS_DIR}/lib/*.jar ${YARN_DIR}/lib/*.jar
 
 # Install webapps
