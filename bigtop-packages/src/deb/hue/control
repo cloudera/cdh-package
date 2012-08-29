@@ -10,7 +10,7 @@ Package: hue-common
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${build:SYS-PYTHON}, libsasl2-modules-gssapi-mit, libxslt1.1, make
 Conflicts: cloudera-desktop
-Recommends: hadoop, hue-useradmin, hue-about, hue-help, hue-filebrowser, hue-jobbrowser, hue-jobsub, hue-beeswax, hue-proxy
+Recommends: hadoop, hue-useradmin, hue-about, hue-help, hue-filebrowser, hue-jobbrowser, hue-jobsub, hue-beeswax, hue-proxy, hue-oozie
 Description: A browser-based desktop interface for Hadoop
  Hue is a browser-based desktop interface for interacting with Hadoop.
  It supports a file browser, job tracker interface, cluster health monitor, and more.
@@ -25,7 +25,7 @@ Description: Plug-ins for Hadoop to enable integration with Hue
 
 Package: hue
 Architecture: all
-Depends: hadoop, bigtop-utils, hue-plugins (= ${source:Version}), hue-common (= ${source:Version}), hue-user, hue-about (= ${source:Version}), hue-help (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-jobsub (= ${source:Version}), hue-beeswax (= ${source:Version}), hue-proxy (= ${source:Version}), hue-shell (= ${source:Version})
+Depends: hadoop, bigtop-utils, hue-plugins (= ${source:Version}), hue-common (= ${source:Version}), hue-user, hue-about (= ${source:Version}), hue-help (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-jobsub (= ${source:Version}), hue-beeswax (= ${source:Version}), hue-proxy (= ${source:Version}), hue-shell (= ${source:Version}), hue-oozie (= ${source:Version})
 Description: The hue metapackage
  .
 
@@ -49,6 +49,14 @@ Description: A UI for Hive on Hue
  .
  It allows users to construct and run queries on Hive, manage tables,
  and import and export data.
+
+Package: hue-oozie
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-jobsub (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version})
+Description: A UI for Oozie on Hue
+ A web interface for Oozie.
+ .
+ It allows users to construct and run Oozie workflows without explicitly managing the XML specification.
 
 Package: hue-filebrowser
 Architecture: all

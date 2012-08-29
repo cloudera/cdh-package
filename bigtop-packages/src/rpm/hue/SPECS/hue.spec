@@ -27,6 +27,7 @@ Requires: %{name}-jobbrowser = %{version}-%{release}
 Requires: %{name}-beeswax = %{version}-%{release}
 Requires: %{name}-proxy = %{version}-%{release}
 Requires: %{name}-shell = %{version}-%{release}
+Requires: %{name}-oozie = %{version}-%{release}
 # hue-user is a virtual package
 Requires: %{name}-user
 
@@ -83,6 +84,7 @@ AutoReqProv: no
 %define apps_dir %{hue_dir}/apps
 %define about_app_dir %{hue_dir}/apps/about
 %define beeswax_app_dir %{hue_dir}/apps/beeswax
+%define oozie_app_dir %{hue_dir}/apps/oozie
 %define filebrowser_app_dir %{hue_dir}/apps/filebrowser
 %define help_app_dir %{hue_dir}/apps/help
 %define jobbrowser_app_dir %{hue_dir}/apps/jobbrowser
@@ -377,6 +379,7 @@ fi
 
 %exclude %{about_app_dir}
 %exclude %{beeswax_app_dir}
+%exclude %{oozie_app_dir}
 %exclude %{filebrowser_app_dir}
 %exclude %{help_app_dir}
 %exclude %{jobbrowser_app_dir}
@@ -488,6 +491,29 @@ and import and export data.
 %defattr(-, %{username}, %{username})
 %{beeswax_app_dir}
 
+#### HUE-OOZIE PLUGIN ######
+%package -n %{name}-oozie
+Summary: A UI for Oozie on Hue
+Group: Applications/Engineering
+Requires: make
+Requires: %{name}-common = %{version}-%{release}
+Requires: %{name}-jobbrowser = %{version}-%{release}
+Requires: %{name}-filebrowser = %{version}-%{release}
+Requires: %{name}-jobsub = %{version}-%{release}
+Requires: %{name}-help = %{version}-%{release}
+
+%description -n %{name}-oozie
+A web interface for Oozie.
+
+It allows users to construct and run Oozie workflows without explicitly
+managing the XML specification.
+
+%app_post_macro oozie
+%app_preun_macro oozie
+
+%files -n %{name}-oozie
+%defattr(-, %{username}, %{username})
+%{oozie_app_dir}
 
 #### HUE-FILEBROWSER PLUGIN ######
 
