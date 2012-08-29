@@ -19,12 +19,16 @@
 
 set -e
 
+PARCEL_DEFAULT_ROOT=/opt/cloudera/parcels/CDH-@VERSION@
+
 case "$1" in
     configure)
-        chown root:yarn /opt/cdh-parcel-@VERSION@/lib/hadoop/bin/container-executor
-        chmod 6050 /opt/cdh-parcel-@VERSION@/lib/hadoop-yarn/bin/container-executor
-        chown root:mapred /opt/cdh-parcel-@VERSION@/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
-        chmod 4754 /opt/cdh-parcel-@VERSION@/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
+        chown root:yarn   $PARCEL_DEFAULT_ROOT/lib/hadoop-yarn/bin/container-executor
+        chmod 6050        $PARCEL_DEFAULT_ROOT/lib/hadoop-yarn/bin/container-executor
+        chown root:mapred $PARCEL_DEFAULT_ROOT/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
+        chmod 4754        $PARCEL_DEFAULT_ROOT/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
+        chown root:hue    $PARCEL_DEFAULT_ROOT/share/hue/apps/shell/src/shell/build/setuid
+        chmod 4750        $PARCEL_DEFAULT_ROOT/share/hue/apps/shell/src/shell/build/setuid
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

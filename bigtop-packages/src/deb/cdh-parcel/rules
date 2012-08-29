@@ -49,10 +49,10 @@ clean:
 	dh_clean
 	find debian -name .\*swp -exec rm -f {} \;
 
-install: debian/cdh-parcel-$(version)/opt/CDH/$(version)
+install: debian/cdh-parcel-$(version)/opt/cloudera/parcels/CDH-$(version)
 	@echo building client
 
-debian/cdh-parcel-$(version)/opt/CDH/$(version):
+debian/cdh-parcel-$(version)/opt/cloudera/parcels/CDH-$(version):
 	mkdir -p $@
 	mv build/usr/{bin,share,lib}* build/meta $@
 	sed -e 's#@VERSION@#$(version)#' < debian/cdh-parcel.postinst > debian/cdh-parcel-$(version).postinst

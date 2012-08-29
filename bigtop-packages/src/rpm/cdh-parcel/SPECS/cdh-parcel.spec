@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+%define parcel_default_root /opt/cloudera/parcels/CDH-%{cdh_parcel_base_version}
+
 Name: cdh-parcel-%{cdh_parcel_base_version}
 Version: %{cdh_parcel_version}
 Release: %{cdh_parcel_release}
@@ -27,7 +29,7 @@ Source1:	do-component-build
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildArch: noarch
-Prefix: /opt
+Prefix: %{parcel_default_root}
 AutoReq: no
 AutoProv: no
 
@@ -67,7 +69,7 @@ chmod 555 $PWD/build/usr/lib/hadoop-yarn/bin/container-executor
 chmod 555 $PWD/build/usr/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
 chmod 555 $PWD/build/usr/share/hue/apps/shell/src/shell/build/setuid
 
-DEST=$RPM_BUILD_ROOT/opt/CDH/%{cdh_parcel_base_version}
+DEST=$RPM_BUILD_ROOT/%{parcel_default_root}
 mkdir -p $DEST
 mv $PWD/build/usr/lib* $PWD/build/usr/share $PWD/build/usr/bin $PWD/build/meta $DEST
 
@@ -77,10 +79,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-/opt
-%attr(6050,root,yarn)   /opt/CDH/%{cdh_parcel_base_version}/lib/hadoop-yarn/bin/container-executor
-%attr(4754,root,mapred) /opt/CDH/%{cdh_parcel_base_version}/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
-%attr(4750,root,hue)    /opt/CDH/%{cdh_parcel_base_version}/share/hue/apps/shell/src/shell/build/setuid
+%{parcel_default_root}
+%attr(6050,root,yarn)   %{parcel_default_root}/lib/hadoop-yarn/bin/container-executor
+%attr(4754,root,mapred) %{parcel_default_root}/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
+%attr(4750,root,hue)    %{parcel_default_root}/share/hue/apps/shell/src/shell/build/setuid
 
 %changelog
 
