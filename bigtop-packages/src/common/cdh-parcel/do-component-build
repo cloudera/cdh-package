@@ -163,6 +163,8 @@ mkdir -p build/meta
   "minPrevVersion":     "$CDH_MIN_PREV_VERSION",
   "maxPrevVersion":     "$CDH_MAX_PREV_VERSION",
 
+  "setActiveSymlink":   false,
+
   "scripts": {
     "defines": "cdh_env.sh",
     "alternatives": "cdh_alternatives.sh"
