@@ -303,10 +303,12 @@ if [ "\${LD_LIBRARY_PATH}" = "" ]; then
   done
 fi
 
-# Pulls all jars from hadoop client package
+# Pulls all jars from hadoop client package and conf files from HADOOP_CONF_DIR
 for jar in \${HADOOP_HOME}/client/*.jar; do
   CLASSPATH+="\$jar:"
 done
+CLASSPATH+="\${HADOOP_CONF_DIR:-\${HADOOP_HOME}/etc/hadoop}"
+
 
 env CLASSPATH="\${CLASSPATH}" \${HADOOP_HOME}/bin/fuse_dfs \$@
 EOF
