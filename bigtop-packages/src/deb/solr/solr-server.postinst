@@ -15,21 +15,11 @@
 # limitations under the License.
 
 set -e
-
-case "$1" in
-    configure)
-        # Install config alternatives
-        update-alternatives  --install /etc/solr/conf solr-conf /etc/solr/conf.dist 30
-	chown solr:solr /var/log/solr /var/lib/solr /var/run/solr
-    ;;
-
-    abort-upgrade|abort-remove|abort-deconfigure)
-    ;;
-
-    *)
-        echo "postinst called with unknown argument \`$1'" >&2
-        exit 1
-    ;;
-esac
-
-#DEBHELPER#
+if [ -x "/etc/init.d/solr-server" ]; then
+	update-rc.d solr-server defaults >/dev/null
+	if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
+		invoke-rc.d solr-server start || :
+	else
+		/etc/init.d/solr-server start || :
+	fi
+fi

@@ -48,7 +48,11 @@ install-indep:
 	sh -x debian/install_solr.sh \
 	  --build-dir=build/solr-${SOLR_PATCHED_VERSION} \
 	  --doc-dir=/usr/share/doc/solr-doc \
+	  --distro-dir=debian \
 	  --prefix=debian/tmp/solr
+	install -d -m 0755 debian/tmp/solr/etc/init.d
+	cp debian/solr-server.init.debian debian/tmp/solr/etc/init.d/solr-server
+	chmod 755 debian/tmp/solr/etc/init.d/solr-server
 	dh_install --sourcedir=debian/tmp/solr -i
 	(dh_lintian) || /bin/true
 

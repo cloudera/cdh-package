@@ -23,7 +23,7 @@ Homepage: http://lucene.apache.org/solr
 
 Package:  solr
 Architecture: all
-Depends: bigtop-utils
+Depends: bigtop-utils, bigtop-tomcat
 Description: Apache Solr is the popular, blazing fast open source enterprise search platform
  Solr is the popular, blazing fast open source enterprise search platform from
  the Apache Lucene project. Its major features include powerful full-text 
@@ -40,6 +40,12 @@ Description: Apache Solr is the popular, blazing fast open source enterprise sea
  powerful external configuration allows it to be tailored to almost any type of
  application without Java coding, and it has an extensive plugin architecture 
  when more advanced customization is required.
+
+Package:  solr-server
+Architecture: all
+Depends: solr (= ${source:Version})
+Description: The Solr server
+ This package starts the Solr server on startup
 
 Package: solr-doc
 Provides: solr-doc

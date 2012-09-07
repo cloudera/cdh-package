@@ -20,13 +20,21 @@
 %define log_solr /var/log/%{solr_name}
 %define bin_solr /usr/bin
 %define man_dir /usr/share/man
+%define run_solr /var/run/solr
+%define svc_solr %{name}-server
 
 %if  %{?suse_version:1}0
 %define doc_solr %{_docdir}/solr-doc
 %define alternatives_cmd update-alternatives
+%define chkconfig_dep    aaa_base
+%define service_dep      aaa_base
+%global initd_dir %{_sysconfdir}/rc.d
 %else
 %define doc_solr %{_docdir}/solr-doc-%{solr_version}
 %define alternatives_cmd alternatives
+%define chkconfig_dep    chkconfig
+%define service_dep      initscripts
+%global initd_dir %{_sysconfdir}/rc.d/init.d
 %endif
 
 # disable repacking jars
@@ -44,7 +52,12 @@ License: ASL 2.0
 Source0: solr-%{solr_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{name}.sh
-Requires: bigtop-utils
+Source3: server.xml
+Source4: web.xml
+Source5: logging.properties
+Source6: solr.default
+Source7: solr-server.init
+Requires: bigtop-utils, bigtop-tomcat
 
 
 %description 
@@ -64,12 +77,25 @@ powerful external configuration allows it to be tailored to almost any type of
 application without Java coding, and it has an extensive plugin architecture
 when more advanced customization is required.
 
+%package server
+Summary: The Solr server
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+Requires(post): %{chkconfig_dep}
+Requires(preun): %{service_dep}, %{chkconfig_dep}
+BuildArch: noarch
+
+%description server
+This package starts the Solr server on startup
+
 %package doc
 Summary: Documentation for Apache Solr
 Group: Documentation
 %description doc
 This package contains the documentation for Apache Solr
 
+%description doc
+Documentation for Flume NG
 
 %prep
 %setup -n solr-%{solr_patched_version}
@@ -82,7 +108,17 @@ env FULL_VERSION=%{solr_patched_version} bash %{SOURCE1}
 sh $RPM_SOURCE_DIR/install_solr.sh \
           --build-dir=build/solr-%{solr_patched_version} \
           --prefix=$RPM_BUILD_ROOT \
+          --distro-dir=$RPM_SOURCE_DIR \
           --doc-dir=%{doc_solr} 
+
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
+init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{svc_solr}
+%__cp %{SOURCE7} $init_file
+chmod 755 $init_file
+
+%pre
+getent group solr >/dev/null || groupadd -r solr
+getent passwd solr > /dev/null || useradd -c "Solr" -s /sbin/nologin -g solr -r -d %{run_solr} solr 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{config_solr} %{solr_name}-conf %{config_solr}.dist 30
@@ -92,16 +128,37 @@ if [ "$1" = 0 ]; then
         %{alternatives_cmd} --remove %{solr_name}-conf %{config_solr}.dist || :
 fi
 
+%post server
+chkconfig --add %{svc_solr}
+
+%preun server
+if [ $1 = 0 ] ; then
+        service %{svc_solr} stop > /dev/null 2>&1
+        chkconfig --del %{svc_solr}
+fi
+
+%postun server
+if [ $1 -ge 1 ]; then
+        service %{svc_solr} condrestart > /dev/null 2>&1
+fi
+
 #######################
 #### FILES SECTION ####
 #######################
 %files 
 %defattr(-,root,root,755)
 %config(noreplace) %{config_solr}.dist
+%config(noreplace) /etc/default/solr 
 %{lib_solr}
-%{bin_solr}/solr
-/var
+# %{bin_solr}/solr
+%defattr(-,solr,solr,755)
+/var/lib/solr
+/var/run/solr
+/var/log/solr
 
 %files doc
 %defattr(-,root,root)
 %doc %{doc_solr}
+
+%files server
+%attr(0755,root,root) %{initd_dir}/%{svc_solr}

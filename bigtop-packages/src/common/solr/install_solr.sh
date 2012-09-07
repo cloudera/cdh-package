@@ -21,6 +21,7 @@ usage() {
   echo "
 usage: $0 <options>
   Required not-so-options:
+     --distro-dir=DIR            path to distro specific files (debian/RPM)
      --build-dir=DIR             path to dist dir
      --prefix=PREFIX             path to install into
 
@@ -39,6 +40,7 @@ OPTS=$(getopt \
   -n $0 \
   -o '' \
   -l 'prefix:' \
+  -l 'distro-dir:' \
   -l 'doc-dir:' \
   -l 'lib-dir:' \
   -l 'installed-lib-dir:' \
@@ -55,6 +57,9 @@ while true ; do
     case "$1" in
         --prefix)
         PREFIX=$2 ; shift 2
+        ;;
+        --distro-dir)
+        DISTRO_DIR=$2 ; shift 2
         ;;
         --build-dir)
         BUILD_DIR=$2 ; shift 2
@@ -85,7 +90,7 @@ while true ; do
     esac
 done
 
-for var in PREFIX BUILD_DIR ; do
+for var in PREFIX BUILD_DIR DISTRO_DIR ; do
   if [ -z "$(eval "echo \$$var")" ]; then
     echo Missing param: $var
     usage
@@ -99,6 +104,7 @@ INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/solr}
 EXAMPLES_DIR=${EXAMPLES_DIR:-$DOC_DIR/examples}
 BIN_DIR=${BIN_DIR:-/usr/bin}
 CONF_DIR=${CONF_DIR:-/etc/solr/conf}
+DEFAULT_DIR=${ETC_DIR:-/etc/default}
 
 VAR_DIR=$PREFIX/var
 
@@ -106,6 +112,16 @@ install -d -m 0755 $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist/*.*ar $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist/solrj-lib $PREFIX/$LIB_DIR/lib
 cp -ra ${BUILD_DIR}/contrib $PREFIX/$LIB_DIR
+
+install -d -m 0755 $PREFIX/$LIB_DIR/server/webapps/ROOT
+(cd $PREFIX/$LIB_DIR/server/webapps/ROOT ; jar xf ../../../*.war)
+#FIXME: this is supposed to be fixed upstream
+rm $PREFIX/$LIB_DIR/server/webapps/ROOT/WEB-INF/lib/javax.servlet-api-*.jar
+
+install -d -m 0755 $PREFIX/$LIB_DIR/server/conf
+cp $DISTRO_DIR/web.xml $PREFIX/$LIB_DIR/server/conf
+cp $DISTRO_DIR/server.xml $PREFIX/$LIB_DIR/server/conf
+cp $DISTRO_DIR/logging.properties $PREFIX/$LIB_DIR/server/conf
 
 cp -ra ${BUILD_DIR}/dist/*.*ar $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist/solrj-lib $PREFIX/$LIB_DIR/lib
@@ -117,13 +133,15 @@ cp -a ${BUILD_DIR}/example/cloud-scripts/*.sh $PREFIX/$LIB_DIR/bin
 install -d -m 0755 $PREFIX/$DOC_DIR
 cp -a  ${BUILD_DIR}/*.txt $PREFIX/$DOC_DIR
 cp -ra ${BUILD_DIR}/docs/* $PREFIX/$DOC_DIR
-cp -a ${BUILD_DIR}/example/ $PREFIX/$DOC_DIR/
+cp -ra ${BUILD_DIR}/example/ $PREFIX/$DOC_DIR/
 
 # Copy in the configuration files
+install -d -m 0755 $PREFIX/$DEFAULT_DIR
+cp $DISTRO_DIR/solr.default $PREFIX/$DEFAULT_DIR/solr
+
 install -d -m 0755 $PREFIX/${CONF_DIR}.dist
 cp -ra ${BUILD_DIR}/example/multicore/* $PREFIX/${CONF_DIR}.dist
 rm -rf $PREFIX/${CONF_DIR}.dist/exampledocs
-ln -s  ${CONF_DIR} $PREFIX/$LIB_DIR/conf
 # FIXME: we have to find a better way to do the following
 for core in core0 core1 ; do
   sed -i -e '/<dataDir>.*<\/dataDir>/s#^.*$#<dataDir>/var/lib/solr/'$core'</dataDir>#' \
@@ -131,9 +149,10 @@ for core in core0 core1 ; do
 done
 
 # Copy in the wrapper
-install -d -m 0755 $PREFIX/$BIN_DIR
-cat > $PREFIX/$BIN_DIR/solr <<EOF
+cat > $PREFIX/$LIB_DIR/bin/solrd <<EOF
 #!/bin/sh
+
+[ -f /etc/default/solr ] && . /etc/default/solr
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then
@@ -142,25 +161,25 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-cd $INSTALLED_LIB_DIR/jetty
-exec java -jar start.jar "\$@"
-EOF
-chmod 755 $PREFIX/$BIN_DIR/solr
+export CATALINA_HOME=$LIB_DIR/../bigtop-tomcat
+export CATALINA_BASE=$LIB_DIR/server
 
-# Zookeeper log and tx log directory
+export CATALINA_TMPDIR=\${SOLR_DATA:-/var/lib/solr/}temp
+export CATALINA_PID=\${SOLR_RUN:-/var/run/solr/}solr.pid
+export CATALINA_OUT=\${SOLR_LOG:-/var/log/solr}/solr.out
+
+export CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.port=\${SOLR_PORT:-8080}
+                                        -Dsolr.log=\${SOLR_LOG:-/var/log/solr}
+                                        -Dsolr.admin.port=\${SOLR_ADMIN_PORT:-8081}
+                                        -Dsolr.solr.home=\${SOLR_HOME:-/etc/solr/conf}" 
+exec \${CATALINA_HOME}/bin/catalina.sh "\$@"
+EOF
+chmod 755 $PREFIX/$LIB_DIR/bin/solrd
+
+# precreating /var layout
 install -d -m 0755 $VAR_DIR/log/solr
 install -d -m 0755 $VAR_DIR/run/solr
 install -d -m 0755 $VAR_DIR/lib/solr
-
-# FIXME: we probably should run Solr via bigtop-tomcat
-install -d -m 0755 $VAR_DIR/lib/solr/jetty
-install -d -m 0755 $VAR_DIR/lib/solr/jetty/webapps
-cp -a  ${BUILD_DIR}/example/start.jar $VAR_DIR/lib/solr/jetty
-cp -ra ${BUILD_DIR}/example/etc $VAR_DIR/lib/solr/jetty
-cp -ra ${BUILD_DIR}/example/contexts $VAR_DIR/lib/solr/jetty
-cp -ra ${BUILD_DIR}/example/lib $VAR_DIR/lib/solr/jetty
-ln -s  $LIB_DIR/conf $VAR_DIR/lib/solr/jetty/solr
-ln -s  $LIB_DIR/`basename $PREFIX/$LIB_DIR/*.war` $VAR_DIR/lib/solr/jetty/webapps/solr.war
 
 # Cloudera specific
 #install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
