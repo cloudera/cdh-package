@@ -16,7 +16,7 @@
 
 set -ex
 IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
-BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Drepo.maven.org=$IVY_MIRROR_PROP -Divy_install_path=${HOME}/.ant/lib -lib ${HOME}/.ant/lib"
+BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Drepo.maven.org=$IVY_MIRROR_PROP -Divy_install_path=${HOME}/.ant/lib -lib ${HOME}/.ant/lib -Dreactor.repo=file://${HOME}/.m2/repository"
 
 # FIXME: this needs to be fixed at the product level
 ant $BUILD_OPTS ivy-bootstrap
