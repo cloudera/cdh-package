@@ -16,18 +16,24 @@
 
 set -ex
 IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
-BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP -Divy_install_path=${HOME}/.ant/lib -lib ${HOME}/.ant/lib"
+BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Drepo.maven.org=$IVY_MIRROR_PROP -Divy_install_path=${HOME}/.ant/lib -lib ${HOME}/.ant/lib"
 
 # FIXME: this needs to be fixed at the product level
 ant $BUILD_OPTS ivy-bootstrap
 mkdir solr/test-framework/lib || :
 
-# FIXME: At some point we'd have to make sure that the locally built
-# lucene artifacts get built and used by a build of Solr
-# (cd lucene ; ant $BUILD_OPTS clean package-all-binary)
+ant $BUILD_OPTS clean
 
-# Build Solr itself
-(cd solr ; ant $BUILD_OPTS clean package-local-src-tgz create-package "$@")
+# Build source package
+(cd solr ; ant $BUILD_OPTS package-local-src-tgz "$@")
+
+# If DO_MAVEN_DEPLOY == deploy, run the generate-maven-artifacts target
+if [ "${DO_MAVEN_DEPLOY}" == "deploy" ]; then
+    ant $BUILD_OPTS generate-maven-artifacts "$@"
+fi
+
+# Build Solr package (and if we didn't do generate-maven-artifacts, it'll build everything else it needs
+(cd solr ; ant $BUILD_OPTS create-package "$@")
 
 # Putting the build artifact in place
 rm -rf build
