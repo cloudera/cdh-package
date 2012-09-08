@@ -43,6 +43,7 @@ pushd build
   tar -C apache-solr-* --strip-components=1 -xzf ../solr/package/apache-solr-*.tgz
   # FIXME: the following needs to be FULL_VERSION by default
   mv apache-solr-* solr-${FULL_VERSION}
+  cp -r ../cloudera* solr-${FULL_VERSION}
   tar -czf solr-${FULL_VERSION}.tar.gz solr-${FULL_VERSION}
 popd
 
