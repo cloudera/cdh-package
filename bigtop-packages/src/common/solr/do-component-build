@@ -16,7 +16,9 @@
 
 set -ex
 IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
-BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Drepo.maven.org=$IVY_MIRROR_PROP -Divy_install_path=${HOME}/.ant/lib -lib ${HOME}/.ant/lib -Dreactor.repo=file://${HOME}/.m2/repository"
+BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Drepo.maven.org=$IVY_MIRROR_PROP \
+            -Divy_install_path=${HOME}/.ant/lib -lib ${HOME}/.ant/lib  \
+            -Dreactor.repo=file://${HOME}/.m2/repository"
 
 # FIXME: this needs to be fixed at the product level
 ant $BUILD_OPTS ivy-bootstrap
@@ -44,6 +46,7 @@ pushd build
   # FIXME: the following needs to be FULL_VERSION by default
   mv apache-solr-* solr-${FULL_VERSION}
   cp -r ../cloudera* solr-${FULL_VERSION}
+  cp -r ../cdh.build.properties solr-${FULL_VERSION}
   tar -czf solr-${FULL_VERSION}.tar.gz solr-${FULL_VERSION}
 popd
 
