@@ -166,7 +166,7 @@ Source23: hadoop-hdfs-zkfc.svc
 Source24: hadoop-hdfs-journalnode.svc
 Source25: %{name}-bigtop-packaging.tar.gz
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
-BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
+BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf, snappy-devel
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils, zookeeper >= 3.4.0
 Requires: psmisc, %{netcat_package}
 Conflicts: hadoop-0.20
