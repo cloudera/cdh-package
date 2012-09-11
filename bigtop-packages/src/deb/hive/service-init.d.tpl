@@ -82,6 +82,9 @@ hive_start() {
     if [ $service_name = "server" ] ; then
       service_name="hiveserver"
       exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE`\""
+    elif [ $service_name = "server2" ] ; then
+      service_name="hiveserver2"
+      exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE`\""
     fi
 
     log_success_msg "Starting $desc (${NAME}): "
