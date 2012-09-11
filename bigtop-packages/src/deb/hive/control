@@ -51,6 +51,12 @@ Depends: hive (= ${source:Version})
 Description: Provides a Hive Thrift service
  This optional package hosts a Thrift server for Hive clients across a network to use.
 
+Package: hive-server2
+Architecture: all
+Depends: hive (= ${source:Version})
+Description: Provides a Hive Thrift service with improved concurrency support.
+ This optional package hosts a Thrift server for Hive clients across a network to use, with improved concurrency support.
+
 Package: hive-metastore
 Architecture: all
 Depends: hive (= ${source:Version})

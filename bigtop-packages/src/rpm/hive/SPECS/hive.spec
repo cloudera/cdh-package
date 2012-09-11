@@ -20,7 +20,7 @@
 %define bin_hive /usr/bin
 %define hive_config_virtual hive_active_configuration
 %define man_dir %{_mandir}
-%define hive_services server metastore
+%define hive_services server metastore server2
 # After we run "ant package" we'll find the distribution here
 %define hive_dist src/build/dist
 
@@ -70,6 +70,7 @@ Source5: hive-server.default
 Source6: hive-metastore.default
 Source7: hive.1
 Source8: hive-site.xml
+Source9: hive-server2.default
 Requires: hadoop-client, bigtop-utils, hbase, zookeeper
 Conflicts: hadoop-hive
 Obsoletes: %{name}-webinterface
@@ -83,6 +84,12 @@ Group: System/Daemons
 Provides: %{name}-server
 Requires: %{name} = %{version}-%{release}
 
+%package server2
+Summary: Provides a Hive Thrift service with improved concurrency support.
+Group: System/Daemons
+Provides: %{name}-server2
+Requires: %{name} = %{version}-%{release}
+
 %if  %{?suse_version:1}0
 # Required for init scripts
 Requires: insserv
@@ -94,6 +101,9 @@ Requires: redhat-lsb
 
 %description server
 This optional package hosts a Thrift server for Hive clients across a network to use.
+
+%description server2
+This optional package hosts a Thrift server for Hive clients across a network to use with improved concurrency support.
 
 %package metastore
 Summary: Shared metadata repository for Hive.
@@ -137,6 +147,7 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
 %__install -m 0644 %{SOURCE6} $RPM_BUILD_ROOT/etc/default/%{name}-metastore
 %__install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT/etc/default/%{name}-server
+%__install -m 0644 %{SOURCE9} $RPM_BUILD_ROOT/etc/default/%{name}-server2
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/log/%{name}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{name}
@@ -213,4 +224,5 @@ if [ $1 -ge 1 ]; then \
 	service %{name}-%1 condrestart >/dev/null 2>&1 || : \
 fi
 %service_macro server
+%service_macro server2
 %service_macro metastore
