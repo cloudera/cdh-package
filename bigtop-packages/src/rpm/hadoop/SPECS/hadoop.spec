@@ -65,9 +65,11 @@
 
 %ifarch i386
 %global hadoop_arch Linux-i386-32
+%global requires_lib_tag %{nil}
 %endif
 %ifarch amd64 x86_64
 %global hadoop_arch Linux-amd64-64
+%global requires_lib_tag ()(64bit)
 %endif
 
 # CentOS 5 does not have any dist macro
@@ -220,6 +222,8 @@ located.
 Summary: The Hadoop Distributed File System
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}, bigtop-jsvc
+# Workaround for 4.0 to 4.X upgrade (CDH-7856) (upgrades from 4.1 onwards are fine)
+Requires: libhadoop.so.1.0.0%{requires_lib_tag}
 
 %description hdfs
 Hadoop Distributed File System (HDFS) is the primary storage system used by
@@ -231,6 +235,8 @@ computations.
 Summary: The Hadoop NextGen MapReduce (YARN)
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
+# Workaround for 4.0 to 4.X upgrade (CDH-7856) (upgrades from 4.1 onwards are fine)
+Requires: libhadoop.so.1.0.0%{requires_lib_tag}
 
 %description yarn
 YARN (Hadoop NextGen MapReduce) is a general purpose data-computation framework.
