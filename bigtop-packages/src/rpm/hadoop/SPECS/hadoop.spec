@@ -63,7 +63,7 @@
 %define hadoop_build_path build
 %define static_images_dir src/webapps/static/images
 
-%ifarch i386
+%ifarch i386 i686
 %global hadoop_arch Linux-i386-32
 %global requires_lib_tag %{nil}
 %endif
