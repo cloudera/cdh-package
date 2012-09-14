@@ -110,6 +110,7 @@ chown -R %{username}:%{username} %{hue_dir}/apps/%1 \
 if [ "$1" != 1 ] ; then \
   echo %{hue_dir}/apps/%1 >> %{hue_dir}/.re_register \
 fi \
+find %{apps_dir}/%1 -iname \*.py[co] -type f -print0 | xargs -0 /bin/rm -f \
 $DO "%{hue_dir}/build/env/bin/python %{hue_dir}/tools/app_reg/app_reg.py --install %{apps_dir}/%1"
 
 # Preun macro for apps

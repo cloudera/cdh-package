@@ -31,6 +31,7 @@ chown $USER:$USER $DESKTOP_LOG_DIR/beeswax_server.*
 
 case "$1" in
     configure)
+        find $APP_DIR -iname \*.py[co] -type f -print0 | xargs -0 /bin/rm -f
 	chown -R hue:hue $APP_DIR
         $DO "cd $ROOT; $ROOT/build/env/bin/python $ROOT/tools/app_reg/app_reg.py --remove beeswax" ||:
         $DO "cd $ROOT; $ROOT/build/env/bin/python $ROOT/tools/app_reg/app_reg.py --install $APP_DIR"
