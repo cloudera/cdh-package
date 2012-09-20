@@ -255,18 +255,18 @@ cat > build/meta/permissions.json <<__EOT__
   "lib/hadoop-0.20-mapreduce/sbin/Linux-amd64-64/task-controller": {
     "user":  "root",
     "group": "mapred",
-    "permissions": "4754",
+    "permissions": "4754"
   },
   "lib/hadoop-yarn/bin/container-executor": {
     "user":  "root",
     "group": "yarn",
-    "permissions": "6050",
+    "permissions": "6050"
   },
   "share/hue/apps/shell/src/shell/build/setuid": {
     "user":  "root",
     "group": "hue",
-    "permissions": "4750",
-  },
+    "permissions": "4750"
+  }
 }
 __EOT__
 
