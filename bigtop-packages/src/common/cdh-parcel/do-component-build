@@ -125,6 +125,13 @@ for link in `find build/usr/lib/ -type l` ; do
   esac
 done
 
+# Figure out the location of bigtop-utils
+if [ -d build/usr/lib/bigtop-utils ] ; then
+  BIGTOP_UTILS_HOME=lib/bigtop-utils
+else
+  BIGTOP_UTILS_HOME=libexec/bigtop-utils
+fi
+
 # Create a bunch of metadata
 mkdir -p build/meta
 (cat <<__EOT__
@@ -289,10 +296,12 @@ export CDH_ZOOKEEPER_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/lib/zookeeper
 export CDH_HIVE_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/lib/hive
 export CDH_HUE_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/share/hue
 export CDH_OOZIE_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/lib/oozie
-export CDH_TOMCAT_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/lib/bigtop-tomcat
-export CDH_JSVC_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/libexec/bigtop-utils
 export CDH_HUE_PLUGINS_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/lib/hadoop
 export CDH_FLUME_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/lib/flume-ng
+export TOMCAT_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/lib/bigtop-tomcat
+export JSVC_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/$BIGTOP_UTILS_HOME
+export CDH_HADOOP_BIN=\$CDH_HADOOP_HOME/bin/hadoop
+export HIVE_DEFAULT_XML=\$PARCELS_ROOT/CDH-$FULL_VERSION/lib/hive/conf/hive-default.xml
 __EOT__
 ) > build/meta/cdh_env.sh
 
