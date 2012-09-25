@@ -71,16 +71,15 @@ TIMEOUT=3
 hive_start() {
     [ -x $EXE_FILE ] || exit $ERROR_PROGRAM_NOT_INSTALLED
 
+    exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE` -Dhive.log.file=${NAME}.log -Dhive.log.threshold=INFO\""
     service_name="@HIVE_DAEMON@"
     if [ $service_name = "server" ] ; then
       service_name="hiveserver"
-      exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE`\""
     elif [ $service_name = "server2" ] ; then
       service_name="hiveserver2"
-      exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE`\""
     fi
 
-USER="hive"
+    USER="hive"
 
     if [ -x /sbin/runuser ]; then
       SU="runuser -s /bin/bash $USER"

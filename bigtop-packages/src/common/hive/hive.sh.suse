@@ -132,14 +132,14 @@ hive_start() {
       exit 0
     fi
 
+    exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE` -Dhive.log.file=${NAME}.log -Dhive.log.threshold=INFO\""
     service_name="@HIVE_DAEMON@"
     if [ $service_name = "server" ] ; then
       service_name="hiveserver"
-      exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE`\""
     elif [ $service_name = "server2" ] ; then
       service_name="hiveserver2"
-      exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE`\""
     fi
+
     su -s /bin/sh $HIVE_USER \
        -c "$exec_env nohup nice -n $NICENESS       \
            $EXE_FILE --service $service_name $PORT \
