@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-%define parcel_default_root /opt/cloudera/parcels/CDH-%{cdh_parcel_base_version}
+%define parcel_default_root /opt/cloudera/parcels/CDH-%{cdh_parcel_version}-%{cdh_parcel_release}
 
 Name: cdh-parcel-%{cdh_parcel_base_version}
 Version: %{cdh_parcel_version}
@@ -60,7 +60,7 @@ and you have some other mechanism for managing orchestration.
 %setup -c
 
 %build
-PKG_FORMAT=rpm FULL_VERSION=%{cdh_parcel_base_version} bash -x %{SOURCE1}
+PKG_FORMAT=rpm FULL_VERSION=%{cdh_parcel_version}-%{cdh_parcel_release} bash -x %{SOURCE1}
 
 %install
 # the following stops rpm from complaining

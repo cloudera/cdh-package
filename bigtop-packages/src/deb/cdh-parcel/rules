@@ -27,6 +27,7 @@ export DH_OPTIONS=-i
 DISTRO_CODENAME=$(shell lsb_release -sc)
 
 version=$(CDH_PARCEL_BASE_VERSION: =)
+version_release=$(CDH_PARCEL_VERSION: =)-$(CDH_PARCEL_RELEASE:= )
 
 patch: patch-stamp
 patch-stamp:	
@@ -35,7 +36,7 @@ patch-stamp:
 build:
 	dh_testdir
 	dh_clean -k
-	PKG_FORMAT=deb FULL_VERSION=$(version) bash debian/do-component-build
+	PKG_FORMAT=deb FULL_VERSION=$(version_release) bash debian/do-component-build
 
 build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
@@ -49,10 +50,10 @@ clean:
 	dh_clean
 	find debian -name .\*swp -exec rm -f {} \;
 
-install: debian/cdh-parcel-$(version)/opt/cloudera/parcels/CDH-$(version)
+install: debian/cdh-parcel-$(version)/opt/cloudera/parcels/CDH-$(version_release)
 	@echo building client
 
-debian/cdh-parcel-$(version)/opt/cloudera/parcels/CDH-$(version):
+debian/cdh-parcel-$(version)/opt/cloudera/parcels/CDH-$(version_release):
 	mkdir -p $@
 	mv build/usr/{bin,share,lib}* build/meta $@
 	sed -e 's#@VERSION@#$(version)#' < debian/cdh-parcel.postinst > debian/cdh-parcel-$(version).postinst
