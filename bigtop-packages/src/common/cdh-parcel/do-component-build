@@ -151,7 +151,7 @@ mkdir -p build/meta
 (cat <<__EOT__
 {
   "name":               "CDH",
-  "version":            "$FULL_VERSION",
+  "version":            "`echo $FULL_VERSION | sed -e 's#\.[^.]*$##'`",
   "minPrevVersion":     "$CDH_MIN_PREV_VERSION",
   "maxPrevVersion":     "$CDH_MAX_PREV_VERSION",
 
