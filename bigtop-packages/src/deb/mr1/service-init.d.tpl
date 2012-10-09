@@ -43,12 +43,11 @@ DAEMON_SCRIPT=$HADOOP_HOME/bin/hadoop-daemon.sh
 NAME=hadoop-@HADOOP_MAJOR_VERSION@-@HADOOP_DAEMON@
 DESC="Hadoop @HADOOP_DAEMON@ daemon"
 PID_FILE=$HADOOP_PID_DIR/hadoop-$HADOOP_IDENT_STRING-@HADOOP_DAEMON@.pid
-SLEEP_TIME=5
 
 test -x $DAEMON_SCRIPT || exit 1
 
 
-DODTIME=3                   # Time to wait for the server to die, in seconds
+DODTIME=5                   # Time to wait for the server to die, in seconds
                             # If this value is set too low you might not
                             # let some servers to die gracefully and
                             # 'restart' will not work
@@ -160,6 +159,7 @@ hadoop_service() {
             check_for_root
             echo -n "Stopping $DESC: "
             stop
+            [ -n "$DODTIME" ] && sleep $DODTIME
 
             if hadoop_check_pidfile $PID_FILE ; then
                 echo "ERROR. Could not stop $DESC"
@@ -172,6 +172,7 @@ hadoop_service() {
             check_for_root
             echo -n "Forcefully stopping $DESC: "
             hadoop_stop_pidfile $PID_FILE
+            [ -n "$DODTIME" ] && sleep $DODTIME
 
             if ! hadoop_check_pidfile $PID_FILE ; then
                 echo "$NAME."
