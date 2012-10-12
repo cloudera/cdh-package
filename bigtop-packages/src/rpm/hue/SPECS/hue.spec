@@ -1,6 +1,17 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
 #
-# Copyright (c) 2010-2011, Cloudera Inc
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 ##### HUE METAPACKAGE ######
 Name:    hue
@@ -9,11 +20,12 @@ Release: %{hue_release}
 Group: Applications/Engineering
 Summary: The hue metapackage
 License: ASL 2.0
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 Source0: %{name}-%{hue_patched_version}.tar.gz
 Source1: %{name}.init
 Source2: %{name}.init.suse
 Source3: do-component-build
+Source4: install_hue.sh
 URL: http://github.com/cloudera/hue
 Vendor: Cloudera, Inc.
 Requires: hadoop
@@ -102,34 +114,32 @@ AutoReqProv: no
 # Post macro for apps
 %define app_post_macro() \
 %post -n %{name}-%1 \
-DO="su --shell=/bin/bash -l %{username} -c" \
 export ROOT=%{hue_dir} \
 export DESKTOP_LOGLEVEL=WARN \
 export DESKTOP_LOG_DIR=/var/log/hue \
-chown -R %{username}:%{username} %{hue_dir}/apps/%1 \
 if [ "$1" != 1 ] ; then \
   echo %{hue_dir}/apps/%1 >> %{hue_dir}/.re_register \
 fi \
-find %{apps_dir}/%1 -iname \*.py[co] -type f -print0 | xargs -0 /bin/rm -f \
-$DO "%{hue_dir}/build/env/bin/python %{hue_dir}/tools/app_reg/app_reg.py --install %{apps_dir}/%1"
+%{hue_dir}/build/env/bin/python %{hue_dir}/tools/app_reg/app_reg.py --install %{apps_dir}/%1 \
+(cd %{hue_dir} ; /bin/bash ./tools/relocatable.sh) \
+chown -R hue:hue /var/log/hue \
+chown hue:hue %{hue_dir}/desktop %{hue_dir}/desktop/desktop.db
 
 # Preun macro for apps
 %define app_preun_macro() \
 %preun -n %{name}-%1 \
 if [ "$1" = 0 ] ; then \
-  DO="su --shell=/bin/bash -l %{username} -c" \
-  ENV_PYTHON="%{hue_dir}/build/env/bin/python" \
   export ROOT=%{hue_dir} \
   export DESKTOP_LOGLEVEL=WARN \
   export DESKTOP_LOG_DIR=/var/log/hue \
   if [ -e $ENV_PYTHON ] ; then \
-    $DO "$ENV_PYTHON %{hue_dir}/tools/app_reg/app_reg.py --remove %1" ||: \
+    %{hue_dir}/build/env/bin/python %{hue_dir}/tools/app_reg/app_reg.py --remove %1 ||: \
   fi \
   find %{apps_dir}/%1 -name \*.egg-info -type f -print0 | xargs -0 /bin/rm -fR   \
 fi \
-find %{apps_dir}/%1 -iname \*.py[co] -type f -print0 | xargs -0 /bin/rm -f  
-
-
+find %{apps_dir}/%1 -iname \*.py[co] -type f -print0 | xargs -0 /bin/rm -f \
+chown -R hue:hue /var/log/hue \
+chown hue:hue %{hue_dir}/desktop %{hue_dir}/desktop/desktop.db
 
 %description
 Hue is a browser-based desktop interface for interacting with Hadoop.
@@ -147,17 +157,13 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
 # Build
 ########################################
 %build
-HADOOP_HOME=%{build_hadoop_home} \
-  make apps
+bash -x %{SOURCE3}  
 
 ########################################
 # Install
 ########################################
 %install
-
-HADOOP_HOME=%{build_hadoop_home} \
-  PREFIX=$RPM_BUILD_ROOT/usr/share/ \
-  make install
+bash -x %{SOURCE4} --prefix=$RPM_BUILD_ROOT --build-dir=${PWD}
 
 %if  %{?suse_version:1}0
 orig_init_file=$RPM_SOURCE_DIR/%{name}.init.suse
@@ -168,79 +174,6 @@ orig_init_file=$RPM_SOURCE_DIR/%{name}.init
 # TODO maybe dont need this line anymore:
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}
 cp $orig_init_file $RPM_BUILD_ROOT/%{initd_dir}/hue
-
-
-# Install conf
-mkdir -p $RPM_BUILD_ROOT/etc/
-mv $RPM_BUILD_ROOT/usr/share/hue/desktop/conf $RPM_BUILD_ROOT/etc/hue
-ln -s /etc/hue $RPM_BUILD_ROOT/usr/share/hue/desktop/conf
-
-# Plugins
-#ROOT=$(pwd) HADOOP_HOME=%{build_hadoop_home} \
-#  make -C desktop/libs/hadoop bdist
-mkdir -p %{buildroot}%{hue_dir}/desktop/libs/hadoop/java-lib \
-  %{buildroot}%{hadoop_lib}
-cp desktop/libs/hadoop/java-lib/*plugin* %{buildroot}%{hue_dir}/desktop/libs/hadoop/java-lib/
-cp desktop/libs/hadoop/java-lib/*plugin* %{buildroot}%{hadoop_lib}/
-
-
-# Fix broken symlinks by removing $RPM_BUILD_ROOT references
-for sm in $RPM_BUILD_ROOT/usr/share/hue/build/env/lib64; do
-
-  if [ -h ${sm} ]
-  then
-    SM_ORIG_DEST_FILE=`ls -l "${sm}" | sed -e 's/.*-> //' `
-    SM_DEST_FILE=`echo $SM_ORIG_DEST_FILE | sed -e "s|${RPM_BUILD_ROOT}||"`
-
-    rm ${sm}
-    ln -s ${SM_DEST_FILE} ${sm}
-  fi
-
-done
-
-# Fix broken python scripts
-HUE_BIN_SCRIPTS=$RPM_BUILD_ROOT/usr/share/hue/build/env/bin/*
-HUE_EGG_SCRIPTS=$RPM_BUILD_ROOT/build/env/lib*/python*/site-packages/*/EGG-INFO/scripts/*
-for file in $HUE_BIN_SCRIPTS $HUE_EGG_SCRIPTS;
-do
-  if [ -f ${file} ]
-  then
-      echo "replacing ${RPM_BUILD_ROOT} in ${file}"
-    sed -i -e "s|${RPM_BUILD_ROOT}||" ${file}
-  fi
-done
-
-#Installing plug-ins configuration files
-mkdir -p $RPM_BUILD_ROOT/etc/hue
-
-# Make binary scripts executables
-for file in $RPM_BUILD_ROOT/%{hue_dir}/build/env/bin/ ;
-do
-  chmod 755 $file
-done
-
-# Remove bogus files
-BUILD_LOG=`find $RPM_BUILD_ROOT/ -iname "build_log.txt"`
-for ALL_BORKED in $BUILD_LOG;
-do
-  rm -fv $ALL_BORKED
-done
-
-ALL_PTH_BORKED=`find $RPM_BUILD_ROOT/ -iname "*.pth"`
-ALL_REG_BORKED=`find $RPM_BUILD_ROOT/ -iname "app.reg"`
-ALL_PYTHON_BORKED=`find $RPM_BUILD_ROOT/%{hue_dir}/build/env/lib/python*/site-packages/ -type f -iname "*"`
-for file in $ALL_PTH_BORKED $ALL_REG_BORKED $ALL_PYTHON_BORKED;
-do
-  sed -i -e "s|${RPM_BUILD_ROOT}||" ${file}
-done
-
-
-# Cloudera specific
-install -d -m 0755 $RPM_BUILD_ROOT/%{hue_dir}/cloudera
-cp cloudera/cdh_version.properties $RPM_BUILD_ROOT/%{hue_dir}/cloudera/
-install -d -m 0755 %{buildroot}%{hadoop_lib}/../cloudera
-grep -v 'cloudera.pkg.name=' < cloudera/cdh_version.properties > %{buildroot}%{hadoop_lib}/../cloudera/cm_version.properties
-echo 'cloudera.pkg.name=hue-plugins' >> %{buildroot}%{hadoop_lib}/../cloudera/cm_version.properties
 
 #### PLUGINS ######
 
@@ -282,48 +215,11 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
 getent group %{username} 2>/dev/null >/dev/null || /usr/sbin/groupadd -r %{username}
 getent passwd %{username} 2>&1 > /dev/null || /usr/sbin/useradd -c "Hue" -s /sbin/nologin -g %{username} -r -d %{hue_dir} %{username} 2> /dev/null || :
 
-
 # If there is an old DB in place, make a backup.
 if [ -e %{hue_dir}/desktop/desktop.db ]; then
   echo "Backing up previous version of Hue database..."
   cp -a %{hue_dir}/desktop/desktop.db %{hue_dir}/desktop/desktop.db.rpmsave.$(date +'%Y%m%d.%H%M%S')
 fi
-
-########################################
-# Postinstall
-########################################
-%post -n %{name}-common -p /bin/bash
-
-cd %{hue_dir}
-DO="su --shell=/bin/bash -l %{username} -c"
-DESKTOP_LOG_DIR=/var/log/hue
-
-mkdir -p $DESKTOP_LOG_DIR
-chown %{username}:%{username} $DESKTOP_LOG_DIR
-
-# Set permissions
-chown %{username}:%{username} %{hue_dir}/*
-chown %{username}:%{username} %{hue_dir}/apps
-chown -R %{username}:%{username} %{hue_dir}/ext
-chown -R %{username}:%{username} %{hue_dir}/tools
-chown -R %{username}:%{username} %{hue_dir}/desktop
-
-# Force regeneration of the virtual-env
-rm -f %{hue_dir}/build/env/stamp
-
-# Delete all pyc files since they contain the wrong path ()
-find %{hue_dir} -iname \*.py[co]  -exec rm -f {} \;
-
-# Install everything into the virtual environment
-# TODO: Should this be in /var/log/hue?
-$DO "DESKTOP_LOG_DIR=$DESKTOP_LOG_DIR DESKTOP_LOGLEVEL=WARN make desktop" >& %{hue_dir}/build_log.txt
-
-# Upgrading database...
-$DO "DESKTOP_LOG_DIR=$DESKTOP_LOG_DIR DESKTOP_LOGLEVEL=WARN build/env/bin/hue syncdb --noinput"
-
-# Delete all pyc files since they contain the wrong path ()
-find %{hue_dir} -iname \*.py[co]  -exec rm -f {} \;
-
 
 ########################################
 # Post-uninstall
@@ -342,13 +238,10 @@ if [ $1 -eq 0 ]; then
   rm -Rf %{hue_dir}/desktop %{hue_dir}/build %{hue_dir}/pids %{hue_dir}/app.reg
 fi
 
-
-
 %files -n %{name}-common
-%defattr(-,%{username},%{username})
 %attr(0755,root,root) %config(noreplace) /etc/hue/
 %dir %{hue_dir}
-%{hue_dir}/desktop
+%attr(0755,hue,hue) %{hue_dir}/desktop
 %{hue_dir}/ext
 %{hue_dir}/LICENSE.txt
 %{hue_dir}/Makefile
@@ -359,13 +252,10 @@ fi
 %{hue_dir}/README
 %{hue_dir}/tools
 %{hue_dir}/VERSION
-%attr(0755,%{username},%{username}) %{hue_dir}/build/env/bin/*
+%{hue_dir}/build/env/bin/*
 %{hue_dir}/build/env/include/
 %{hue_dir}/build/env/lib*/
 %{hue_dir}/build/env/stamp
-## We exclude app.reg to prevent it getting overwritten,
-##  postinstall should generate this see: CDH-3820
-%exclude %{hue_dir}/app.reg
 %{hue_dir}/apps/Makefile
 %{hue_dir}/cloudera/cdh_version.properties
 %dir %{hue_dir}/apps
@@ -374,9 +264,6 @@ fi
 
 
 %exclude %{hadoop_lib}
-
-# Exclude hue database
-%exclude %{hue_dir}/desktop/desktop.db
 
 %exclude %{about_app_dir}
 %exclude %{beeswax_app_dir}
@@ -461,7 +348,6 @@ Displays the current version and configuration information about your Hue instal
 %app_preun_macro about 
 
 %files -n %{name}-about
-%defattr(-, %{username}, %{username})
 %{about_app_dir}
 
 
@@ -489,7 +375,6 @@ and import and export data.
 %app_preun_macro beeswax
 
 %files -n %{name}-beeswax
-%defattr(-, %{username}, %{username})
 %{beeswax_app_dir}
 
 #### HUE-OOZIE PLUGIN ######
@@ -513,7 +398,6 @@ managing the XML specification.
 %app_preun_macro oozie
 
 %files -n %{name}-oozie
-%defattr(-, %{username}, %{username})
 %{oozie_app_dir}
 
 #### HUE-FILEBROWSER PLUGIN ######
@@ -532,7 +416,6 @@ Filebrowser is a graphical web interface that lets you browse and interact with 
 %app_preun_macro filebrowser
 
 %files -n %{name}-filebrowser
-%defattr(-, %{username}, %{username})
 %{filebrowser_app_dir}
 
 
@@ -550,7 +433,6 @@ Displays help documentation for various Hue apps.
 %app_preun_macro help
 
 %files -n %{name}-help
-%defattr(-, %{username}, %{username})
 %{help_app_dir}
 
 
@@ -571,7 +453,6 @@ Jobbrowser is a web interface for viewing Hadoop map-reduce jobs running on your
 %app_preun_macro jobbrowser
 
 %files -n %{name}-jobbrowser
-%defattr(-, %{username}, %{username})
 %{jobbrowser_app_dir}
 
 
@@ -592,7 +473,6 @@ Jobsub is a web interface for designing and submitting map-reduce jobs to Hadoop
 %app_preun_macro jobsub
 
 %files -n %{name}-jobsub
-%defattr(-, %{username}, %{username})
 %{jobsub_app_dir}
 
 
@@ -611,7 +491,6 @@ Proxies HTTP requests through the Hue server. This is intended to be used for "b
 %app_preun_macro proxy
 
 %files -n %{name}-proxy
-%defattr(-, %{username}, %{username})
 %{proxy_app_dir}
 
 
@@ -633,7 +512,6 @@ Create/delete Hue users, and update user information (name, email, superuser sta
 %app_preun_macro useradmin
 
 %files -n %{name}-useradmin
-%defattr(-, %{username}, %{username})
 %{useradmin_app_dir}
 
 ############################################################
@@ -656,23 +534,10 @@ AutoReqProv: no
 %description -n %{name}-shell
 The Shell application lets the user connect to various backend shells (e.g. Pig, HBase, Flume).
 
-%post -n %{name}-shell
-DO="su --shell=/bin/bash -l %{username} -c"
-export ROOT=%{hue_dir}
-export DESKTOP_LOGLEVEL=WARN
-export DESKTOP_LOG_DIR=/var/log/hue
-chown -R %{username}:%{username} %{hue_dir}/apps/shell
-
-$DO "%{hue_dir}/build/env/bin/python %{hue_dir}/tools/app_reg/app_reg.py --install %{shell_app_dir}"
-
-chown root:hue %{shell_app_dir}/src/shell/build/setuid
-chmod 4750 %{shell_app_dir}/src/shell/build/setuid
-
-
+%app_post_macro shell
 %app_preun_macro shell
 
 %files -n %{name}-shell
-%defattr(-, %{username}, %{username})
 %{shell_app_dir}
 %attr(4750,root,hue) %{shell_app_dir}/src/shell/build/setuid
 

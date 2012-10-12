@@ -71,7 +71,7 @@ hue_start() {
             return 0
         fi
         # the supervisor itself will setuid down to $USER
-        env - $DAEMON $DAEMON_OPTS
+        env - PATH=$PATH $DAEMON $DAEMON_OPTS
         ret=$?
         base=$(basename $0)
         if [ $ret -eq 0 ]; then

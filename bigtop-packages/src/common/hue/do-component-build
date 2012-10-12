@@ -1,21 +1,33 @@
-#!/bin/bash
-# Copyright (c) 2011 Cloudera, inc
+#!/bin/sh
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
 #
-# Performs a release build
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 set -ex
 
-RELEASE_DIR=$PWD
+mvn -f maven/pom.xml clean install "$@"
 
-pushd maven
-  mvn -N install
-popd
+make apps
 
-MAVEN_OPTIONS=$DO_MAVEN_DEPLOY make prod
-pushd build/release/prod/
-  mv hue-2.1.0 hue-${FULL_VERSION}
-  cp -r ${RELEASE_DIR}/cloudera hue-${FULL_VERSION}
-  tar -czf hue-${FULL_VERSION}.tar.gz hue-${FULL_VERSION}
-popd
+# Make the entire tree relocatable
+bash tools/relocatable.sh
 
-cp build/release/prod/hue-${FULL_VERSION}.tar.gz build/
+# Cloudera specific
+if [ -f Makefile.tarball ] ; then
+  MAVEN_OPTIONS=$DO_MAVEN_DEPLOY make prod
+  rm -rf build/release/prod/hue-*.tgz build/release/prod/hue-${FULL_VERSION}
+  mv build/release/prod/hue-* build/release/prod/hue-${FULL_VERSION}
+  cp -r cloudera build/release/prod/hue-${FULL_VERSION}
+  tar -C build/release/prod -czf build/hue-${FULL_VERSION}.tar.gz hue-${FULL_VERSION}
+fi
