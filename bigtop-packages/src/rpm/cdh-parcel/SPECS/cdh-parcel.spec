@@ -60,7 +60,7 @@ and you have some other mechanism for managing orchestration.
 %setup -c
 
 %build
-PKG_FORMAT=rpm FULL_VERSION=%{cdh_parcel_version}-%{cdh_parcel_release} bash -x %{SOURCE1}
+PKG_FORMAT=rpm FULL_VERSION=%{cdh_parcel_version}-%{cdh_parcel_release} CDH_PARCEL_CUSTOM_VERSION=%{cdh_parcel_custom_version} CDH_CUSTOMER_PATCH=%{cdh_customer_patch} CDH_PARCEL_BASE_VERSION=%{cdh_parcel_version} bash -x %{SOURCE1}
 
 %install
 # the following stops rpm from complaining

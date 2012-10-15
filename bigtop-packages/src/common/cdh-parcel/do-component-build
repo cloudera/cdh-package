@@ -151,7 +151,12 @@ mkdir -p build/meta
 (cat <<__EOT__
 {
   "name":               "CDH",
-  "version":            "`echo $FULL_VERSION | sed -e 's#\.[^.]*$##'`",
+  "version":            "`echo $CDH_PARCEL_CUSTOM_VERSION | sed -e 's#\.[^.]*$##'`",
+  "extraVersionInfo": {
+    "fullVersion":        "$CDH_PARCEL_CUSTOM_VERSION",
+    "baseVersion":        "$CDH_PARCEL_BASE_VERSION",
+    "patchCount":         "$CDH_CUSTOMER_PATCH"
+  },
   "minPrevVersion":     "$CDH_MIN_PREV_VERSION",
   "maxPrevVersion":     "$CDH_MAX_PREV_VERSION",
 

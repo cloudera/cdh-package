@@ -36,7 +36,7 @@ patch-stamp:
 build:
 	dh_testdir
 	dh_clean -k
-	PKG_FORMAT=deb FULL_VERSION=$(version_release) bash debian/do-component-build
+	PKG_FORMAT=deb FULL_VERSION=${version_release} CDH_PARCEL_CUSTOM_VERSION=$(CDH_PARCEL_CUSTOM_VERSION) CDH_CUSTOMER_PATCH=$(CDH_CUSTOMER_PATCH) CDH_PARCEL_BASE_VERSION=${version} bash debian/do-component-build
 
 build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
