@@ -35,7 +35,7 @@ fi
 
 REDHAT_RELEASES="rhel|redhat|centos|red.hat"
 SUSE_RELEASES="suse|sles"
-UBUNTU_RELEASES="lucid|maverick|squeeze"
+UBUNTU_RELEASES="lucid|maverick|precise"
 ARC="`uname -m`"
 
 if [ "$ARC" = "x86_64" ] ; then
@@ -124,6 +124,20 @@ for link in `find build/usr/lib/ -type l` ; do
                 ;;
   esac
 done
+
+# FIXME: special handling for Hue
+HUE_APPS="beeswax about filebrowser help jobbrowser jobsub oozie proxy useradmin shell"
+rm -f build/usr/share/hue/desktop/conf
+cp -r build/etc/hue build/usr/share/hue/desktop/conf
+pushd build/usr/share/hue
+ /bin/bash -x ./tools/relocatable.sh
+ for app in $HUE_APPS ; do
+   ROOT=`pwd` DESKTOP_LOGLEVEL=WARN DESKTOP_LOG_DIR=/tmp ./build/env/bin/python ./tools/app_reg/app_reg.py --install `pwd`/apps/$app
+ done
+ /bin/bash -x ./tools/relocatable.sh
+ find . -name '*.py[oc]' -exec rm -f {} \;
+ sed -i -e '/"path"/s#:.*".*share/hue#: ".#g' app.reg
+popd
 
 # Figure out the location of bigtop-utils
 if [ -d build/usr/lib/bigtop-utils ] ; then
@@ -278,6 +292,16 @@ cat > build/meta/permissions.json <<__EOT__
     "user":  "root",
     "group": "hue",
     "permissions": "4750"
+  }
+  "share/hue/desktop": {
+    "user":  "hue",
+    "group": "hue",
+    "permissions": "0755"
+  }
+  "share/hue/desktop/desktop.db": {
+    "user":  "hue",
+    "group": "hue",
+    "permissions": "0644"
   }
 }
 __EOT__
