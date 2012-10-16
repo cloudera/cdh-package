@@ -115,8 +115,6 @@ cp -ra ${BUILD_DIR}/contrib $PREFIX/$LIB_DIR
 
 install -d -m 0755 $PREFIX/$LIB_DIR/server/webapps/ROOT
 (cd $PREFIX/$LIB_DIR/server/webapps/ROOT ; jar xf ../../../*.war)
-#FIXME: this is supposed to be fixed upstream
-rm $PREFIX/$LIB_DIR/server/webapps/ROOT/WEB-INF/lib/javax.servlet-api-*.jar
 
 install -d -m 0755 $PREFIX/$LIB_DIR/server/conf
 cp $DISTRO_DIR/web.xml $PREFIX/$LIB_DIR/server/conf
