@@ -47,7 +47,6 @@ and you have some other mechanism for managing orchestration.
     /usr/lib/rpm/redhat/brp-compress ; \
     /usr/lib/rpm/redhat/brp-strip-static-archive %{__strip} ; \
     /usr/lib/rpm/redhat/brp-strip-comment-note %{__strip} %{__objdump} ; \
-    /usr/lib/rpm/brp-python-bytecompile ; \
     %{nil}
 %else
 %define __os_install_post \
@@ -83,6 +82,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(6050,root,yarn)   %{parcel_default_root}/lib/hadoop-yarn/bin/container-executor
 %attr(4754,root,mapred) %{parcel_default_root}/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
 %attr(4750,root,hue)    %{parcel_default_root}/share/hue/apps/shell/src/shell/build/setuid
+%attr(0755,hue,hue)     %{parcel_default_root}/share/hue/desktop
+%attr(0644,hue,hue)     %{parcel_default_root}/share/hue/desktop/desktop.db
 
 %changelog
 

@@ -7,6 +7,17 @@
 # Implicit targets
 SHELL := /bin/bash
 
+APPS=beeswax about filebrowser help jobbrowser jobsub oozie proxy useradmin
+
+$(APPS:%=debian/hue-%.postinst): debian/hue-app.postinst.tpl
+	sed -e 's#@APP@#$(patsubst debian/hue-%.postinst,%,$@)#'  < $< > $@
+
+$(APPS:%=debian/hue-%.prerm): debian/hue-app.prerm.tpl
+	sed -e 's#@APP@#$(patsubst debian/hue-%.prerm,%,$@)#'  < $< > $@
+
+$(APPS:%=debian/hue-%.install):
+	echo "/usr/share/hue/apps/$(patsubst debian/hue-%.install,%,$@)" > $@
+
 HUE_DIR ?= /usr/share/hue
 PKG_DESKTOP=$(CURDIR)/debian/tmp
 
@@ -30,9 +41,7 @@ build: build-stamp
 
 build-stamp: configure-stamp
 	dh_testdir
-	#make parent-pom desktop
-	#mvn -f desktop/libs/hadoop/java/pom.xml -DskipTests install
-	make apps
+	bash -x debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
 	touch $@
 
 clean:
@@ -44,45 +53,17 @@ clean:
 
 	dh_clean
 
-install: build
+
+install: build $(APPS:%=debian/hue-%.postinst) $(APPS:%=debian/hue-%.prerm) $(APPS:%=debian/hue-%.install)
 	dh_testdir
 	dh_testroot
 	dh_prep
 	dh_installdirs
-
-	mvn -f maven/pom.xml install $(MAVEN_OPTIONS)
-
-	PREFIX=$(PKG_DESKTOP)/usr/share/ \
-	  make install
-
+	bash -x debian/install_hue.sh --build-dir=${PWD} --prefix=${PWD}/debian/tmp
 	sed -e 's,^,build:,;' ${PKG_DESKTOP_DIR}/Makefile.buildvars \
 	  | tr _ - >> debian/hue-common.substvars
-
-	@# Conf in etc
-	mkdir -p $(PKG_DESKTOP)/etc/
-	mv $(PKG_DESKTOP_DIR)/desktop/conf $(PKG_DESKTOP)/etc/hue
-	(cd $(PKG_DESKTOP_DIR)/desktop; ln -s ../../../../etc/hue conf)
-
-
-	@# Plugins
-	mkdir -p $(PKG_HADOOP_LIB_DIR)
-	cp $(PKG_DESKTOP_DIR)/desktop/libs/hadoop/java-lib/*plugin*jar \
-	   $(PKG_HADOOP_LIB_DIR)
-
-	# Hue Shell specific
-	mkdir -p $(PKG_DESKTOP)/$(HUE_DIR)/apps/shell/src/shell/build/
-	cp -f apps/shell/src/shell/build/setuid $(PKG_DESKTOP)/$(HUE_DIR)/apps/shell/src/shell/build/
-
 	# Remove Hue database
 	rm -f $(PKG_DESKTOP)/$(HUE_DIR)/desktop/desktop.db
-
-	# Cloudera specific
-	install -d -m 0755 $(PKG_DESKTOP_DIR)/cloudera
-	cp cloudera/cdh_version.properties $(PKG_DESKTOP_DIR)/cloudera/
-	install -d -m 0755 $(PKG_HADOOP_LIB_DIR)/../cloudera
-	grep -v 'cloudera.pkg.name=' < cloudera/cdh_version.properties > $(PKG_HADOOP_LIB_DIR)/../cloudera/cm_version.properties
-	echo 'cloudera.pkg.name=hue-plugins' >> $(PKG_HADOOP_LIB_DIR)/../cloudera/cm_version.properties
-
 	dh_install --sourcedir=debian/tmp --list-missing
 
 # Build architecture-independent files here.

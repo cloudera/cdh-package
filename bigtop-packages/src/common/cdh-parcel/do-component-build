@@ -35,7 +35,7 @@ fi
 
 REDHAT_RELEASES="rhel|redhat|centos|red.hat"
 SUSE_RELEASES="suse|sles"
-UBUNTU_RELEASES="lucid|maverick|squeeze"
+UBUNTU_RELEASES="lucid|maverick|precise"
 ARC="`uname -m`"
 
 if [ "$ARC" = "x86_64" ] ; then
@@ -124,6 +124,27 @@ for link in `find build/usr/lib/ -type l` ; do
                 ;;
   esac
 done
+
+# FIXME: special handling for Hue
+HUE_APPS="beeswax about filebrowser help jobbrowser jobsub oozie proxy useradmin shell"
+rm -f build/usr/share/hue/desktop/conf
+cp -r build/etc/hue build/usr/share/hue/desktop/conf
+pushd build/usr/share/hue
+ /bin/bash -x ./tools/relocatable.sh
+ for app in $HUE_APPS ; do
+   ROOT=`pwd` DESKTOP_LOGLEVEL=WARN DESKTOP_LOG_DIR=/tmp ./build/env/bin/python ./tools/app_reg/app_reg.py --install `pwd`/apps/$app
+ done
+ /bin/bash -x ./tools/relocatable.sh
+ find . -name '*.py[oc]' -exec rm -f {} \;
+ sed -i -e '/"path"/s#:.*".*share/hue#: ".#g' app.reg
+popd
+
+# Figure out the location of bigtop-utils
+if [ -d build/usr/lib/bigtop-utils ] ; then
+  BIGTOP_UTILS_HOME=lib/bigtop-utils
+else
+  BIGTOP_UTILS_HOME=libexec/bigtop-utils
+fi
 
 # Create a bunch of metadata
 mkdir -p build/meta
@@ -253,18 +274,28 @@ cat > build/meta/permissions.json <<__EOT__
   "lib/hadoop-0.20-mapreduce/sbin/Linux-amd64-64/task-controller": {
     "user":  "root",
     "group": "mapred",
-    "permissions": "4754",
+    "permissions": "4754"
   },
   "lib/hadoop-yarn/bin/container-executor": {
     "user":  "root",
     "group": "yarn",
-    "permissions": "6050",
+    "permissions": "6050"
   },
   "share/hue/apps/shell/src/shell/build/setuid": {
     "user":  "root",
     "group": "hue",
-    "permissions": "4750",
-  },
+    "permissions": "4750"
+  }
+  "share/hue/desktop": {
+    "user":  "hue",
+    "group": "hue",
+    "permissions": "0755"
+  }
+  "share/hue/desktop/desktop.db": {
+    "user":  "hue",
+    "group": "hue",
+    "permissions": "0644"
+  }
 }
 __EOT__
 
@@ -287,10 +318,12 @@ export CDH_ZOOKEEPER_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/lib/zookeeper
 export CDH_HIVE_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/lib/hive
 export CDH_HUE_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/share/hue
 export CDH_OOZIE_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/lib/oozie
-export CDH_TOMCAT_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/lib/bigtop-tomcat
-export CDH_JSVC_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/libexec/bigtop-utils
 export CDH_HUE_PLUGINS_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/lib/hadoop
 export CDH_FLUME_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/lib/flume-ng
+export TOMCAT_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/lib/bigtop-tomcat
+export JSVC_HOME=\$PARCELS_ROOT/CDH-$FULL_VERSION/$BIGTOP_UTILS_HOME
+export CDH_HADOOP_BIN=\$CDH_HADOOP_HOME/bin/hadoop
+export HIVE_DEFAULT_XML=\$PARCELS_ROOT/CDH-$FULL_VERSION/lib/hive/conf/hive-default.xml
 __EOT__
 ) > build/meta/cdh_env.sh
 
