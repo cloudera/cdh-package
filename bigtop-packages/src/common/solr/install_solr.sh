@@ -111,7 +111,9 @@ VAR_DIR=$PREFIX/var
 install -d -m 0755 $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist/*.*ar $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist/solrj-lib $PREFIX/$LIB_DIR/lib
-cp -ra ${BUILD_DIR}/contrib $PREFIX/$LIB_DIR
+
+install -d -m 0755 $PREFIX/$LIB_DIR/contrib
+cp -ra ${BUILD_DIR}/contrib/velocity $PREFIX/$LIB_DIR/contrib
 
 install -d -m 0755 $PREFIX/$LIB_DIR/server/webapps/ROOT
 (cd $PREFIX/$LIB_DIR/server/webapps/ROOT ; jar xf ../../../*.war)
@@ -123,7 +125,6 @@ cp $DISTRO_DIR/logging.properties $PREFIX/$LIB_DIR/server/conf
 
 cp -ra ${BUILD_DIR}/dist/*.*ar $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist/solrj-lib $PREFIX/$LIB_DIR/lib
-cp -ra ${BUILD_DIR}/contrib $PREFIX/$LIB_DIR
 
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 cp -a ${BUILD_DIR}/example/cloud-scripts/*.sh $PREFIX/$LIB_DIR/bin
