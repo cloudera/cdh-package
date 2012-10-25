@@ -114,7 +114,7 @@ do
 done
 
 install -d -m 0755 ${BIN_DIR}
-for file in hive
+for file in hive beeline hiveserver2
 do
   wrapper=$BIN_DIR/$file
   cat >>$wrapper <<EOF
