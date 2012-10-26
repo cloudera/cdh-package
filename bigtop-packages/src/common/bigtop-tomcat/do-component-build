@@ -16,6 +16,10 @@
 
 set -ex
 
+# FIXME: This replaces the apache.org with a more reliable, local mirror - we need a better long-term fix
+CLOUDERA_MIRROR="mirror.infra.cloudera.com/apache"
+sed -i "s#www.apache.org/dist#$CLOUDERA_MIRROR#" build.properties.default
+
 rm -rf build .build
 mkdir -p .build/bigtop-tomcat-${FULL_VERSION}
 cp -r * .build/bigtop-tomcat-${FULL_VERSION}
