@@ -13,7 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-%define parcel_default_root /opt/cloudera/parcels/CDH-%{cdh_parcel_version}-%{cdh_parcel_release}
+%define distro_less_version_release %(echo %{version}-%{release} | sed -e 's/\.[^\.]*$//')
+%define parcel_default_root /opt/cloudera/parcels/CDH-%{distro_less_version_release}
 
 Name: cdh-parcel-%{cdh_parcel_base_version}
 Version: %{cdh_parcel_version}
@@ -60,7 +61,8 @@ and you have some other mechanism for managing orchestration.
 %setup -c
 
 %build
-PKG_FORMAT=rpm FULL_VERSION=%{cdh_parcel_version}-%{cdh_parcel_release} CDH_PARCEL_CUSTOM_VERSION=%{cdh_parcel_custom_version} CDH_CUSTOMER_PATCH=%{cdh_customer_patch} CDH_PARCEL_BASE_VERSION=%{cdh_parcel_version} bash -x %{SOURCE1}
+PKG_FORMAT=rpm FULL_VERSION=%{cdh_parcel_version}-%{cdh_parcel_release} CDH_PARCEL_CUSTOM_VERSION=%{version}-%{release} \
+CDH_CUSTOMER_PATCH=%{cdh_customer_patch} CDH_PARCEL_BASE_VERSION=%{cdh_parcel_version} bash -x %{SOURCE1}
 
 %install
 # the following stops rpm from complaining
