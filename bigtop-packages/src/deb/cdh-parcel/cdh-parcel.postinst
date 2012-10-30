@@ -19,7 +19,13 @@
 
 set -e
 
-PARCEL_DEFAULT_ROOT=/opt/cloudera/parcels/CDH-@VERSION@
+# Technically, we would have wanted to get the CDH_PARCEL_CUSTOM_VERSION parameter from the 
+# rules file and strip the distro identifier (e.g. lucid) from it and prepend CDH-
+# at the front of it to get the name of the directory. However, we know that @VERSION@-@RELEASE@
+# on debian systems is equivalent to CDH_PARCEL_CUSTOM_VERSION with distro identifier stripped off.
+# So, instead of introducing the overhead of passing an extra custom variable to all the postinst scripts
+# lets just use @VERSION@-@RELEASE@ instead of something like $(shell echo $CDH_PARCEL_CUSTOM_VERSION | sed -e 's:\-[\-^]*$::')
+PARCEL_DEFAULT_ROOT=/opt/cloudera/parcels/CDH-@VERSION@-@RELEASE@
 
 case "$1" in
     configure)
