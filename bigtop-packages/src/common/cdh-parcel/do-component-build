@@ -295,12 +295,12 @@ cat > build/meta/permissions.json <<__EOT__
     "user":  "root",
     "group": "hue",
     "permissions": "4750"
-  }
+  },
   "share/hue/desktop": {
     "user":  "hue",
     "group": "hue",
     "permissions": "0755"
-  }
+  },
   "share/hue/desktop/desktop.db": {
     "user":  "hue",
     "group": "hue",
