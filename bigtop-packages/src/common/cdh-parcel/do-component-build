@@ -342,3 +342,12 @@ echo "This script does nothing for now, since the location of the only alternati
 echo "packages support (/etc/<component>/conf) are not given to us by CM, and the"
 echo "/usr/bin/<component> alternatives need to be implemented by CDH."
 __EOT__
+
+# Magically manipulate the bin scripts to point to ../lib instead of /usr/lib
+# Ideally we would want alternatives configuration for bin scripts as well
+for file in build/usr/bin/*; do
+  # Insert a command that sets the LIB_DIR we want to use
+  sed -i '1aBIN_DIR=`which $0`\nBIN_DIR=`dirname $BIN_DIR`\nLIB_DIR=$BIN_DIR/../lib\n' $file
+  # Replace /usr/lib with the LIB_DIR variable we set in the above line
+  sed -i 's:/usr/lib/:\$LIB_DIR/:' $file
+done
