@@ -222,6 +222,18 @@ if [ -e %{hue_dir}/desktop/desktop.db ]; then
 fi
 
 ########################################
+# FIXME: this is a workaround for RPM upgrade 
+# sequence trying to change a subdiretory 
+# into a symlink
+########################################
+
+if [ -e %{hue_dir}/desktop/logs ]; then
+  NAME=%{hue_dir}/desktop/logs.$(date +'%Y%m%d.%H%M%S')
+  echo "Preserving exiting log files under $NAME"
+  mv %{hue_dir}/desktop/logs %{hue_dir}/desktop/logs.$(date +'%Y%m%d.%H%M%S') || :
+fi
+
+########################################
 # Post-uninstall
 ########################################
 %postun -n %{name}-common -p /bin/bash
