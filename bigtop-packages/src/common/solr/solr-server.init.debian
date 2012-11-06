@@ -15,20 +15,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Starts a Flume NG agent
+# Starts a Solr server
 #
 # chkconfig: 2345 90 10
-# description: Flume NG agent
+# description: Solr server
 #
 ### BEGIN INIT INFO
-# Provides:          flume-ng-agent
+# Provides:          solr-server
 # Required-Start:    $remote_fs
 # Should-Start:
 # Required-Stop:     $remote_fs
 # Should-Stop:
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Flume NG agent
+# Short-Description: Solr server
 ### END INIT INFO
 
 . /lib/lsb/init-functions
@@ -77,13 +77,13 @@ start() {
 
 stop() {
   if [ ! -e $SOLR_PID_FILE ]; then
-    log_failure_msg "Flume agent is not running"
+    log_failure_msg "$desc is not running"
     exit 0
   fi
 
-  log_success_msg "Stopping $desc (flume-ng-agent): "
+  log_success_msg "Stopping ${desc}: "
 
-  /bin/su -s /bin/bash -c "${EXEC_PATH} stop -force $SOLR_SHUTDOWN_TIMEOUT" $SOLR_USER
+  /bin/su -s /bin/bash -c "${EXEC_PATH} stop $SOLR_SHUTDOWN_TIMEOUT -force" $SOLR_USER
   rm -f $LOCKFILE $SOLR_PID_FILE
   return 0
 }

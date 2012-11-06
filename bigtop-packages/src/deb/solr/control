@@ -16,8 +16,8 @@
 Source: solr
 Section: misc
 Priority: extra
-Maintainer: Roman Shaposhnik <rvs@apache.org>
-Build-Depends: debhelper (>= 6), git-core
+Maintainer: Apache Bigtop <dev@bigtop.apache.org>
+Build-Depends: debhelper (>= 7.0.50~), git-core
 Standards-Version: 3.8.0
 Homepage: http://lucene.apache.org/solr
 
@@ -52,6 +52,5 @@ Provides: solr-doc
 Architecture: all
 Section: doc
 Description: Documentation for Apache Solr
- This package contains the documentation for Apache Solr
-
+ Documentation for Apache Solr
 

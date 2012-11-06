@@ -139,13 +139,11 @@ install -d -m 0755 $PREFIX/$DEFAULT_DIR
 cp $DISTRO_DIR/solr.default $PREFIX/$DEFAULT_DIR/solr
 
 install -d -m 0755 $PREFIX/${CONF_DIR}.dist
-cp -ra ${BUILD_DIR}/example/multicore/* $PREFIX/${CONF_DIR}.dist
-rm -rf $PREFIX/${CONF_DIR}.dist/exampledocs
-# FIXME: we have to find a better way to do the following
-for core in core0 core1 ; do
-  sed -i -e '/<dataDir>.*<\/dataDir>/s#^.*$#<dataDir>/var/lib/solr/'$core'</dataDir>#' \
-    $PREFIX/${CONF_DIR}.dist/$core/conf/solrconfig.xml
-done
+cp -ra ${BUILD_DIR}/example/solr/* $PREFIX/${CONF_DIR}.dist
+# FIXME: this will eventually go upstream
+cp -f ${BUILD_DIR}/../../../cloudera/solrconfig.xml $PREFIX/${CONF_DIR}.dist/collection1/conf/
+cp -f ${BUILD_DIR}/../../../cloudera/schema.xml $PREFIX/${CONF_DIR}.dist/collection1/conf/
+
 
 # Copy in the wrapper
 cat > $PREFIX/$LIB_DIR/bin/solrd <<EOF
@@ -167,10 +165,21 @@ export CATALINA_TMPDIR=\${SOLR_DATA:-/var/lib/solr/}temp
 export CATALINA_PID=\${SOLR_RUN:-/var/run/solr/}solr.pid
 export CATALINA_OUT=\${SOLR_LOG:-/var/log/solr}/solr.out
 
+# FIXME: perhaps we have to have a better way of detecting SolCloud (SOLR_ZK_ROOT)
+if [ -n "\$SOLR_ZK_ENSEMBLE" ] ; then
+  CATALINA_OPTS="\${CATALINA_OPTS} -DzkHost=\${SOLR_ZK_ENSEMBLE}"
+fi
+
 export CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.port=\${SOLR_PORT:-8080}
                                         -Dsolr.log=\${SOLR_LOG:-/var/log/solr}
                                         -Dsolr.admin.port=\${SOLR_ADMIN_PORT:-8081}
+                                        -Dsolr.data.dir=\${SOLR_DATA_DIR:-/var/lib/solr/index}
                                         -Dsolr.solr.home=\${SOLR_HOME:-/etc/solr/conf}" 
+
+# FIXME: for some reason catalina doesn't use CATALINA_OPTS for stop action
+#        and thus doesn't know the admin port
+export JAVA_OPTS="\$CATALINA_OPTS"
+
 exec \${CATALINA_HOME}/bin/catalina.sh "\$@"
 EOF
 chmod 755 $PREFIX/$LIB_DIR/bin/solrd

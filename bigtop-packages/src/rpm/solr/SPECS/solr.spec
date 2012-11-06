@@ -95,7 +95,7 @@ Group: Documentation
 This package contains the documentation for Apache Solr
 
 %description doc
-Documentation for Flume NG
+Documentation for Apache Solr
 
 %prep
 %setup -n solr-%{solr_patched_version}
@@ -106,7 +106,7 @@ env FULL_VERSION=%{solr_patched_version} bash %{SOURCE1}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh $RPM_SOURCE_DIR/install_solr.sh \
-          --build-dir=build/solr-%{solr_patched_version} \
+          --build-dir=solr/build/apache-solr-%{solr_patched_version} \
           --prefix=$RPM_BUILD_ROOT \
           --distro-dir=$RPM_SOURCE_DIR \
           --doc-dir=%{doc_solr} 
