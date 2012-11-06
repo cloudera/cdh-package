@@ -35,6 +35,12 @@ case "$1" in
                         echo ... backing up $OLD_DESKTOP_DB as ${OLD_DESKTOP_DB}.bak.$2
                         cp -a $OLD_DESKTOP_DB ${OLD_DESKTOP_DB}.bak.$2
                 fi
+                OLD_DESKTOP_LOGS=/usr/share/hue/desktop/logs.$(date +'%Y%m%d.%H%M%S')
+                NEW_DESKTOP_LOGS=$OLD_DESKTOP_LOGS.bak
+                if [ -e $OLD_DESKTOP_LOGS ]; then
+                        echo ... preserving $OLD_DESKTOP_LOGS as $NEW_DESKTOP_LOGS
+                        mv $OLD_DESKTOP_LOGS $NEW_DESKTOP_LOGS
+                fi
         fi
 
     ;;

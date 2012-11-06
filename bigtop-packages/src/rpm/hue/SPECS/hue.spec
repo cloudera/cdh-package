@@ -229,7 +229,7 @@ fi
 
 if [ -e %{hue_dir}/desktop/logs ]; then
   NAME=%{hue_dir}/desktop/logs.$(date +'%Y%m%d.%H%M%S')
-  echo "Preserving exiting log files under $NAME"
+  echo "Preserving existing log files under $NAME"
   mv %{hue_dir}/desktop/logs %{hue_dir}/desktop/logs.$(date +'%Y%m%d.%H%M%S') || :
 fi
 
