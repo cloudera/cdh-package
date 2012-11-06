@@ -69,6 +69,11 @@ class hadoop_cluster_node {
 
   $hadoop_zookeeper_ensemble = ["$hadoop_head_node:2888:3888"]
 
+  $solrcloud_collections = ["collection1"]
+  $solrcloud_port        = "1978"
+  $solrcloud_port_admin  = "1979"
+  $solrcloud_zk          = "${hadoop_head_node}:2181"
+
   # Set from facter if available
   $roots              = extlookup("hadoop_storage_dirs",       split($hadoop_storage_dirs, ";"))
   $namenode_data_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/namenode", $roots))
@@ -128,6 +133,13 @@ class hadoop_worker_node inherits hadoop_cluster_node {
         jobtracker_port => $hadoop_jobtracker_port,
         auth => $hadoop_security_authentication,
         dirs => $mapred_data_dirs,
+  }
+
+  solr::server { "solrcloud server":
+       collections => $solrcloud_collections,
+       port        => $solrcloud_port,
+       port_admin  => $solrcloud_port_admin,
+       zk          => $solrcloud_zk,
   }
 }
 
@@ -215,6 +227,13 @@ class hadoop_head_node inherits hadoop_cluster_node {
                         "/user/history" => { perm => "777", user => "mapred" },
                         "/user/root"    => { perm => "777", user => "root"   },
                         "/user/hive"    => { perm => "777", user => "hive"   } },
+  }
+
+  solr::server { "solrcloud server":
+       collections => $solrcloud_collections,
+       port        => $solrcloud_port,
+       port_admin  => $solrcloud_port_admin,
+       zk          => $solrcloud_zk,
   }
 }
 
