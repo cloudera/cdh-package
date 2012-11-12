@@ -18,14 +18,14 @@ set -ex
 
 mvn -f maven/pom.xml clean install "$@"
 
-make apps
+MAVEN_OPTIONS=$DO_MAVEN_DEPLOY make apps
 
 # Make the entire tree relocatable
 bash tools/relocatable.sh
 
 # Cloudera specific
 if [ -f Makefile.tarball ] ; then
-  MAVEN_OPTIONS=$DO_MAVEN_DEPLOY make prod
+  make prod
   rm -rf build/release/prod/hue-*.tgz build/release/prod/hue-${FULL_VERSION}
   mv build/release/prod/hue-* build/release/prod/hue-${FULL_VERSION}
   cp -r cloudera build/release/prod/hue-${FULL_VERSION}
