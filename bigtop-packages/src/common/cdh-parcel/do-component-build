@@ -113,11 +113,6 @@ for link in `find build/usr/lib/ -type l` ; do
   target=`readlink $link`
   TOPDIR=`echo $link | sed -e 's#^build/usr/lib/##' -e 's#[^/]\+#..#g' -e 's#/..$##'`
   case $target in
-    /etc/*/conf)
-                mkdir -p build/usr/`dirname $target` || :
-                rm -f $link
-                ln -s $TOPDIR/../etc/`echo $target | cut -f3 -d/`  $link
-                ;;
     /usr/lib/*)
                 rm -f $link
                 ln -s $TOPDIR/`echo $target |sed -e 's#/usr/lib/##'` $link
