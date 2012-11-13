@@ -412,4 +412,6 @@ for file in build/usr/bin/*; do
   LIB_DIR=$BIN_DIR/../lib' $file
   # Replace /usr/lib with the LIB_DIR variable we set in the above line
   sed -i 's:/usr/lib/:\$LIB_DIR/:' $file
+  # Replace all instances of /etc/default to relatively point to <parcel root>/etc/default
+  sed -i 's:/etc/default:$BIN_DIR/../etc/default:' $file
 done
