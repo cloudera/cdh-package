@@ -111,12 +111,15 @@ done
 # Fix the symlinks
 for link in `find build/usr/lib/ -type l` ; do
   target=`readlink $link`
-  TOPDIR=`echo $link | sed -e 's#^build/usr/lib/##' -e 's#[^/]\+#..#g' -e 's#/..$##'`
+  TOPDIR=`echo $link | sed -e 's#^build/usr/lib/##' -e 's#[^/]\+#..#g'`
   case $target in
     /usr/lib/*)
                 rm -f $link
-                ln -s $TOPDIR/`echo $target |sed -e 's#/usr/lib/##'` $link
+                ln -s $TOPDIR/lib/`echo $target |sed -e 's#/usr/lib/##'` $link
                 ;;
+    /usr/share/hue/*)
+                rm -f $link
+                ln -s $TOPDIR/share/`echo $target |sed -e 's#/usr/share##'` $link
   esac
 done
 
