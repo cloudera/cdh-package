@@ -344,7 +344,7 @@ BINARIES="beeline flume-ng hadoop hadoop-0.20 hadoop-fuse-dfs hbase hdfs hive \
           sqoop-version whirr yarn zookeeper-client zookeeper-server-cleanup \
           zookeeper-server zookeeper-server-cleanup zookeeper-server-initialize"
 
-CONFDIRS="hadoop hadoop-httpfs hbase hive hue mahout oozie pig sqoop zookeeper solr"
+CONFDIRS="hadoop hadoop-httpfs hbase hive hue mahout oozie pig sqoop zookeeper"
 # flume-ng is 'special' and uses conf.empty instead of conf.dist
 EMPTY_CONFDIRS="flume-ng"
 
