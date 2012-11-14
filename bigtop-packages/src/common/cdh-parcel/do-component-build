@@ -344,7 +344,9 @@ BINARIES="beeline flume-ng hadoop hadoop-0.20 hadoop-fuse-dfs hbase hdfs hive \
           sqoop-version whirr yarn zookeeper-client zookeeper-server-cleanup \
           zookeeper-server zookeeper-server-cleanup zookeeper-server-initialize"
 
-CONFDIRS="pig hive solr sqoop mahout flume-ng oozie zookeeper"
+CONFDIRS="hadoop hadoop-httpfs hbase hive hue mahout oozie pig sqoop zookeeper solr"
+# flume-ng is 'special' and uses conf.empty instead of conf.dist
+EMPTY_CONFDIRS="flume-ng"
 
 cat > build/meta/cdh_alternatives.sh <<__EOT__
 #!/bin/bash
@@ -367,6 +369,13 @@ for CONFDIR in $CONFDIRS; do
     >> build/meta/cdh_alternatives.sh
 done
 
+for CONFDIR in $EMPTY_CONFDIRS; do
+  echo "  mkdir -p /etc/$CONFDIR" >> build/meta/cdh_alternatives.sh
+  echo \
+    "  update-alternatives --install /etc/$CONFDIR/conf $CONFDIR-conf \$PARCELS_ROOT/CDH-$DISTRO_LESS_FULL_VERSION/etc/$CONFDIR/conf.empty \$PRIORITY" \
+    >> build/meta/cdh_alternatives.sh
+done
+
 cat >> build/meta/cdh_alternatives.sh <<__EOT__
 
 elif [[ "\$1" == "deactivate" ]]; then
@@ -382,6 +391,13 @@ done
 for CONFDIR in $CONFDIRS; do
   echo \
     "  update-alternatives --remove $CONFDIR-conf \$PARCELS_ROOT/CDH-$DISTRO_LESS_FULL_VERSION/etc/$CONFDIR/conf.dist" \
+    >> build/meta/cdh_alternatives.sh
+  echo "  rmdir --ignore-fail-on-non-empty /etc/$CONFDIR" >> build/meta/cdh_alternatives.sh
+done
+
+for CONFDIR in $EMPTY_CONFDIRS; do
+  echo \
+    "  update-alternatives --remove $CONFDIR-conf \$PARCELS_ROOT/CDH-$DISTRO_LESS_FULL_VERSION/etc/$CONFDIR/conf.empty" \
     >> build/meta/cdh_alternatives.sh
   echo "  rmdir --ignore-fail-on-non-empty /etc/$CONFDIR" >> build/meta/cdh_alternatives.sh
 done
