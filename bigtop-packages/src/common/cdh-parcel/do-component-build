@@ -417,3 +417,19 @@ for file in build/usr/bin/*; do
   # Replace all instances of /etc/default to relatively point to <parcel root>/etc/default
   sed -i 's:/etc/default:$BIN_DIR/../etc/default:' $file
 done
+
+# Fixing up /usr/lib/hadoop/libexec/hadoop-layout.sh
+# The above directly refers to directories in /usr/lib, etc. which don't exist in the CM/parcel use case.
+
+FILE=build/usr/lib/hadoop/libexec/hadoop-layout.sh
+# Insert stuff after the first line that doesn't start with a comment
+sed -i '1,/^[^#]/ {/^[^#]/i\
+\
+this="${BASH_SOURCE-$0}"\
+common_bin=$(cd -P -- "$(dirname -- "$this")" && pwd -P)\
+script="$(basename -- "$this")"\
+this="$common_bin/$script"\
+
+}' $FILE
+# Replace references to /usr/lib with the relative path to within the parcel
+sed -i 's#/usr/lib/#\$common_bin/../../#' $FILE
