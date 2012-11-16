@@ -16,3 +16,5 @@
 export HBASE_PID_DIR="/var/run/hbase"
 export HBASE_LOG_DIR="/var/log/hbase"
 export HBASE_IDENT_STRING=hbase
+#export HBASE_REGIONSERVER_MLOCK=true
+#export HBASE_REGIONSERVER_UID=hbase

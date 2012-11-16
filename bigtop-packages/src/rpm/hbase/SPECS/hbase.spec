@@ -252,7 +252,7 @@ sh %{SOURCE2} \
 %__install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT/etc/default/%{name}
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
-%__install -m 0644 %{SOURCE6} $RPM_BUILD_ROOT/etc/security/limits.d/%{name}.nofiles.conf
+%__install -m 0644 %{SOURCE6} $RPM_BUILD_ROOT/etc/security/limits.d/%{name}.conf
 
 %__install -d  -m 0755  %{buildroot}/%{_localstatedir}/log/%{name}
 ln -s %{_localstatedir}/log/%{name} %{buildroot}/%{logs_hbase}
@@ -305,7 +305,7 @@ fi
 
 %defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/default/hbase
-%config(noreplace) /etc/security/limits.d/hbase.nofiles.conf
+%config(noreplace) /etc/security/limits.d/hbase.conf
 %{hbase_home}
 %{hbase_home}/hbase-*.jar
 %{webapps_hbase}
