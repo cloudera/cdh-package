@@ -317,10 +317,10 @@ chmod 755 $fuse_wrapper
 
 
 # conf
-install -d -m 0755 $HADOOP_ETC_DIR/conf.empty
+install -d -m 0755 $HADOOP_ETC_DIR/conf.dist
 
-cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
-cp $DISTRO_DIR/conf.empty/* $HADOOP_ETC_DIR/conf.empty
+cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.dist
+cp $DISTRO_DIR/conf.empty/* $HADOOP_ETC_DIR/conf.dist
 
 # docs
 install -d -m 0755 ${DOC_DIR}
@@ -337,8 +337,8 @@ cp ${BUILD_DIR}/sbin/httpfs.sh ${HTTPFS_DIR}/sbin/
 cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/webapps ${HTTPFS_DIR}/
 cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/conf ${HTTPFS_DIR}/
 chmod 644 ${HTTPFS_DIR}/conf/*
-install -d -m 0755 $HTTPFS_ETC_DIR/conf.empty
-mv $HADOOP_ETC_DIR/conf.empty/httpfs* $HTTPFS_ETC_DIR/conf.empty
+install -d -m 0755 $HTTPFS_ETC_DIR/conf.dist
+mv $HADOOP_ETC_DIR/conf.dist/httpfs* $HTTPFS_ETC_DIR/conf.dist
 sed -i -e '/<\/configuration>/i\
   <!-- HUE proxy user setting -->\
   <property>\
@@ -353,7 +353,7 @@ sed -i -e '/<\/configuration>/i\
   <property>\
     <name>httpfs.hadoop.config.dir</name>\
     <value>/etc/hadoop/conf</value>\
-  </property>' $HTTPFS_ETC_DIR/conf.empty/httpfs-site.xml
+  </property>' $HTTPFS_ETC_DIR/conf.dist/httpfs-site.xml
 
 # Make the pseudo-distributed config
 for conf in conf.pseudo ; do

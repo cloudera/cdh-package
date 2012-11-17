@@ -545,10 +545,10 @@ getent group mapred >/dev/null   || groupadd -r mapred
 getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapred -G hadoop --home %{state_mapreduce} mapred
 
 %post
-%{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.empty 10
+%{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.dist 10
 
 %post httpfs
-%{alternatives_cmd} --install %{config_httpfs} %{name}-httpfs-conf %{etc_httpfs}/conf.empty 10
+%{alternatives_cmd} --install %{config_httpfs} %{name}-httpfs-conf %{etc_httpfs}/conf.dist 10
 chkconfig --add %{name}-httpfs
 
 %preun
@@ -558,14 +558,14 @@ if [ "$1" = 0 ]; then
   do
      service hadoop-$service stop 1>/dev/null 2>/dev/null || :
   done
-  %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.empty || :
+  %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.dist || :
 fi
 
 %preun httpfs
 if [ $1 = 0 ]; then
   service %{name}-httpfs stop > /dev/null 2>&1
   chkconfig --del %{name}-httpfs
-  %{alternatives_cmd} --remove %{name}-httpfs-conf %{etc_httpfs}/conf.empty || :
+  %{alternatives_cmd} --remove %{name}-httpfs-conf %{etc_httpfs}/conf.dist || :
 fi
 
 %postun httpfs
@@ -576,8 +576,8 @@ fi
 
 %files yarn
 %defattr(-,root,root)
-%config(noreplace) %{etc_hadoop}/conf.empty/yarn-env.sh
-%config(noreplace) %{etc_hadoop}/conf.empty/yarn-site.xml
+%config(noreplace) %{etc_hadoop}/conf.dist/yarn-env.sh
+%config(noreplace) %{etc_hadoop}/conf.dist/yarn-site.xml
 %config(noreplace) /etc/security/limits.d/yarn.conf
 %{lib_hadoop}/libexec/yarn-config.sh
 %{lib_yarn}
@@ -590,7 +590,7 @@ fi
 
 %files hdfs
 %defattr(-,root,root)
-%config(noreplace) %{etc_hadoop}/conf.empty/hdfs-site.xml
+%config(noreplace) %{etc_hadoop}/conf.dist/hdfs-site.xml
 %config(noreplace) /etc/default/hadoop-fuse
 %config(noreplace) /etc/security/limits.d/hdfs.conf
 %{lib_hdfs}
@@ -603,7 +603,7 @@ fi
 
 %files mapreduce
 %defattr(-,root,root)
-%config(noreplace) %{etc_hadoop}/conf.empty/mapred-site.xml
+%config(noreplace) %{etc_hadoop}/conf.dist/mapred-site.xml
 %config(noreplace) /etc/security/limits.d/mapreduce.conf
 %{lib_mapreduce}
 %{lib_hadoop}/libexec/mapred-config.sh
@@ -616,13 +616,13 @@ fi
 
 %files
 %defattr(-,root,root)
-%config(noreplace) %{etc_hadoop}/conf.empty/core-site.xml
-%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics.properties
-%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics2.properties
-%config(noreplace) %{etc_hadoop}/conf.empty/log4j.properties
-%config(noreplace) %{etc_hadoop}/conf.empty/slaves
-%config(noreplace) %{etc_hadoop}/conf.empty/ssl-client.xml.example
-%config(noreplace) %{etc_hadoop}/conf.empty/ssl-server.xml.example
+%config(noreplace) %{etc_hadoop}/conf.dist/core-site.xml
+%config(noreplace) %{etc_hadoop}/conf.dist/hadoop-metrics.properties
+%config(noreplace) %{etc_hadoop}/conf.dist/hadoop-metrics2.properties
+%config(noreplace) %{etc_hadoop}/conf.dist/log4j.properties
+%config(noreplace) %{etc_hadoop}/conf.dist/slaves
+%config(noreplace) %{etc_hadoop}/conf.dist/ssl-client.xml.example
+%config(noreplace) %{etc_hadoop}/conf.dist/ssl-server.xml.example
 %config(noreplace) /etc/default/hadoop
 %{lib_hadoop}/*.jar
 %{lib_hadoop}/lib
@@ -641,7 +641,7 @@ fi
 
 %files httpfs
 %defattr(-,root,root)
-%config(noreplace) %{etc_httpfs}/conf.empty
+%config(noreplace) %{etc_httpfs}/conf.dist
 %config(noreplace) /etc/default/%{name}-httpfs
 %{lib_hadoop}/libexec/httpfs-config.sh
 %{initd_dir}/%{name}-httpfs

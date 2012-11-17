@@ -1,4 +1,4 @@
-/etc/hadoop/conf.empty/
+/etc/hadoop/conf.dist/
 /usr/lib/hadoop/libexec
 /usr/lib/hadoop-hdfs
 /usr/bin

@@ -1,10 +1,10 @@
-/etc/hadoop/conf.empty/hadoop-metrics.properties
-/etc/hadoop/conf.empty/hadoop-metrics2.properties
-/etc/hadoop/conf.empty/log4j.properties
-/etc/hadoop/conf.empty/slaves
-/etc/hadoop/conf.empty/ssl-client.xml.example
-/etc/hadoop/conf.empty/ssl-server.xml.example
-/etc/hadoop/conf.empty/core-site.xml
+/etc/hadoop/conf.dist/hadoop-metrics.properties
+/etc/hadoop/conf.dist/hadoop-metrics2.properties
+/etc/hadoop/conf.dist/log4j.properties
+/etc/hadoop/conf.dist/slaves
+/etc/hadoop/conf.dist/ssl-client.xml.example
+/etc/hadoop/conf.dist/ssl-server.xml.example
+/etc/hadoop/conf.dist/core-site.xml
 /etc/default/hadoop
 /usr/lib/hadoop/cloudera
 /usr/lib/hadoop/etc

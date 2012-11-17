@@ -1,6 +1,6 @@
 /etc/security/limits.d/yarn.conf
-/etc/hadoop/conf.empty/yarn-env.sh
-/etc/hadoop/conf.empty/yarn-site.xml
+/etc/hadoop/conf.dist/yarn-env.sh
+/etc/hadoop/conf.dist/yarn-site.xml
 /usr/lib/hadoop-yarn
 /usr/lib/hadoop/libexec/yarn-config.sh
 /usr/bin/yarn
