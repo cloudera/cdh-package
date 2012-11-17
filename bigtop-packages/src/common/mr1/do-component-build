@@ -84,7 +84,15 @@ ant \
   ${IVY_EXTRA_ARGS} \
   task-controller package-native tar
 
-cp build/hadoop-$FULL_VERSION.tar.gz build/mr1-$FULL_VERSION.tar.gz
+rm -rf build/tar
+mkdir build/tar
+(cd build/tar
+  tar -xzf ../hadoop-$FULL_VERSION.tar.gz
+  BIN_EXCLUDE="--exclude=*/c++/Linux-*-*/bin/* \
+               --exclude=*/c++/Linux-*-*/lib/* \
+               --exclude=*/sbin/Linux-*-*/*"
+  tar $BIN_EXCLUDE -czf ../mr1-$FULL_VERSION.tar.gz *
+)
 
 if [ -z "$SKIP_MVN_EXPLICIT" ]; then
 # Change to cloudera/maven directory, and install

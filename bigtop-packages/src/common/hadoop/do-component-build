@@ -52,7 +52,11 @@ JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms25
 # (cd build/hadoop-${FULL_VERSION}/src ; tar --strip-components=1 -xzvf  ../../../hadoop-dist/target/hadoop-${FULL_VERSION}-src.tar.gz)
 (cd build/hadoop-${FULL_VERSION} ; cp -r ../../cloudera .)
 
-(cd build && tar -czf hadoop-${FULL_VERSION}.tar.gz hadoop-${FULL_VERSION})
+BIN_EXCLUDE="--exclude=*/lib/native/lib*            \
+             --exclude=*/examples/bin/*             \
+             --exclude=*/bin/container-executor     \
+             --exclude=*/bin/test-container-executor"
+(cd build && tar $BIN_EXCLUDE -czf hadoop-${FULL_VERSION}.tar.gz hadoop-${FULL_VERSION})
 
 # Copy fuse output to the build directory
 cp hadoop-hdfs-project/hadoop-hdfs/target/native/main/native/fuse-dfs/fuse_dfs build/hadoop-${FULL_VERSION}/bin/

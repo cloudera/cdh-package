@@ -31,4 +31,4 @@ if $security ; then
     mv build/hbase-${FULL_VERSION}-security build/hbase-${FULL_VERSION}
 fi
 cp -r target/site/apidocs build/hbase-${FULL_VERSION}/docs
-(cd build && tar -czf hbase-${FULL_VERSION}.tar.gz hbase-${FULL_VERSION})
+(cd build && tar --exclude='*/native/lib*' --exclude='*/lib/native/*' -czf hbase-${FULL_VERSION}.tar.gz hbase-${FULL_VERSION})
