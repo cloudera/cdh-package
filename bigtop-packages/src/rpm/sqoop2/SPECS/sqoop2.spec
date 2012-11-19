@@ -64,6 +64,7 @@ Source5: catalina.properties
 Source6: catalina.properties.mr1
 Source7: setenv.sh
 Source8: sqoop2-env.sh
+Source9: init.d.tmpl
 Buildarch: noarch
 BuildRequires: asciidoc
 Requires: hadoop-client, bigtop-utils
