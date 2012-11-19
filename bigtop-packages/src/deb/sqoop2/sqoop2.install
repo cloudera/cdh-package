@@ -1,0 +1,4 @@
+/etc/sqoop2/conf.dist
+/usr/bin/sqoop2
+/usr/lib/sqoop2
+/var/tmp/sqoop2
