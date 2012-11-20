@@ -27,6 +27,8 @@
 %define hadoop_home /usr/lib/hadoop
 %define zookeeper_home /usr/lib/zookeeper
 
+%define debug_package %{nil}
+
 %if  %{?suse_version:1}0
 
 # Only tested on openSUSE 11.4. le'ts update it for previous release when confirmed
@@ -90,7 +92,6 @@ Source3: hbase.sh
 Source4: hbase.sh.suse
 Source5: hbase.default
 Source6: hbase.nofiles.conf
-BuildArch: noarch
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
 Requires: hadoop-hdfs, zookeeper >= 3.3.1, bigtop-utils
 Conflicts: hadoop-hbase
@@ -197,7 +198,6 @@ ThriftServer - this class starts up a Thrift server which implements the Hbase A
 %package doc
 Summary: Hbase Documentation
 Group: Documentation
-BuildArch: noarch
 Obsoletes: %{name}-docs
 
 %description doc
