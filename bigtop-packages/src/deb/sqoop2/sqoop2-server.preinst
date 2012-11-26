@@ -26,13 +26,13 @@ case "$1" in
                 adduser \
                   --system \
                   --group \
-                  --home /var/run/sqoop2 \
+                  --home /var/run/sqoop \
                   --gecos "Sqoop User" \
                   --shell /bin/false \
                   sqoop >/dev/null
         fi
-        install -d -m 0755 -o sqoop -g sqoop /var/log/sqoop2
-        install -d -m 0755 -o sqoop -g sqoop /var/lib/sqoop2
+        install -d -m 0755 -o sqoop -g sqoop /var/log/sqoop
+        install -d -m 0755 -o sqoop -g sqoop /var/lib/sqoop
     ;;
 
     abort-upgrade)

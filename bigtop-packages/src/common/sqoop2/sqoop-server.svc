@@ -13,31 +13,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-DAEMON="sqoop2-server"
-DESC="Sqoop 2 Server"
-EXEC_PATH="/usr/lib/sqoop2/bin/sqoop.sh"
+DAEMON="sqoop-server"
+DESC="Sqoop Server"
+EXEC_PATH="/usr/lib/sqoop/bin/sqoop.sh"
 SVC_USER="sqoop"
 DAEMON_FLAGS=""
-CONF_DIR="/etc/sqoop2/conf"
-PIDFILE="/var/run/sqoop2/sqoop2-server-$SVC_USER.pid"
+CONF_DIR="/etc/sqoop/conf"
+PIDFILE="/var/run/sqoop/sqoop-server-$SVC_USER.pid"
 LOCKDIR="/var/lock/subsys"
-LOCKFILE="sqoop2-server"
+LOCKFILE="sqoop-server"
 
 generate_functions() {
 
 cat <<'__EOT__'
-sqoop2_env() {
-  export SQOOP2_USER="$SVC_USER"
-  export SQOOP2_CONFIG="$CONF_DIR"
-  export SQOOP2_LOG=${SQOOP2_LOG:-"/var/log/sqoop2/"}
-  export SQOOP2_TEMP="$(dirname $PIDFILE)"
-  export SQOOP2_SLEEP_TIME="$SLEEP_TIME"
-  export SQOOP2_PID="$PIDFILE"
+sqoop_env() {
+  export SQOOP_USER="$SVC_USER"
+  export SQOOP_CONFIG="$CONF_DIR"
+  export SQOOP_LOG=${SQOOP_LOG:-"/var/log/sqoop/"}
+  export SQOOP_TEMP="$(dirname $PIDFILE)"
+  export SQOOP_SLEEP_TIME="$SLEEP_TIME"
+  export SQOOP_PID="$PIDFILE"
   export CATALINA_BIN="/usr/lib/bigtop-tomcat/bin"
   export CATALINA_PID="$PIDFILE"
-  export CATALINA_TMPDIR="/var/tmp/sqoop2"
+  export CATALINA_TMPDIR="/var/tmp/sqoop"
   export CATALINA_OPTS="-Xmx1024m -cp ${LIB_DIR}:${LIB_DIR}/lib"
-  export CATALINA_OUT="${SQOOP2_LOG}/sqoop2-server.log"
+  export CATALINA_OUT="${SQOOP2_LOG}/sqoop-server.log"
 }
 __EOT__
 
@@ -51,8 +51,8 @@ start() {
   [ -d $CONF_DIR ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
   log_success_msg "Starting ${DESC}: "
 
-  sqoop2_env
-  . /usr/lib/sqoop2/bin/sqoop2-env.sh
+  sqoop_env
+  . /usr/lib/sqoop/bin/sqoop-env.sh
 
   su -s /bin/bash -c "${EXEC_PATH} server start $DAEMON_FLAGS" $SQOOP2_USER
 
@@ -82,8 +82,8 @@ stop() {
   checkstatusofproc
   if [ "$?" = "$STATUS_RUNNING" ] ; then
 
-    sqoop2_env
-    . /usr/lib/sqoop2/bin/sqoop2-env.sh
+    sqoop_env
+    . /usr/lib/sqoop/bin/sqoop-env.sh
 
     su -s /bin/bash $SVC_USER -c "${EXEC_PATH} server stop"
 

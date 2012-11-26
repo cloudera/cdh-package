@@ -54,12 +54,11 @@ install-indep:
 
 	sh -x debian/install_sqoop2.sh \
 	  --build-dir=build/sqoop2-${SQOOP2_PATCHED_VERSION} \
-	  --doc-dir=/usr/share/doc/sqoop2 \
-	  --conf-dir=/etc/sqoop2/conf.dist \
+	  --doc-dir=/usr/share/doc/sqoop \
 	  --prefix=debian/tmp \
 	  --extra-dir=debian
 
-	bash debian/init.d.tmpl debian/sqoop2-server.svc deb debian/tmp/etc/init.d/sqoop2-server
+	bash debian/init.d.tmpl debian/sqoop-server.svc deb debian/tmp/etc/init.d/sqoop-server
 
 	dh_install --sourcedir=debian/tmp
 

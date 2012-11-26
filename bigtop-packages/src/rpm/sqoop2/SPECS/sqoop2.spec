@@ -13,10 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-%define lib_sqoop2 /usr/lib/sqoop2
-%define conf_sqoop2 %{_sysconfdir}/%{name}/conf
-%define conf_sqoop2_dist %{conf_sqoop2}.dist
-%define run_sqoop2 /var/run/sqoop2
+%define lib_sqoop /usr/lib/sqoop
+%define conf_sqoop %{_sysconfdir}/sqoop/conf
+%define conf_sqoop_dist %{conf_sqoop}.dist
+%define run_sqoop /var/run/sqoop
 
 %if  %{?suse_version:1}0
 
@@ -35,13 +35,13 @@
     /usr/lib/rpm/brp-compress ; \
     %{nil}
 
-%define doc_sqoop2 %{_docdir}/%{name}
+%define doc_sqoop %{_docdir}/sqoop
 %define initd_dir %{_sysconfdir}/rc.d
 %define alternatives_cmd update-alternatives
 
 %else
 
-%define doc_sqoop2 %{_docdir}/%{name}-%{sqoop2_version}
+%define doc_sqoop %{_docdir}/sqoop-%{sqoop2_version}
 %define initd_dir %{_sysconfdir}/rc.d/init.d
 %define alternatives_cmd alternatives
 
@@ -58,16 +58,17 @@ License: APL2
 Source0: %{name}-%{sqoop2_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
-Source3: sqoop2.sh
+Source3: sqoop.sh
 Source4: sqoop.properties
 Source5: catalina.properties
 Source6: catalina.properties.mr1
 Source7: setenv.sh
-Source8: sqoop2-env.sh
+Source8: sqoop-env.sh
 Source9: init.d.tmpl
 Buildarch: noarch
 BuildRequires: asciidoc
 Requires: hadoop-client, bigtop-utils
+Conflicts: sqoop
 
 %description
 Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).
@@ -114,51 +115,51 @@ env FULL_VERSION=%{sqoop2_patched_version} bash %{SOURCE1} -Drat.basedir=${PWD}/
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
           --build-dir=build/sqoop2-%{sqoop2_patched_version} \
-          --conf-dir=%{conf_sqoop2_dist} \
-          --doc-dir=%{doc_sqoop2} \
+          --conf-dir=%{conf_sqoop_dist} \
+          --doc-dir=%{doc_sqoop} \
           --prefix=$RPM_BUILD_ROOT \
           --extra-dir=$RPM_SOURCE_DIR \
           --initd-dir=%{initd_dir}
 
 # Install init script
-init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-server
-bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/%{name}-server.svc rpm $init_file
+init_file=$RPM_BUILD_ROOT/%{initd_dir}/sqoop-server
+bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/sqoop-server.svc rpm $init_file
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
-%__install -d  -m 0755 $RPM_BUILD_ROOT/var/lib/sqoop2
+%__install -d  -m 0755 $RPM_BUILD_ROOT/var/lib/sqoop
 
 %pre
 getent group sqoop >/dev/null || groupadd -r sqoop
-getent passwd sqoop >/dev/null || useradd -c "Sqoop User" -s /sbin/nologin -g sqoop -r -d %{run_sqoop2} sqoop 2> /dev/null || :
-%__install -d -o sqoop -g sqoop -m 0755 /var/lib/sqoop2
-%__install -d -o sqoop -g sqoop -m 0755 /var/log/sqoop2
+getent passwd sqoop >/dev/null || useradd -c "Sqoop User" -s /sbin/nologin -g sqoop -r -d %{run_sqoop} sqoop 2> /dev/null || :
+%__install -d -o sqoop -g sqoop -m 0755 /var/lib/sqoop
+%__install -d -o sqoop -g sqoop -m 0755 /var/log/sqoop
 
 %post server
-%{alternatives_cmd} --install %{conf_sqoop2} %{name}-conf %{conf_sqoop2_dist} 30
-chkconfig --add sqoop2-server
+%{alternatives_cmd} --install %{conf_sqoop} sqoop-conf %{conf_sqoop_dist} 30
+chkconfig --add sqoop-server
 
 %preun server
 if [ "$1" = "0" ] ; then
-  service sqoop2-server stop > /dev/null 2>&1
-  chkconfig --del sqoop2-server
-  %{alternatives_cmd} --remove %{name}-conf %{conf_sqoop2_dist} || :
+  service sqoop-server stop > /dev/null 2>&1
+  chkconfig --del sqoop-server
+  %{alternatives_cmd} --remove sqoop-conf %{conf_sqoop_dist} || :
 fi
 
 %postun server
 if [ $1 -ge 1 ]; then
-  service sqoop2-server condrestart > /dev/null 2>&1
+  service sqoop-server condrestart > /dev/null 2>&1
 fi
 
 # Files for client package
 %files
-%attr(0755,root,root) /usr/bin/sqoop2
-%attr(0755,root,root) %{lib_sqoop2}/bin/sqoop.sh
+%attr(0755,root,root) /usr/bin/sqoop
+%attr(0755,root,root) %{lib_sqoop}/bin/sqoop.sh
 %defattr(0644,root,root)
-%{lib_sqoop2}
-/etc/sqoop2/conf.dist/*
-/var/lib/sqoop2
-/var/tmp/sqoop2
+%{lib_sqoop}
+/etc/sqoop/conf.dist/*
+/var/lib/sqoop
+/var/tmp/sqoop
 
 %files server
-%attr(0755,root,root) %{initd_dir}/sqoop2-server
+%attr(0755,root,root) %{initd_dir}/sqoop-server
 

@@ -26,11 +26,11 @@ usage: $0 <options>
      --extra-dir=DIR             path to Bigtop distribution files
 
   Optional options:
-     --doc-dir=DIR               path to install docs into [/usr/share/doc/sqoop2]
-     --lib-dir=DIR               path to install sqoop2 home [/usr/lib/sqoop2]
+     --doc-dir=DIR               path to install docs into [/usr/share/doc/sqoop]
+     --lib-dir=DIR               path to install sqoop home [/usr/lib/sqoop]
      --installed-lib-dir=DIR     path where lib-dir will end up on target system
      --bin-dir=DIR               path to install bins [/usr/bin]
-     --conf-dir=DIR              path to configuration files provided by the package [/etc/sqoop2/conf.dist]
+     --conf-dir=DIR              path to configuration files provided by the package [/etc/sqoop/conf.dist]
      --examples-dir=DIR          path to install examples [doc-dir/examples]
      --initd-dir=DIR             path to install init scripts [/etc/init.d]
      ... [ see source for more similar options ]
@@ -112,15 +112,15 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
-DOC_DIR=${DOC_DIR:-/usr/share/doc/sqoop2}
-LIB_DIR=${LIB_DIR:-/usr/lib/sqoop2}
-BIN_DIR=${BIN_DIR:-/usr/lib/sqoop2/bin}
-ETC_DIR=${ETC_DIR:-/etc/sqoop2}
+DOC_DIR=${DOC_DIR:-/usr/share/doc/sqoop}
+LIB_DIR=${LIB_DIR:-/usr/lib/sqoop}
+BIN_DIR=${BIN_DIR:-/usr/lib/sqoop/bin}
+ETC_DIR=${ETC_DIR:-/etc/sqoop}
 MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 CONF_DIR=${CONF_DIR:-${ETC_DIR}/conf.dist}
-WEB_DIR=${WEB_DIR:-/usr/lib/sqoop2/sqoop2-server}
+WEB_DIR=${WEB_DIR:-/usr/lib/sqoop/sqoop-server}
 INITD_DIR=${INITD_DIR:-/etc/init.d}
-TMP_DIR=${TMP_DIR:-/var/tmp/sqoop2}
+TMP_DIR=${TMP_DIR:-/var/tmp/sqoop}
 DIST_DIR=${DIST_DIR:-.}
 
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
@@ -136,35 +136,34 @@ install -m 0755 ${EXTRA_DIR}/setenv.sh ${PREFIX}/${BIN_DIR}/
 
 install -m 0644 ${DIST_DIR}/server/conf/sqoop_bootstrap.properties ${PREFIX}/${CONF_DIR}
 install -m 0644 ${EXTRA_DIR}/sqoop.properties ${PREFIX}/${CONF_DIR}
-install -m 0644 ${EXTRA_DIR}/sqoop2-env.sh ${PREFIX}/${CONF_DIR}/
-ln -s -f /etc/sqoop2/conf/sqoop2-env.sh ${PREFIX}/${BIN_DIR}/sqoop2-env.sh
+install -m 0644 ${EXTRA_DIR}/sqoop-env.sh ${PREFIX}/${CONF_DIR}/
+ln -s -f /etc/sqoop/conf/sqoop-env.sh ${PREFIX}/${BIN_DIR}/sqoop-env.sh
 
 # Explode the WAR
 SQOOP2_WEBAPPS=${PREFIX}/${LIB_DIR}/webapps
 cp -r ${DIST_DIR}/server/webapps $SQOOP2_WEBAPPS
-mv $SQOOP2_WEBAPPS/sqoop.war $SQOOP2_WEBAPPS/sqoop2.war
-unzip -d $SQOOP2_WEBAPPS/sqoop2 $SQOOP2_WEBAPPS/sqoop2.war
+unzip -d $SQOOP2_WEBAPPS/sqoop $SQOOP2_WEBAPPS/sqoop.war
 
 # Create MR2 configuration
-install -d -m 0755 ${PREFIX}/${LIB_DIR}/sqoop2-server/conf
+install -d -m 0755 ${PREFIX}/${LIB_DIR}/sqoop-server/conf
 for conf in web.xml tomcat-users.xml server.xml logging.properties context.xml catalina.policy
 do
-    install -m 0644 ${DIST_DIR}/server/conf/$conf ${PREFIX}/${LIB_DIR}/sqoop2-server/conf/
+    install -m 0644 ${DIST_DIR}/server/conf/$conf ${PREFIX}/${LIB_DIR}/sqoop-server/conf/
 done
-sed -i -e "s|<Host |<Host workDir=\"/var/tmp/sqoop2\" |" ${PREFIX}/${LIB_DIR}/sqoop2-server/conf/server.xml
-sed -i -e "s|\${catalina\.base}/logs|/var/log/sqoop2|"   ${PREFIX}/${LIB_DIR}/sqoop2-server/conf/logging.properties
-cp -f ${EXTRA_DIR}/catalina.properties ${PREFIX}/${LIB_DIR}/sqoop2-server/conf/catalina.properties
-ln -s ../webapps ${PREFIX}/${LIB_DIR}/sqoop2-server/webapps
-ln -s ../bin ${PREFIX}/${LIB_DIR}/sqoop2-server/bin
+sed -i -e "s|<Host |<Host workDir=\"/var/tmp/sqoop\" |" ${PREFIX}/${LIB_DIR}/sqoop-server/conf/server.xml
+sed -i -e "s|\${catalina\.base}/logs|/var/log/sqoop|"   ${PREFIX}/${LIB_DIR}/sqoop-server/conf/logging.properties
+cp -f ${EXTRA_DIR}/catalina.properties ${PREFIX}/${LIB_DIR}/sqoop-server/conf/catalina.properties
+ln -s ../webapps ${PREFIX}/${LIB_DIR}/sqoop-server/webapps
+ln -s ../bin ${PREFIX}/${LIB_DIR}/sqoop-server/bin
 
 # Create MR1 configuration
-cp -r ${PREFIX}/${LIB_DIR}/sqoop2-server ${PREFIX}/${LIB_DIR}/sqoop2-server-0.20
-cp -f ${EXTRA_DIR}/catalina.properties.mr1 ${PREFIX}/${LIB_DIR}/sqoop2-server/conf/catalina.properties
+cp -r ${PREFIX}/${LIB_DIR}/sqoop-server ${PREFIX}/${LIB_DIR}/sqoop-server-0.20
+cp -f ${EXTRA_DIR}/catalina.properties.mr1 ${PREFIX}/${LIB_DIR}/sqoop-server/conf/catalina.properties
 
 # Create wrapper script for the client
-client_wrapper=$PREFIX/usr/bin/sqoop2
+client_wrapper=$PREFIX/usr/bin/sqoop
 mkdir -p `dirname $client_wrapper`
-install -m 0755 $EXTRA_DIR/sqoop2.sh $client_wrapper
+install -m 0755 $EXTRA_DIR/sqoop.sh $client_wrapper
 
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera

@@ -14,5 +14,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-JAVA_OPTS=-Dsqoop.config.dir=/etc/sqoop2/conf
+JAVA_OPTS=-Dsqoop.config.dir=/etc/sqoop/conf
 
