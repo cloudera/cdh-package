@@ -33,6 +33,7 @@ case "$1" in
         fi
         install -d -m 0755 -o sqoop -g sqoop /var/log/sqoop
         install -d -m 0755 -o sqoop -g sqoop /var/lib/sqoop
+        install -d -m 0755 -o sqoop -g sqoop /var/tmp/sqoop
     ;;
 
     abort-upgrade)

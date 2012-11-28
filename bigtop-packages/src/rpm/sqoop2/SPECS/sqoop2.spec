@@ -20,7 +20,7 @@
 
 %if  %{?suse_version:1}0
 
-# Only tested on openSUSE 11.4. le'ts update it for previous release when confirmed
+# Only tested on openSUSE 11.4. let's update it for previous release when confirmed
 %if 0%{suse_version} > 1130
 %define suse_check \# Define an empty suse_check for compatibility with older sles
 %endif
@@ -126,23 +126,29 @@ init_file=$RPM_BUILD_ROOT/%{initd_dir}/sqoop-server
 bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/sqoop-server.svc rpm $init_file
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
-%__install -d  -m 0755 $RPM_BUILD_ROOT/var/lib/sqoop
 
 %pre
 getent group sqoop >/dev/null || groupadd -r sqoop
 getent passwd sqoop >/dev/null || useradd -c "Sqoop User" -s /sbin/nologin -g sqoop -r -d %{run_sqoop} sqoop 2> /dev/null || :
 %__install -d -o sqoop -g sqoop -m 0755 /var/lib/sqoop
 %__install -d -o sqoop -g sqoop -m 0755 /var/log/sqoop
+%__install -d -o sqoop -g sqoop -m 0755 /var/tmp/sqoop
+
+%post
+%{alternatives_cmd} --install %{conf_sqoop} sqoop-conf %{conf_sqoop_dist} 30
 
 %post server
-%{alternatives_cmd} --install %{conf_sqoop} sqoop-conf %{conf_sqoop_dist} 30
 chkconfig --add sqoop-server
+
+%preun
+if [ "$1" = "0" ] ; then
+  %{alternatives_cmd} --remove sqoop-conf %{conf_sqoop_dist} || :
+fi
 
 %preun server
 if [ "$1" = "0" ] ; then
   service sqoop-server stop > /dev/null 2>&1
   chkconfig --del sqoop-server
-  %{alternatives_cmd} --remove sqoop-conf %{conf_sqoop_dist} || :
 fi
 
 %postun server
@@ -150,15 +156,12 @@ if [ $1 -ge 1 ]; then
   service sqoop-server condrestart > /dev/null 2>&1
 fi
 
-# Files for client package
 %files
-%attr(0755,root,root) /usr/bin/sqoop
-%attr(0755,root,root) %{lib_sqoop}/bin/sqoop.sh
-%defattr(0644,root,root)
+%defattr(0755,root,root)
+/usr/bin/sqoop
+/etc/sqoop/conf.dist
 %{lib_sqoop}
-/etc/sqoop/conf.dist/*
-/var/lib/sqoop
-/var/tmp/sqoop
+%{lib_sqoop}/bin/sqoop.sh
 
 %files server
 %attr(0755,root,root) %{initd_dir}/sqoop-server

@@ -120,14 +120,12 @@ MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 CONF_DIR=${CONF_DIR:-${ETC_DIR}/conf.dist}
 WEB_DIR=${WEB_DIR:-/usr/lib/sqoop/sqoop-server}
 INITD_DIR=${INITD_DIR:-/etc/init.d}
-TMP_DIR=${TMP_DIR:-/var/tmp/sqoop}
 DIST_DIR=${DIST_DIR:-.}
 
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
 install -d -m 0755 ${PREFIX}/${LIB_DIR}/lib
 install -d -m 0755 ${PREFIX}/${BIN_DIR}
 install -d -m 0755 ${PREFIX}/${CONF_DIR}
-install -d -m 0755 ${PREFIX}/${TMP_DIR}
 
 install -m 0644 ${DIST_DIR}/client/lib/*.jar ${PREFIX}/${LIB_DIR}/lib/
 mv ${PREFIX}/${LIB_DIR}/lib/sqoop*.jar ${PREFIX}/${LIB_DIR}/
