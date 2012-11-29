@@ -4635,109 +4635,6 @@ difficult to manage. Even when done correctly, different implementations of thes
       <file name="/usr/lib/pig/conf" target="/etc/pig/conf" perm="lrwxrwxrwx" group="root" owners="-1" user="root"/>
       <file name="/usr/lib/pig/contrib" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
       <file name="/usr/lib/pig/contrib/CHANGES.txt" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/build.xml" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/ClassWithArgs.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/Communicator.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/Coordinator.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/Location.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/LogicalLocation.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/MonitorAgent.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/NoSuchLocationException.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/ParsedPigScript.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/PennyServer.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/PhysicalLocation.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/bt" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/bt/BTCoordinator.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/bt/BTInjectTaintMonitorAgent.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/bt/BTMatchTaintMonitorAgent.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/bt/BTPropagateTaintMonitorAgent.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/bt/Main.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ci" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ci/CICoordinator.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ci/CIMonitorAgent.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ci/Main.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/dh" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/dh/DHCoordinator.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/dh/DHMonitorAgent.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/dh/Main.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ds" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ds/DSCoordinator.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ds/DSMonitorAgent.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ds/Main.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ft" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ft/FTCoordinator.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ft/FTMonitorAgent.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ft/Main.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/gl" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/gl/GLCoordinator.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/gl/GLMonitorAgent1.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/gl/GLMonitorAgent2.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/gl/GoldenLogic.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/gl/Main.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/gl/goldenLogicClasses" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/gl/goldenLogicClasses/FlattenLinksGL.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/la" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/la/LACoordinator.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/la/LAMonitorAgent.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/la/Main.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/lp" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/lp/LPCoordinator.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/lp/LPMonitorAgent.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/lp/Main.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/nop" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/nop/Main.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/nop/NOPCoordinator.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/nop/NOPMonitorAgent.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/op" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/op/Main.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/op/OPCoordinator.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/op/OPMonitorAgent.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ri" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ri/Main.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ri/RICoordinator.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ri/RIMonitorAgent.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ti" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ti/Main.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ti/TICoordinator.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/ti/TIMonitorAgent.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/tr" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/tr/Main.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/tr/TRCoordinator.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/apps/tr/TRMonitorAgent.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/impl" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/impl/comm" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/impl/comm/AsyncMessageReceiptCallback.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/impl/comm/Message.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/impl/comm/MessageReceiptCallback.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/impl/comm/SyncCallResult.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/impl/harnesses" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/impl/harnesses/CoordinatorHarness.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/impl/harnesses/MessagingClient.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/impl/harnesses/MessagingServer.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/impl/harnesses/MonitorAgentHarness.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/impl/pig" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/impl/pig/MonitorAgentUDF.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/impl/pig/MonitorAgentUDFArgs.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/main/java/org/apache/pig/penny/impl/pig/PigLauncher.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/test" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/test/java" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/test/java/org" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/test/java/org/apache" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/test/java/org/apache/pig" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/test/java/org/apache/pig/penny" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/test/java/org/apache/pig/penny/test" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/test/java/org/apache/pig/penny/test/ComTest.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <file name="/usr/lib/pig/contrib/penny/java/src/test/java/org/apache/pig/penny/test/PennyAgentTest.java" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
       <file name="/usr/lib/pig/contrib/piggybank" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
       <file name="/usr/lib/pig/contrib/piggybank/java" perm="drwxr-xr-x" group="root" owners="-1" user="root"/>
       <file name="/usr/lib/pig/contrib/piggybank/java/build.xml" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
@@ -8169,7 +8066,6 @@ difficult to manage. Even when done correctly, different implementations of thes
       <doc name="/usr/share/doc/pig-0.9.1.16/images/built-with-forrest-button.png" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
       <doc name="/usr/share/doc/pig-0.9.1.16/images/hadoop-logo.jpg" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
       <doc name="/usr/share/doc/pig-0.9.1.16/images/instruction_arrow.png" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
-      <doc name="/usr/share/doc/pig-0.9.1.16/images/penny-archt.jpg" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
       <doc name="/usr/share/doc/pig-0.9.1.16/images/pig-logo.gif" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
       <doc name="/usr/share/doc/pig-0.9.1.16/images/zebra.jpg" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
       <doc name="/usr/share/doc/pig-0.9.1.16/index.html" perm="-rw-r--r--" group="root" owners="-1" user="root"/>

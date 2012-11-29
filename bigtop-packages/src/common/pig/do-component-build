@@ -30,8 +30,8 @@ BUILD_OPTS="-Djavac.version=1.6 -Dforrest.home=${FORREST_HOME}  -Dhadoopversion=
 # Build pig jars.
 ant $BUILD_OPTS clean jar jar-withouthadoop "$@"
 
-# Build piggybank, penny
-for build_file in contrib/piggybank/java/build.xml contrib/penny/java/build.xml ; do
+# Build piggybank
+for build_file in contrib/piggybank/java/build.xml ; do
   ant $BUILD_OPTS -buildfile $build_file clean jar "$@"
 done
 

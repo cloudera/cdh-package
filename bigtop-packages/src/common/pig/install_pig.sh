@@ -106,7 +106,6 @@ install -d -m 0755 $LIB_DIR
 (cd $BUILD_DIR/tar/pig* && tar -cf - .) | (cd $LIB_DIR && tar -xf -)
 
 # Salavage a few files from the contrib &co
-find $LIB_DIR/contrib -name penny.jar -exec mv {} $LIB_DIR/ \;
 find $LIB_DIR/contrib -name piggybank.jar -exec mv {} $LIB_DIR/ \;
 find $LIB_DIR/contrib -name \*.jar -exec mv {} $LIB_DIR/lib/ \;
 cp $BUILD_DIR/pig-*-smoketests.jar $LIB_DIR/
