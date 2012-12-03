@@ -24,5 +24,6 @@ mvn clean install -DskipTests $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/re
 rm -rf build
 mkdir -p build/flume-ng-solr-${FULL_VERSION}
 cp -r $ALL_FILES build/flume-ng-solr-${FULL_VERSION}
-cp -f target/flume-ng-solr-sink-*.jar build/flume-ng-solr-${FULL_VERSION}
+cp -f flume-indexer/target/flume-ng-solr-*.jar build/flume-ng-solr-${FULL_VERSION}
+cp -rf flume-indexer/target/lib build/flume-ng-solr-${FULL_VERSION}
 tar -C build -czf build/flume-ng-solr-${FULL_VERSION}.tar.gz flume-ng-solr-${FULL_VERSION}

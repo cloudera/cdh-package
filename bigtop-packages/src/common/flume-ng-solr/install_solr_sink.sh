@@ -96,16 +96,17 @@ ETC_DIR=${ETC_DIR:-/etc/flume-ng}
 
 # Plugin jars
 install -d -m 0755 ${PREFIX}/${FLUME_DIR}/lib
-cp ${BUILD_DIR}/target/flume-ng-solr-sink-*.jar ${PREFIX}/${FLUME_DIR}/lib
-cp ${BUILD_DIR}/target/lib/*.jar ${PREFIX}/${FLUME_DIR}/lib
+cp ${BUILD_DIR}/flume-indexer/target/flume-ng-solr-*.jar ${PREFIX}/${FLUME_DIR}/lib
+cp ${BUILD_DIR}/flume-indexer/target/lib/*.jar ${PREFIX}/${FLUME_DIR}/lib
+(cd ${PREFIX}/${FLUME_DIR}/lib ; rm -f *-tests.jar `ls flume-ng-*jar | grep -v flume-ng-solr`)
 
 # Sample (twitter) configs
 install -d -m 0755 ${PREFIX}/${CONF_DIST_DIR}
-cp ${BUILD_DIR}/src/test/resources/twitter-flume.conf  ${PREFIX}/${CONF_DIST_DIR}
-cp ${BUILD_DIR}/src/test/resources/tika-config.xml     ${PREFIX}/${CONF_DIST_DIR} 
-cp -r ${BUILD_DIR}/src/test/resources/solr/collection1 ${PREFIX}/${CONF_DIST_DIR}
+cp ${BUILD_DIR}/examples/src/test/resources/twitter-flume.conf       ${PREFIX}/${CONF_DIST_DIR}
+cp ${BUILD_DIR}/flume-indexer/src/test/resources/tika-config.xml     ${PREFIX}/${CONF_DIST_DIR} 
+cp -r ${BUILD_DIR}/flume-indexer/src/test/resources/solr/collection1 ${PREFIX}/${CONF_DIST_DIR}
 # FIXME: get org/apache/tika/mime/custom-mimetypes.xml onto classpath
-cp -r ${BUILD_DIR}/src/test/resources/org              ${PREFIX}/${CONF_DIST_DIR}
+cp -r ${BUILD_DIR}/flume-indexer/src/test/resources/org              ${PREFIX}/${CONF_DIST_DIR}
 
 # Cloudera specific
 #install -d -m 0755 $PREFIX/$FLUME_DIR/cloudera
