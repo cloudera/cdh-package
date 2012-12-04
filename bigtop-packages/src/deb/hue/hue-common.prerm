@@ -20,8 +20,7 @@ set -e
 case "$1" in
     remove|upgrade|deconfigure)
         if [ -d /usr/share/hue ]; then
-          cd /usr/share/hue
-          find . -name \*.py[co] -exec rm -f {} \;
+          find /usr/share/hue -name \*.py[co] -exec rm -f {} \;
         fi
     ;;
 
