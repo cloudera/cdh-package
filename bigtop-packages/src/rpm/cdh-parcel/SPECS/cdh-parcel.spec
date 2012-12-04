@@ -80,7 +80,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%{parcel_default_root}
+%attr(0755,root,root)   %{parcel_default_root}
 %attr(6050,root,yarn)   %{parcel_default_root}/lib/hadoop-yarn/bin/container-executor
 %attr(4754,root,mapred) %{parcel_default_root}/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
 %attr(4750,root,hue)    %{parcel_default_root}/share/hue/apps/shell/src/shell/build/setuid
