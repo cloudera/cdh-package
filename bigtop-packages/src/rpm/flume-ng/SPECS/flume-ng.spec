@@ -18,6 +18,7 @@
 %define lib_flume /usr/lib/flume-ng
 %define log_flume /var/log/flume-ng
 %define run_flume /var/run/flume-ng
+%define vlb_flume /var/lib/flume-ng
 
 %if  %{?suse_version:1}0
 
@@ -146,8 +147,10 @@ chmod 755 $init_file
 
 %pre
 getent group flume >/dev/null || groupadd -r flume
-getent passwd flume >/dev/null || useradd -c "Flume" -s /sbin/nologin -g flume -r -d %{run_flume} flume 2> /dev/null || :
-%__install -d -o flume -g flume -m 0755 /var/log/flume-ng
+getent passwd flume >/dev/null || useradd -c "Flume" -s /sbin/nologin -g flume -r -d %{vlb_flume} flume 2> /dev/null || :
+%__install -d -o flume -g flume -m 0755 %{log_flume}
+%__install -d -o flume -g flume -m 0755 %{run_flume}
+%__install -d -o flume -g flume -m 0755 %{vlb_flume}
 
 # Manage configuration symlink
 %post
