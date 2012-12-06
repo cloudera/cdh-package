@@ -7,7 +7,7 @@
 # Implicit targets
 SHELL := /bin/bash
 
-APPS=beeswax about filebrowser help jobbrowser jobsub oozie proxy useradmin
+APPS=beeswax about filebrowser help jobbrowser jobsub oozie proxy useradmin impala
 
 $(APPS:%=debian/hue-%.postinst): debian/hue-app.postinst.tpl
 	sed -e 's#@APP@#$(patsubst debian/hue-%.postinst,%,$@)#'  < $< > $@

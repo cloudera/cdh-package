@@ -10,7 +10,7 @@ Package: hue-common
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${build:SYS-PYTHON}, libsasl2-modules-gssapi-mit, libxslt1.1, make
 Conflicts: cloudera-desktop
-Recommends: hadoop, hue-useradmin, hue-about, hue-help, hue-filebrowser, hue-jobbrowser, hue-jobsub, hue-beeswax, hue-proxy, hue-oozie
+Recommends: hadoop, hue-useradmin, hue-about, hue-help, hue-filebrowser, hue-jobbrowser, hue-jobsub, hue-beeswax, hue-proxy, hue-oozie, hue-impala
 Description: A browser-based desktop interface for Hadoop
  Hue is a browser-based desktop interface for interacting with Hadoop.
  It supports a file browser, job tracker interface, cluster health monitor, and more.
@@ -100,4 +100,13 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), mak
 Description: Create/delete users, update user information
  Create/delete Hue users, and update user information (name, email, superuser status, etc.)
 Provides: hue-user
+
+Package: hue-impala
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-jobsub (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version})
+Description: A UI for Impala on Hue
+ A web interface for Impala.
+ .
+ It allows users to construct and run queries on Impala, manage tables,
+ and import and export data.
 

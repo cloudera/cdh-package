@@ -40,6 +40,7 @@ Requires: %{name}-beeswax = %{version}-%{release}
 Requires: %{name}-proxy = %{version}-%{release}
 Requires: %{name}-shell = %{version}-%{release}
 Requires: %{name}-oozie = %{version}-%{release}
+Requires: %{name}-impala = %{version}-%{release}
 # hue-user is a virtual package
 Requires: %{name}-user
 
@@ -104,6 +105,7 @@ AutoReqProv: no
 %define proxy_app_dir %{hue_dir}/apps/proxy
 %define shell_app_dir %{hue_dir}/apps/shell
 %define useradmin_app_dir %{hue_dir}/apps/useradmin
+%define impala_app_dir %{hue_dir}/apps/impala
 
 # Path to the HADOOP_HOME to build against - these
 # are not substituted into the build products anywhere!
@@ -286,6 +288,7 @@ fi
 %exclude %{jobsub_app_dir}
 %exclude %{proxy_app_dir}
 %exclude %{useradmin_app_dir}
+%exclude %{impala_app_dir}
 
 %exclude %{shell_app_dir}
 
@@ -525,6 +528,30 @@ Create/delete Hue users, and update user information (name, email, superuser sta
 
 %files -n %{name}-useradmin
 %{useradmin_app_dir}
+
+#### HUE-IMPALA PLUGIN ######
+%package -n %{name}-impala
+Summary: A UI for Impala on Hue
+Group: Applications/Engineering
+Requires: make
+Requires: %{name}-common = %{version}-%{release}
+Requires: %{name}-jobbrowser = %{version}-%{release}
+Requires: %{name}-filebrowser = %{version}-%{release}
+Requires: %{name}-jobsub = %{version}-%{release}
+Requires: %{name}-help = %{version}-%{release}
+
+%description -n %{name}-impala
+A web interface for Impala.
+
+It allows users to construct and run queries on Impala, manage tables,
+and import and export data.
+
+%app_post_macro impala
+%app_preun_macro impala
+
+%files -n %{name}-impala
+%{impala_app_dir}
+
 
 ############################################################
 # Arch packages - plugins and conf
