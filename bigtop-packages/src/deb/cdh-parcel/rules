@@ -53,6 +53,14 @@ install: debian/cdh-parcel-$(version)/opt/cloudera/parcels/CDH-${version_release
 	@echo building client
 
 debian/cdh-parcel-$(version)/opt/cloudera/parcels/CDH-${version_release}:
+	# Links to python libs under virtualenv in Hue have to absolute.
+	# This code only applies to debian since these links are relative 
+	# only in Hue's debian package 
+	for link in `find build/usr/share/hue/build/env/lib/python* -type l`; do \
+	  target=`readlink $$link`; \
+          rm -f $$link; \
+          ln -s `echo $$target | sed -e 's#[../]*#/usr/#'` $$link; \
+	done
 	mkdir -p $@
 	mv build/usr/{bin,share,lib}* build/meta build/etc $@
 	sed -e 's#@VERSION@#$(version)#' < debian/cdh-parcel.postinst > debian/cdh-parcel-$(version).postinst
