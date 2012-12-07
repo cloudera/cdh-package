@@ -123,6 +123,15 @@ for link in `find build/usr/lib/ -type l` ; do
   esac
 done
 
+# Links to python libs under virtualenv in Hue have to absolute.
+# This code only applies to debian since these links are relative
+# only in Hue's debian package
+for link in `find build/usr/share/hue/build/env/lib/python* -type l`; do
+  target=`readlink $link`
+  rm -f $link
+  ln -s `echo $target | sed -e 's#\(\.\./\)\(\.\./\)*#/usr/#'` $link
+done
+
 # FIXME: special handling for Hue
 HUE_APPS="beeswax about filebrowser help jobbrowser jobsub oozie proxy useradmin shell"
 rm -f build/usr/share/hue/desktop/conf
