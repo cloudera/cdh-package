@@ -436,11 +436,13 @@ for file in build/usr/bin/*; do
   BIN_DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"\
   LIB_DIR=$BIN_DIR/../lib' $file
   # Replace /usr/libexec with the libexec dir from within the parcel
-  sed -i 's:/usr/libexec/:\$BIN_DIR/../libexec/:' $file
   # Replace /usr/lib with the LIB_DIR variable we set in the above line
-  sed -i 's:/usr/lib/:\$LIB_DIR/:' $file
   # Replace all instances of /etc/default to relatively point to <parcel root>/etc/default
-  sed -i 's:/etc/default:$BIN_DIR/../etc/default:' $file
+  # Replace default shell in shell scripts to be explicitly bash (since default shell in debian/ubuntu shell is dash)
+  sed -i -e 's:/usr/libexec/:\$BIN_DIR/../libexec/:' \
+  -e 's:/usr/lib/:\$LIB_DIR/:' \
+  -e 's:/etc/default:$BIN_DIR/../etc/default:' \
+  -e 's:#!/bin/sh:#!/bin/bash:' $file
 done
 
 # Fixing up /usr/lib/hadoop/libexec/hadoop-layout.sh
