@@ -133,7 +133,7 @@ for link in `find build/usr/share/hue/build/env/lib/python* -type l`; do
 done
 
 # FIXME: special handling for Hue
-HUE_APPS="beeswax about filebrowser help jobbrowser jobsub oozie proxy useradmin shell"
+HUE_APPS=`ls build/usr/share/hue/apps | grep -v Makefile | xargs`
 rm -f build/usr/share/hue/desktop/conf
 cp -r build/etc/hue build/usr/share/hue/desktop/conf
 pushd build/usr/share/hue
