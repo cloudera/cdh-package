@@ -112,6 +112,7 @@ install -d -m 0755 ${PREFIX}/${FLUME_DIR}
 
 # Take out useless things or we've installed elsewhere
 for x in flume-ng-* \
+          .gitignore \
           conf \
           pom.xml \
           CHANGELOG \
