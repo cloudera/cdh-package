@@ -108,7 +108,7 @@ ETC_DIR=${ETC_DIR:-/etc/flume-ng}
 install -d -m 0755 ${PREFIX}/${FLUME_DIR}
 
 (cd ${PREFIX}/${FLUME_DIR} &&
-  tar --strip-components=1 -xvzf ${BUILD_DIR}/flume-ng-dist/target/apache-flume-*-dist.tar.gz)
+  tar --strip-components=1 -xvzf ${BUILD_DIR}/flume-ng-dist/target/apache-flume-*-bin.tar.gz)
 
 # Take out useless things or we've installed elsewhere
 for x in flume-ng-* \
