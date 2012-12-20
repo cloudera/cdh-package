@@ -27,3 +27,9 @@ Depends: flume-ng
 Description: Flume NG Solr Sink
  Flume NG Solr Sink
 
+Package: solr-mapreduce
+Architecture: all
+Depends: hadoop-client, bigtop-utils
+Description: Solr mapreduce indexer
+ Solr mapreduce indexer
+

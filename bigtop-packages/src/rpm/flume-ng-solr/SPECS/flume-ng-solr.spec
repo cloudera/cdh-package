@@ -79,3 +79,16 @@ sh %{SOURCE2} \
 %defattr(644,root,root,755)
 %config(noreplace) %{etc_flume}.dist/*
 %{lib_flume}/lib
+
+# FIXME: once solr-mr and core indexer go upstream we need to rationalize this
+%package -n solr-mapreduce
+Summary: Solr mapreduce indexer
+Group: Development/Libraries
+Requires: hadoop-client, bigtop-utils
+
+%description -n solr-mapreduce
+Solr mapreduce indexer
+
+%files -n solr-mapreduce
+%defattr(644,root,root,755)
+/usr/lib/solr/contrib/mr/*.jar

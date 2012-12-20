@@ -25,5 +25,6 @@ rm -rf build
 mkdir -p build/flume-ng-solr-${FULL_VERSION}
 cp -r $ALL_FILES build/flume-ng-solr-${FULL_VERSION}
 cp -f flume-indexer/target/flume-ng-solr-*.jar build/flume-ng-solr-${FULL_VERSION}
+cp -f solr-mr/target/solr-mr*.jar build/flume-ng-solr-${FULL_VERSION}
 cp -rf flume-indexer/target/lib build/flume-ng-solr-${FULL_VERSION}
 tar -C build -czf build/flume-ng-solr-${FULL_VERSION}.tar.gz flume-ng-solr-${FULL_VERSION}
