@@ -145,10 +145,6 @@ cp $DISTRO_DIR/solr.default $PREFIX/$DEFAULT_DIR/solr
 
 install -d -m 0755 $PREFIX/${CONF_DIR}.dist
 cp -ra ${BUILD_DIR}/example/hdfs/* $PREFIX/${CONF_DIR}.dist
-# FIXME: this will eventually go upstream
-cp -f ${BUILD_DIR}/../../../cloudera/solrconfig.xml $PREFIX/${CONF_DIR}.dist/collection1/conf/
-cp -f ${BUILD_DIR}/../../../cloudera/schema.xml $PREFIX/${CONF_DIR}.dist/collection1/conf/
-
 
 # Copy in the wrapper
 cat > $PREFIX/$LIB_DIR/bin/solrd <<EOF
