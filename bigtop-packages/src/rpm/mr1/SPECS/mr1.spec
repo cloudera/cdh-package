@@ -12,7 +12,7 @@
 %define man_hadoop %{_mandir}
 %define src_hadoop /usr/src/%{name}
 %define hadoop_username mapred
-%define hadoop_services jobtracker tasktracker
+%define hadoop_services jobtracker tasktracker zkfc jobtrackerha
 # Hadoop outputs built binaries into %{hadoop_build}
 %define hadoop_src_path $RPM_BUILD_DIR/hadoop-@HADOOP_VERSION@
 %define static_images_dir src/webapps/static/images
@@ -135,10 +135,10 @@ nodes around the cluster. MapReduce can then process the data where it is
 located.
 
 %package jobtracker
-Summary: Hadoop Job Tracker
+Summary: Hadoop JobTracker
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
-Conflicts: hadoop-0.20-jobtracker
+Conflicts: hadoop-0.20-jobtracker, %{name}-jobtrackerha
 BuildArch: noarch
 
 %description jobtracker
@@ -170,6 +170,40 @@ Installation of this RPM will setup your machine to run in pseudo-distributed mo
 where each Hadoop daemon runs in a separate Java process. You will be getting old
 style daemons (MRv1) for Hadoop jobtracker and Hadoop tasktracker instead of new
 YARN (MRv2) ones.
+
+%package jobtrackerha
+Summary: Hadoop JobTracker High Availability
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+Conflicts: hadoop-0.20-jobtracker, %{name}-jobtracker
+BuildArch: noarch
+
+%description jobtrackerha
+The Hadoop MapReduce JobTracker High Availability Daemon provides a 
+High Availability JobTracker. JobTracker (installed by 
+hadoop-0.20-mapreduce-jobtracker) and JobTracker High Availability 
+(installed by this package - hadoop-0.20-mapreduce-jobtrackerha)
+can not be installed together on the same machine. Only one of them should
+be installed on a given machine at any given time. When used in coordination
+with Hadoop MapReduce failover controller (installed by
+hadoop-0.20-mapreduce-zkfc), this JobTracker provides automatic failover.
+The jobtracker is a central service which is responsible for managing
+the tasktracker services running on all nodes in a Hadoop Cluster.
+The jobtracker allocates work to the tasktracker nearest to the data
+with an available work slot.
+
+%package zkfc
+Summary: Hadoop MapReduce failover controller
+Group: System/Daemons
+Requires: %{name}-jobtrackerha = %{version}-%{release}, zookeeper >= 3.4.0
+BuildArch: noarch
+
+%description zkfc
+The Hadoop MapReduce failover controller is a Zookeeper client which also
+manages the state of the JobTracker. Any machines running ZKFC also need to
+run High Availability JobTracker (installed by hadoop-0.20-mapreduce-jobtrackerha). 
+The ZKFC is responsible for: Health monitoring, Zookeeper
+session management and Zookeeper-based election.
 
 %prep
 %setup -n hadoop-%{cloudera_version}
@@ -227,9 +261,14 @@ orig_init_file=$RPM_SOURCE_DIR/hadoop-init.tmpl
 for service in %{hadoop_services}
 do
        init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
+       service_command_name=${service}
+       if [ "${service}" = 'zkfc' ]; then 
+         service_command_name='mrzkfc'
+       fi
+       
        %__cp $orig_init_file $init_file
        %__sed -i -e 's|@HADOOP_COMMON_ROOT@|%{lib_hadoop}|' $init_file
-       %__sed -i -e "s|@HADOOP_DAEMON@|${service}|" $init_file
+       %__sed -i -e "s|@HADOOP_DAEMON@|$service_command_name|" $init_file
        %__sed -i -e 's|@HADOOP_CONF_DIR@|%{config_hadoop}|' $init_file
        %__sed -i -e 's|@HADOOP_DAEMON_USER@|mapred|' $init_file
 
@@ -319,3 +358,5 @@ if [ $1 -ge 1 ]; then \
 fi
 %service_macro jobtracker
 %service_macro tasktracker
+%service_macro zkfc
+%service_macro jobtrackerha

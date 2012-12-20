@@ -8,14 +8,20 @@ secondarynamenode_user=hdfs
 datanode_user=hdfs
 jobtracker_user=mapred
 tasktracker_user=mapred
+zkfc_user=mapred
+jobtrackerha_user=mapred
 
-for node in namenode secondarynamenode jobtracker tasktracker datanode ; do
+for node in namenode secondarynamenode jobtracker tasktracker datanode zkfc jobtrackerha; do
     service_pkgdir=debian/$SRC_PKG-$node
     debdir=$service_pkgdir/DEBIAN
     template="debian/service-init.d.tpl"
     user=$(eval "echo \$${node}_user")
     mkdir -p $service_pkgdir/etc/init.d/ $debdir
-    sed -e "s|@HADOOP_DAEMON@|$node|" -e "s|@HADOOP_MAJOR_VERSION@|$MAJOR_VERSION|" \
+    command_name=$node
+    if [ "${node}" = 'zkfc' ]; then 
+      command_name='mrzkfc'
+    fi
+    sed -e "s|@HADOOP_DAEMON@|$command_name|" -e "s|@HADOOP_MAJOR_VERSION@|$MAJOR_VERSION|" \
 	-e "s|@DAEMON_USER@|$user|" \
         $template > $service_pkgdir/etc/init.d/$SRC_PKG-$node
     sed -e "s|@HADOOP_DAEMON@|$node|" -e "s|@HADOOP_MAJOR_VERSION@|$MAJOR_VERSION|" \

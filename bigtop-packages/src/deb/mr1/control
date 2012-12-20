@@ -44,8 +44,8 @@ Package: hadoop-0.20-mapreduce-jobtracker
 Architecture: all
 Depends: hadoop-0.20-mapreduce (= ${source:Version})
 Replaces: hadoop-0.20-mapreduce (<< 0.20.2+737-1)
-Breaks: hadoop-0.20-mapreduce (<< 0.20.2+737-1)
-Description: Job Tracker for Hadoop
+Breaks: hadoop-0.20-mapreduce (<< 0.20.2+737-1), hadoop-0.20-mapreduce-jobtrackerha
+Description: JobTracker for Hadoop
  The jobtracker is a central service which is responsible for managing
  the tasktracker services running on all nodes in a Hadoop Cluster.
  The jobtracker allocates work to the tasktracker nearest to the data
@@ -62,3 +62,32 @@ Description: Hadoop installation in pseudo-distributed mode with MRv1
  style daemons (MRv1) for Hadoop jobtracker and Hadoop tasktracker instead of new
  YARN (MRv2) ones.
 
+Package: hadoop-0.20-mapreduce-jobtrackerha
+Provides: hadoop-0.20-mapreduce-jobtrackerha
+Architecture: all
+Depends: hadoop-0.20-mapreduce (= ${source:Version})
+Breaks: hadoop-0.20-mapreduce-jobtracker, hadoop-0.20-jobtracker
+Description: High Availability JobTracker for Hadoop
+ The Hadoop MapReduce JobTracker High Availability Daemon provides a 
+ High Availability JobTracker. JobTracker (installed by 
+ hadoop-0.20-mapreduce-jobtracker) and JobTracker High Availability 
+ (installed by this package - hadoop-0.20-mapreduce-jobtrackerha)
+ can not be installed together on the same machine. Only one of them should
+ be installed on a given machine at any given time. When used in coordination
+ with Hadoop MapReduce failover controller (installed by
+ hadoop-0.20-mapreduce-zkfc), this JobTracker provides automatic failover.
+ The jobtracker is a central service which is responsible for managing
+ the tasktracker services running on all nodes in a Hadoop Cluster.
+ The jobtracker allocates work to the tasktracker nearest to the data
+ with an available work slot.
+
+Package: hadoop-0.20-mapreduce-zkfc
+Provides: hadoop-0.20-mapreduce-zkfc
+Architecture: all
+Depends: hadoop-0.20-mapreduce-jobtrackerha (= ${source:Version}), zookeeper (>= 3.4.0)
+Description: Hadoop MapReduce failover controller
+ The Hadoop MapReduce failover controller is a Zookeeper client which also
+ manages the state of the JobTracker. Any machines running ZKFC also need to
+ run High Availability JobTracker (installed by hadoop-0.20-mapreduce-jobtrackerha).
+ The ZKFC is responsible for: Health monitoring, Zookeeper
+ session management and Zookeeper-based election.
