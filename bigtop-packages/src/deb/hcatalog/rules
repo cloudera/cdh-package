@@ -28,6 +28,9 @@ hcatalog_pkg_name=hcatalog
 %:
 	dh $@
 
+override_dh_auto_clean:
+	@echo FXIME: we need to fix ant clean in hcat itself
+
 override_dh_auto_build:
 	# we'll just use the build from the tarball.
 	env FULL_VERSION=${HCATALOG_PATCHED_VERSION} bash -x debian/do-component-build
