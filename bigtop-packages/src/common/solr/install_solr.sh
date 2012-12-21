@@ -172,11 +172,11 @@ if [ -n "\$SOLR_ZK_ENSEMBLE" ] ; then
 fi
 
 # FIXME: Guess the location of SOLR_UPDATE_LOG_DIR based on SOLR_DATA_DIR
-SOLR_DATA_DIR="${SOLR_DATA_DIR:-/var/lib/solr/index}"
-SOLR_UPDATE_LOG_DIR="${SOLR_UPDATE_LOG_DIR:-`dirname ${SOLR_DATA_DIR}`/ulog}"
+SOLR_DATA_DIR="\${SOLR_DATA_DIR:-/var/lib/solr/index}"
+SOLR_UPDATE_LOG_DIR="\${SOLR_UPDATE_LOG_DIR:-\`dirname \${SOLR_DATA_DIR}\`/ulog}"
 
 # FIXME: make Solr config parsing happy about not seeing hdfs:// 
-SOLR_DATA_DIR=`echo $SOLR_DATA_DIR | sed -e 's#hdfs://*#/#'`
+SOLR_DATA_DIR=\`echo \$SOLR_DATA_DIR | sed -e 's#hdfs://*#/#'\`
 
 export CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.port=\${SOLR_PORT:-8080}
                                         -Dsolr.log=\${SOLR_LOG:-/var/log/solr}
