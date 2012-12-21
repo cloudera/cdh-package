@@ -178,6 +178,9 @@ SOLR_UPDATE_LOG_DIR="\${SOLR_UPDATE_LOG_DIR:-\`dirname \${SOLR_DATA_DIR}\`/ulog}
 # FIXME: make Solr config parsing happy about not seeing hdfs:// 
 SOLR_DATA_DIR=\`echo \$SOLR_DATA_DIR | sed -e 's#hdfs://*#/#'\`
 
+# FIXME: we need to set this because of the jetty-centric default solr.xml
+CATALINA_OPTS="\${CATALINA_OPTS} -Dhost=\$HOSTNAME -Djetty.port=\${SOLR_PORT:-8080}"
+
 export CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.port=\${SOLR_PORT:-8080}
                                         -Dsolr.log=\${SOLR_LOG:-/var/log/solr}
                                         -Dsolr.admin.port=\${SOLR_ADMIN_PORT:-8081}
