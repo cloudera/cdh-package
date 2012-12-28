@@ -519,6 +519,7 @@ Requires: %{name}-common = %{version}-%{release}
 Requires: %{name}-filebrowser = %{version}-%{release}
 Requires: %{name}-about = %{version}-%{release}
 Requires: %{name}-help = %{version}-%{release}
+Obsoletes: %{name}-userman
 
 %description -n %{name}-useradmin
 Create/delete Hue users, and update user information (name, email, superuser status, etc.)

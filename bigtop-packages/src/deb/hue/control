@@ -97,6 +97,8 @@ Description: A shell for console based Hadoop applications
 Package: hue-useradmin
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hadoop, bigtop-utils, hue-filebrowser (= ${source:Version}), hue-about (= ${source:Version}), hue-help (= ${source:Version})
+Replaces: hue-userman
+Breaks: hue-userman
 Description: Create/delete users, update user information
  Create/delete Hue users, and update user information (name, email, superuser status, etc.)
 Provides: hue-user
