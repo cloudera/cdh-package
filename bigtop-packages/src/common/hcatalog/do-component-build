@@ -16,13 +16,12 @@
 
 set -ex
 
-IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
-BUILD_OPTS="-Dversion=${FULL_VERSION} -Dforrest.home=$FORREST_HOME -D_vtype= \
-            -Divy.home=${HOME}/.ivy2 -Drepo.maven.org=$IVY_MIRROR_PROP       \
-            -Dreactor.repo=file://${HOME}/.m2/repository"
+BUILD_OPTS="-Dversion=${FULL_VERSION} -Dforrest.home=$FORREST_HOME \
+            -Dreactor.repo=file://${HOME}/.m2/repository           \
+            -Dmvn.hadoop.profile=hadoop23"
 
 
-ant $BUILD_OPTS src-release tar "$@"
+ant $BUILD_OPTS src-release package "$@"
 
 rm -rf build/hcatalog-${FULL_VERSION}*
 mkdir build/hcatalog-${FULL_VERSION}

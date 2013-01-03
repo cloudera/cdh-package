@@ -91,7 +91,7 @@ for var in PREFIX BUILD_DIR ; do
 done
 
 MAN_DIR=/usr/share/man/man1
-DOC_DIR=${DOC_DIR:-/usr/share/doc/hcatalog}
+DOC_DIR=${DOC_DIR:-/usr/share/hcatalog}
 LIB_DIR=${LIB_DIR:-/usr/lib/hcatalog}
 LIB_SHARE_DIR=${LIB_DIR}/share/hcatalog
 INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/hcatalog}
@@ -125,6 +125,6 @@ install -d -m 0755 ${PREFIX}/${LIB_SHARE_DIR}
 
 
 install -d -m 0755 ${DOC_DIR}
-mv ${PREFIX}/$LIB_DIR/share/doc/hcatalog ${DOC_DIR}
+mv ${PREFIX}/$LIB_DIR/share/hcatalog ${DOC_DIR}
 install -d -m 0755 ${PREFIX}/$MAN_DIR
 gzip -c hcatalog.1 > ${PREFIX}/$MAN_DIR/hcatalog.1.gz
