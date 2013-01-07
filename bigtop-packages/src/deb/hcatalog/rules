@@ -38,7 +38,7 @@ override_dh_auto_build:
 override_dh_auto_install:
 	cp debian/hcatalog.1 .
 	sh -x debian/install_hcatalog.sh \
-	  --build-dir=build \
+	  --build-dir=build/hcatalog-$(strip ${HCATALOG_PATCHED_VERSION})/dist \
 	  --prefix=debian/${hcatalog_pkg_name} \
           --doc-dir=debian/${hcatalog_pkg_name}/usr/share/doc/${hcatalog_pkg_name} \
           --examples-dir=debian/${hcatalog_pkg_name}/usr/share/doc/${hcatalog_pkg_name}/examples

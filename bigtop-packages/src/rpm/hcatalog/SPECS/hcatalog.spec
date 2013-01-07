@@ -17,7 +17,7 @@
 %define bin_hcatalog /usr/bin
 %define man_dir %{_mandir}
 # After we run "ant package" we'll find the distribution here
-%define hcatalog_dist build
+%define hcatalog_dist build/hcatalog-%{hcatalog_patched_version}/dist
 
 %if  %{!?suse_version:1}0
 

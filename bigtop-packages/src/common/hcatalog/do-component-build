@@ -23,9 +23,10 @@ BUILD_OPTS="-Dversion=${FULL_VERSION} -Dforrest.home=$FORREST_HOME \
 
 ant $BUILD_OPTS src-release package "$@"
 
-rm -rf build/hcatalog-${FULL_VERSION}*
-mkdir build/hcatalog-${FULL_VERSION}
-for i in build/*.tar.gz ; do
-  tar -C build/hcatalog-${FULL_VERSION} --strip-components=1 -xzf $i
-done
-(cd build ; tar czf hcatalog-${FULL_VERSION}.tar.gz hcatalog-${FULL_VERSION})
+# Add sources to the binary installation
+cd build
+tar xzf hcatalog-src-${FULL_VERSION}.tar.gz
+mv hcatalog-${FULL_VERSION} hcatalog-src-${FULL_VERSION}/dist
+mv hcatalog-src-${FULL_VERSION} hcatalog-${FULL_VERSION}
+rm hcatalog-${FULL_VERSION}.tar.gz
+tar czf hcatalog-${FULL_VERSION}.tar.gz hcatalog-${FULL_VERSION}

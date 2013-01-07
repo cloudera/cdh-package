@@ -100,7 +100,7 @@ BIN_DIR=${BIN_DIR:-/usr/bin}
 
 # First we'll move everything into lib
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
-(cd $BUILD_DIR/hcatalog-* && tar -cf - .) | (cd ${PREFIX}/$LIB_DIR && tar -xf -)
+(cd $BUILD_DIR && tar -cf - .) | (cd ${PREFIX}/$LIB_DIR && tar -xf -)
 install -d -m 0755 ${PREFIX}/${BIN_DIR}
 
 wrapper=${PREFIX}/$BIN_DIR/hcat
@@ -125,6 +125,6 @@ install -d -m 0755 ${PREFIX}/${LIB_SHARE_DIR}
 
 
 install -d -m 0755 ${DOC_DIR}
-mv ${PREFIX}/$LIB_DIR/share/hcatalog ${DOC_DIR}
+mv ${PREFIX}/$LIB_DIR/share/doc/hcatalog/* ${DOC_DIR}
 install -d -m 0755 ${PREFIX}/$MAN_DIR
 gzip -c hcatalog.1 > ${PREFIX}/$MAN_DIR/hcatalog.1.gz
