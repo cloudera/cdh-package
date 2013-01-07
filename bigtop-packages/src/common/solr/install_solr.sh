@@ -185,9 +185,7 @@ export CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.port=\${SOLR_PORT:-8080}
                                         -Dsolr.log=\${SOLR_LOG:-/var/log/solr}
                                         -Dsolr.admin.port=\${SOLR_ADMIN_PORT:-8081}
                                         -Dsolr.data.dir=\${SOLR_DATA_DIR}
-                                        -Ddata.dir=\${SOLR_DATA_DIR}
-                                        -Dsolr.update.log.dir=\${SOLR_UPDATE_LOG_DIR}
-                                        -Dupdate.log.dir=\${SOLR_UPDATE_LOG_DIR}
+                                        -Dsolr.ulog.dir=\${SOLR_UPDATE_LOG_DIR}
                                         -Dsolr.solr.home=\${SOLR_HOME:-/etc/solr/conf}" 
 
 # FIXME: for some reason catalina doesn't use CATALINA_OPTS for stop action
