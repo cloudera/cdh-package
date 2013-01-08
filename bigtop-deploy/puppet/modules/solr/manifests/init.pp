@@ -22,7 +22,7 @@ class solr {
   }
   
 
-  define server($collections = ["solrcloud"], $port = "1978", $port_admin = "1979", $zk = "localhost:2181") {
+  define server($collections = ["solrcloud"], $port = "1978", $port_admin = "1979", $zk = "localhost:2181", $data_dir = "/var/lib/solr/index", $catalina_opts = "") {
     package { "solr-server":
       ensure => latest,
     }

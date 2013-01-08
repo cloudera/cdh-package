@@ -18,4 +18,6 @@ solr::server { "test-solr-server":
   port        => "1978",
   port_admin  => "1979",
   zk          => "localhost:2181",
+  data_dir    => "hdfs://localhost/solr/$fqdn/index",
+  catalina_opts => "-Dblur.shard.nrtcachingdirectory.maxmergesizemb=16 -Dblur.shard.nrtcachingdirectory.maxcachedmb=192 -Dblur.shard.blockcache.slab.count=100 -XX:MaxDirectMemorySize=20g -XX:+UseLargePages",
 }

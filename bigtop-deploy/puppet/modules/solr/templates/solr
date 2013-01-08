@@ -1,6 +1,7 @@
 SOLR_PORT="<%= port %>"
 SOLR_ADMIN_PORT="<%= port_admin %>"
 SOLR_ZK_ENSEMBLE="<%= zk %>/solr"
+SOLR_DATA_DIR="<%= data_dir %>"
+CATALINA_OPTS="<%= catalina_opts %>"
+
 SOLR_LOG=/var/log/solr
-SOLR_DATA_DIR=/var/lib/solr/index
-# CATALINA_OPTS="-Dfoo=bar"
