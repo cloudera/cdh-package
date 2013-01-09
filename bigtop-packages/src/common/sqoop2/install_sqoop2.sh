@@ -156,7 +156,7 @@ ln -s ../bin ${PREFIX}/${LIB_DIR}/sqoop-server/bin
 
 # Create MR1 configuration
 cp -r ${PREFIX}/${LIB_DIR}/sqoop-server ${PREFIX}/${LIB_DIR}/sqoop-server-0.20
-cp -f ${EXTRA_DIR}/catalina.properties.mr1 ${PREFIX}/${LIB_DIR}/sqoop-server/conf/catalina.properties
+cp -f ${EXTRA_DIR}/catalina.properties.mr1 ${PREFIX}/${LIB_DIR}/sqoop-server-0.20/conf/catalina.properties
 
 # Create wrapper script for the client
 client_wrapper=$PREFIX/usr/bin/sqoop
