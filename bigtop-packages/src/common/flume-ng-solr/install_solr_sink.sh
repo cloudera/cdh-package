@@ -100,7 +100,8 @@ ETC_DIR=${ETC_DIR:-/etc/flume-ng}
 install -d -m 0755 ${PREFIX}/${FLUME_DIR}/lib
 cp ${BUILD_DIR}/flume-indexer/target/flume-ng-solr-*.jar ${PREFIX}/${FLUME_DIR}/lib
 cp ${BUILD_DIR}/flume-indexer/target/lib/*.jar ${PREFIX}/${FLUME_DIR}/lib
-(cd ${PREFIX}/${FLUME_DIR}/lib ; rm -f *-tests.jar `ls flume-ng-*jar | grep -v flume-ng-solr`)
+cp ${BUILD_DIR}/examples/target/*.jar ${PREFIX}/${FLUME_DIR}/lib
+(cd ${PREFIX}/${FLUME_DIR}/lib ; rm -f *-tests.jar *-sources.jar `ls flume-ng-*jar | grep -v flume-ng-solr`)
 
 # FIXME: once solr-mr and core indexer go upstream we need to rationalize this
 install -d -m 0755 ${PREFIX}/${SOLR_MR_DIR}
