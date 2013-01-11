@@ -78,8 +78,8 @@ sh %{SOURCE2} \
 
 %files 
 %defattr(644,root,root,755)
-%config(noreplace) %{etc_flume}.dist/*
 %{lib_flume}/lib
+%{doc_flume}
 
 # FIXME: once solr-mr and core indexer go upstream we need to rationalize this
 %package -n solr-mapreduce
