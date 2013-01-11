@@ -116,6 +116,9 @@ cp -r ${BUILD_DIR}/core-indexer/src/test/resources/solr/collection1 ${PREFIX}/${
 cp -r ${BUILD_DIR}/core-indexer/src/test/resources/org              ${PREFIX}/${DOC_DIR}/examples/solr-nrt
 # FIXME: sed-away test specific stuff
 sed -i -e '/TestParser/d' ${PREFIX}/${DOC_DIR}/examples/solr-nrt/tika-config.xml
+sed -i -e '/agent.sinks.solrSink.collection.collection1.solr.home/s#^.*$#agent.sinks.solrSink.collection.collection1.solr.home = '${DOC_DIR}/examples/solr-nrt/collection1# \
+       -e '/agent.sinks.solrSink.tika.config/s#^.*$#agent.sinks.solrSink.tika.config = '${DOC_DIR}/examples/solr-nrt/tika-config.xml# \
+    ${PREFIX}/${DOC_DIR}/examples/solr-nrt/twitter-flume.conf
 
 # Cloudera specific
 #install -d -m 0755 $PREFIX/$FLUME_DIR/cloudera
