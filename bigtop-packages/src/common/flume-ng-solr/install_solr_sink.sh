@@ -108,12 +108,14 @@ install -d -m 0755 ${PREFIX}/${SOLR_MR_DIR}
 cp ${BUILD_DIR}/solr-mr/target/*.jar ${PREFIX}/${SOLR_MR_DIR}
 
 # Sample (twitter) configs
-install -d -m 0755 ${PREFIX}/${CONF_DIST_DIR}
-cp ${BUILD_DIR}/examples/src/test/resources/twitter-flume.conf       ${PREFIX}/${CONF_DIST_DIR}
-cp ${BUILD_DIR}/core-indexer/src/test/resources/tika-config.xml     ${PREFIX}/${CONF_DIST_DIR} 
-cp -r ${BUILD_DIR}/core-indexer/src/test/resources/solr/collection1 ${PREFIX}/${CONF_DIST_DIR}
+install -d -m 0755 ${PREFIX}/${DOC_DIR}/examples/solr-nrt
+cp ${BUILD_DIR}/examples/src/test/resources/twitter-flume.conf      ${PREFIX}/${DOC_DIR}/examples/solr-nrt
+cp ${BUILD_DIR}/core-indexer/src/test/resources/tika-config.xml     ${PREFIX}/${DOC_DIR}/examples/solr-nrt
+cp -r ${BUILD_DIR}/core-indexer/src/test/resources/solr/collection1 ${PREFIX}/${DOC_DIR}/examples/solr-nrt
 # FIXME: get org/apache/tika/mime/custom-mimetypes.xml onto classpath
-cp -r ${BUILD_DIR}/core-indexer/src/test/resources/org              ${PREFIX}/${CONF_DIST_DIR}
+cp -r ${BUILD_DIR}/core-indexer/src/test/resources/org              ${PREFIX}/${DOC_DIR}/examples/solr-nrt
+# FIXME: sed-away test specific stuff
+sed -i -e '/TestParser/d' ${PREFIX}/${DOC_DIR}/examples/solr-nrt/tika-config.xml
 
 # Cloudera specific
 #install -d -m 0755 $PREFIX/$FLUME_DIR/cloudera

@@ -73,6 +73,7 @@ env FULL_VERSION=%{flume_ng_solr_patched_version} bash -x %{SOURCE1}
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
           --build-dir=$PWD \
+          --doc-dir=%{doc_flume} \
           --prefix=$RPM_BUILD_ROOT
 
 %files 
