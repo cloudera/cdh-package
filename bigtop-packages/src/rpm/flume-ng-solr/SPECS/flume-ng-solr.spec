@@ -38,7 +38,7 @@
 
 %else
 
-%define doc_flume %{_docdir}/flume-ng-%{flume_ng_version}
+%define doc_flume %{_docdir}/flume-ng
 %define alternatives_cmd alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 
