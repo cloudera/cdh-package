@@ -352,6 +352,7 @@ This package should be installed on each node in the Hadoop cluster.
 %package -n %{name}-about
 Summary: Show version and configuration information about Hue
 Group: Applications/Engineering
+Requires(pre): %{name}-common = %{version}-%{release}
 Requires(preun): %{name}-common = %{version}-%{release}
 Requires: make
 
@@ -373,6 +374,7 @@ Displays the current version and configuration information about your Hue instal
 Summary: A UI for Hive on Hue
 Group: Applications/Engineering
 Requires: make
+Requires(pre): %{name}-common = %{version}-%{release}
 Requires(preun): %{name}-common = %{version}-%{release}
 Requires: %{name}-jobbrowser = %{version}-%{release}
 Requires: %{name}-filebrowser = %{version}-%{release}
@@ -397,6 +399,7 @@ and import and export data.
 Summary: A UI for Oozie on Hue
 Group: Applications/Engineering
 Requires: make
+Requires(pre): %{name}-common = %{version}-%{release}
 Requires(preun): %{name}-common = %{version}-%{release}
 Requires: %{name}-jobbrowser = %{version}-%{release}
 Requires: %{name}-filebrowser = %{version}-%{release}
@@ -421,6 +424,7 @@ managing the XML specification.
 Summary: A UI for the Hadoop Distributed File System (HDFS)
 Group: Applications/Engineering
 Requires: make
+Requires(pre): %{name}-common = %{version}-%{release}
 Requires(preun): %{name}-common = %{version}-%{release}
 Requires: %{name}-help = %{version}-%{release}
 
@@ -438,6 +442,7 @@ Filebrowser is a graphical web interface that lets you browse and interact with 
 %package -n %{name}-help
 Summary: Display help documentation for various Hue apps
 Group: Applications/Engineering
+Requires(pre): %{name}-common = %{version}-%{release}
 Requires(preun): %{name}-common = %{version}-%{release}
 Requires: make
 
@@ -457,6 +462,7 @@ Displays help documentation for various Hue apps.
 Summary: A UI for viewing Hadoop map-reduce jobs
 Group: Applications/Engineering
 Requires: make
+Requires(pre): %{name}-common = %{version}-%{release}
 Requires(preun): %{name}-common = %{version}-%{release}
 Requires: %{name}-filebrowser = %{version}-%{release}
 Requires: %{name}-help = %{version}-%{release}
@@ -477,6 +483,7 @@ Jobbrowser is a web interface for viewing Hadoop map-reduce jobs running on your
 Summary: A UI for designing and submitting map-reduce jobs to Hadoop
 Group: Applications/Engineering
 Requires: make
+Requires(pre): %{name}-common = %{version}-%{release}
 Requires(preun): %{name}-common = %{version}-%{release}
 Requires: %{name}-jobbrowser = %{version}-%{release}
 Requires: %{name}-help = %{version}-%{release}
@@ -497,6 +504,7 @@ Jobsub is a web interface for designing and submitting map-reduce jobs to Hadoop
 Summary: Reverse proxy for the Hue server
 Group: Applications/Engineering
 Requires: make
+Requires(pre): %{name}-common = %{version}-%{release}
 Requires(preun): %{name}-common = %{version}-%{release}
 
 %description -n %{name}-proxy
@@ -515,6 +523,7 @@ Summary: Create/delete users, update user information
 Group: Applications/Engineering
 Provides: %{name}-user
 Requires: make
+Requires(pre): %{name}-common = %{version}-%{release}
 Requires(preun): %{name}-common = %{version}-%{release}
 Requires: %{name}-filebrowser = %{version}-%{release}
 Requires: %{name}-about = %{version}-%{release}
@@ -535,6 +544,7 @@ Create/delete Hue users, and update user information (name, email, superuser sta
 Summary: A UI for Impala on Hue
 Group: Applications/Engineering
 Requires: make
+Requires(pre): %{name}-common = %{version}-%{release}
 Requires(preun): %{name}-common = %{version}-%{release}
 Requires: %{name}-jobbrowser = %{version}-%{release}
 Requires: %{name}-filebrowser = %{version}-%{release}
@@ -563,6 +573,7 @@ and import and export data.
 Summary: A shell for console based Hadoop applications
 Group: Applications/Engineering
 Requires: make
+Requires(pre): %{name}-common = %{version}-%{release}
 Requires(preun): %{name}-common = %{version}-%{release}
 Requires: %{name}-help = %{version}-%{release}
 
