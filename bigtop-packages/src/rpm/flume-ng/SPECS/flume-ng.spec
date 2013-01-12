@@ -156,6 +156,9 @@ getent passwd flume >/dev/null || useradd -c "Flume" -s /sbin/nologin -g flume -
 %post
 %{alternatives_cmd} --install %{etc_flume} %{name}-conf %{etc_flume}.dist 30
 
+# Workaround for CDH-9780
+[ -e %{etc_flume}.empty ] || ln -s conf.dist %{etc_flume}.empty
+
 %preun
 if [ "$1" = 0 ]; then
         %{alternatives_cmd} --remove %{name}-conf %{etc_flume}.dist || :

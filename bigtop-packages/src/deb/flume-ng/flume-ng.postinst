@@ -24,6 +24,8 @@ case "$1" in
         # Install config alternatives
         update-alternatives  --install /etc/flume-ng/conf flume-ng-conf /etc/flume-ng/conf.dist 30
 
+        # Workaround for CDH-9780
+        [ -e /etc/flume-ng/conf.empty ] || ln -s conf.dist /etc/flume-ng/conf.empty
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
