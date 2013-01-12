@@ -75,9 +75,8 @@ start() {
 
 stop() {
   if [ ! -e $CATALINA_PID ]; then
-    log_failure_msg "$desc is not running"
-    RETVAL=$STATUS_NOT_RUNNING
-    return $RETVAL
+    log_success_msg "$desc is not running"
+    return 0
   fi
 
   log_success_msg "Stopping ${desc}: "
