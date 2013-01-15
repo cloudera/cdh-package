@@ -112,6 +112,9 @@ install -d -m 0755 ${PREFIX}/${DOC_DIR}/examples/solr-nrt
 cp ${BUILD_DIR}/examples/src/test/resources/twitter-flume.conf      ${PREFIX}/${DOC_DIR}/examples/solr-nrt
 cp ${BUILD_DIR}/core-indexer/src/test/resources/tika-config.xml     ${PREFIX}/${DOC_DIR}/examples/solr-nrt
 cp -r ${BUILD_DIR}/core-indexer/src/test/resources/solr/collection1 ${PREFIX}/${DOC_DIR}/examples/solr-nrt
+# FIXME: this really should belong to a different package
+cp -r ${BUILD_DIR}/core-indexer/src/test/resources/test-documents   ${PREFIX}/${DOC_DIR}/examples/
+cp -r ${BUILD_DIR}/solr-mr/src/test/resources/log4j.properties      ${PREFIX}/${DOC_DIR}/examples/solr-nrt
 # FIXME: get org/apache/tika/mime/custom-mimetypes.xml onto classpath
 cp -r ${BUILD_DIR}/core-indexer/src/test/resources/org              ${PREFIX}/${DOC_DIR}/examples/solr-nrt
 # FIXME: sed-away test specific stuff
