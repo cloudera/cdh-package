@@ -154,14 +154,11 @@ getent passwd flume >/dev/null || useradd -c "Flume" -s /sbin/nologin -g flume -
 
 # Manage configuration symlink
 %post
-%{alternatives_cmd} --install %{etc_flume} %{name}-conf %{etc_flume}.dist 30
-
-# Workaround for CDH-9780
-[ -e %{etc_flume}.empty ] || ln -s conf.dist %{etc_flume}.empty
+%{alternatives_cmd} --install %{etc_flume} %{name}-conf %{etc_flume}.empty 30
 
 %preun
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove %{name}-conf %{etc_flume}.dist || :
+        %{alternatives_cmd} --remove %{name}-conf %{etc_flume}.empty || :
 fi
 
 %post agent
@@ -181,13 +178,14 @@ fi
 %files 
 %defattr(644,root,root,755)
 
-%dir %{etc_flume}.dist
+%dir %{etc_flume}.empty
 %dir %{lib_flume}
 %dir %{lib_flume}/bin
 %dir %{lib_flume}/lib
 %dir %{lib_flume}/cloudera
 
-%config(noreplace) %{etc_flume}.dist/*
+%config(noreplace) %{etc_flume}.empty/*
+%{etc_flume}.dist
 %attr(0755,root,root) %{bin_flume}/flume-ng
 %attr(0755,root,root) %{lib_flume}/bin/flume-ng
 %{lib_flume}/cloudera/cdh_version.properties

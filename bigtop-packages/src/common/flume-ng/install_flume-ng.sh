@@ -148,10 +148,11 @@ EOF
 chmod 755 $wrapper
 
 
-install -d -m 0755 $PREFIX/$ETC_DIR/conf.dist
-(cd ${BUILD_DIR}/conf && tar cf - .) | (cd $PREFIX/$ETC_DIR/conf.dist && tar xf -)
-sed -i -e "s|flume\.log\.dir=.*|flume.log.dir=/var/log/flume-ng|" $PREFIX/$ETC_DIR/conf.dist/log4j.properties
-touch $PREFIX/$ETC_DIR/conf.dist/flume.conf
+install -d -m 0755 $PREFIX/$ETC_DIR/conf.empty
+(cd ${BUILD_DIR}/conf && tar cf - .) | (cd $PREFIX/$ETC_DIR/conf.empty && tar xf -)
+sed -i -e "s|flume\.log\.dir=.*|flume.log.dir=/var/log/flume-ng|" $PREFIX/$ETC_DIR/conf.empty/log4j.properties
+touch $PREFIX/$ETC_DIR/conf.empty/flume.conf
+ln -s conf.empty $PREFIX/$ETC_DIR/conf.dist
 
 unlink $PREFIX/$FLUME_DIR/conf || /bin/true
 ln -s /etc/flume-ng/conf $PREFIX/$FLUME_DIR/conf
