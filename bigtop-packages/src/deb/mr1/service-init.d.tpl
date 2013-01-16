@@ -204,8 +204,17 @@ hadoop_service() {
             ;;
         *)
             N=/etc/init.d/$NAME
-            echo "Usage: $N {start|stop|restart|force-reload|status|force-stop}" >&2
-            exit 1
+            if [ "@HADOOP_DAEMON@" = "mrzkfc" ]; then
+              if [ "$1" = "init" ]; then
+                DAEMON_FLAGS=-formatZK $0 start
+              else
+                echo "Usage: $N {start|stop|restart|force-reload|status|force-stop|init}" >&2
+                exit 1
+              fi
+            else
+              echo "Usage: $N {start|stop|restart|force-reload|status|force-stop}" >&2
+              exit 1
+            fi
             ;;
     esac
 }

@@ -99,8 +99,18 @@ hadoopservice() {
       condrestart
       ;;
     *)
-      echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart}"
-      exit 1
+      if [ "@HADOOP_DAEMON@" = "mrzkfc" ]; then
+        if [ "$1" = "init" ]; then
+          DAEMON_FLAGS=-formatZK $0 start
+          RETVAL=$?
+        else
+          echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart|init}"
+          exit 1
+        fi
+      else
+        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart}"
+        exit 1
+      fi
   esac
 }
 
