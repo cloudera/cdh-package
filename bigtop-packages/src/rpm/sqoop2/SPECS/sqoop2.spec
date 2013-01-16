@@ -68,17 +68,22 @@ Source9: init.d.tmpl
 Source10: sqoop-server.svc
 Buildarch: noarch
 BuildRequires: asciidoc
-Requires: hadoop-client, bigtop-utils
-Conflicts: sqoop
+Requires: hadoop-client, bigtop-utils, bigtop-tomcat, %{name}-client = %{version}-%{release}
 
 %description
 Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).
+
+%package client
+Summary: Client for Sqoop.
+URL: http://incubator.apache.org/sqoop/
+Group: System/Daemons
+Conflicts: sqoop
 
 %package server
 Summary: Server for Sqoop.
 URL: http://incubator.apache.org/sqoop/
 Group: System/Daemons
-Requires: sqoop2 = %{version}-%{release}, bigtop-tomcat
+Requires: sqoop2 = %{version}-%{release}
 
 %if  %{?suse_version:1}0
 # Required for init scripts
@@ -96,6 +101,9 @@ Requires: initscripts
 # Required for init scripts
 Requires: redhat-lsb
 %endif
+
+%description client
+Lightweight client for Sqoop.
 
 %description server
 Centralized server for Sqoop.
@@ -159,10 +167,31 @@ fi
 
 %files
 %defattr(0755,root,root)
-/usr/bin/sqoop
 /etc/sqoop/conf.dist
-%{lib_sqoop}
+%defattr(0644,root,root)
+%{lib_sqoop}/bin/setenv.sh
+%{lib_sqoop}/bin/sqoop-env.sh
+%{lib_sqoop}/sqoop-server-0.20
+%{lib_sqoop}/sqoop-server
+%{lib_sqoop}/webapps
+
+%files client
+%attr(0755,root,root)
+/usr/bin/sqoop
 %{lib_sqoop}/bin/sqoop.sh
+%defattr(0644,root,root)
+%{lib_sqoop}/cloudera/cdh_version.properties
+%{lib_sqoop}/sqoop-common-*.jar
+%{lib_sqoop}/sqoop-client-*.jar
+%{lib_sqoop}/lib/commons-cli-*.jar
+%{lib_sqoop}/lib/commons-lang-*.jar
+%{lib_sqoop}/lib/jansi-*.jar
+%{lib_sqoop}/lib/jersey-*.jar
+%{lib_sqoop}/lib/jline-*.jar
+%{lib_sqoop}/lib/json-simple-*.jar
+%{lib_sqoop}/lib/groovy-all-*.jar
+%{lib_sqoop}/lib/log4j-*.jar
+%{lib_sqoop}/lib/hamcrest-core-*.jar
 
 %files server
 %attr(0755,root,root) %{initd_dir}/sqoop-server

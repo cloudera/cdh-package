@@ -1,3 +1,6 @@
 /etc/sqoop/conf.dist
-/usr/bin/sqoop
-/usr/lib/sqoop
+/usr/lib/sqoop/bin/setenv.sh
+/usr/lib/sqoop/bin/sqoop-env.sh
+/usr/lib/sqoop/sqoop-server-0.20
+/usr/lib/sqoop/sqoop-server
+/usr/lib/sqoop/webapps
