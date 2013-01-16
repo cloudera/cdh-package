@@ -253,6 +253,7 @@ if [ $1 -eq 0 ]; then
 fi
 
 %files -n %{name}-common
+%defattr(-,root,root)
 %attr(0755,root,root) %config(noreplace) /etc/hue/
 %dir %{hue_dir}
 %attr(0755,hue,hue) %{hue_dir}/desktop
@@ -343,6 +344,7 @@ Plugins for Hue
 This package should be installed on each node in the Hadoop cluster.
 
 %files -n %{name}-plugins
+%defattr(-,root,root)
 %{hadoop_lib}/
 %{hadoop_home}/cloudera/
 
@@ -365,6 +367,7 @@ Displays the current version and configuration information about your Hue instal
 %app_preun_macro about 
 
 %files -n %{name}-about
+%defattr(-,root,root)
 %{about_app_dir}
 
 
@@ -394,6 +397,7 @@ and import and export data.
 %app_preun_macro beeswax
 
 %files -n %{name}-beeswax
+%defattr(-,root,root)
 %{beeswax_app_dir}
 
 #### HUE-OOZIE PLUGIN ######
@@ -419,6 +423,7 @@ managing the XML specification.
 %app_preun_macro oozie
 
 %files -n %{name}-oozie
+%defattr(-,root,root)
 %{oozie_app_dir}
 
 #### HUE-FILEBROWSER PLUGIN ######
@@ -439,6 +444,7 @@ Filebrowser is a graphical web interface that lets you browse and interact with 
 %app_preun_macro filebrowser
 
 %files -n %{name}-filebrowser
+%defattr(-,root,root)
 %{filebrowser_app_dir}
 
 
@@ -458,6 +464,7 @@ Displays help documentation for various Hue apps.
 %app_preun_macro help
 
 %files -n %{name}-help
+%defattr(-,root,root)
 %{help_app_dir}
 
 
@@ -480,6 +487,7 @@ Jobbrowser is a web interface for viewing Hadoop map-reduce jobs running on your
 %app_preun_macro jobbrowser
 
 %files -n %{name}-jobbrowser
+%defattr(-,root,root)
 %{jobbrowser_app_dir}
 
 
@@ -502,6 +510,7 @@ Jobsub is a web interface for designing and submitting map-reduce jobs to Hadoop
 %app_preun_macro jobsub
 
 %files -n %{name}-jobsub
+%defattr(-,root,root)
 %{jobsub_app_dir}
 
 
@@ -522,6 +531,7 @@ Proxies HTTP requests through the Hue server. This is intended to be used for "b
 %app_preun_macro proxy
 
 %files -n %{name}-proxy
+%defattr(-,root,root)
 %{proxy_app_dir}
 
 
@@ -546,6 +556,7 @@ Create/delete Hue users, and update user information (name, email, superuser sta
 %app_preun_macro useradmin
 
 %files -n %{name}-useradmin
+%defattr(-,root,root)
 %{useradmin_app_dir}
 
 #### HUE-IMPALA PLUGIN ######
@@ -571,6 +582,7 @@ and import and export data.
 %app_preun_macro impala
 
 %files -n %{name}-impala
+%defattr(-,root,root)
 %{impala_app_dir}
 
 
@@ -600,6 +612,7 @@ The Shell application lets the user connect to various backend shells (e.g. Pig,
 %app_preun_macro shell
 
 %files -n %{name}-shell
+%defattr(-,root,root)
 %{shell_app_dir}
 %attr(4750,root,hue) %{shell_app_dir}/src/shell/build/setuid
 
