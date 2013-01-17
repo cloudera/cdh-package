@@ -23,6 +23,25 @@ Homepage: http://incubator.apache.org/hcatalog/
 
 Package: hcatalog
 Architecture: all
-Depends: hadoop, hive-metastore, bigtop-utils
+Depends: hadoop, hive, bigtop-utils
 Description: Apache HCatalog is a table and storage management service.
  Apache HCatalog is a table and storage management service for data created using Apache Hadoop.
+
+Package: hcatalog-server
+Architecture: all
+Depends: hcatalog (= ${source:Version})
+Description: Server for HCatalog.
+ Server for HCatalog.
+
+Package: webhcat
+Architecture: all
+Depends: hcatalog (= ${source:Version})
+Description: WEBHcat provides a REST-like web API for HCatalog and related Hadoop components.
+ WEBHcat provides a REST-like web API for HCatalog and related Hadoop components.
+
+Package: webhcat-server
+Architecture: all
+Depends: webhcat (= ${source:Version})
+Description: Server for WEBHcat.
+ Server for WEBHcat.
+

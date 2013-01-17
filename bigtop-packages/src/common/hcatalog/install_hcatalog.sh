@@ -103,6 +103,18 @@ install -d -m 0755 ${PREFIX}/${LIB_DIR}
 (cd $BUILD_DIR && tar -cf - .) | (cd ${PREFIX}/$LIB_DIR && tar -xf -)
 install -d -m 0755 ${PREFIX}/${BIN_DIR}
 
+# Remove useless bits
+rm -rf ${PREFIX}/${LIB_DIR}/cloudera
+
+# Take care of the configs
+install -d -m 0755 ${PREFIX}/etc/default
+for conf in `cd ${PREFIX}/${LIB_DIR}/etc ; ls -d *` ; do
+  install -d -m 0755 ${PREFIX}/etc/$conf
+  mv ${PREFIX}/${LIB_DIR}/etc/$conf ${PREFIX}/etc/$conf/conf.dist
+  ln -s /etc/$conf/conf ${PREFIX}/${LIB_DIR}/etc/$conf
+  touch ${PREFIX}/etc/default/$conf-server
+done
+
 wrapper=${PREFIX}/$BIN_DIR/hcat
 cat >>$wrapper <<EOF
 #!/bin/sh
@@ -120,11 +132,12 @@ exec $INSTALLED_LIB_DIR/bin/hcat "\$@"
 EOF
 chmod 755 $wrapper
 
-install -d -m 0755 ${PREFIX}/${CONF_DIST_DIR}
-install -d -m 0755 ${PREFIX}/${LIB_SHARE_DIR}
-
-
+# Install the docs
 install -d -m 0755 ${DOC_DIR}
 mv ${PREFIX}/$LIB_DIR/share/doc/hcatalog/* ${DOC_DIR}
 install -d -m 0755 ${PREFIX}/$MAN_DIR
 gzip -c hcatalog.1 > ${PREFIX}/$MAN_DIR/hcatalog.1.gz
+
+# Provide the runtime dirs
+install -d -m 0755 $PREFIX/var/run/hcatalog
+install -d -m 0755 $PREFIX/var/log/hcatalog

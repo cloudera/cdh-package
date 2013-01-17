@@ -1,0 +1,3 @@
+export HADOOP_PREFIX=/usr
+export WEBHCAT_LOG_DIR=/var/log/hcatalog
+export WEBHCAT_PID_DIR=/var/run/hcatalog
