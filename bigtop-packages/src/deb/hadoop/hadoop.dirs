@@ -1,4 +1,4 @@
-/etc/hadoop/conf.dist/
+/etc/hadoop/conf.empty/
 /usr/lib/hadoop
 /usr/bin
 /usr/share/doc/hadoop

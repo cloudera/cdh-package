@@ -135,8 +135,10 @@ EOF
 chmod 755 $wrapper
 
 
-install -d -m 0755 $PREFIX/$ETC_DIR/conf.dist
-(cd ${BUILD_DIR}/conf && tar cf - .) | (cd $PREFIX/$ETC_DIR/conf.dist && tar xf -)
+install -d -m 0755 $PREFIX/$ETC_DIR/conf.empty
+(cd ${BUILD_DIR}/conf && tar cf - .) | (cd $PREFIX/$ETC_DIR/conf.empty && tar xf -)
+# workaround for CDH-9780
+ln -s conf.empty $PREFIX/$ETC_DIR/conf.dist
 
 unlink $PREFIX/$LIB_DIR/conf || /bin/true
 ln -s /etc/flume/conf $PREFIX/$LIB_DIR/conf

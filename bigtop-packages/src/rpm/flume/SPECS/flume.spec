@@ -175,16 +175,16 @@ getent passwd flume >/dev/null || useradd -c "Flume" -s /sbin/nologin -g flume -
 
 # Manage configuration symlink
 %post
-%{alternatives_cmd} --install %{etc_flume} %{name}-conf %{etc_flume}.dist 30
+%{alternatives_cmd} --install %{etc_flume} %{name}-conf %{etc_flume}.empty 30
 
 %preun
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove %{name}-conf %{etc_flume}.dist || :
+        %{alternatives_cmd} --remove %{name}-conf %{etc_flume}.empty || :
 fi
 
 %files 
 %defattr(-,flume,flume)
-%config(noreplace) %{etc_flume}.dist
+%config(noreplace) %{etc_flume}.empty
 %doc %{doc_flume}
 
 %attr(0755,root,root) %{bin_flume}
