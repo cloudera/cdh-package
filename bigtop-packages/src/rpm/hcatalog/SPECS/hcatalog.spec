@@ -62,6 +62,7 @@ Source4: hcatalog-server.svc
 Source5: webhcat-server.svc
 Source6: hcatalog-server.default
 Source7: webhcat-server.default
+Source8: init.d.tmpl
 Requires: hadoop, hive, bigtop-utils
 
 %description 
