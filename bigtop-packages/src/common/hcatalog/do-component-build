@@ -23,6 +23,11 @@ BUILD_OPTS="-Dversion=${FULL_VERSION} -Dforrest.home=$FORREST_HOME \
 
 ant $BUILD_OPTS src-release package "$@"
 
+# If DO_MAVEN_DEPLOY == deploy, run the generate-maven-artifacts target
+if [ "${DO_MAVEN_DEPLOY}" == "deploy" ]; then
+    ant $BUILD_OPTS mvn-deploy "$@"
+fi
+
 # Add sources to the binary installation
 cd build
 tar xzf hcatalog-src-${FULL_VERSION}.tar.gz
