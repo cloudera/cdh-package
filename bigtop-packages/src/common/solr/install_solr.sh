@@ -173,7 +173,7 @@ fi
 
 # FIXME: Guess the location of SOLR_UPDATE_LOG_DIR based on SOLR_DATA_DIR
 SOLR_DATA_DIR="\${SOLR_DATA_DIR:-/var/lib/solr}"
-SOLR_UPDATE_LOG_DIR="\${SOLR_UPDATE_LOG_DIR:-\${SOLR_DATA_DIR}/ulog}"
+SOLR_UPDATE_LOG_DIR="\${SOLR_UPDATE_LOG_DIR:-\${SOLR_DATA_DIR}}"
 
 # FIXME: make Solr config parsing happy about not seeing hdfs:// 
 SOLR_DATA_DIR=\`echo \$SOLR_DATA_DIR | sed -e 's#hdfs://*#/#'\`
