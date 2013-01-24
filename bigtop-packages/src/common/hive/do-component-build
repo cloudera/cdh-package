@@ -28,7 +28,7 @@ cd src
 
 ant -Dhadoop.security.version.prefix=0.23 \
     -Dreactor.repo=file://${HOME}/.m2/repository -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP \
-    -propertyfile cdh.build.properties tar "$@"
+    -propertyfile cdh.build.properties -Dinclude.postgres=true tar "$@"
 
 # Change to cloudera/maven directory, and install
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository
