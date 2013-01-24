@@ -138,9 +138,9 @@ install -m 0644 ${EXTRA_DIR}/sqoop-env.sh ${PREFIX}/${CONF_DIR}/
 ln -s -f /etc/sqoop/conf/sqoop-env.sh ${PREFIX}/${BIN_DIR}/sqoop-env.sh
 
 # Explode the WAR
-SQOOP2_WEBAPPS=${PREFIX}/${LIB_DIR}/webapps
-cp -r ${DIST_DIR}/server/webapps $SQOOP2_WEBAPPS
-unzip -d $SQOOP2_WEBAPPS/sqoop $SQOOP2_WEBAPPS/sqoop.war
+SQOOP_WEBAPPS=${PREFIX}/${LIB_DIR}/webapps
+cp -r ${DIST_DIR}/server/webapps $SQOOP_WEBAPPS
+unzip -d $SQOOP_WEBAPPS/sqoop $SQOOP_WEBAPPS/sqoop.war
 
 # Create MR2 configuration
 install -d -m 0755 ${PREFIX}/${LIB_DIR}/sqoop-server/conf
