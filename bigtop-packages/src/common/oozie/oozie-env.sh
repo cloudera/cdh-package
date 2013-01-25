@@ -23,3 +23,7 @@ export CATALINA_TMPDIR=/var/lib/oozie
 export CATALINA_PID=/var/run/oozie/oozie.pid
 export CATALINA_BASE=/usr/lib/oozie/oozie-server-0.20
 export CATALINA_OPTS=-Xmx1024m
+export OOZIE_HTTPS_PORT=11443
+export OOZIE_HTTPS_KEYSTORE_PASS=password
+export CATALINA_OPTS="$CATALINA_OPTS -Doozie.https.port=${OOZIE_HTTPS_PORT}"
+export CATALINA_OPTS="$CATALINA_OPTS -Doozie.https.keystore.pass=${OOZIE_HTTPS_KEYSTORE_PASS}"
