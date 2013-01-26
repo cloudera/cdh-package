@@ -105,7 +105,7 @@ PLUGIN_NAME=`basename $BUILD_DIR/desktop/libs/hadoop/java-lib/*plugin*jar`
 install -d -m 0755 $PREFIX/$LIB_DIR/desktop/libs/hadoop/java-lib
 cp $BUILD_DIR/desktop/libs/hadoop/java-lib/$PLUGIN_NAME $PREFIX/$LIB_DIR/desktop/libs/hadoop/java-lib
 install -d -m 0755 $PREFIX/$HADOOP_DIR
-ln -fs $LIB_DIR/desktop/libs/hadoop/java-lib/$PLUGIN_NAME $PREFIX/$HADOOP_DIR
+cp -f $BUILD_DIR/desktop/libs/hadoop/java-lib/$PLUGIN_NAME $PREFIX/$HADOOP_DIR
 
 # Hue Shell specific
 install -d -m 0755 $PREFIX/$LIB_DIR/apps/shell/src/shell/build/
