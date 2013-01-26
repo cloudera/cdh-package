@@ -99,7 +99,7 @@ Source12: log4j.properties
 Source13: mapred.conf
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -n -u)
 BuildRequires: lzo-devel, python >= 2.4, git, automake, autoconf
-Requires: hadoop, hadoop-hdfs, sh-utils, textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
+Requires: hadoop >= 2.0.0+901, hadoop-hdfs >= 2.0.0+901, sh-utils, textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
 
 BuildArch: i386 amd64 x86_64
 
