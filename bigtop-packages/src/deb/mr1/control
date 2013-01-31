@@ -8,7 +8,7 @@ Homepage: http://hadoop.apache.org/core/
 
 Package: hadoop-0.20-mapreduce
 Architecture: i386 amd64 
-Depends: ${shlibs:Depends}, ${misc:Depends}, hadoop (>= 2.0.0+901), hadoop-hdfs (>= 2.0.0+901), adduser
+Depends: ${shlibs:Depends}, ${misc:Depends}, hadoop (= ${hadoop_common_version}), hadoop-hdfs (= ${hadoop_common_version}), adduser
 Description: A software platform for processing vast amounts of data
  Hadoop is a software platform that lets one easily write and
  run applications that process vast amounts of data.
