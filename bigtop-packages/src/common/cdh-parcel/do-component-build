@@ -200,7 +200,8 @@ JSON_IS_STUPID=""
 for comp in build/usr/lib/*/cloudera/cdh_version.properties ; do
   cat <<__EOT__
     ${JSON_IS_STUPID}{ "name":     "`sed -ne 's/^cloudera.pkg.name=//p' $comp`",
-      "version":  "`sed -ne 's/^version=//p' $comp`"
+      "version":  "`sed -ne 's/^version=//p' $comp`",
+      "pkg_version":  "`sed -ne 's/^cloudera.pkg.version=//p' $comp`" 
     }
 __EOT__
   JSON_IS_STUPID=","
