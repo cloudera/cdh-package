@@ -134,14 +134,14 @@ if [ "$1" = 0 ] ; then \
   export ROOT=%{hue_dir} \
   export DESKTOP_LOGLEVEL=WARN \
   export DESKTOP_LOG_DIR=/var/log/hue \
-  if [ -e $ENV_PYTHON ] ; then \
+  if [[ -e $ENV_PYTHON && -f %{hue_dir}/tools/app_reg/app_reg.py ]] ; then \
     %{hue_dir}/build/env/bin/python %{hue_dir}/tools/app_reg/app_reg.py --remove %1 ||: \
   fi \
   find %{apps_dir}/%1 -name \*.egg-info -type f -print0 | xargs -0 /bin/rm -fR   \
 fi \
 find %{apps_dir}/%1 -iname \*.py[co] -type f -print0 | xargs -0 /bin/rm -f \
 chown -Rf hue:hue /var/log/hue \
-chown -f hue:hue %{hue_dir}/desktop %{hue_dir}/desktop/desktop.db
+chown -f hue:hue %{hue_dir}/desktop %{hue_dir}/desktop/desktop.db ||:
 
 %description
 Hue is a browser-based desktop interface for interacting with Hadoop.
