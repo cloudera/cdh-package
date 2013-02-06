@@ -168,12 +168,12 @@ fi
 %files
 %defattr(0755,root,root)
 /etc/sqoop/conf.dist
-%defattr(0644,root,root)
-%{lib_sqoop}/bin/setenv.sh
-%{lib_sqoop}/bin/sqoop-env.sh
 %{lib_sqoop}/sqoop-server-0.20
 %{lib_sqoop}/sqoop-server
 %{lib_sqoop}/webapps
+%{lib_sqoop}/bin/setenv.sh
+%{lib_sqoop}/bin/sqoop-env.sh
+
 
 %files client
 %attr(0755,root,root)
