@@ -13,15 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-DAEMON="sqoop-server"
+DAEMON="sqoop2-server"
 DESC="Sqoop Server"
-EXEC_PATH="/usr/lib/sqoop/bin/sqoop.sh"
-SVC_USER="sqoop"
+EXEC_PATH="/usr/lib/sqoop2/bin/sqoop.sh"
+SVC_USER="sqoop2"
 DAEMON_FLAGS=""
-CONF_DIR="/etc/sqoop/conf"
-PIDFILE="/var/run/sqoop/sqoop-server-$SVC_USER.pid"
+CONF_DIR="/etc/sqoop2/conf"
+PIDFILE="/var/run/sqoop2/sqoop-server-$SVC_USER.pid"
 LOCKDIR="/var/lock/subsys"
-LOCKFILE="sqoop-server"
+LOCKFILE="sqoop2-server"
 
 generate_functions() {
 
@@ -29,14 +29,14 @@ cat <<'__EOT__'
 sqoop_env() {
   export SQOOP_USER="$SVC_USER"
   export SQOOP_CONFIG="$CONF_DIR"
-  export SQOOP_LOG=${SQOOP_LOG:-"/var/log/sqoop/"}
+  export SQOOP_LOG=${SQOOP_LOG:-"/var/log/sqoop2/"}
   export SQOOP_TEMP="$(dirname $PIDFILE)"
   export SQOOP_SHUTDOWN_TIMEOUT=${SQOOP_SHUTDOWN_TIMEOUT:-60}
   export SQOOP_SLEEP_TIME="$SLEEP_TIME"
   export SQOOP_PID="$PIDFILE"
   export CATALINA_BIN="/usr/lib/bigtop-tomcat/bin"
   export CATALINA_PID="$PIDFILE"
-  export CATALINA_TMPDIR="/var/tmp/sqoop"
+  export CATALINA_TMPDIR="/var/tmp/sqoop2"
   export CATALINA_OPTS="-Xmx1024m -cp ${LIB_DIR}:${LIB_DIR}/lib"
   export CATALINA_OUT="${SQOOP_LOG}/sqoop-tomcat.log"
 }
@@ -53,7 +53,7 @@ start() {
   log_success_msg "Starting ${DESC}: "
 
   sqoop_env
-  . /usr/lib/sqoop/bin/sqoop-env.sh
+  . /usr/lib/sqoop2/bin/sqoop-env.sh
 
   su -s /bin/bash -c "cd ~/ && ${EXEC_PATH} server start $DAEMON_FLAGS" $SVC_USER
 
@@ -84,7 +84,7 @@ stop() {
   if [ "$?" = "$STATUS_RUNNING" ] ; then
 
     sqoop_env
-    . /usr/lib/sqoop/bin/sqoop-env.sh
+    . /usr/lib/sqoop2/bin/sqoop-env.sh
 
     su -s /bin/bash -c "cd ~/ && ${EXEC_PATH} server stop" $SVC_USER
 

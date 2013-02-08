@@ -22,8 +22,8 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-BIN_DIR=/usr/lib/sqoop/bin
-LIB_DIR=/usr/lib/sqoop
+BIN_DIR=/usr/lib/sqoop2/bin
+LIB_DIR=/usr/lib/sqoop2
 
 CLASSPATH=$CLASSPATH:$(echo "$LIB_DIR"/*.jar | tr ' ' ':')
 CLASSPATH=$CLASSPATH:$(echo "$LIB_DIR"/lib/*.jar | tr ' ' ':')

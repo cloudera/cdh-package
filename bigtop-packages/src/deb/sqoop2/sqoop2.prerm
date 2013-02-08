@@ -23,7 +23,7 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-      update-alternatives --remove sqoop-conf /etc/sqoop/conf.dist || :
+      update-alternatives --remove sqoop2-conf /etc/sqoop2/conf.dist || :
     ;;
 
     failed-upgrade)

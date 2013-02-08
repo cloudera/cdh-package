@@ -13,10 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-%define lib_sqoop /usr/lib/sqoop
-%define conf_sqoop %{_sysconfdir}/sqoop/conf
+%define lib_sqoop /usr/lib/sqoop2
+%define conf_sqoop %{_sysconfdir}/sqoop2/conf
 %define conf_sqoop_dist %{conf_sqoop}.dist
-%define run_sqoop /var/run/sqoop
+%define run_sqoop /var/run/sqoop2
 
 %if  %{?suse_version:1}0
 
@@ -35,13 +35,13 @@
     /usr/lib/rpm/brp-compress ; \
     %{nil}
 
-%define doc_sqoop %{_docdir}/sqoop
+%define doc_sqoop %{_docdir}/sqoop2
 %define initd_dir %{_sysconfdir}/rc.d
 %define alternatives_cmd update-alternatives
 
 %else
 
-%define doc_sqoop %{_docdir}/sqoop-%{sqoop2_version}
+%define doc_sqoop %{_docdir}/sqoop2-%{sqoop2_version}
 %define initd_dir %{_sysconfdir}/rc.d/init.d
 %define alternatives_cmd alternatives
 
@@ -50,8 +50,8 @@
 Name: sqoop2
 Version: %{sqoop2_version}
 Release: %{sqoop2_release}
-Summary:  Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).
-URL: http://incubator.apache.org/sqoop/
+Summary:  Sqoop is a tool that provides the ability to import and export data sets between the Hadoop Distributed File System (HDFS) and relational databases
+URL: http://sqoop.apache.org
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
@@ -71,17 +71,19 @@ BuildRequires: asciidoc
 Requires: hadoop-client, bigtop-utils, bigtop-tomcat, %{name}-client = %{version}-%{release}
 
 %description
-Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).
+Sqoop is a tool that provides the ability to import and export data sets between
+the Hadoop Distributed File System (HDFS) and relational databases. In Sqoop 2, the tool
+consists of a server that is configured to interface with the Hadoop cluster, and a
+lightweight client for executing imports and exports on the server.
 
 %package client
-Summary: Client for Sqoop.
-URL: http://incubator.apache.org/sqoop/
+Summary: Client for Sqoop 2.
+URL: http://sqoop.apache.org
 Group: System/Daemons
-Conflicts: sqoop
 
 %package server
-Summary: Server for Sqoop.
-URL: http://incubator.apache.org/sqoop/
+Summary: Server for Sqoop 2.
+URL: http://sqoop.apache.org
 Group: System/Daemons
 Requires: sqoop2 = %{version}-%{release}
 
@@ -103,10 +105,10 @@ Requires: redhat-lsb
 %endif
 
 %description client
-Lightweight client for Sqoop.
+Lightweight client for Sqoop 2.
 
 %description server
-Centralized server for Sqoop.
+Centralized server for Sqoop 2.
 
 %prep
 %setup -n sqoop2-%{sqoop2_patched_version}
@@ -131,43 +133,44 @@ sh %{SOURCE2} \
           --initd-dir=%{initd_dir}
 
 # Install init script
-init_file=$RPM_BUILD_ROOT/%{initd_dir}/sqoop-server
+init_file=$RPM_BUILD_ROOT/%{initd_dir}/sqoop2-server
 bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/sqoop-server.svc rpm $init_file
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
 %pre
 getent group sqoop >/dev/null || groupadd -r sqoop
-getent passwd sqoop >/dev/null || useradd -c "Sqoop User" -s /sbin/nologin -g sqoop -r -d %{run_sqoop} sqoop 2> /dev/null || :
-%__install -d -o sqoop -g sqoop -m 0755 /var/lib/sqoop
-%__install -d -o sqoop -g sqoop -m 0755 /var/log/sqoop
-%__install -d -o sqoop -g sqoop -m 0755 /var/tmp/sqoop
+getent passwd sqoop2 >/dev/null || useradd -c "Sqoop 2 User" -s /sbin/nologin -g sqoop -r -d %{run_sqoop} sqoop2 2> /dev/null || :
+%__install -d -o sqoop2 -g sqoop -m 0755 /var/lib/sqoop2
+%__install -d -o sqoop2 -g sqoop -m 0755 /var/log/sqoop2
+%__install -d -o sqoop2 -g sqoop -m 0755 /var/tmp/sqoop2
+%__install -d -o sqoop2 -g sqoop -m 0755 /var/run/sqoop2
 
 %post
-%{alternatives_cmd} --install %{conf_sqoop} sqoop-conf %{conf_sqoop_dist} 30
+%{alternatives_cmd} --install %{conf_sqoop} sqoop2-conf %{conf_sqoop_dist} 30
 
 %post server
-chkconfig --add sqoop-server
+chkconfig --add sqoop2-server
 
 %preun
 if [ "$1" = "0" ] ; then
-  %{alternatives_cmd} --remove sqoop-conf %{conf_sqoop_dist} || :
+  %{alternatives_cmd} --remove sqoop2-conf %{conf_sqoop_dist} || :
 fi
 
 %preun server
 if [ "$1" = "0" ] ; then
-  service sqoop-server stop > /dev/null 2>&1
-  chkconfig --del sqoop-server
+  service sqoop2-server stop > /dev/null 2>&1
+  chkconfig --del sqoop2-server
 fi
 
 %postun server
 if [ $1 -ge 1 ]; then
-  service sqoop-server condrestart > /dev/null 2>&1
+  service sqoop2-server condrestart > /dev/null 2>&1
 fi
 
 %files
 %defattr(0755,root,root)
-/etc/sqoop/conf.dist
+/etc/sqoop2/conf.dist
 %{lib_sqoop}/sqoop-server-0.20
 %{lib_sqoop}/sqoop-server
 %{lib_sqoop}/webapps
@@ -177,7 +180,7 @@ fi
 
 %files client
 %attr(0755,root,root)
-/usr/bin/sqoop
+/usr/bin/sqoop2
 %{lib_sqoop}/bin/sqoop.sh
 %defattr(0644,root,root)
 %{lib_sqoop}/cloudera/cdh_version.properties
@@ -194,5 +197,5 @@ fi
 %{lib_sqoop}/lib/hamcrest-core-*.jar
 
 %files server
-%attr(0755,root,root) %{initd_dir}/sqoop-server
+%attr(0755,root,root) %{initd_dir}/sqoop2-server
 

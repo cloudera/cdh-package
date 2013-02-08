@@ -18,6 +18,8 @@ set -ex
 export MAVEN_OPTS='-Xmx512m -XX:MaxPermSize=512m'
 mvn -DskipTests=true install package -P=binary $@ $DO_MAVEN_DEPLOY
 
+# Repackaging and changing the name to "sqoop2" is necessary as long
+# as we continue to distribute a version of Sqoop 1.x as "sqoop"
 cd dist/target
 for file in `find ./ -name 'sqoop-*-bin-hadoop*' -type d`; do
     mv $file sqoop2-$FULL_VERSION
