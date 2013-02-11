@@ -268,6 +268,7 @@ in parallel on large clusters of hosts.
 Summary: The Hadoop namenode manages the block locations of HDFS files
 Group: System/Daemons
 Requires: %{name}-hdfs = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %description hdfs-namenode
 The Hadoop Distributed Filesystem (HDFS) requires one unique server, the
@@ -278,6 +279,7 @@ namenode, which manages the block locations of files on the filesystem.
 Summary: Hadoop Secondary namenode
 Group: System/Daemons
 Requires: %{name}-hdfs = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %description hdfs-secondarynamenode
 The Secondary Name Node periodically compacts the Name Node EditLog
@@ -312,6 +314,7 @@ separate machines in the cluster.
 Summary: Hadoop Data Node
 Group: System/Daemons
 Requires: %{name}-hdfs = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %description hdfs-datanode
 The Data Nodes in the Hadoop Cluster are responsible for serving up
@@ -332,6 +335,7 @@ interface in HDFS.
 Summary: Yarn Resource Manager
 Group: System/Daemons
 Requires: %{name}-yarn = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %description yarn-resourcemanager
 The resource manager manages the global assignment of compute resources to applications
@@ -340,6 +344,7 @@ The resource manager manages the global assignment of compute resources to appli
 Summary: Yarn Node Manager
 Group: System/Daemons
 Requires: %{name}-yarn = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %description yarn-nodemanager
 The NodeManager is the per-machine framework agent who is responsible for
@@ -359,6 +364,7 @@ The web proxy server sits in front of the YARN application master web UI.
 Summary: MapReduce History Server
 Group: System/Daemons
 Requires: %{name}-mapreduce = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %description mapreduce-historyserver
 The History server keeps records of the different activities being performed on a Apache Hadoop cluster
@@ -521,7 +527,7 @@ done
 %__install -d -m 0775 $RPM_BUILD_ROOT/%{log_httpfs}
 # /var/run/*
 %__install -d -m 0775 $RPM_BUILD_ROOT/%{run_yarn}
-%__install -d -m 0775 $RPM_BUILD_ROOT/%{run_hdfs}
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{run_hdfs}
 %__install -d -m 0775 $RPM_BUILD_ROOT/%{run_mapreduce}
 %__install -d -m 0775 $RPM_BUILD_ROOT/%{run_httpfs}
 
@@ -596,7 +602,7 @@ fi
 %{lib_hdfs}
 %{lib_hadoop}/libexec/hdfs-config.sh
 %{bin_hadoop}/hdfs
-%attr(0775,hdfs,hadoop) %{run_hdfs}
+%attr(0755,hdfs,hadoop) %{run_hdfs}
 %attr(0775,hdfs,hadoop) %{log_hdfs}
 %attr(0755,hdfs,hadoop) %{state_hdfs}
 %attr(1777,hdfs,hadoop) %{state_hdfs}/cache
