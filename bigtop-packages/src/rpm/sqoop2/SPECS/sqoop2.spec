@@ -170,7 +170,7 @@ fi
 
 %files
 %defattr(0755,root,root)
-/etc/sqoop2/conf.dist
+%config(noreplace) /etc/sqoop2/conf.dist
 %{lib_sqoop}/sqoop-server-0.20
 %{lib_sqoop}/sqoop-server
 %{lib_sqoop}/webapps
