@@ -22,16 +22,6 @@
     <name>dfs.replication</name>
     <value>1</value>
   </property>
-
-  <property>
-    <name>dfs.client.read.shortcircuit</name>
-    <value>true</value>
-  </property>
-  <property>
-    <name>dfs.domain.socket.path</name>
-    <value>/var/run/hadoop-hdfs/socket._PORT</value>
-  </property>
-
   <!-- Immediately exit safemode as soon as one DataNode checks in. 
        On a multi-node cluster, these configurations must be removed.  -->
   <property>
