@@ -419,6 +419,20 @@ fi
 __EOT__
 chmod +x build/meta/cdh_alternatives.sh
 
+# Sqoop looks for certain environment variables, the defaults for which are no good for parcel use case
+# Consequently we need to do some hackery to <parcel root>/bin/sqoop to set those environment variables
+# We need to do this for only sqoop1 and related scripts. sqoop2 script has a different client-server
+# model and needs to be dealt separately
+SQOOP1_SCRIPTS="sqoop sqoop-*"
+for file in $SQOOP1_SCRIPTS; do
+  sed -i '1a \
+  export HADOOP_COMMON_HOME=$LIB_DIR/hadoop\
+  export YARN_HOME=$LIB_DIR/hadoop-yarn\
+  export HADOOP_MAPRED_HOME=$LIB_DIR/hadoop-0.20-mapreduce\
+  export HADOOP_HDFS_HOME=$LIB_DIR/hadoop-hdfs\
+  export HBASE_HOME=$LIB_DIR/hbase\
+  export HIVE_HOME=$LIB_DIR/hive' build/usr/bin/$file
+done
 
 # Magically manipulate the bin scripts to point to ../lib instead of /usr/lib
 # Ideally we would want alternatives configuration for bin scripts as well
