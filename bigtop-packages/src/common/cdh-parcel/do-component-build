@@ -276,11 +276,18 @@ cat <<__EOT__
        "home"        : "/var/run/zookeeper",
        "shell"       : "/bin/false",
        "extra_groups": [ ]
+     },
+     "sqoop2": {
+       "longname"    : "Sqoop 2 User",
+       "home"        : "/var/run/sqoop2",
+       "shell"       : "/sbin/nologin",
+       "extra_groups": [ "sqoop" ]
      }
   },
 
   "groups": [
-     "hadoop"
+     "hadoop",
+     "sqoop"
   ]
 }
 __EOT__
@@ -352,9 +359,9 @@ BINARIES="beeline flume-ng hadoop hadoop-0.20 hadoop-fuse-dfs hbase hdfs hive \
           sqoop-eval sqoop-export sqoop-help sqoop-import sqoop-import-all-tables \
           sqoop-job sqoop-list-databases sqoop-list-tables sqoop-merge sqoop-metastore \
           sqoop-version whirr yarn zookeeper-client zookeeper-server-cleanup \
-          zookeeper-server zookeeper-server-cleanup zookeeper-server-initialize"
+          zookeeper-server zookeeper-server-cleanup zookeeper-server-initialize sqoop2"
 
-CONFDIRS="hbase hive mahout oozie pig sqoop zookeeper solr"
+CONFDIRS="hbase hive mahout oozie pig sqoop zookeeper solr sqoop2"
 # Some services are 'special' and use conf.empty instead of conf.dist
 EMPTY_CONFDIRS="flume-ng hadoop hadoop-httpfs"
 
@@ -476,10 +483,10 @@ this="$common_bin/$script"\
 # Replace references to /usr/lib with the relative path to within the parcel
 sed -i 's#/usr/lib/#\$common_bin/../../#' $FILE
 
-# Updating catalina.properties in oozie to not point to /usr/lib/hadoop absolute paths but relatively to hadoop location within the parcel
-OOZIE_SERVERS="oozie-server oozie-server-0.20"
-for oozie_server in $OOZIE_SERVERS; do
-  file=build/usr/lib/oozie/$oozie_server/conf/catalina.properties
+# Updating catalina.properties in oozie and sqoop2 to not point to /usr/lib/hadoop absolute paths but relatively to hadoop location within the parcel
+TOMCAT_SERVERS="oozie/oozie-server oozie/oozie-server-0.20 sqoop2/sqoop-server sqoop2/sqoop-server-0.20"
+for server in $TOMCAT_SERVERS; do
+  file=build/usr/lib/$server/conf/catalina.properties
   if [ -e $file ];
   then
     sed -i -e '/common.loader=/ s:/usr/lib/:${catalina.base}/../../:g' $file
