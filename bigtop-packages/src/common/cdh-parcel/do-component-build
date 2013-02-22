@@ -426,6 +426,7 @@ chmod +x build/meta/cdh_alternatives.sh
 SQOOP1_SCRIPTS="sqoop sqoop-*"
 for file in $SQOOP1_SCRIPTS; do
   sed -i '1a \
+  export HADOOP_HOME=$LIB_DIR/hadoop\
   export HADOOP_COMMON_HOME=$LIB_DIR/hadoop\
   export YARN_HOME=$LIB_DIR/hadoop-yarn\
   export HADOOP_MAPRED_HOME=$LIB_DIR/hadoop-0.20-mapreduce\
