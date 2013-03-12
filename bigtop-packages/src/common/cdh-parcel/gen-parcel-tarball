@@ -1,0 +1,107 @@
+#!/bin/bash
+set -x
+usage() {
+  echo "
+usage: $0 <options>
+  Required parameters:
+     --parcel-dest=DIR           destination path where to put parcels at. The directory will be created if it doesnt exist.
+     --packages-loc=DIR          path to source packages to be used for building parcels
+  "
+  exit 1
+}
+
+
+OPTS=$(getopt \
+  -n $0 \
+  -o '' \
+  -l 'parcel-dest:' \
+  -l 'packages-loc:' -- "$@")
+
+if [ $? != 0 ] ; then
+    usage
+fi
+
+eval set -- "$OPTS"
+while true ; do
+    case "$1" in
+        --parcel-dest)
+        PARCEL_DEST_TMP=$2 ; shift 2
+        ;;
+        --packages-loc)
+        PACKAGES_LOC=$2 ; shift 2
+        ;;
+        --)
+        shift ; break
+        ;;
+        *)
+        echo "Unknown option: $1"
+        usage
+        exit 1
+        ;;
+    esac
+done
+
+PARCEL_DEST_TMP=${PARCEL_DEST_TMP:-.}
+PACKAGES_LOC=${PACKAGES_LOC:-.}
+
+# Turn gorgeous, sexy packages into ugly, repulsive tarballs
+mkdir -p $PARCEL_DEST_TMP/ || :
+
+NOW="`date +%s`0000"
+echo "{" > $PARCEL_DEST_TMP/manifest.json
+echo "  \"lastUpdated\": $NOW," >> $PARCEL_DEST_TMP/manifest.json
+echo "  \"parcels\": [" >> $PARCEL_DEST_TMP/manifest.json
+FIRST_PARCEL=1
+
+# first do this abomination to RPMs
+for pkg in `find $PACKAGES_LOC -name \*.rpm | grep -v src.rpm` ; do
+  rm -rf root
+  mkdir root
+  rpm2cpio $pkg | (cd root ; cpio -i --make-directories) 
+  chmod -R a+r root
+  # PARCEL_TAR=`basename ${pkg%%rpm}tar.gz`
+  # PARCEL_TAR=`echo $pkg | sed -e 's#^.*cdh-parcel-[^-]*-#CDH-#' -e 's#.noarch.*$#.parcel#'`
+  PARCEL_TAR=`echo $pkg | sed -e 's#^.*cdh-parcel-[^-]*-#CDH-#' -e 's#\.\([^\.]*\).noarch.*$#-\1.parcel#'`
+
+  cd root/opt/cloudera/parcels; 
+  if [[ $FIRST_PARCEL -eq 1 ]]; then
+    FIRST_PARCEL=0
+  else
+    echo "," >> $PARCEL_DEST_TMP/manifest.json
+  fi
+  echo    "    {" >> $PARCEL_DEST_TMP/manifest.json
+  echo    "      \"parcelName\": \"$PARCEL_TAR\"," >> $PARCEL_DEST_TMP/manifest.json
+  sed -n -e '/\"components\"/,/]/ p' */meta/parcel.json | sed -e 's/.*/    &/g' >> $PARCEL_DEST_TMP/manifest.json
+  tar -czf $PARCEL_DEST_TMP/$PARCEL_TAR *;
+  echo    "      \"hash\": \""`sha1sum "$PARCEL_DEST_TMP/$PARCEL_TAR" | cut -d ' ' -f 1`"\"" >> $PARCEL_DEST_TMP/manifest.json
+  echo -n "    }" >> $PARCEL_DEST_TMP/manifest.json
+  cd -;
+done
+
+# now to DEBs
+for pkg in `find $PACKAGES_LOC -name \*.deb` ; do
+  rm -rf root
+  mkdir root
+  dpkg -x $pkg ./root
+  chmod -R a+r root
+  # PARCEL_TAR=`basename ${pkg%%deb}tar.gz`
+  # PARCEL_TAR=`echo $pkg | sed -e 's#^.*cdh-parcel-[^_]*_#CDH-#' -e 's#~\([^-]*\)-.*$#.\1.parcel#'`
+  PARCEL_TAR=`echo $pkg | sed -e 's#^.*cdh-parcel-[^_]*_#CDH-#' -e 's#~\([^-]*\)-.*$#-\1.parcel#'`
+
+  cd root/opt/cloudera/parcels;
+  if [[ $FIRST_PARCEL -eq 1 ]]; then
+    FIRST_PARCEL=0
+  else
+    echo "," >> $PARCEL_DEST_TMP/manifest.json
+  fi
+  echo    "    {" >> $PARCEL_DEST_TMP/manifest.json
+  echo    "      \"parcelName\": \"$PARCEL_TAR\"," >> $PARCEL_DEST_TMP/manifest.json
+  sed -n -e '/\"components\"/,/]/ p' */meta/parcel.json | sed -e 's/.*/    &/g' >> $PARCEL_DEST_TMP/manifest.json
+  tar -czf $PARCEL_DEST_TMP/$PARCEL_TAR *;  
+  echo    "      \"hash\": \""`sha1sum "$PARCEL_DEST_TMP/$PARCEL_TAR" | cut -d ' ' -f 1`"\"" >> $PARCEL_DEST_TMP/manifest.json
+  echo -n "    }" >> $PARCEL_DEST_TMP/manifest.json
+  cd -;
+done
+
+echo -e "\n  ]" >> $PARCEL_DEST_TMP/manifest.json
+echo "}" >> $PARCEL_DEST_TMP/manifest.json
