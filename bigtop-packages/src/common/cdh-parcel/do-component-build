@@ -282,6 +282,12 @@ cat <<__EOT__
        "home"        : "/var/run/sqoop2",
        "shell"       : "/sbin/nologin",
        "extra_groups": [ "sqoop" ]
+     },
+     "hcatalog": {
+       "longname"    : "HCatalog User",
+       "home"        : "/var/run/hcatalog",
+       "shell"       : "/sbin/nologin",
+       "extra_groups": [ ]
      }
   },
 
@@ -359,9 +365,9 @@ BINARIES="beeline flume-ng hadoop hadoop-0.20 hadoop-fuse-dfs hbase hdfs hive \
           sqoop-eval sqoop-export sqoop-help sqoop-import sqoop-import-all-tables \
           sqoop-job sqoop-list-databases sqoop-list-tables sqoop-merge sqoop-metastore \
           sqoop-version whirr yarn zookeeper-client zookeeper-server-cleanup \
-          zookeeper-server zookeeper-server-cleanup zookeeper-server-initialize sqoop2"
+          zookeeper-server zookeeper-server-cleanup zookeeper-server-initialize sqoop2 hcat"
 
-CONFDIRS="hbase hive mahout oozie pig sqoop zookeeper solr sqoop2"
+CONFDIRS="hbase hive mahout oozie pig sqoop zookeeper solr sqoop2 hcatalog webhcat"
 # Some services are 'special' and use conf.empty instead of conf.dist
 EMPTY_CONFDIRS="flume-ng hadoop hadoop-httpfs"
 
@@ -438,6 +444,27 @@ for file in $SQOOP1_SCRIPTS; do
   export HADOOP_MAPRED_HOME=$LIB_DIR/hadoop-0.20-mapreduce\
   export HADOOP_HDFS_HOME=$LIB_DIR/hadoop-hdfs\
   export HBASE_HOME=$LIB_DIR/hbase\
+  export HIVE_HOME=$LIB_DIR/hive' build/usr/bin/$file
+done
+
+# HCatalog also looks for certain environment variables.
+HCATALOG_SCRIPTS="hcat"
+for file in $HCATALOG_SCRIPTS; do
+  sed -i -e 's#. /etc/default/hadoop##' build/usr/bin/$file
+  sed -i '1a \
+  export HADOOP_HOME=$LIB_DIR/hadoop \
+  export HCAT_HOME=$LIB_DIR/hcatalog \
+  export HIVE_HOME=$LIB_DIR/hive' build/usr/bin/$file
+done
+
+# And Pig - if you want pig to work with hcatalog
+# I was tempted to just put hcat and pig in the same bucket
+# but I don't want to set HADOOP_HOME when it can work it out
+# itself. Bad habits, etc.
+PIG_SCRIPTS="pig"
+for file in $PIG_SCRIPTS; do
+  sed -i '1a \
+  export HCAT_HOME=$LIB_DIR/hcatalog \
   export HIVE_HOME=$LIB_DIR/hive' build/usr/bin/$file
 done
 
