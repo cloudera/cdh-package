@@ -29,6 +29,14 @@
 # Support ephemeral /var/run. We need to create this directory before
 # hadoop-config.sh is sourced below since it sets HADOOP_PID_DIR if
 # this directory exists.
+
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  . /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
 install -d -m 0775 -o root -g hadoop /var/run/hadoop-0.20-mapreduce
 
 # Include hadoop defaults if available

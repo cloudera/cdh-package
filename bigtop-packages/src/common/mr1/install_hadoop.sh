@@ -152,6 +152,13 @@ for bin_wrapper in hadoop-$APACHE_BRANCH ; do
   cat > $wrapper <<EOF
 #!/bin/sh
 
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  . /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
 export HADOOP_HOME=$INSTALLED_LIB_DIR
 export HADOOP_MAPRED_HOME=$INSTALLED_LIB_DIR
 export HADOOP_LIBEXEC_DIR=$SYSTEM_LIB_DIR/hadoop/libexec
