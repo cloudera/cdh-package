@@ -170,7 +170,7 @@ mkdir -p build/meta
   "minPrevVersion":     "$CDH_MIN_PREV_VERSION",
   "maxPrevVersion":     "$CDH_MAX_PREV_VERSION",
 
-  "setActiveSymlink":   false,
+  "setActiveSymlink":   true,
 
   "scripts": {
     "defines": "cdh_env.sh",
