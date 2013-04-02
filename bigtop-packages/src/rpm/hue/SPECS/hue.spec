@@ -249,6 +249,8 @@ if [ $1 -eq 0 ]; then
   # NOTE  Despite dependency, hue-common could get removed before the apps are.
   #       We should remove app.reg because apps won't have a chance to
   #       unregister themselves.
+  # FIXME: workaround for CDH-11067
+  [ -e /usr/share/hue/desktop/desktop.db ] && ([ ! -e /var/lib/hue-db-backup ] && (install -d -o hue -g hue /var/lib/hue-db-backup || mkdir -p /var/lib/hue-db-backup) || true) && (umask 077; cp /usr/share/hue/desktop/desktop.db /var/lib/hue-db-backup/desktop.db.$(date +'%%Y%%m%%d.%%H%%M%%S')) || true
   rm -Rf %{hue_dir}/desktop %{hue_dir}/build %{hue_dir}/pids %{hue_dir}/app.reg
 fi
 
