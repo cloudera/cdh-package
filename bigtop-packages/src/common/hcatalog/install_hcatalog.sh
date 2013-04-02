@@ -141,3 +141,7 @@ gzip -c hcatalog.1 > ${PREFIX}/$MAN_DIR/hcatalog.1.gz
 # Provide the runtime dirs
 install -d -m 0755 $PREFIX/var/run/hcatalog
 install -d -m 0755 $PREFIX/var/log/hcatalog
+
+# Cloudera specific
+install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/

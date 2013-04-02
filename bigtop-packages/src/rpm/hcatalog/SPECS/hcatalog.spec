@@ -208,6 +208,7 @@ fi
 %files
 %defattr(-,root,root,755)
 %config(noreplace) %attr(755,root,root) %{conf_hcatalog}.dist
+%{usr_lib_hcatalog}/cloudera
 %{usr_lib_hcatalog}/bin
 %{usr_lib_hcatalog}/etc/hcatalog
 %{usr_lib_hcatalog}/libexec
