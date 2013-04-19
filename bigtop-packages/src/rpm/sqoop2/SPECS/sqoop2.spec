@@ -176,7 +176,8 @@ fi
 %{lib_sqoop}/webapps
 %{lib_sqoop}/bin/setenv.sh
 %{lib_sqoop}/bin/sqoop-env.sh
-
+%defattr(0755,sqoop2,sqoop)
+/var/lib/sqoop2
 
 %files client
 %attr(0755,root,root)

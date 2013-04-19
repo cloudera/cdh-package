@@ -126,6 +126,7 @@ install -d -m 0755 ${PREFIX}/${LIB_DIR}
 install -d -m 0755 ${PREFIX}/${LIB_DIR}/lib
 install -d -m 0755 ${PREFIX}/${BIN_DIR}
 install -d -m 0755 ${PREFIX}/${CONF_DIR}
+install -d -m 0755 ${PREFIX}/var/lib/sqoop2
 
 install -m 0644 ${DIST_DIR}/client/lib/*.jar ${PREFIX}/${LIB_DIR}/lib/
 mv ${PREFIX}/${LIB_DIR}/lib/sqoop*.jar ${PREFIX}/${LIB_DIR}/
