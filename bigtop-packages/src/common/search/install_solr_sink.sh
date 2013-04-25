@@ -112,7 +112,7 @@ cp ${BUILD_DIR}/search-flume/target/lib/*.jar ${PREFIX}/${FLUME_DIR}/lib
 cp ${BUILD_DIR}/search-contrib/target/*.jar ${PREFIX}/${FLUME_DIR}/lib
 (cd ${PREFIX}/${FLUME_DIR}/lib ; rm -f *-tests.jar *-sources.jar `ls flume-ng-*jar | grep -v flume-ng-solr`)
 # FIXME: this *really* needs to get fixed
-for f in avro commons-cli commons-io commons-lang guava jsr305 paranamer snappy-java zookeeper ; do
+for f in avro commons-cli commons-io commons-lang guava jsr305 paranamer snappy-java zookeeper xz- ; do
   rm -f ${PREFIX}/${FLUME_DIR}/lib/${f}*
 done
 
