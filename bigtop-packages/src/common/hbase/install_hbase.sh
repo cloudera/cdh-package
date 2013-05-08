@@ -106,6 +106,7 @@ THRIFT_DIR=${THRIFT_DIR:-${LIB_DIR}/include/thrift}
 
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
+install -d -m 0755 $PREFIX/$LIB_DIR/native
 install -d -m 0755 $PREFIX/$DOC_DIR
 install -d -m 0755 $PREFIX/$BIN_DIR
 install -d -m 0755 $PREFIX/$ETC_DIR
@@ -113,6 +114,7 @@ install -d -m 0755 $PREFIX/$MAN_DIR
 install -d -m 0755 $PREFIX/$THRIFT_DIR
 
 cp -ra $BUILD_DIR/lib/* ${PREFIX}/${LIB_DIR}/lib/
+cp $BUILD_DIR/native/* ${PREFIX}/${LIB_DIR}/native/
 cp $BUILD_DIR/hbase*.jar $PREFIX/$LIB_DIR
 cp -a $BUILD_DIR/docs/* $PREFIX/$DOC_DIR
 cp $BUILD_DIR/*.txt $PREFIX/$DOC_DIR/
@@ -154,3 +156,8 @@ EOF
 chmod 755 $wrapper
 
 install -d -m 0755 $PREFIX/usr/bin
+
+
+# Cloudera specific
+install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/

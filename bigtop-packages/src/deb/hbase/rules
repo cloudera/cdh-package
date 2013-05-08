@@ -31,13 +31,13 @@ hbase_pkg_name=hbase
 	dh $@
 
 override_dh_auto_build:
-	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
+	env FULL_VERSION=${HBASE_PATCHED_VERSION} bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
 
 	
 override_dh_auto_install:
 	cp debian/hbase.default debian/${hbase_pkg_name}/etc/default/${hbase_pkg_name}
 	bash -x debian/install_hbase.sh \
-		--build-dir=build \
+		--build-dir=build/${hbase_pkg_name}-${HBASE_PATCHED_VERSION} \
 		--conf-dir=/etc/hbase/conf.dist \
 		--doc-dir=usr/share/doc/${hbase_pkg_name}-doc \
 		--prefix=debian/tmp

@@ -27,6 +27,8 @@
 %define hadoop_home /usr/lib/hadoop
 %define zookeeper_home /usr/lib/zookeeper
 
+%define debug_package %{nil}
+
 %if  %{?suse_version:1}0
 
 # Only tested on openSUSE 11.4. le'ts update it for previous release when confirmed
@@ -83,7 +85,7 @@ URL: http://hbase.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
-Source0: %{name}-%{hbase_base_version}.tar.gz
+Source0: %{name}-%{hbase_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_hbase.sh
 Source3: hbase.svc
@@ -91,9 +93,9 @@ Source4: init.d.tmpl
 Source5: hbase.default
 Source6: hbase.nofiles.conf
 Source7: regionserver-init.d.tpl
-BuildArch: noarch
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
 Requires: hadoop-hdfs, zookeeper >= 3.3.1, bigtop-utils >= 0.6
+Conflicts: hadoop-hbase
 
 %if  0%{?mgaversion}
 Requires: bsh-utils
@@ -198,7 +200,6 @@ ThriftServer - this class starts up a Thrift server which implements the Hbase A
 %package doc
 Summary: Hbase Documentation
 Group: Documentation
-BuildArch: noarch
 Obsoletes: %{name}-docs
 
 %description doc
@@ -232,15 +233,15 @@ Requires: redhat-lsb
 The Apache HBase REST gateway
 
 %prep
-%setup -n %{name}-%{hbase_base_version}
+%setup -n %{name}-%{hbase_patched_version} 
 
 %build
-env HBASE_VERSION=%{version} bash %{SOURCE1}
+env FULL_VERSION=%{hbase_patched_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
-	--build-dir=build \
+	--build-dir=build/hbase-%{hbase_patched_version} \
         --doc-dir=%{doc_hbase} \
         --conf-dir=%{etc_hbase_conf_dist} \
 	--prefix=$RPM_BUILD_ROOT

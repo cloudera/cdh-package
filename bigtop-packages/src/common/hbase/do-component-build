@@ -14,15 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+build_args="clean -Pnative -DskipTests -Dhadoop.profile=23 source:jar install site javadoc:javadoc assembly:assembly $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository"
+security=true
+if $security ; then
+    build_args="$build_args -Psecurity"
+fi
 set -ex
 
-. `dirname $0`/bigtop.bom
+mvn $build_args "$@"
 
-mvn -DskipTests -Dhadoop.profile=23           \
-    -Dslf4j.version=1.6.1                     \
-    -Dhadoop.version=$HADOOP_VERSION          \
-    -Dzookeeper.version=$ZOOKEEPER_VERSION    \
-    clean install site assembly:assembly "$@"
-rm -rf build
-mkdir build
-tar -C build --strip-components=1 -xzf target/hbase*.tar.gz
+mkdir -p build
+for x in target/*.tar.gz ; do
+  tar -C build -xzf $x
+done
+if $security ; then
+    mv build/hbase-${FULL_VERSION}-security build/hbase-${FULL_VERSION}
+fi
+cp -r target/site/apidocs build/hbase-${FULL_VERSION}/docs
+(cd build && tar --exclude='*/native/lib*' --exclude='*/lib/native/*' -czf hbase-${FULL_VERSION}.tar.gz hbase-${FULL_VERSION})
