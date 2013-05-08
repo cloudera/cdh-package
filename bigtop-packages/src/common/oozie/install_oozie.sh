@@ -168,15 +168,17 @@ if [ "${INITD_DIR}" != "" ]; then
   cp -R ${EXTRA_DIR}/oozie.init ${INITD_DIR}/oozie
   chmod 755 ${INITD_DIR}/oozie
 fi
-cp -R ${BUILD_DIR}/oozie-sharelib*.tar.gz ${SERVER_LIB_DIR}/oozie-sharelib.tar.gz
+mv ${BUILD_DIR}/../oozie-sharelib-*-yarn.tar.gz ${SERVER_LIB_DIR}/oozie-sharelib-yarn.tar.gz
+mv ${BUILD_DIR}/../oozie-sharelib-*.tar.gz ${SERVER_LIB_DIR}/oozie-sharelib-mr1.tar.gz
+ln -s oozie-sharelib-mr1.tar.gz ${SERVER_LIB_DIR}/oozie-sharelib.tar.gz
 cp -R ${BUILD_DIR}/oozie-server/webapps ${SERVER_LIB_DIR}/webapps
 ln -s -f /etc/oozie/conf/oozie-env.sh ${SERVER_LIB_DIR}/bin
 
 # Unpack oozie.war some place reasonable
-WEBAPP_DIR=${SERVER_LIB_DIR}/webapps/oozie
-mkdir ${WEBAPP_DIR}
-(cd ${WEBAPP_DIR} ; jar xf ${BUILD_DIR}/oozie.war)
-mv -f ${WEBAPP_DIR}/WEB-INF/lib ${SERVER_LIB_DIR}/libserver
+OOZIE_WEBAPP=${SERVER_LIB_DIR}/webapps/oozie
+mkdir ${OOZIE_WEBAPP}
+unzip -d ${OOZIE_WEBAPP} ${BUILD_DIR}/oozie.war
+mv -f ${OOZIE_WEBAPP}/WEB-INF/lib ${SERVER_LIB_DIR}/libserver
 touch ${SERVER_LIB_DIR}/webapps/oozie.war
 
 # Create all the jars needed for tools execution
@@ -189,7 +191,7 @@ for i in `cd ${BUILD_DIR}/libtools ; ls *` ; do
   fi
 done
 
-# Create an exploded-war oozie deployment in /usr/lib/oozie
+# Create an exploded-war oozie deployment in /usr/lib/oozie/oozie-server for MR2
 install -d -m 0755 ${SERVER_LIB_DIR}/oozie-server
 cp -R ${BUILD_DIR}/oozie-server/conf ${SERVER_LIB_DIR}/oozie-server/conf
 cp ${EXTRA_DIR}/context.xml ${SERVER_LIB_DIR}/oozie-server/conf/
@@ -199,6 +201,10 @@ ln -s ../webapps ${SERVER_LIB_DIR}/oozie-server/webapps
 # Provide a convenience symlink to be more consistent with tarball deployment
 ln -s ${DATA_DIR#${SERVER_PREFIX}} ${SERVER_LIB_DIR}/libext
 
+# Create an exploded-war oozie deployment in /usr/lib/oozie/oozie-server-0.20 for MR1
+cp -r ${SERVER_LIB_DIR}/oozie-server ${SERVER_LIB_DIR}/oozie-server-0.20
+cp -f ${EXTRA_DIR}/catalina.properties.mr1 ${SERVER_LIB_DIR}/oozie-server-0.20/conf/catalina.properties
+
 # Create an exploded-war oozie deployment in /usr/lib/oozie/oozie-server-ssl for SSL
 cp -r ${SERVER_LIB_DIR}/oozie-server ${SERVER_LIB_DIR}/oozie-server-ssl
 cp -r ${SERVER_LIB_DIR}/webapps ${SERVER_LIB_DIR}/webapps-ssl
@@ -207,3 +213,12 @@ ln -s ../webapps-ssl ${SERVER_LIB_DIR}/oozie-server-ssl/webapps
 cp ${BUILD_DIR}/oozie-server/conf/ssl/ssl-server.xml ${SERVER_LIB_DIR}/oozie-server-ssl/conf/server.xml
 cp ${BUILD_DIR}/oozie-server/conf/ssl/ssl-web.xml ${SERVER_LIB_DIR}/webapps-ssl/oozie/WEB-INF/web.xml
 
+# Create an exploded-war oozie deployment in /usr/lib/oozie/oozie-server-0.20-ssl for MR1 for SSL
+cp -r ${SERVER_LIB_DIR}/oozie-server-0.20 ${SERVER_LIB_DIR}/oozie-server-0.20-ssl
+rm -r ${SERVER_LIB_DIR}/oozie-server-0.20-ssl/webapps
+ln -s ../webapps-ssl ${SERVER_LIB_DIR}/oozie-server-0.20-ssl/webapps
+cp ${SERVER_LIB_DIR}/oozie-server-0.20/conf/ssl/ssl-server.xml ${SERVER_LIB_DIR}/oozie-server-0.20-ssl/conf/server.xml
+
+# Cloudera specific
+install -d -m 0755 ${CLIENT_LIB_DIR}/cloudera
+cp ${BUILD_DIR}/cloudera/cdh_version.properties ${CLIENT_LIB_DIR}/cloudera/

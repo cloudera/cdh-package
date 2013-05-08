@@ -53,7 +53,7 @@ URL: http://incubator.apache.org/oozie/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
-Source0: %{name}-%{oozie_base_version}.tar.gz
+Source0: %{name}-%{oozie_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_oozie.sh
 Source3: oozie.1
@@ -62,6 +62,7 @@ Source5: oozie.init
 Source6: catalina.properties
 Source7: context.xml
 Source8: hive.xml
+Source9: catalina.properties.mr1
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
@@ -129,15 +130,15 @@ Requires: bigtop-utils >= 0.6
 
 
 %prep
-%setup -n oozie-%{oozie_base_version}
+%setup -n oozie-%{oozie_patched_version}
 
 %build
     mkdir -p distro/downloads
-    env DO_MAVEN_DEPLOY="" FULL_VERSION=%{oozie_base_version} bash -x %{SOURCE1}
+    cd src ; env DO_MAVEN_DEPLOY="" FULL_VERSION=%{oozie_patched_version} bash -x %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-    sh %{SOURCE2} --extra-dir=$RPM_SOURCE_DIR --build-dir=$PWD --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{doc_oozie} --initd-dir=$RPM_BUILD_ROOT%{initd_dir} --conf-dir=$RPM_BUILD_ROOT%{conf_oozie_dist}
+    sh %{SOURCE2} --extra-dir=$RPM_SOURCE_DIR --build-dir=src --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{doc_oozie} --initd-dir=$RPM_BUILD_ROOT%{initd_dir} --conf-dir=$RPM_BUILD_ROOT%{conf_oozie_dist}
 
 %__ln_s -f %{data_oozie}/ext-2.2 $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/ext-2.2
 %__rm  -rf              $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/docs
@@ -189,8 +190,12 @@ fi
 %{lib_oozie}/libtools
 %{lib_oozie}/libserver
 %{lib_oozie}/oozie-sharelib.tar.gz
+%{lib_oozie}/oozie-sharelib-yarn.tar.gz
+%{lib_oozie}/oozie-sharelib-mr1.tar.gz
 %{lib_oozie}/oozie-server
+%{lib_oozie}/oozie-server-0.20
 %{lib_oozie}/oozie-server-ssl
+%{lib_oozie}/oozie-server-0.20-ssl
 %{lib_oozie}/libext
 %{initd_dir}/oozie
 %defattr(-, oozie, oozie)
@@ -205,5 +210,6 @@ fi
 %dir %{lib_oozie}/bin
 %{lib_oozie}/bin/oozie
 %{lib_oozie}/lib
+%{lib_oozie}/cloudera/
 %doc %{doc_oozie}
 %{man_dir}/man1/oozie.1.*
