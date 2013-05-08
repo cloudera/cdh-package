@@ -111,12 +111,15 @@ VAR_DIR=$PREFIX/var
 install -d -m 0755 $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist/*.*ar $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist/solrj-lib $PREFIX/$LIB_DIR/lib
+cp -ra ${BUILD_DIR}/example/hdfs/collection1/conf $PREFIX/$LIB_DIR/coreconfig-template
 
 install -d -m 0755 $PREFIX/$LIB_DIR/contrib
 cp -ra ${BUILD_DIR}/contrib/velocity $PREFIX/$LIB_DIR/contrib
 
 install -d -m 0755 $PREFIX/$LIB_DIR/server/webapps/solr
 (cd $PREFIX/$LIB_DIR/server/webapps/solr ; jar xf ../../../*.war)
+ln -s /var/lib/solr $PREFIX/$LIB_DIR/server/work
+cp ${BUILD_DIR}/example/lib/ext/*.jar $PREFIX/$LIB_DIR/server/webapps/solr/WEB-INF/lib/
 
 install -d -m 0755 $PREFIX/$LIB_DIR/server/webapps/ROOT
 cat > $PREFIX/$LIB_DIR/server/webapps/ROOT/index.html <<__EOT__
@@ -133,6 +136,8 @@ cp -ra ${BUILD_DIR}/dist/solrj-lib $PREFIX/$LIB_DIR/lib
 
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 cp -a ${BUILD_DIR}/example/cloud-scripts/*.sh $PREFIX/$LIB_DIR/bin
+sed -i -e 's#/../solr-webapp/webapp/WEB-INF/lib/#/../server/webapps/solr/WEB-INF/lib/#' $PREFIX/$LIB_DIR/bin/zkcli.sh
+chmod 755 $PREFIX/$LIB_DIR/bin/*
 
 install -d -m 0755 $PREFIX/$DOC_DIR
 cp -a  ${BUILD_DIR}/*.txt $PREFIX/$DOC_DIR
@@ -144,11 +149,11 @@ install -d -m 0755 $PREFIX/$DEFAULT_DIR
 cp $DISTRO_DIR/solr.default $PREFIX/$DEFAULT_DIR/solr
 
 install -d -m 0755 $PREFIX/${CONF_DIR}.dist
-cp -ra ${BUILD_DIR}/example/solr/* $PREFIX/${CONF_DIR}.dist
+cp ${BUILD_DIR}/example/resources/log4j.properties $PREFIX/${CONF_DIR}.dist
 
 # Copy in the wrapper
 cat > $PREFIX/$LIB_DIR/bin/solrd <<EOF
-#!/bin/sh
+#!/bin/bash
 
 [ -f /etc/default/solr ] && . /etc/default/solr
 
@@ -158,20 +163,53 @@ cat > $PREFIX/$LIB_DIR/bin/solrd <<EOF
 export CATALINA_HOME=$LIB_DIR/../bigtop-tomcat
 export CATALINA_BASE=$LIB_DIR/server
 
-export CATALINA_TMPDIR=\${SOLR_DATA:-/var/lib/solr/}temp
+export CATALINA_TMPDIR=\${SOLR_DATA:-/var/lib/solr/}
 export CATALINA_PID=\${SOLR_RUN:-/var/run/solr/}solr.pid
 export CATALINA_OUT=\${SOLR_LOG:-/var/log/solr}/solr.out
 
-# FIXME: perhaps we have to have a better way of detecting SolCloud (SOLR_ZK_ROOT)
-if [ -n "\$SOLR_ZK_ENSEMBLE" ] ; then
+die() {
+  echo "\$@" >&2
+  exit 1
+}
+
+# SolrCloud and Non-SolrCloud modes should not step on each other toes,
+# which means going from one to the other would require full reconfig
+if [ -e \${SOLR_DATA:-/var/lib/solr/}/solr.cloud.ini ] ; then
+  [ -n "\$SOLR_ZK_ENSEMBLE" ] || die "Error: Solr is configured for for SolrCloud mode but SOLR_ZK_ENSEMBLE is not set"
   CATALINA_OPTS="\${CATALINA_OPTS} -DzkHost=\${SOLR_ZK_ENSEMBLE}"
+else
+  [ -z "\$SOLR_ZK_ENSEMBLE" ] || die "Error: Solr is configured for for Non SolrCloud mode but SOLR_ZK_ENSEMBLE is set"
 fi
 
-export CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.port=\${SOLR_PORT:-8080}
+if [ -n "\$SOLR_HDFS_HOME" ] ; then
+  CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.hdfs.home=\${SOLR_HDFS_HOME}"
+fi
+
+if [ -n "\$SOLR_HDFS_CONFIG" ] ; then
+  CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.hdfs.confdir=\${SOLR_HDFS_CONFIG}"
+fi
+
+if [ "\$SOLR_KERBEROS_ENABLED" == "true" ] ; then
+  CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.hdfs.security.kerberos.enabled=\${SOLR_KERBEROS_ENABLED}"
+fi
+
+if [ -n "\$SOLR_KERBEROS_KEYTAB" ] ; then
+  CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.hdfs.security.kerberos.keytabfile=\${SOLR_KERBEROS_KEYTAB}"
+fi
+
+if [ -n "\$SOLR_KERBEROS_PRINCIPAL" ] ; then
+  CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.hdfs.security.kerberos.principal=\${SOLR_KERBEROS_PRINCIPAL}"
+fi
+
+# FIXME: we need to set this because of the jetty-centric default solr.xml
+CATALINA_OPTS="\${CATALINA_OPTS} -Dhost=\$HOSTNAME -Djetty.port=\${SOLR_PORT:-8080}"
+
+export CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.host=\$HOSTNAME
+                                        -Dsolr.port=\${SOLR_PORT:-8080}
+                                        -Dlog4j.configuration=file://\${SOLR_LOG4J_CONFIG:-/etc/solr/conf/log4j.properties}
                                         -Dsolr.log=\${SOLR_LOG:-/var/log/solr}
                                         -Dsolr.admin.port=\${SOLR_ADMIN_PORT:-8081}
-                                        -Dsolr.data.dir=\${SOLR_DATA_DIR:-/var/lib/solr/index}
-                                        -Dsolr.solr.home=\${SOLR_HOME:-/etc/solr/conf}" 
+                                        -Dsolr.solr.home=\${SOLR_HOME:-/var/lib/solr}"
 
 # FIXME: for some reason catalina doesn't use CATALINA_OPTS for stop action
 #        and thus doesn't know the admin port
@@ -180,6 +218,9 @@ export JAVA_OPTS="\$CATALINA_OPTS"
 exec \${CATALINA_HOME}/bin/catalina.sh "\$@"
 EOF
 chmod 755 $PREFIX/$LIB_DIR/bin/solrd
+
+# installing the only script that goes into /usr/bin
+install -D -m 0755 ${BUILD_DIR}/example/cloud-scripts/solrctl.sh $PREFIX/usr/bin/solrctl
 
 # precreating /var layout
 install -d -m 0755 $VAR_DIR/log/solr

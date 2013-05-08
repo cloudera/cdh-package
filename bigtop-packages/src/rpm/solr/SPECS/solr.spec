@@ -128,6 +128,14 @@ getent passwd solr > /dev/null || useradd -c "Solr" -s /sbin/nologin -g solr -r 
 
 %post
 %{alternatives_cmd} --install %{config_solr} %{solr_name}-conf %{config_solr}.dist 30
+[ -e /var/lib/solr/solr.xml ] || /usr/bin/solrctl nodeconfig >/dev/null 2>&1 || :
+touch /var/lib/solr/solr.cloud.ini || :
+chown solr:solr /var/lib/solr/* || :
+cat <<__EOT__
+The following warning applies to any collections configured to
+use Non-SolrCloud mode. Any such collection configuration will
+need to be upgraded, see Upgrading Cloudera Search for details.
+__EOT__
 
 %preun
 if [ "$1" = 0 ]; then
@@ -156,7 +164,7 @@ fi
 %config(noreplace) %{config_solr}.dist
 %config(noreplace) /etc/default/solr 
 %{lib_solr}
-# %{bin_solr}/solr
+%{bin_solr}/solrctl
 %defattr(-,solr,solr,755)
 /var/lib/solr
 /var/run/solr

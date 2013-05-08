@@ -20,7 +20,15 @@ case "$1" in
     configure)
         # Install config alternatives
         update-alternatives  --install /etc/solr/conf solr-conf /etc/solr/conf.dist 30
-	chown solr:solr /var/log/solr /var/lib/solr /var/run/solr
+        [ -e /var/lib/solr/solr.xml ] || /usr/bin/solrctl nodeconfig >/dev/null 2>&1 || :
+        touch /var/lib/solr/solr.cloud.ini || :
+	chown -R solr:solr /var/log/solr /var/lib/solr /var/run/solr
+        cat <<-__EOT__
+	The following warning applies to any collections configured to
+	use Non-SolrCloud mode. Any such collection configuration will
+	need to be upgraded, see Upgrading Cloudera Search for details.
+	__EOT__
+
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
