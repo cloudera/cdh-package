@@ -232,9 +232,9 @@ Requires: %{name} = %{version}-%{release}, bigtop-jsvc
 Requires: libhadoop.so.1.0.0%{requires_lib_tag}
 
 %description hdfs
-Hadoop Distributed File System (HDFS) is the primary storage system used by 
-Hadoop applications. HDFS creates multiple replicas of data blocks and distributes 
-them on compute nodes throughout a cluster to enable reliable, extremely rapid 
+Hadoop Distributed File System (HDFS) is the primary storage system used by
+Hadoop applications. HDFS creates multiple replicas of data blocks and
+distributes them on cluster hosts to enable reliable and extremely rapid
 computations.
 
 %package yarn
@@ -246,19 +246,18 @@ Requires: libhadoop.so.1.0.0%{requires_lib_tag}
 
 %description yarn
 YARN (Hadoop NextGen MapReduce) is a general purpose data-computation framework.
-The fundamental idea of YARN is to split up the two major functionalities of the 
-JobTracker, resource management and job scheduling/monitoring, into separate daemons:
+YARN splits up the functionalities of JobTracker, resource management, 
+job scheduling, and job monitoring into separate daemons called 
 ResourceManager and NodeManager.
 
-The ResourceManager is the ultimate authority that arbitrates resources among all 
-the applications in the system. The NodeManager is a per-node slave managing allocation
-of computational resources on a single node. Both work in support of per-application 
-ApplicationMaster (AM).
+ResourceManager is the ultimate authority that arbitrates resources 
+among all applications in the system. NodeManager is a per-host slave
+that manages allocation of computational resources on a single host. 
+Both daemons work in support of ApplicationMaster (AM).
 
-An ApplicationMaster is, in effect, a framework specific library and is tasked with 
-negotiating resources from the ResourceManager and working with the NodeManager(s) to 
-execute and monitor the tasks. 
-
+ApplicationMaster is a framework-specific library that negotiates resources 
+from ResourceManager and works with NodeManager(s) to execute and monitor 
+the tasks.
 
 %package mapreduce
 Summary: The Hadoop MapReduce (MRv2)
@@ -266,8 +265,9 @@ Group: System/Daemons
 Requires: %{name}-yarn = %{version}-%{release}
 
 %description mapreduce
-Hadoop MapReduce is a programming model and software framework for writing applications 
-that rapidly process vast amounts of data in parallel on large clusters of compute nodes.
+Hadoop MapReduce is a programming model and software framework for
+writing applications that rapidly process vast amounts of data
+in parallel on large clusters of hosts.
 
 %package 0.20-mapreduce
 Summary: Hadoop is a software platform for processing vast amounts of data
@@ -368,7 +368,7 @@ The server providing HTTP REST API support for the complete FileSystem/FileConte
 interface in HDFS.
 
 %package yarn-resourcemanager
-Summary: YARN Resource Manager
+Summary: Yarn Resource Manager
 Group: System/Daemons
 Requires: %{name}-yarn = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
@@ -378,7 +378,7 @@ Requires(pre): %{name}-yarn = %{version}-%{release}
 The resource manager manages the global assignment of compute resources to applications
 
 %package yarn-nodemanager
-Summary: YARN Node Manager
+Summary: Yarn Node Manager
 Group: System/Daemons
 Requires: %{name}-yarn = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
@@ -390,7 +390,7 @@ containers, monitoring their resource usage (cpu, memory, disk, network) and
 reporting the same to the ResourceManager/Scheduler.
 
 %package yarn-proxyserver
-Summary: YARN Web Proxy
+Summary: Yarn Web Proxy
 Group: System/Daemons
 Requires: %{name}-yarn = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
@@ -495,7 +495,7 @@ Requires(pre): %{name}-0.20-mapreduce = %{version}-%{release}
 Installation of this package will provide you with all the dependencies for Hadoop clients.
 
 %package conf-pseudo
-Summary: Pseudo-distributed Hadoop configuration
+Summary: Hadoop installation in pseudo-distributed mode
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
 Requires: %{name}-hdfs-namenode = %{version}-%{release}
@@ -506,9 +506,8 @@ Requires: %{name}-yarn-nodemanager = %{version}-%{release}
 Requires: %{name}-mapreduce-historyserver = %{version}-%{release}
 
 %description conf-pseudo
-Contains configuration files for a "pseudo-distributed" Hadoop deployment.
-In this mode, each of the hadoop components runs as a separate Java process,
-but all on the same machine.
+Installation of this RPM will setup your machine to run in pseudo-distributed mode
+where each Hadoop daemon runs in a separate Java process.
 
 %package doc
 Summary: Hadoop Documentation

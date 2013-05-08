@@ -24,20 +24,20 @@ Homepage: http://hadoop.apache.org/core/
 Package: hadoop
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.6), zookeeper (>= 3.4.0), psmisc, netcat-openbsd
-Description: Hadoop is a software platform for processing vast amounts of data
+Description: A software platform for processing vast amounts of data
  Hadoop is a software platform that lets one easily write and
  run applications that process vast amounts of data.
  .
  Here's what makes Hadoop especially useful:
- * Scalable: Hadoop can reliably store and process petabytes.
- * Economical: It distributes the data and processing across clusters
-               of commonly available computers. These clusters can number
-               into the thousands of nodes.
- * Efficient: By distributing the data, Hadoop can process it in parallel
-              on the nodes where the data is located. This makes it
-              extremely rapid.
- * Reliable: Hadoop automatically maintains multiple copies of data and
-             automatically redeploys computing tasks based on failures.
+  * Scalable: Hadoop can reliably store and process petabytes.
+  * Economical: It distributes the data and processing across clusters
+                of commonly available computers. These clusters can number
+                into the thousands of nodes.
+  * Efficient: By distributing the data, Hadoop can process it in parallel
+               on the nodes where the data is located. This makes it
+               extremely rapid.
+  * Reliable: Hadoop automatically maintains multiple copies of data and
+              automatically redeploys computing tasks based on failures.
  .
  Hadoop implements MapReduce, using the Hadoop Distributed File System (HDFS).
  MapReduce divides applications into many small blocks of work. HDFS creates
@@ -49,9 +49,9 @@ Package: hadoop-hdfs
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.6), hadoop (= ${source:Version}), bigtop-jsvc
 Description: The Hadoop Distributed File System
- Hadoop Distributed File System (HDFS) is the primary storage system used by 
- Hadoop applications. HDFS creates multiple replicas of data blocks and distributes 
- them on compute nodes throughout a cluster to enable reliable, extremely rapid 
+ Hadoop Distributed File System (HDFS) is the primary storage system used by
+ Hadoop applications. HDFS creates multiple replicas of data blocks and
+ distributes them on cluster hosts to enable reliable and extremely rapid
  computations.
 
 Package: hadoop-yarn
@@ -59,38 +59,44 @@ Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.6), hadoop (= ${source:Version})
 Description: The Hadoop NextGen MapReduce (YARN)
  YARN (Hadoop NextGen MapReduce) is a general purpose data-computation framework.
- The fundamental idea of YARN is to split up the two major functionalities of the 
- JobTracker, resource management and job scheduling/monitoring, into separate daemons:
+ YARN splits up the functionalities of JobTracker, resource management, 
+ job scheduling, and job monitoring into separate daemons called 
  ResourceManager and NodeManager.
  .
- The ResourceManager is the ultimate authority that arbitrates resources among all 
- the applications in the system. The NodeManager is a per-node slave managing allocation
- of computational resources on a single node. Both work in support of per-application 
- ApplicationMaster (AM).
+ ResourceManager is the ultimate authority that arbitrates resources 
+ among all applications in the system. NodeManager is a per-host slave
+ that manages allocation of computational resources on a single host. 
+ Both daemons work in support of ApplicationMaster (AM).
  .
- An ApplicationMaster is, in effect, a framework specific library and is tasked with 
- negotiating resources from the ResourceManager and working with the NodeManager(s) to 
- execute and monitor the tasks. 
+ ApplicationMaster is a framework-specific library that negotiates resources 
+ from ResourceManager and works with NodeManager(s) to execute and monitor 
+ the tasks.
 
 Package: hadoop-mapreduce
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.6), hadoop-yarn (= ${source:Version})
 Description: The Hadoop MapReduce (MRv2)
- Hadoop MapReduce is a programming model and software framework for writing applications 
- that rapidly process vast amounts of data in parallel on large clusters of compute nodes.
+ Hadoop MapReduce is a programming model and software framework for
+ writing applications that rapidly process vast amounts of data
+ in parallel on large clusters of hosts.
 
 Package: hadoop-hdfs-fuse
 Architecture: i386 amd64
 Depends: ${shlibs:Depends}, hadoop-hdfs (= ${source:Version}), hadoop-client (= ${source:Version}), libfuse2, fuse-utils, bigtop-utils (>= 0.6)
 Enhances: hadoop
-Description: Mountable HDFS
- These projects (enumerated below) allow HDFS to be mounted (on most flavors of Unix) as a standard file system using
+Description: HDFS exposed over a Filesystem in Userspace
+ These projects (enumerated below) allow HDFS to be mounted (on most flavors 
+ of Unix) as a standard file system using the mount command. Once mounted, the
+  user can operate on an instance of hdfs using standard Unix utilities such 
+ as 'ls', 'cd', 'cp', 'mkdir', 'find', 'grep', or use standard Posix libraries 
+ like open, write, read, close from C, C++, Python, Ruby, Perl, Java, bash, etc.
 
 Package: hadoop-doc
 Architecture: all
 Section: doc
-Description: Hadoop Documentation
- Documentation for Hadoop
+Description: Documentation for Hadoop
+ This package contains the Java Documentation for Hadoop and its relevant
+ APIs.
 
 Package: hadoop-conf-pseudo
 Architecture: all
@@ -107,12 +113,13 @@ Package: hadoop-mapreduce-historyserver
 Architecture: all
 Depends: hadoop-mapreduce (= ${source:Version}), hadoop-hdfs (= ${source:Version})
 Description: MapReduce History Server
- The History server keeps records of the different activities being performed on a Apache Hadoop cluster
+ The History server keeps records of the different activities being performed 
+ on a Apache Hadoop cluster.
 
 Package: hadoop-yarn-nodemanager
 Architecture: all
 Depends: hadoop-yarn (= ${source:Version})
-Description: YARN Node Manager
+Description: Node manager for Hadoop
  The NodeManager is the per-machine framework agent who is responsible for
  containers, monitoring their resource usage (cpu, memory, disk, network) and
  reporting the same to the ResourceManager/Scheduler.
@@ -120,29 +127,29 @@ Description: YARN Node Manager
 Package: hadoop-yarn-resourcemanager
 Architecture: all
 Depends: hadoop-yarn (= ${source:Version})
-Description: YARN Resource Manager
- The resource manager manages the global assignment of compute resources to applications
+Description: Resource manager for Hadoop
+ The resource manager manages the global assignment of compute resources to applications.
 
 Package: hadoop-yarn-proxyserver
 Architecture: all
 Depends: hadoop-yarn (= ${source:Version})
-Description: YARN Web Proxy
+Description: Web proxy for YARN
  The web proxy server sits in front of the YARN application master web UI.
 
 Package: hadoop-hdfs-namenode
 Architecture: all
 Depends: hadoop-hdfs (= ${source:Version})
-Description: The Hadoop namenode manages the block locations of HDFS files
+Description: Name Node for Hadoop
  The Hadoop Distributed Filesystem (HDFS) requires one unique server, the
  namenode, which manages the block locations of files on the filesystem.
 
 Package: hadoop-hdfs-secondarynamenode
 Architecture: all
 Depends: hadoop-hdfs (= ${source:Version})
-Description: Hadoop Secondary namenode
- The Secondary Name Node periodically compacts the Name Node EditLog
- into a checkpoint.  This compaction ensures that Name Node restarts
- do not incur unnecessary downtime.
+Description: Secondary Name Node for Hadoop
+ The Secondary Name Node is responsible for checkpointing file system images.
+ It is _not_ a failover pair for the namenode, and may safely be run on the
+ same machine.
 
 Package: hadoop-hdfs-zkfc
 Architecture: all
@@ -166,7 +173,7 @@ Description: Hadoop HDFS JournalNode
 Package: hadoop-hdfs-datanode
 Architecture: all
 Depends: hadoop-hdfs (= ${source:Version})
-Description: Hadoop Data Node
+Description: Data Node for Hadoop
  The Data Nodes in the Hadoop Cluster are responsible for serving up
  blocks of data over the network to Hadoop Distributed Filesystem
  (HDFS) clients.
@@ -174,8 +181,8 @@ Description: Hadoop Data Node
 Package: libhdfs0
 Architecture: any
 Depends: hadoop (= ${source:Version}), ${shlibs:Depends}
-Description: Hadoop Filesystem Library
- Hadoop Filesystem Library
+Description: JNI Bindings to access Hadoop HDFS from C
+ See http://wiki.apache.org/hadoop/LibHDFS
 
 Package: libhdfs0-dev
 Architecture: any
