@@ -1,0 +1,5 @@
+/usr/bin
+/var/log/hadoop-0.20-mapreduce
+/var/run/hadoop-0.20-mapreduce
+/var/lib/hadoop-0.20-mapreduce/cache/hadoop
+/usr/share/doc/hadoop-0.20-mapreduce

@@ -12,13 +12,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-HADOOP_NAME="historyserver"
-DAEMON="hadoop-mapreduce-$HADOOP_NAME"
+HADOOP_NAME="jobtracker"
+DAEMON="hadoop-0.20-mapreduce-$HADOOP_NAME"
 DESC="Hadoop $HADOOP_NAME"
-EXEC_PATH="/usr/lib/hadoop-mapreduce/sbin/mr-jobhistory-daemon.sh"
+EXEC_PATH="/usr/lib/hadoop-0.20-mapreduce/bin/hadoop-daemon.sh"
 SVC_USER="mapred"
 DAEMON_FLAGS="$HADOOP_NAME"
 CONF_DIR="/etc/hadoop/conf"
-PIDFILE="/var/run/hadoop-mapreduce/yarn-$SVC_USER-$HADOOP_NAME.pid"
+PIDFILE="/var/run/hadoop-0.20-mapreduce/hadoop-hadoop-$HADOOP_NAME.pid"
 LOCKDIR="/var/lock/subsys"
-LOCKFILE="hadoop-$HADOOP_NAME"
+LOCKFILE="hadoop-0.20-$HADOOP_NAME"

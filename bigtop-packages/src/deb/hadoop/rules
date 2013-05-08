@@ -36,12 +36,13 @@ ifeq (${DEB_BUILD_ARCH},i386)
 endif
 
 override_dh_auto_build:
-	env HADOOP_VERSION=${hadoop_version} HADOOP_ARCH=${native_dir} \
-        bash debian/do-component-build -Divy.home=${HOME}/.ivy2
+	env FULL_VERSION=${HADOOP_PATCHED_VERSION} HADOOP_VERSION=${HADOOP_VERSION} HADOOP_ARCH=${native_dir} \
+	    bash debian/do-component-build
 
 hadoop_svcs=hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode \
             yarn-resourcemanager yarn-nodemanager yarn-proxyserver \
-            mapreduce-historyserver httpfs
+            mapreduce-historyserver httpfs 0.20-mapreduce-zkfc \
+            0.20-mapreduce-jobtracker 0.20-mapreduce-jobtrackerha 0.20-mapreduce-tasktracker
 
 $(hadoop_svcs): debian/init.d.tmpl
 	bash $< debian/hadoop-$@.svc deb debian/hadoop-$@.init
@@ -56,8 +57,8 @@ override_dh_auto_install:
 	  --prefix=debian/tmp/ \
 	  --distro-dir=debian \
           --source-dir=${PWD}/src \
-          --build-dir=${PWD}/build \
-          --hadoop-version=${hadoop_version} \
+          --build-dir=${PWD}/src/build/hadoop-${HADOOP_PATCHED_VERSION} \
+          --hadoop-version=${HADOOP_PATCHED_VERSION} \
 	  --httpfs-dir=debian/tmp/usr/lib/hadoop-httpfs \
 	  --httpfs-etc-dir=debian/tmp/etc/hadoop-httpfs \
 	  --system-lib-dir=debian/tmp/usr/lib/ \
@@ -82,6 +83,11 @@ override_dh_auto_install:
 	cp debian/hadoop-fuse.default debian/tmp/etc/default/hadoop-fuse
 	mkdir -p debian/tmp/etc/security/limits.d
 	cp debian/hdfs.conf debian/yarn.conf debian/mapreduce.conf debian/tmp/etc/security/limits.d
+	# FIXME: the following mess needs to be fixed
+	cp debian/0.20.default debian/tmp/etc/default/hadoop-0.20-mapreduce
+	cp debian/0.20.default debian/tmp/etc/default/hadoop-0.20
+	# MR1 hack
+	cp debian/mapreduce.conf debian/tmp/etc/security/limits.d/mapred.conf
 
 override_dh_install: $(hadoop_svcs)
 	dh_install

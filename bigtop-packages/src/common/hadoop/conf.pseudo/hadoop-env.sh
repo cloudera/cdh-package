@@ -12,13 +12,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-HADOOP_NAME="historyserver"
-DAEMON="hadoop-mapreduce-$HADOOP_NAME"
-DESC="Hadoop $HADOOP_NAME"
-EXEC_PATH="/usr/lib/hadoop-mapreduce/sbin/mr-jobhistory-daemon.sh"
-SVC_USER="mapred"
-DAEMON_FLAGS="$HADOOP_NAME"
-CONF_DIR="/etc/hadoop/conf"
-PIDFILE="/var/run/hadoop-mapreduce/yarn-$SVC_USER-$HADOOP_NAME.pid"
-LOCKDIR="/var/lock/subsys"
-LOCKFILE="hadoop-$HADOOP_NAME"
+
+# Set Hadoop-specific environment variables here.
+# Forcing YARN-based mapreduce implementaion. 
+# Make sure to comment out if you want to go back to the default or
+# if you want this to be tweakable on a per-user basis
+export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce
+
+# The maximum amount of heap to use, in MB. Default is 1000.
+#export HADOOP_HEAPSIZE=
+#export HADOOP_NAMENODE_INIT_HEAPSIZE=""
+
+# Extra Java runtime options.  Empty by default.
+#export HADOOP_OPTS="-Djava.net.preferIPv4Stack=true $HADOOP_CLIENT_OPTS"
+#export HADOOP_CLIENT_OPTS="-Xmx128m $HADOOP_CLIENT_OPTS"

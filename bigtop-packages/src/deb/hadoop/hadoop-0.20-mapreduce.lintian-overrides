@@ -1,0 +1,2 @@
+hadoop-0.20-mapreduce: extra-license-file usr/lib/hadoop-0.20-mapreduce/LICENSE.txt
+hadoop-0.20-mapreduce: new-package-should-close-itp-bug

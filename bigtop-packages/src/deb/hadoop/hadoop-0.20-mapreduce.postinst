@@ -1,0 +1,29 @@
+#!/bin/sh
+# postinst script for hadoop
+
+set -e
+
+case "$1" in
+    configure)
+	chgrp -R hadoop /var/log/hadoop-0.20-mapreduce /var/run/hadoop-0.20-mapreduce
+	chmod g+w /var/run/hadoop-0.20-mapreduce /var/log/hadoop-0.20-mapreduce
+
+        # We don't want to do this recursively since we may be reinstalling, in which case
+        # users have their own cache/<username> directories which shouldn't be stolen
+        chown root:hadoop /var/lib/hadoop-0.20-mapreduce/ /var/lib/hadoop-0.20-mapreduce/cache/ /var/lib/hadoop-0.20-mapreduce/cache/hadoop/
+        chmod 1777 /var/lib/hadoop-0.20-mapreduce/cache/
+
+        chown root:mapred /usr/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
+        chmod 4754 /usr/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
