@@ -17,7 +17,7 @@
 #
 # Starts Oozie Server
 #
-# chkconfig: 345 90 10
+# chkconfig: 2345 90 10
 # description: Oozie Server
 #
 ### BEGIN INIT INFO
@@ -81,6 +81,7 @@ case "$1" in
   start)
         is_oozie_alive
         if [ "${STATUS}" = "0" ]; then
+          echo "already running"
           exit 0
         fi
         if [ "${STATUS}" = "1" ]; then
