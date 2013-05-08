@@ -31,7 +31,7 @@ hbase_pkg_name=hbase
 	dh $@
 
 override_dh_auto_build:
-	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository  
+	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
 
 	
 override_dh_auto_install:
@@ -42,7 +42,7 @@ override_dh_auto_install:
 		--doc-dir=usr/share/doc/${hbase_pkg_name}-doc \
 		--prefix=debian/tmp
 	mkdir -p debian/tmp/etc/security/limits.d
-	cp debian/hbase.nofiles.conf debian/tmp/etc/security/limits.d/${hbase_pkg_name}.nofiles.conf
+	cp debian/hbase.nofiles.conf debian/tmp/etc/security/limits.d/${hbase_pkg_name}.conf
 	# Symlink in the dependency jars from their packages. Both of these packages
 	# provide an unversioned symlink foo.jar -> foo-0.1.2.jar.
 	rm -f debian/tmp/usr/lib/${hbase_pkg_name}/lib/{hadoop,zookeeper,slf4j-log4j12-}*.jar

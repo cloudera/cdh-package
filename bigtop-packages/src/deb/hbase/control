@@ -43,8 +43,8 @@ Description: HBase is the Hadoop database. Use it when you need random, realtime
 Package: hbase-doc
 Architecture: all
 Section: doc
-Description: Hbase Documentation
- Documentation for Hbase
+Description: Documentation for HBase
+ This package contains the HBase manual and JavaDoc.
 
 Package: hbase-master
 Architecture: all

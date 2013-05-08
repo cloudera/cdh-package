@@ -1,4 +1,4 @@
 /usr/lib/hbase
 /usr/bin/hbase
 /etc/hbase
-/etc/security/limits.d/hbase.nofiles.conf
+/etc/security/limits.d/hbase.conf
