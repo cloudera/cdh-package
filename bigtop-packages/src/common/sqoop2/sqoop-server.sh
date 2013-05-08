@@ -24,13 +24,13 @@ fi
 
 LIB_DIR=${LIB_DIR:-/usr/lib}
 
-SQOOP_HOME=${LIB_DIR}/sqoop
+SQOOP_HOME=${LIB_DIR}/sqoop2
 TOMCAT_HOME=${LIB_DIR}/bigtop-tomcat
 
 export CATALINA_BIN=${CATALINA_BIN:-${TOMCAT_HOME}/bin}
-export CATALINA_BASE=${CATALINA_BASE:-${SQOOP_HOME}/sqoop-server}
+export CATALINA_BASE=${CATALINA_BASE:-${SQOOP_HOME}/sqoop-server-0.20}
 export CATALINA_OPTS=${CATALINA_OPTS:--Xmx1024m}
-export CATALINA_OUT=${CATALINE_OUT:-/var/log/sqoop/sqoop-tomcat.log}
+export CATALINA_OUT=${CATALINE_OUT:-/var/log/sqoop2/sqoop-tomcat.log}
 
 env CLASSPATH=$CLASSPATH $SQOOP_HOME/bin/sqoop.sh server $@
 

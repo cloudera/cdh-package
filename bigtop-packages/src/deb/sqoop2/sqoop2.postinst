@@ -16,5 +16,5 @@
 
 set -e
 
-update-alternatives  --install /etc/sqoop/conf sqoop-conf /etc/sqoop/conf.dist 30
+update-alternatives  --install /etc/sqoop2/conf sqoop2-conf /etc/sqoop2/conf.dist 30
 

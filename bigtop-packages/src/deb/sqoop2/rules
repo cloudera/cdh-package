@@ -30,15 +30,15 @@ override_dh_auto_build:
 	# There's no good way to get the RAT plugin to ignore the debian/ directory, so bigtop-empty is used as a decoy
 	rm -rf bigtop-empty
 	mkdir -p bigtop-empty
-	env FULL_VERSION=${SQOOP_VERSION} bash debian/do-component-build \
+	env FULL_VERSION=${SQOOP2_PATCHED_VERSION} bash debian/do-component-build \
 	  -Drat.basedir=$${PWD}/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository
 
 override_dh_auto_install:
-	sh -x debian/install_sqoop.sh \
-	  --build-dir=build/sqoop-${SQOOP_VERSION} \
-	  --doc-dir=/usr/share/doc/sqoop \
+	sh -x debian/install_sqoop2.sh \
+	  --build-dir=build/sqoop2-${SQOOP2_PATCHED_VERSION} \
+	  --doc-dir=/usr/share/doc/sqoop2 \
 	  --prefix=debian/tmp \
 	  --extra-dir=debian
-	bash debian/init.d.tmpl debian/sqoop-server.svc deb debian/tmp/etc/init.d/sqoop-server
+	bash debian/init.d.tmpl debian/sqoop-server.svc deb debian/tmp/etc/init.d/sqoop2-server
 	dh_install --sourcedir=debian/tmp
 

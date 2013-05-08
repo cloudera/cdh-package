@@ -15,7 +15,7 @@
 # limitations under the License.
 
 set -e
-if [ -x "/etc/init.d/sqoop-server" ]; then
-    update-rc.d sqoop-server defaults > /dev/null || exit 1
-    invoke-rc.d sqoop-server start || :
+if [ -x "/etc/init.d/sqoop2-server" ]; then
+    update-rc.d sqoop2-server defaults > /dev/null || exit 1
+    invoke-rc.d sqoop2-server start || :
 fi
