@@ -28,11 +28,11 @@ export DH_OPTIONS
 
 override_dh_auto_build:
 	# we'll just use the build from the tarball.
-	env FULL_VERSION=${SOLR_BASE_VERSION} bash -x debian/do-component-build
+	env FULL_VERSION=${SOLR_PATCHED_VERSION} bash -x debian/do-component-build
 
 override_dh_auto_install:
 	sh -x debian/install_solr.sh \
-	  --build-dir=solr/build/solr-${SOLR_BASE_VERSION} \
+	  --build-dir=solr/build/solr-${SOLR_PATCHED_VERSION} \
 	  --doc-dir=/usr/share/doc/solr-doc \
 	  --distro-dir=debian \
 	  --prefix=debian/tmp

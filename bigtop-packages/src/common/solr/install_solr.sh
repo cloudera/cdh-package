@@ -226,3 +226,7 @@ install -D -m 0755 ${BUILD_DIR}/example/cloud-scripts/solrctl.sh $PREFIX/usr/bin
 install -d -m 0755 $VAR_DIR/log/solr
 install -d -m 0755 $VAR_DIR/run/solr
 install -d -m 0755 $VAR_DIR/lib/solr
+
+# Cloudera specific
+install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
