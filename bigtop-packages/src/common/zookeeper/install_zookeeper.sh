@@ -115,8 +115,6 @@ ln -s $CONF_DIR $PREFIX/$LIB_DIR/conf
 
 # Copy in the /usr/bin/zookeeper-server wrapper
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
-# FIXME: a workaround in preparation for Zookeeper 3.5
-echo '#!/bin/bash' > $BUILD_DIR/bin/zkServer-initialize.sh
 
 for i in zkServer.sh zkEnv.sh zkCli.sh zkCleanup.sh zkServer-initialize.sh
 	do cp $BUILD_DIR/bin/$i $PREFIX/$LIB_DIR/bin
@@ -173,3 +171,7 @@ gzip -c zookeeper.1 > $PREFIX/$MAN_DIR/zookeeper.1.gz
 # Zookeeper log and tx log directory
 install -d -m 1766 $PREFIX/var/log/zookeeper
 install -d -m 1766 $PREFIX/var/log/zookeeper/txlog
+
+# Cloudera specific
+install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/

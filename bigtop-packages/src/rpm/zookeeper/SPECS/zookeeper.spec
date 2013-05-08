@@ -67,7 +67,7 @@ URL: http://zookeeper.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
-Source0: %{name}-%{zookeeper_base_version}.tar.gz
+Source0: %{name}-%{zookeeper_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_zookeeper.sh
 Source3: zookeeper-server.sh
@@ -80,6 +80,7 @@ Requires(pre): coreutils, shadow-utils, /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): %{alternatives_dep}
 Requires(preun): %{alternatives_dep}
 Requires: bigtop-utils >= 0.6
+Conflicts: hadoop-zookeeper
 
 %description 
 ZooKeeper is a centralized service for maintaining configuration information, 
@@ -122,16 +123,16 @@ Requires: redhat-lsb
 This package starts the zookeeper server on startup
 
 %prep
-%setup -n %{name}-%{zookeeper_base_version}
+%setup -n %{name}-%{zookeeper_patched_version}
 
 %build
-bash %{SOURCE1}
+env FULL_VERSION=%{zookeeper_patched_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
 cp $RPM_SOURCE_DIR/zookeeper.1 $RPM_SOURCE_DIR/zoo.cfg .
 sh %{SOURCE2} \
-          --build-dir=build/%{name}-%{zookeeper_base_version} \
+          --build-dir=build/%{name}-%{zookeeper_patched_version} \
           --doc-dir=%{doc_zookeeper} \
           --prefix=$RPM_BUILD_ROOT
 
@@ -150,7 +151,7 @@ chmod 755 $init_file
 
 %pre
 getent group zookeeper >/dev/null || groupadd -r zookeeper
-getent passwd zookeeper > /dev/null || useradd -c "ZooKeeper" -s /sbin/nologin -g zookeeper -r -d %{vlb_zookeeper} zookeeper 2> /dev/null || :
+getent passwd zookeeper > /dev/null || useradd -c "ZooKeeper" -s /sbin/nologin -g zookeeper -r -d %{run_zookeeper} zookeeper 2> /dev/null || :
 
 %__install -d -o zookeeper -g zookeeper -m 0755 %{run_zookeeper}
 %__install -d -o zookeeper -g zookeeper -m 0755 %{log_zookeeper}

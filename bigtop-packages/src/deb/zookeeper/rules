@@ -29,13 +29,14 @@ zookeeper_pkg_name=zookeeper
 	dh $@
 
 override_dh_auto_build:
-	bash debian/do-component-build -Divy.home=${HOME}/.ivy2
+	env FULL_VERSION=${ZOOKEEPER_PATCHED_VERSION} bash debian/do-component-build
 	mkdir -p debian/tmp
 	tar cf - --exclude=debian/\* . | (cd debian/tmp && tar xf -)
 
 override_dh_auto_install:
 	cp debian/zookeeper.1 debian/zoo.cfg .
 	sh -x debian/install_zookeeper.sh \
-	  --build-dir=build/zookeeper-${ZOOKEEPER_BASE_VERSION} \
+	  --build-dir=build/zookeeper-${ZOOKEEPER_PATCHED_VERSION} \
+	  --doc-dir=usr/share/doc/zookeeper \
 	  --prefix=debian/$(zookeeper_pkg_name)
 	dh_install -i
