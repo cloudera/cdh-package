@@ -1,0 +1,54 @@
+#!/bin/sh
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# postinst script for cdh-parcel
+
+set -e
+
+# Technically, we would have wanted to get the CDH_PARCEL_CUSTOM_VERSION parameter from the 
+# rules file and strip the distro identifier (e.g. lucid) from it and prepend CDH-
+# at the front of it to get the name of the directory. However, we know that @VERSION@-@RELEASE@
+# on debian systems is equivalent to CDH_PARCEL_CUSTOM_VERSION with distro identifier stripped off.
+# So, instead of introducing the overhead of passing an extra custom variable to all the postinst scripts
+# lets just use @VERSION@-@RELEASE@ instead of something like $(shell echo $CDH_PARCEL_CUSTOM_VERSION | sed -e 's:\-[\-^]*$::')
+PARCEL_DEFAULT_ROOT=/opt/cloudera/parcels/CDH-@VERSION@-@RELEASE@
+
+case "$1" in
+    configure)
+        chown root:yarn   $PARCEL_DEFAULT_ROOT/lib/hadoop-yarn/bin/container-executor
+        chmod 6050        $PARCEL_DEFAULT_ROOT/lib/hadoop-yarn/bin/container-executor
+        chown root:mapred $PARCEL_DEFAULT_ROOT/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
+        chmod 4754        $PARCEL_DEFAULT_ROOT/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
+        chown root:hue    $PARCEL_DEFAULT_ROOT/share/hue/apps/shell/src/shell/build/setuid
+        chmod 4750        $PARCEL_DEFAULT_ROOT/share/hue/apps/shell/src/shell/build/setuid
+        chown hue:hue     $PARCEL_DEFAULT_ROOT/share/hue/desktop
+        chmod 0755        $PARCEL_DEFAULT_ROOT/share/hue/desktop
+        chown hue:hue     $PARCEL_DEFAULT_ROOT/share/hue/desktop/desktop.db
+        chmod 0644        $PARCEL_DEFAULT_ROOT/share/hue/desktop/desktop.db
+
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#

@@ -1,0 +1,76 @@
+#!/usr/bin/make -f
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# 
+# -*- makefile -*-
+SHELL=/bin/bash
+
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS=-i
+
+version=$(CDH_PARCEL_BASE_VERSION: =)
+version_release=$(CDH_PARCEL_VERSION: =)-$(CDH_PARCEL_RELEASE: =)
+version_release_distro=${version_release}.$(shell lsb_release -sc)
+
+patch: patch-stamp
+patch-stamp:	
+	touch $@
+
+build:
+	dh_testdir
+	dh_clean -k
+	PKG_FORMAT=deb FULL_VERSION=${version_release} CDH_PARCEL_CUSTOM_VERSION=${version_release_distro} CDH_CUSTOMER_PATCH=$(CDH_CUSTOMER_PATCH) CDH_PARCEL_BASE_VERSION=${version} bash debian/do-component-build
+
+build-indep: build-indep-stamp
+build-indep-stamp: patch-stamp
+	touch $@
+
+clean:	
+	sed -i -e '/cdh-parcel-/s#-$$#-$(version)#' debian/control
+	dh_testdir
+	dh_testroot
+	rm -f *-stamp
+	dh_clean
+	find debian -name .\*swp -exec rm -f {} \;
+
+install: debian/cdh-parcel-$(version)/opt/cloudera/parcels/CDH-${version_release}
+	@echo building client
+
+debian/cdh-parcel-$(version)/opt/cloudera/parcels/CDH-${version_release}:
+	mkdir -p $@
+	mv build/usr/{bin,share,lib}* build/meta build/etc $@
+	sed -e 's#@VERSION@#$(version)#' < debian/cdh-parcel.postinst > debian/cdh-parcel-$(version).postinst
+	echo /opt > debian/cdh-parcel-$(version).install
+
+binary-common:
+	dh_testdir
+	dh_testroot
+	dh_compress
+	dh_fixperms
+	dh_makeshlibs
+	dh_installdocs
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: build install install-indep binary-common
+	@echo Build completed
+
+.PHONY: clean install-indep binary-arc
