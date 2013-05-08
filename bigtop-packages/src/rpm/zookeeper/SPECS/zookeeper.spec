@@ -75,8 +75,8 @@ Source4: zookeeper-server.sh.suse
 Source5: zookeeper.1
 Source6: zoo.cfg
 BuildArch: noarch
-BuildRequires: autoconf, automake
-Requires(pre): coreutils, /usr/sbin/groupadd, /usr/sbin/useradd
+BuildRequires: ant, autoconf, automake
+Requires(pre): coreutils, shadow-utils, /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): %{alternatives_dep}
 Requires(preun): %{alternatives_dep}
 Requires: bigtop-utils >= 0.6
