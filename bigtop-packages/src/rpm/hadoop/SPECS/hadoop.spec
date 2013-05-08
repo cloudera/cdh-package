@@ -64,7 +64,7 @@
 %define static_images_dir src/webapps/static/images
 %define libexecdir /usr/lib
 
-%ifarch i386
+%ifarch i386 i686
 %global hadoop_arch Linux-i386-32
 %endif
 %ifarch amd64 x86_64
@@ -399,6 +399,7 @@ but all on the same machine.
 %package doc
 Summary: Hadoop Documentation
 Group: Documentation
+Obsoletes: %{name}-docs
 %description doc
 Documentation for Hadoop
 
@@ -458,6 +459,8 @@ env HADOOP_VERSION=%{hadoop_base_version} HADOOP_ARCH=%{hadoop_arch} bash %{SOUR
 bash %{SOURCE2} \
   --distro-dir=$RPM_SOURCE_DIR \
   --build-dir=$PWD/build \
+  --source-dir=$PWD/src \
+  --hadoop-version=%{hadoop_base_version} \
   --httpfs-dir=$RPM_BUILD_ROOT%{lib_httpfs} \
   --system-include-dir=$RPM_BUILD_ROOT%{_includedir} \
   --system-lib-dir=$RPM_BUILD_ROOT%{_libdir} \
@@ -475,6 +478,8 @@ bash %{SOURCE2} \
 %__ln_s -f /usr/lib/zookeeper/zookeeper.jar $RPM_BUILD_ROOT/%{lib_hadoop}/lib/zookeeper*.jar
 # Workaround for BIGTOP-583
 %__rm -f $RPM_BUILD_ROOT/%{lib_hadoop}-*/lib/slf4j-log4j12-*.jar
+%__ln_s -f /usr/lib/zookeeper/lib/`basename $RPM_BUILD_ROOT/%{lib_hadoop}/lib/slf4j-log4j12-*.jar` \
+         $RPM_BUILD_ROOT/%{lib_hadoop}/lib/slf4j-log4j12-*.jar
 
 # Init.d scripts
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
@@ -586,7 +591,7 @@ fi
 %{lib_hdfs}
 %{lib_hadoop}/libexec/hdfs-config.sh
 %{bin_hadoop}/hdfs
-%attr(0775,hdfs,hadoop) %{run_hdfs}
+%attr(0755,hdfs,hadoop) %{run_hdfs}
 %attr(0775,hdfs,hadoop) %{log_hdfs}
 %attr(0755,hdfs,hadoop) %{state_hdfs}
 %attr(1777,hdfs,hadoop) %{state_hdfs}/cache
@@ -622,6 +627,7 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/hadoop-policy.xml
 %config(noreplace) /etc/default/hadoop
 /etc/bash_completion.d/hadoop
+%{etc_hadoop}/conf.dist
 %{lib_hadoop}/*.jar
 %{lib_hadoop}/lib
 %{lib_hadoop}/sbin

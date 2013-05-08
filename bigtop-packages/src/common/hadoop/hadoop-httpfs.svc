@@ -48,7 +48,7 @@ start() {
     checkstatusofproc
     RETVAL=$?
     if [ "$RETVAL" -eq $RETVAL_SUCCESS ] ; then
-      break
+	  break
     fi
     sleep 1
   done

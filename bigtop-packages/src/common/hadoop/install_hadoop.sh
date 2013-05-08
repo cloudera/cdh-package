@@ -36,7 +36,9 @@ OPTS=$(getopt \
   -o '' \
   -l 'prefix:' \
   -l 'distro-dir:' \
+  -l 'source-dir:' \
   -l 'build-dir:' \
+  -l 'hadoop-version:' \
   -l 'native-build-string:' \
   -l 'installed-lib-dir:' \
   -l 'hadoop-dir:' \
@@ -75,6 +77,9 @@ while true ; do
         --hadoop-dir)
         HADOOP_DIR=$2 ; shift 2
         ;;
+        --hadoop-version)
+        HADOOP_VERSION=$2 ; shift 2
+        ;;
         --hdfs-dir)
         HDFS_DIR=$2 ; shift 2
         ;;
@@ -98,6 +103,9 @@ while true ; do
         ;;
         --build-dir)
         BUILD_DIR=$2 ; shift 2
+        ;;
+        --source-dir)
+        SOURCE_DIR=$2 ; shift 2
         ;;
         --native-build-string)
         NATIVE_BUILD_STRING=$2 ; shift 2
@@ -158,7 +166,6 @@ BASH_COMPLETION_DIR=${BASH_COMPLETION_DIR:-$PREFIX/etc/bash_completion.d}
 INSTALLED_HADOOP_DIR=${INSTALLED_HADOOP_DIR:-/usr/lib/hadoop}
 HADOOP_NATIVE_LIB_DIR=${HADOOP_DIR}/lib/native
 
-HADOOP_VERSION=0.23.1
 
 ##Needed for some distros to find ldconfig
 export PATH="/sbin/:$PATH"
@@ -224,6 +231,7 @@ install -d -m 0755 ${YARN_DIR}/bin
 cp -a ${BUILD_DIR}/bin/{yarn,container-executor} ${YARN_DIR}/bin
 install -d -m 0755 ${MAPREDUCE_DIR}/bin
 cp -a ${BUILD_DIR}/bin/mapred ${MAPREDUCE_DIR}/bin
+cp -a ${BUILD_DIR}/examples/bin/* ${MAPREDUCE_DIR}/bin
 # FIXME: MAPREDUCE-3980
 cp -a ${BUILD_DIR}/bin/mapred ${YARN_DIR}/bin
 
@@ -250,7 +258,7 @@ install -d -m 0755 ${SYSTEM_INCLUDE_DIR}
 cp ${BUILD_DIR}/include/hdfs.h ${SYSTEM_INCLUDE_DIR}/
 
 cp ${BUILD_DIR}/lib/native/*.a ${HADOOP_NATIVE_LIB_DIR}/
-for library in `cd ${BUILD_DIR}/lib ; ls libsnappy.so.1.* 2>/dev/null` libhadoop.so.1.0.0; do
+for library in `cd ${BUILD_DIR}/lib/native ; ls libsnappy.so.1.* 2>/dev/null` libhadoop.so.1.0.0; do
   cp ${BUILD_DIR}/lib/native/${library} ${HADOOP_NATIVE_LIB_DIR}/
   ldconfig -vlN ${HADOOP_NATIVE_LIB_DIR}/${library}
   ln -s ${library} ${HADOOP_NATIVE_LIB_DIR}/${library/.so.*/}.so
@@ -275,16 +283,18 @@ fi
 export HADOOP_LIBEXEC_DIR=${SYSTEM_LIBEXEC_DIR#${PREFIX}}
 
 if [ "\${LD_LIBRARY_PATH}" = "" ]; then
-  export JAVA_NATIVE_LIBS="libjvm.so"
-  . /usr/lib/bigtop-utils/bigtop-detect-javalibs
-  export LD_LIBRARY_PATH=\${JAVA_NATIVE_PATH}:/usr/lib
+  export LD_LIBRARY_PATH=/usr/lib
+  for f in \`find \${JAVA_HOME}/ -name client -prune -o -name libjvm.so -exec dirname {} \;\`; do
+    export LD_LIBRARY_PATH=\$f:\${LD_LIBRARY_PATH}
+  done
 fi
 
-# Pulls all jars from hadoop client package
+# Pulls all jars from hadoop client package and conf files from HADOOP_CONF_DIR
 for jar in \${HADOOP_HOME}/client/*.jar; do
   CLASSPATH+="\$jar:"
 done
-CLASSPATH="/etc/hadoop/conf:\${CLASSPATH}"
+CLASSPATH+="\${HADOOP_CONF_DIR:-\${HADOOP_HOME}/etc/hadoop}"
+
 
 env CLASSPATH="\${CLASSPATH}" \${HADOOP_HOME}/bin/fuse_dfs \$@
 EOF
@@ -294,12 +304,15 @@ chmod 755 $fuse_wrapper
 # Bash tab completion
 install -d -m 0755 $BASH_COMPLETION_DIR
 install -m 0644 \
-  hadoop-common-project/hadoop-common/src/contrib/bash-tab-completion/hadoop.sh \
+  $SOURCE_DIR/hadoop-common-project/hadoop-common/src/contrib/bash-tab-completion/hadoop.sh \
   $BASH_COMPLETION_DIR/hadoop
 
 # conf
 install -d -m 0755 $HADOOP_ETC_DIR/conf.empty
 cp ${DISTRO_DIR}/conf.empty/mapred-site.xml $HADOOP_ETC_DIR/conf.empty
+# workaround for CDH-9780
+ln -s conf.empty $HADOOP_ETC_DIR/conf.dist
+
 cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
 
 # docs
