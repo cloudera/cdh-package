@@ -38,7 +38,17 @@ case "$1" in
 	# initialize seed databases if there's none
         HUE_STATE=/var/lib/hue
         if [ ! -e $HUE_STATE/desktop.db ] && [ ! -e $HUE_STATE/app.reg ] && [ ! -e $HUE_STATE/hue.pth ] ; then
-          cp /usr/lib/hue/seed/common/* /var/lib/hue
+          OLD_DESKTOP_DB=/usr/share/hue/desktop/desktop.db
+          OLD_APP_REG=/usr/share/hue/app.reg
+          OLD_PTH=`echo /usr/share/hue/build/env/lib/*/site-packages/hue.pth`
+          if [ -d /usr/share/hue ] && [ -e "$OLD_DESKTOP_DB" ] && [ -e "$OLD_APP_REG" ] && [ -e "$OLD_PTH" ] ; then
+            cp "$OLD_DESKTOP_DB" "$OLD_APP_REG" "$OLD_PTH" /var/lib/hue 2>/dev/null
+            if [ $? -ne 0 ] ; then
+              cp /usr/lib/hue/seed/common/* /var/lib/hue
+            fi
+          else
+            cp /usr/lib/hue/seed/common/* /var/lib/hue
+          fi
         fi
         chown -R hue:hue /var/log/hue /var/lib/hue
 
@@ -49,6 +59,12 @@ case "$1" in
         SETUID=/usr/lib/hue/apps/shell/src/shell/build/setuid
         chown root:hue $SETUID
         chmod 4750 $SETUID
+
+        # This is only here for the benefit of CM. We have to keep it until CDH5.
+        if [ -d /usr/share/hue ] ; then
+          mv /usr/share/hue /usr/share/hue.$$ || :
+          ln -s /usr/lib/hue /usr/share/hue || :
+        fi
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

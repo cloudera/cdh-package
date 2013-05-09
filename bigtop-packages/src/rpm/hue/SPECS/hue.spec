@@ -21,7 +21,7 @@ Group: Applications/Engineering
 Summary: The hue metapackage
 License: ASL 2.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
-Source0: %{name}-%{hue_base_version}.tar.gz
+Source0: %{name}-%{hue_patched_version}.tar.gz
 Source1: %{name}.init
 Source2: %{name}.init.suse
 Source3: do-component-build
@@ -31,6 +31,7 @@ Requires: %{name}-common = %{version}-%{release}
 Requires: %{name}-server = %{version}-%{release}
 Requires: %{name}-beeswax = %{version}-%{release}
 Requires: %{name}-pig = %{version}-%{release}
+Requires: %{name}-impala = %{version}-%{release}
 
 ################ RPM CUSTOMIZATION ##############################
 # Disable automatic Provides generation - otherwise we will claim to provide all of the
@@ -86,6 +87,7 @@ AutoReqProv: no
 %define shell_app_dir %{hue_dir}/apps/shell
 %define useradmin_app_dir %{hue_dir}/apps/useradmin
 %define etc_hue /etc/hue/conf 
+%define impala_app_dir %{hue_dir}/apps/impala
 
 # Path to the HADOOP_HOME to build against - these
 # are not substituted into the build products anywhere!
@@ -130,7 +132,7 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
 %__rm -rf $RPM_BUILD_ROOT
 
 %prep
-%setup -n %{name}-%{hue_base_version}
+%setup -n %{name}-%{hue_patched_version}
 
 ########################################
 # Build
@@ -167,6 +169,8 @@ Group: Applications/Engineering
 Requires: cyrus-sasl-gssapi, libxml2, libxslt, zlib, python, sqlite
 # The only reason we need the following is because we also have AutoProv: no
 Provides: config(%{name}-common) = %{version}
+Conflicts: cloudera-desktop
+Obsoletes: hue-about, hue-help, hue-useradmin, hue-proxy, hue-shell, hue-filebrowser, hue-jobsub, hue-jobbrowser, hue-oozie
 
 %if  %{?suse_version:1}0
 BuildRequires: sqlite3-devel, openldap2-devel, libmysqlclient-devel, libopenssl-devel
@@ -202,7 +206,17 @@ getent passwd %{username} 2>&1 > /dev/null || /usr/sbin/useradd -c "Hue" -s /sbi
 # initialize seed databases if there's none
 HUE_STATE=/var/lib/hue
 if [ ! -e $HUE_STATE/desktop.db ] && [ ! -e $HUE_STATE/app.reg ] && [ ! -e $HUE_STATE/hue.pth ] ; then
-  cp /usr/lib/hue/seed/common/* /var/lib/hue
+  OLD_DESKTOP_DB=/usr/share/hue/desktop/desktop.db
+  OLD_APP_REG=/usr/share/hue/app.reg
+  OLD_PTH=`echo /usr/share/hue/build/env/lib/*/site-packages/hue.pth`
+  if [ -d /usr/share/hue ] && [ -e "$OLD_DESKTOP_DB" ] && [ -e "$OLD_APP_REG" ] && [ -e "$OLD_PTH" ] ; then
+    cp "$OLD_DESKTOP_DB" "$OLD_APP_REG" "$OLD_PTH" /var/lib/hue 2>/dev/null
+    if [ $? -ne 0 ] ; then
+      cp /usr/lib/hue/seed/common/* /var/lib/hue
+    fi
+  else
+    cp /usr/lib/hue/seed/common/* /var/lib/hue
+  fi
 fi
 chown -R hue:hue /var/log/hue /var/lib/hue
 
@@ -220,6 +234,16 @@ fi
 
 if [ -d %{hue_dir} ]; then
   find %{hue_dir} -name \*.py[co] -exec rm -f {} \;
+fi
+
+##################################################
+# Post-transaction (runs when old package is gone)
+##################################################
+%posttrans -n %{name}-common -p /bin/bash
+# This is only here for the benefit of CM. We have to keep it until CDH5.
+if [ -d /usr/share/hue ] ; then
+  mv /usr/share/hue /usr/share/hue.$$ || :
+  ln -s /usr/lib/hue /usr/share/hue || :
 fi
 
 %files -n %{name}-common
@@ -244,6 +268,7 @@ fi
 %{hue_dir}/app.reg
 %{hue_dir}/seed
 %{hue_dir}/apps/Makefile
+%{hue_dir}/cloudera/cdh_version.properties
 %dir %{hue_dir}/apps
 # Hue core apps
 %{about_app_dir}
@@ -263,6 +288,8 @@ fi
 # beeswax and pig are packaged as a plugin app
 %exclude %{beeswax_app_dir}
 %exclude %{pig_app_dir}
+%exclude %{hadoop_lib}
+%exclude %{impala_app_dir}
 
 ############################################################
 # No-arch packages - plugins and conf
@@ -307,7 +334,7 @@ fi
 %package -n %{name}-beeswax
 Summary: A UI for Hive on Hue
 Group: Applications/Engineering
-Requires: %{name}-common = %{version}-%{release}, hive, make
+Requires: %{name}-common = %{version}-%{release}, hive
 Requires(pre): %{name}-common = %{version}-%{release}
 Requires(preun): %{name}-common = %{version}-%{release}
 
@@ -328,7 +355,6 @@ and import and export data.
 %package -n %{name}-pig
 Summary: A UI for Pig on Hue
 Group: Applications/Engineering
-Requires: make, pig
 Requires: %{name}-common = %{version}-%{release}
 Requires(pre): %{name}-common = %{version}-%{release}
 Requires(preun): %{name}-common = %{version}-%{release}
@@ -343,3 +369,41 @@ It allows users to construct and run Pig jobs.
 
 %files -n %{name}-pig
 %{pig_app_dir}
+
+#### PLUGINS ######
+%package -n %{name}-plugins
+Summary: Hadoop plugins for Hue
+Requires: hadoop, bigtop-utils
+Group: Applications/Engineering
+Conflicts: cloudera-desktop-plugins
+%description -n %{name}-plugins
+Plugins for Hue
+
+This package should be installed on each node in the Hadoop cluster.
+
+%files -n %{name}-plugins
+%defattr(-,root,root)
+%{hadoop_lib}/
+%{hadoop_home}/cloudera/
+
+#### HUE-IMPALA PLUGIN ######
+%package -n %{name}-impala
+Summary: A UI for Impala on Hue
+Group: Applications/Engineering
+Requires: %{name}-beeswax = %{version}-%{release}
+Requires: %{name}-common = %{version}-%{release}
+Requires(pre): %{name}-common = %{version}-%{release}
+Requires(preun): %{name}-common = %{version}-%{release}
+
+%description -n %{name}-impala
+A web interface for Impala.
+
+It allows users to construct and run queries on Impala, manage tables,
+and import and export data.
+
+%app_post_macro impala
+%app_preun_macro impala
+
+%files -n %{name}-impala
+%defattr(-,root,root)
+%{impala_app_dir}

@@ -102,8 +102,11 @@ BUNDLED_BUILD_DIR=$PREFIX/$LIB_DIR/build
 (cd $BUILD_DIR ; PREFIX=`dirname $PREFIX/$LIB_DIR` make install)
 
 # Install plugins
+PLUGIN_NAME=`basename $BUILD_DIR/desktop/libs/hadoop/java-lib/*plugin*jar`
+install -d -m 0755 $PREFIX/$LIB_DIR/desktop/libs/hadoop/java-lib
+cp $BUILD_DIR/desktop/libs/hadoop/java-lib/$PLUGIN_NAME $PREFIX/$LIB_DIR/desktop/libs/hadoop/java-lib
 install -d -m 0755 $PREFIX/$HADOOP_DIR
-ln -fs $LIB_DIR/desktop/libs/hadoop/java-lib/*plugin*jar $PREFIX/$HADOOP_DIR
+cp -f $BUILD_DIR/desktop/libs/hadoop/java-lib/$PLUGIN_NAME $PREFIX/$HADOOP_DIR
 
 # Hue Shell specific
 install -d -m 0755 $PREFIX/$LIB_DIR/apps/shell/src/shell/build/
@@ -146,8 +149,6 @@ ln -fs $CONF_DIR/conf $PREFIX/$LIB_DIR/desktop/conf
 sed -i -e '/\[\[database\]\]/a\
     engine=sqlite3\
     name=/var/lib/hue/desktop.db' $PREFIX/${CONF_DIR}/conf.empty/hue.ini
-sed -i -e '/\[\[yarn_clusters\]\]/,+20s@## submit_to=False@submit_to=True@' \
-    $PREFIX/${CONF_DIR}/conf.empty/hue.ini
 
 # Relink logs subdirectory just in case
 install -d -m 0755 $PREFIX/$LOG_DIR
@@ -187,3 +188,10 @@ done
 
 # Remove bogus files
 rm -fv `find $PREFIX -iname "build_log.txt"`
+
+# Cloudera specific
+install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
+cp $BUILD_DIR/cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera
+install -d -m 0755 $PREFIX/$HADOOP_DIR/../cloudera
+grep -v 'cloudera.pkg.name=' < $BUILD_DIR/cloudera/cdh_version.properties > $PREFIX/$HADOOP_DIR/../cloudera/cm_version.properties
+echo 'cloudera.pkg.name=hue-plugins' >> $PREFIX/$HADOOP_DIR/../cloudera/cm_version.properties
