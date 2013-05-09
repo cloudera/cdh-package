@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -15,6 +15,12 @@
 # limitations under the License.
 
 set -ex
+
+if ! [ -e $FORREST_HOME/bin/forrest ]; then
+  echo No FORREST_HOME set. Forrest documentation requires Forrest to be 1>&2
+  echo installed. 1>&2
+  exit 1
+fi
 
 . `dirname ${0}`/bigtop.bom
 
@@ -41,11 +47,22 @@ export LC_ALL=en_US.UTF-8
 rm test/org/apache/pig/test/TestHBaseStorage.java
 sed -i.orig -e 's#</modules>#<module organisation="org.apache.hadoop" name=".*" resolver="internal"/>\n</modules>#' ivy/ivysettings.xml
 
-ant $BUILD_OPTS clean jar jar-withouthadoop pigunit-jar smoketests-jar "$@"
-for build_file in contrib/piggybank/java/build.xml contrib/zebra/build.xml ; do
+ant $BUILD_OPTS clean jar jar-withouthadoop "$@"
+for build_file in contrib/piggybank/java/build.xml ; do
   ant $BUILD_OPTS -buildfile $build_file clean jar "$@"
 done
-ant $BUILD_OPTS tar "$@"
+
+# Additional JARs needed for Avro integration
+IVY_LIB=build/ivy/lib/Pig
+for jar_file in avro-* jackson-core-asl-* jackson-mapper-asl-* json-simple-* snappy-java-* ; do
+	cp $IVY_LIB/$jar_file.jar contrib/piggybank/java/lib/
+done
+
+# Build pig tar and pigunit..
+ant $BUILD_OPTS tar pigunit-jar smoketests-jar "$@"
+
+# Clean up after piggybank.
+rm -rf contrib/piggybank/java/build
 
 # install the Pig jar into the local Maven cache
 mvn install:install-file -DgroupId=org.apache.pig -DartifactId=pig -Dversion=${PIG_VERSION} -Dpackaging=jar -Dfile=pig.jar

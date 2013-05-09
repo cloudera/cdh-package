@@ -105,7 +105,8 @@ install -d -m 0755 $PREFIX/$LIB_DIR
 (cd $BUILD_DIR/tar/pig* && tar -cf - .) | (cd $PREFIX/$LIB_DIR && tar -xf -)
 
 # Salavage a few files from the contrib &co
-find $PREFIX/$LIB_DIR/contrib -name \*.jar -exec cp {} $PREFIX/$LIB_DIR \;
+find $PREFIX/$LIB_DIR/contrib -name piggybank.jar -exec mv {} $PREFIX/$LIB_DIR/ \;
+find $PREFIX/$LIB_DIR/contrib -name \*.jar -exec cp {} $PREFIX/$LIB_DIR/lib/ \;
 cp $BUILD_DIR/pig-*-smoketests.jar $PREFIX/$LIB_DIR/
 
 # Remove directories that are going elsewhere
