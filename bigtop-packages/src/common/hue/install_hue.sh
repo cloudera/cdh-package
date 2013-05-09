@@ -109,6 +109,13 @@ ln -fs $LIB_DIR/desktop/libs/hadoop/java-lib/*plugin*jar $PREFIX/$HADOOP_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/apps/shell/src/shell/build/
 cp -f $BUILD_DIR/apps/shell/src/shell/build/setuid $PREFIX/$LIB_DIR/apps/shell/src/shell/build
 
+# Create a stash for mutable DB files
+install -d -m 0755 $PREFIX/$LIB_DIR/seed/all
+install -d -m 0755 $PREFIX/$LIB_DIR/seed/common
+mv $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$LIB_DIR/seed/all
+mv $PREFIX/$LIB_DIR/app.reg $PREFIX/$LIB_DIR/seed/all
+mv $PREFIX/$LIB_DIR/build/env/lib/*/site-packages/hue.pth $PREFIX/$LIB_DIR/seed/all
+
 # Remove Hue database and then recreate it, but with just the "right" apps
 rm -f $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$LIB_DIR/app.reg
 APPS="about filebrowser help proxy useradmin shell oozie jobbrowser jobsub metastore"
@@ -123,9 +130,14 @@ find $PREFIX/$LIB_DIR -iname \*.py[co]  -exec rm -f {} \;
 # Making the resulting tree relocatable
 (cd $PREFIX/$LIB_DIR ; bash tools/relocatable.sh)
 
-# Move desktop.db to a var location
+# Move desktop.db, app.reg and hue.pth to a var location
 install -d -m 0755 $PREFIX/$VAR_DIR
-mv $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$VAR_DIR
+mv $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$LIB_DIR/seed/common
+ln -s $VAR_DIR/desktop.db $PREFIX/$LIB_DIR/desktop/desktop.db
+mv $PREFIX/$LIB_DIR/app.reg $PREFIX/$LIB_DIR/seed/common
+ln -s $VAR_DIR/app.reg $PREFIX/$LIB_DIR/app.reg
+mv $PREFIX/$LIB_DIR/build/env/lib/*/site-packages/hue.pth $PREFIX/$LIB_DIR/seed/common
+(cd $PREFIX/$LIB_DIR/build/env/lib/*/site-packages ; ln -s $VAR_DIR/hue.pth hue.pth)
 
 # Install conf files
 install -d -m 0755 $PREFIX/$CONF_DIR

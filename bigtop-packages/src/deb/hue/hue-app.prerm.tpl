@@ -39,7 +39,7 @@ app_reg="$ROOT/tools/app_reg/app_reg.py"
 case "$1" in
     remove|upgrade|deconfigure)
         if test -e $app_reg -a -e $env_python ; then
-	    $env_python $app_reg --remove $APP ||:
+	    HUE_APP_REG_DIR=/var/lib/hue HUE_PTH_DIR=/var/lib/hue $env_python $app_reg --remove $APP ||:
         fi
         find $APP_DIR -name \*.py[co] -exec rm -f {} \; ||:
         find $APP_DIR -name \*.egg-info -prune -exec rm -Rf {} \; ||:

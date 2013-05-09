@@ -35,7 +35,11 @@ set -e
 
 case "$1" in
     configure)
-        # tweak permissions
+	# initialize seed databases if there's none
+        HUE_STATE=/var/lib/hue
+        if [ ! -e $HUE_STATE/desktop.db ] && [ ! -e $HUE_STATE/app.reg ] && [ ! -e $HUE_STATE/hue.pth ] ; then
+          cp /usr/lib/hue/seed/common/* /var/lib/hue
+        fi
         chown -R hue:hue /var/log/hue /var/lib/hue
 
         # Install config alternatives

@@ -1,5 +1,6 @@
 /etc/hue/conf.empty
 /usr/lib/hue/app.reg
+/usr/lib/hue/seed
 /usr/lib/hue/desktop
 /usr/lib/hue/ext
 /usr/lib/hue/LICENSE.txt

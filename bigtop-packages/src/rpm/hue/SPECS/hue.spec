@@ -199,13 +199,14 @@ getent passwd %{username} 2>&1 > /dev/null || /usr/sbin/useradd -c "Hue" -s /sbi
 ########################################
 %post -n %{name}-common -p /bin/bash
 
-%{alternatives_cmd} --install %{etc_hue} hue-conf %{etc_hue}.empty 30
-
-# If there is an old DB in place, make a backup.
-if [ -e %{hue_dir}/desktop/desktop.db ]; then
-  echo "Backing up previous version of Hue database..."
-  cp -a %{hue_dir}/desktop/desktop.db %{hue_dir}/desktop/desktop.db.rpmsave.$(date +'%Y%m%d.%H%M%S')
+# initialize seed databases if there's none
+HUE_STATE=/var/lib/hue
+if [ ! -e $HUE_STATE/desktop.db ] && [ ! -e $HUE_STATE/app.reg ] && [ ! -e $HUE_STATE/hue.pth ] ; then
+  cp /usr/lib/hue/seed/common/* /var/lib/hue
 fi
+chown -R hue:hue /var/log/hue /var/lib/hue
+
+%{alternatives_cmd} --install %{etc_hue} hue-conf %{etc_hue}.empty 30
 
 %preun -n %{name}-common -p /bin/bash
 if [ "$1" = 0 ]; then
@@ -251,6 +252,7 @@ fi
 %{hue_dir}/build/env/lib*/
 %{hue_dir}/build/env/stamp
 %{hue_dir}/app.reg
+%{hue_dir}/seed
 %{hue_dir}/apps/Makefile
 %dir %{hue_dir}/apps
 # Hue core apps
