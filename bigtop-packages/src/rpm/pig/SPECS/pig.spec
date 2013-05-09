@@ -75,14 +75,14 @@ URL: http://pig.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch
-Source0: pig-%{pig_base_version}.tar.gz
+Source0: pig-%{pig_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_pig.sh
 Source3: log4j.properties
 Source4: pig.1
 Source5: pig.properties
-Source6: bigtop.bom
 Requires: hadoop-client, bigtop-utils >= 0.6
+Conflicts: hadoop-pig
 
 %description 
 Pig is a platform for analyzing large data sets that consists of a high-level language 
@@ -108,10 +108,10 @@ language called Pig Latin, which has the following key properties:
 
 
 %prep
-%setup -n %{name}-%{pig_base_version}
+%setup -n pig-%{pig_patched_version}
 
 %build
-env PIG_BASE_VERSION=%{pig_base_version} bash %{SOURCE1}
+env FULL_VERSION=%{pig_patched_version} bash %{SOURCE1}
 
 
 #########################

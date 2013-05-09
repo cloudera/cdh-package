@@ -15,6 +15,7 @@
 # limitations under the License.
 
 set -ex
+IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
 
 if ! [ -e $FORREST_HOME/bin/forrest ]; then
   echo No FORREST_HOME set. Forrest documentation requires Forrest to be 1>&2
@@ -22,29 +23,14 @@ if ! [ -e $FORREST_HOME/bin/forrest ]; then
   exit 1
 fi
 
-. `dirname ${0}`/bigtop.bom
-
-cat <<__EOT__ >> ivy/libraries.properties
-
-hbase.version=$HBASE_VERSION
-hive.version=$HIVE_VERSION
-zookeeper.version=$ZOOKEEPER_VERSION
-hadoop-common.version=$HADOOP_VERSION
-hadoop-hdfs.version=$HADOOP_VERSION
-hadoop-mapreduce.version=$HADOOP_VERSION
-__EOT__
-
-# Workaround because renamed o.a.h.h.serde.Constants to o.a.h.h.serde.serdeConstants in a non-backwards compatible way in 0.10.0
-# This is being fixed via HIVE-4001. Please remove this workaround once that gets into a release (Hive 0.11?)
-sed -i -e "s/org.apache.hadoop.hive.serde.Constants/org.apache.hadoop.hive.serde.serdeConstants/g" \
--e "s/Constants\./serdeConstants\./g" contrib/piggybank/java/src/main/java/org/apache/pig/piggybank/storage/HiveColumnarLoader.java
-
-BUILD_OPTS="-Djavac.version=1.6 -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_VERSION} -Dhadoopversion=23"
+BUILD_OPTS="-Djavac.version=1.6 -Dforrest.home=${FORREST_HOME}  -Dhadoopversion=23   \
+            -Dreactor.repo=file://${HOME}/.m2/repository -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP \
+            -propertyfile cloudera/build.properties"
 
 # FIXME: BIGTOP-894. Please get rid of the line below when Bigtop integrates a version of Pig that includes the fix for PIG-3262
 export LC_ALL=en_US.UTF-8
 
-rm test/org/apache/pig/test/TestHBaseStorage.java
+rm -f test/org/apache/pig/test/TestHBaseStorage.java
 sed -i.orig -e 's#</modules>#<module organisation="org.apache.hadoop" name=".*" resolver="internal"/>\n</modules>#' ivy/ivysettings.xml
 
 ant $BUILD_OPTS clean jar jar-withouthadoop "$@"
@@ -64,5 +50,7 @@ ant $BUILD_OPTS tar pigunit-jar smoketests-jar "$@"
 # Clean up after piggybank.
 rm -rf contrib/piggybank/java/build
 
-# install the Pig jar into the local Maven cache
-mvn install:install-file -DgroupId=org.apache.pig -DartifactId=pig -Dversion=${PIG_VERSION} -Dpackaging=jar -Dfile=pig.jar
+# Change to cloudera/maven directory, and install
+# (and if called from CDH nightly build, deploy) artifacts into Maven repository
+cd cloudera/maven-packaging
+mvn -Dnot.cdh.release.build=false install -Dmaven.repo.local=${HOME}/.m2/repository $DO_MAVEN_DEPLOY

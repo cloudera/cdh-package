@@ -110,7 +110,7 @@ find $PREFIX/$LIB_DIR/contrib -name \*.jar -exec cp {} $PREFIX/$LIB_DIR/lib/ \;
 cp $BUILD_DIR/pig-*-smoketests.jar $PREFIX/$LIB_DIR/
 
 # Remove directories that are going elsewhere
-for dir in shims conf src lib-src docs tutorial test build.xml contrib ivy pig-*.stage.jar ivy.xml build.properties
+for dir in cloudera-pom.xml cloudera shims conf src lib-src docs tutorial test build.xml contrib ivy pig-*.stage.jar ivy.xml build.properties
 do
    rm -rf $PREFIX/$LIB_DIR/$dir
 done
@@ -165,3 +165,7 @@ rm -f $PREFIX/$LIB_DIR/lib/hadoop*jar
 
 # Pig log directory
 install -d -m 1777 $PREFIX/var/log/pig
+
+# Cloudera specific
+install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
