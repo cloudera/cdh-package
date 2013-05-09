@@ -41,18 +41,6 @@ case "$1" in
                   --gecos "Hue daemon" \
                   $USER >/dev/null
         fi
-
-        # In upgrade, make a copy of the database, if it's there.
-        if [ "$1" == "upgrade" ] ; then
-                echo "... stopping any running Hue"
-                /etc/init.d/hue stop || :
-                OLD_DESKTOP_DB=/usr/share/hue/desktop/desktop.db
-                if [ -e $OLD_DESKTOP_DB ]; then
-                        echo ... backing up $OLD_DESKTOP_DB as ${OLD_DESKTOP_DB}.bak.$2
-                        cp -a $OLD_DESKTOP_DB ${OLD_DESKTOP_DB}.bak.$2
-                fi
-        fi
-
     ;;
 
     abort-upgrade)

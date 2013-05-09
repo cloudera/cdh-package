@@ -213,7 +213,6 @@ if [ "$1" = 0 ]; then
         %{alternatives_cmd} --remove hue-conf %{etc_hue}.empty || :
 fi
 
-
 ########################################
 # Post-uninstall
 ########################################
@@ -222,15 +221,6 @@ fi
 if [ -d %{hue_dir} ]; then
   find %{hue_dir} -name \*.py[co] -exec rm -f {} \;
 fi
-
-if [ $1 -eq 0 ]; then
-  # TODO this seems awfully aggressive
-  # NOTE  Despite dependency, hue-common could get removed before the apps are.
-  #       We should remove app.reg because apps won't have a chance to
-  #       unregister themselves.
-  rm -Rf %{hue_dir}/desktop %{hue_dir}/build %{hue_dir}/pids %{hue_dir}/app.reg
-fi
-
 
 %files -n %{name}-common
 %defattr(-,root,root)
@@ -282,6 +272,8 @@ fi
 %package -n %{name}-server
 Summary: Service Scripts for Hue
 Requires: %{name}-common = %{version}-%{release}
+Requires(pre): %{name}-common = %{version}-%{release}
+Requires(preun): %{name}-common = %{version}-%{release}
 Requires: /sbin/chkconfig
 Group: Applications/Engineering
 
@@ -316,6 +308,8 @@ fi
 Summary: A UI for Hive on Hue
 Group: Applications/Engineering
 Requires: %{name}-common = %{version}-%{release}, hive, make
+Requires(pre): %{name}-common = %{version}-%{release}
+Requires(preun): %{name}-common = %{version}-%{release}
 
 %description -n %{name}-beeswax
 Beeswax is a web interface for Hive.
@@ -327,7 +321,7 @@ and import and export data.
 %app_preun_macro beeswax
 
 %files -n %{name}-beeswax
-%defattr(-, %{username}, %{username})
+%defattr(-,root,root)
 %{beeswax_app_dir}
 
 #### HUE-PIG PLUGIN ######
@@ -336,6 +330,8 @@ Summary: A UI for Pig on Hue
 Group: Applications/Engineering
 Requires: make, pig
 Requires: %{name}-common = %{version}-%{release}
+Requires(pre): %{name}-common = %{version}-%{release}
+Requires(preun): %{name}-common = %{version}-%{release}
 
 %description -n %{name}-pig
 A web interface for Pig.

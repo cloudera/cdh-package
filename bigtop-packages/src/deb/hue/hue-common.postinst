@@ -45,16 +45,6 @@ case "$1" in
         # Install config alternatives
         update-alternatives  --install /etc/hue/conf hue-conf /etc/hue/conf.empty 30
 
-        # If we're upgrading, copy their backed up db from the old version
-        # and syncdb.
-        if [ ! -z "$2" ]; then
-                OLD_DB=/usr/share/hue/desktop/desktop.db.bak.$2
-                if [ -e $OLD_DB ]; then
-                        echo Upgrading old database...
-                        cp $OLD_DB /usr/share/hue/desktop/desktop.db
-                fi
-        fi
-
         # Take care of hue-shell setuid binary
         SETUID=/usr/lib/hue/apps/shell/src/shell/build/setuid
         chown root:hue $SETUID
