@@ -77,7 +77,7 @@ AutoReqProv: no
 %define beeswax_app_dir %{hue_dir}/apps/beeswax
 %define oozie_app_dir %{hue_dir}/apps/oozie
 %define pig_app_dir %{hue_dir}/apps/pig
-%define catalog_app_dir %{hue_dir}/apps/catalog
+%define catalog_app_dir %{hue_dir}/apps/metastore
 %define filebrowser_app_dir %{hue_dir}/apps/filebrowser
 %define help_app_dir %{hue_dir}/apps/help
 %define jobbrowser_app_dir %{hue_dir}/apps/jobbrowser
