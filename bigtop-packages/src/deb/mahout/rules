@@ -28,11 +28,11 @@ export DH_OPTIONS
 
 override_dh_auto_build:
 	# we'll just use the build from the tarball.
-	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
+	env FULL_VERSION=${MAHOUT_PATCHED_VERSION} bash -x debian/do-component-build
 
 override_dh_auto_install:
 	sh -x debian/install_mahout.sh \
-	  --build-dir=build \
+	  --build-dir=build/mahout-${MAHOUT_PATCHED_VERSION} \
 	  --doc-dir=/usr/share/doc/mahout-doc \
 	  --prefix=debian/tmp
 	rm -rf debian/tmp/usr/lib/mahout/lib/slf4j-log4j12-*.jar debian/tmp/usr/lib/mahout/lib/hadoop

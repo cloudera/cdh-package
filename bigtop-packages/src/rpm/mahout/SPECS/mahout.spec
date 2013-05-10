@@ -41,7 +41,7 @@ Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0 
-Source0: %{name}-distribution-%{mahout_base_version}-src.tar.gz
+Source0: mahout-%{mahout_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{name}.sh
 Requires: hadoop-client, bigtop-utils >= 0.6
@@ -73,15 +73,15 @@ Documentation for Apache Mahout
 
 
 %prep
-%setup -n %{name}-distribution-%{mahout_base_version}
+%setup -n mahout-%{mahout_patched_version}
 
 %build
-bash $RPM_SOURCE_DIR/do-component-build
+env FULL_VERSION=%{mahout_patched_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh $RPM_SOURCE_DIR/install_mahout.sh \
-          --build-dir=build \
+          --build-dir=build/mahout-%{mahout_patched_version} \
           --prefix=$RPM_BUILD_ROOT \
           --doc-dir=%{doc_mahout} 
 %__rm -rf $RPM_BUILD_ROOT/usr/lib/mahout/lib/slf4j-log4j12-*.jar $RPM_BUILD_ROOT/usr/lib/mahout/lib/hadoop
