@@ -30,20 +30,21 @@ hive_pkg_name=hive
 
 override_dh_auto_build:
 	mkdir -p /tmp/debian-hive/.ivy
-	bash debian/do-component-build  -Divy.home=${HOME}/.ivy2
+	env FULL_VERSION=${HIVE_PATCHED_VERSION} bash debian/do-component-build
 	touch $@
 
-server metastore:
+server server2 metastore:
 	bash debian/init.d.tmpl debian/hive-$@.svc deb debian/${hive_pkg_name}-$@.init
 
-override_dh_auto_install: metastore server
+override_dh_auto_install: metastore server server2
 	cp debian/hive-site.xml .
 	cp debian/hive.1 .
 	sh debian/install_hive.sh \
 	  --prefix=debian/${hive_pkg_name} \
 	  --build-dir=src/build/dist \
-	  --doc-dir=/usr/share/doc/${hive_pkg_name}
-	# We need to get rid of jars that happen to be shipped in other packages
+	  --doc-dir=debian/${hive_pkg_name}/usr/share/doc/${hive_pkg_name} \
+	  --python-dir=debian/python-${hive_pkg_name}/usr/share/python-support/python-${hive_pkg_name}/${hive_pkg_name}
+	# We need to get rid of jars that happen to be shipped in other CDH packages
 	rm -f debian/${hive_pkg_name}/usr/lib/hive/lib/hbase-*.jar debian/${hive_pkg_name}/usr/lib/hive/lib/zookeeper-*.jar
 	mkdir -p debian/${hive_pkg_name}-hbase/usr/lib/hive/lib
 	ln -s  /usr/lib/hbase/hbase.jar debian/${hive_pkg_name}-hbase/usr/lib/hive/lib

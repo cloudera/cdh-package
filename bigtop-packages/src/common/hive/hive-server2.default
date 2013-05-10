@@ -1,4 +1,3 @@
-#!/bin/sh
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -14,23 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -ex
-# -f src/build.xml
-IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
-
-ln -s src/build .
-
-if [ -f cloudera/build.properties ]; then
-    cp -r cloudera/* src/cloudera
-fi
-
-cd src
-
-ant -Dhadoop.security.version.prefix=0.23 \
-    -Dreactor.repo=file://${HOME}/.m2/repository -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP \
-    -propertyfile cdh.build.properties -Dinclude.postgres=true tar "$@"
-
-# Change to cloudera/maven directory, and install
-# (and if called from CDH nightly build, deploy) artifacts into Maven repository
-cd cloudera/maven-packaging
-mvn -Dnot.cdh.release.build=false -Dmaven.repo.local=${HOME}/.m2/repository  install $DO_MAVEN_DEPLOY
+# The port for Hive server2 daemon to listen to.
+# Unfortunatelly, there is no way to specify the interfaces 
+# to which the daemon binds.
+#
+#PORT=

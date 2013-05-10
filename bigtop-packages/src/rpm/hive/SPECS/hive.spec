@@ -20,7 +20,7 @@
 %define bin_hive /usr/bin
 %define hive_config_virtual hive_active_configuration
 %define man_dir %{_mandir}
-%define hive_services server metastore
+%define hive_services server metastore server2
 # After we run "ant package" we'll find the distribution here
 %define hive_dist src/build/dist
 
@@ -60,7 +60,7 @@ URL: http://hive.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch
-Source0: %{name}-%{hive_base_version}.tar.gz
+Source0: %{name}-%{hive_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_hive.sh
 Source3: init.d.tmpl
@@ -69,9 +69,9 @@ Source5: hive-server.default
 Source6: hive-metastore.default
 Source7: hive.1
 Source8: hive-site.xml
-Source9: hive-server.svc
-Source10: hive-metastore.svc
+Source9: hive-server2.default
 Requires: hadoop-client, bigtop-utils >= 0.6, hbase, zookeeper
+Conflicts: hadoop-hive
 Obsoletes: %{name}-webinterface
 
 %description 
@@ -79,6 +79,11 @@ Hive is a data warehouse infrastructure built on top of Hadoop that provides too
 
 %package server
 Summary: Provides a Hive Thrift service.
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+
+%package server2
+Summary: Provides a Hive Thrift service with improved concurrency support.
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
@@ -94,6 +99,9 @@ Requires: redhat-lsb
 
 %description server
 This optional package hosts a Thrift server for Hive clients across a network to use.
+
+%description server2
+This optional package hosts a Thrift server for Hive clients across a network to use with improved concurrency support.
 
 %package metastore
 Summary: Shared metadata repository for Hive.
@@ -126,7 +134,7 @@ This optional package provides integration between Apache HBase and Apache Hive
 
 
 %prep
-%setup -n %{name}-%{hive_base_version}
+%setup -n %{name}-%{hive_patched_version}
 
 %build
 bash %{SOURCE1}
@@ -142,21 +150,23 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 /bin/bash %{SOURCE2} \
   --prefix=$RPM_BUILD_ROOT \
   --build-dir=%{hive_dist} \
-  --doc-dir=%{doc_hive}
+  --doc-dir=$RPM_BUILD_ROOT/%{doc_hive}
 
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
 %__install -m 0644 %{SOURCE6} $RPM_BUILD_ROOT/etc/default/%{name}-metastore
 %__install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT/etc/default/%{name}-server
+%__install -m 0644 %{SOURCE9} $RPM_BUILD_ROOT/etc/default/%{name}-server2
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/log/%{name}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{name}
 
-# Workaround for BIGTOP-583
-%__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/slf4j-log4j12-*.jar
-
 # We need to get rid of jars that happen to be shipped in other CDH packages
 %__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/zookeeper-*.jar
 %__ln_s  /usr/lib/hbase/hbase.jar /usr/lib/zookeeper/zookeeper.jar  $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
+
+# Workaround for BIGTOP-583
+%__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/slf4j-log4j12-*.jar
 
 for service in %{hive_services}
 do
@@ -199,7 +209,9 @@ fi
 %config(noreplace) %{etc_hive}/conf.dist
 %{usr_lib_hive}
 %{bin_hive}/hive
-%attr(0755,hive,hive) %dir %{var_lib_hive}
+%{bin_hive}/beeline
+%{bin_hive}/hiveserver2
+%{var_lib_hive}
 %attr(0755,hive,hive) %dir %{_localstatedir}/log/%{name}
 %attr(0755,hive,hive) %dir %{_localstatedir}/run/%{name}
 %doc %{doc_hive}
@@ -228,4 +240,5 @@ if [ $1 -ge 1 ]; then \
 	service %{name}-%1 condrestart >/dev/null 2>&1 || : \
 fi
 %service_macro server
+%service_macro server2
 %service_macro metastore

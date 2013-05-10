@@ -37,13 +37,19 @@ Description: Hive is a data warehouse infrastructure built on top of Hadoop
 Package: hive-server
 Architecture: all
 Depends: hive (= ${source:Version})
-Description: Provides a Hive Thrift service.
+Description: Provides a Hive Thrift service
  This optional package hosts a Thrift server for Hive clients across a network to use.
+
+Package: hive-server2
+Architecture: all
+Depends: hive (= ${source:Version})
+Description: Provides a Hive Thrift service with improved concurrency support.
+ This optional package hosts a Thrift server for Hive clients across a network to use, with improved concurrency support.
 
 Package: hive-metastore
 Architecture: all
 Depends: hive (= ${source:Version})
-Description: Shared metadata repository for Hive.
+Description: Shared metadata repository for Hive
  This optional package hosts a metadata server for Hive clients across a network to use.
 
 Package: hive-hbase
