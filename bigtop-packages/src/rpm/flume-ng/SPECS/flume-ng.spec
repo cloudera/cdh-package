@@ -12,15 +12,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%define etc_flume /etc/flume/conf
+%define etc_flume /etc/flume-ng/conf
 %define bin_flume %{_bindir}
 %define man_flume %{_mandir}
-%define lib_flume /usr/lib/flume
-%define log_flume /var/log/flume
-%define run_flume /var/run/flume
-%define vlb_flume /var/lib/flume
-
-%define flume_folder apache-%{name}-%{flume_base_version}-src
+%define lib_flume /usr/lib/flume-ng
+%define log_flume /var/log/flume-ng
+%define run_flume /var/run/flume-ng
+%define vlb_flume /var/lib/flume-ng
 
 %if  %{?suse_version:1}0
 
@@ -39,13 +37,13 @@
     /usr/lib/rpm/brp-compress ; \
     %{nil}
 
-%define doc_flume %{_docdir}/flume
+%define doc_flume %{_docdir}/flume-ng
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d
 
 %else
 
-%define doc_flume %{_docdir}/flume-%{flume_version}
+%define doc_flume %{_docdir}/flume-ng-%{flume_ng_version}
 %define alternatives_cmd alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 
@@ -53,20 +51,20 @@
 
 
 
-Name: flume
-Version: %{flume_version}
-Release: %{flume_release}
+Name: flume-ng
+Version: %{flume_ng_version}
+Release: %{flume_ng_release}
 Summary:  Flume is a reliable, scalable, and manageable distributed log collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.
 URL: http://incubator.apache.org/projects/flume.html
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch
 License: APL2
-Source0: %{flume_folder}.tar.gz
+Source0: %{name}-%{flume_ng_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: %{name}-agent.init
-Source4: flume-agent.default
+Source4: flume-ng-agent.default
 Requires: /usr/sbin/useradd
 Requires: coreutils
 Requires: hadoop-hdfs
@@ -113,19 +111,19 @@ Flume is a reliable, scalable, and manageable distributed data collection applic
 
 
 %package doc
-Summary: Flume Documentation
+Summary: Flume NG Documentation
 Group: Documentation
 BuildArch: noarch
 
 %description doc
-Documentation for Flume
+Documentation for Flume NG
 
 
 %prep
-%setup -n %{flume_folder}
+%setup -n apache-flume-%{flume_ng_patched_version}-bin
 
 %build
-env FLUME_VERSION=%{version} sh %{SOURCE1}
+env FULL_VERSION=%{flume_ng_patched_version} sh %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
@@ -185,10 +183,13 @@ fi
 %dir %{lib_flume}
 %dir %{lib_flume}/bin
 %dir %{lib_flume}/lib
+%dir %{lib_flume}/cloudera
 
 %config(noreplace) %{etc_flume}.empty/*
+%{etc_flume}.dist
 %attr(0755,root,root) %{bin_flume}/flume-ng
 %attr(0755,root,root) %{lib_flume}/bin/flume-ng
+%{lib_flume}/cloudera/cdh_version.properties
 %{lib_flume}/lib/*.jar
 %{lib_flume}/conf
 

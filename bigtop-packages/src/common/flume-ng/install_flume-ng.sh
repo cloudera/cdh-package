@@ -25,7 +25,7 @@ usage: $0 <options>
 
   Optional options:
      --doc-dir=DIR               path to install docs into [/usr/share/doc/flume]
-     --lib-dir=DIR               path to install flume home [/usr/lib/flume]
+     --flume-dir=DIR               path to install flume home [/usr/lib/flume]
      --bin-dir=DIR               path to install bins [/usr/bin]
      --examples-dir=DIR          path to install examples [doc-dir/examples]
      ... [ see source for more similar options ]
@@ -38,8 +38,8 @@ OPTS=$(getopt \
   -o '' \
   -l 'prefix:' \
   -l 'doc-dir:' \
-  -l 'lib-dir:' \
   -l 'doc-dir-prefix:' \
+  -l 'flume-dir:' \
   -l 'bin-dir:' \
   -l 'examples-dir:' \
   -l 'build-dir:' -- "$@")
@@ -61,10 +61,11 @@ while true ; do
         --doc-dir)
         DOC_DIR=$2 ; shift 2
         ;;
-        --lib-dir)
-        LIB_DIR=$2 ; shift 2
         --doc-dir-prefix)
         DOC_DIR_PREFIX=$2 ; shift 2
+        ;;
+        --flume-dir)
+        FLUME_DIR=$2 ; shift 2
         ;;
         ;;
         --bin-dir)
@@ -92,17 +93,17 @@ for var in PREFIX BUILD_DIR ; do
 done
 
 MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
-DOC_DIR=${DOC_DIR:-/usr/share/doc/flume}
+DOC_DIR=${DOC_DIR:-/usr/share/doc/flume-ng}
 DOC_DIR_PREFIX=${DOC_DIR_PREFIX:-$PREFIX}
-LIB_DIR=${LIB_DIR:-/usr/lib/flume}
-BIN_DIR=${BIN_DIR:-/usr/lib/flume/bin}
-CONF_DIST_DIR=/etc/flume/conf.dist/
-ETC_DIR=${ETC_DIR:-/etc/flume}
+FLUME_DIR=${FLUME_DIR:-/usr/lib/flume-ng}
+BIN_DIR=${BIN_DIR:-/usr/lib/flume-ng/bin}
+CONF_DIST_DIR=/etc/flume-ng/conf.dist/
+ETC_DIR=${ETC_DIR:-/etc/flume-ng}
 
-install -d -m 0755 ${PREFIX}/${LIB_DIR}
+install -d -m 0755 ${PREFIX}/${FLUME_DIR}
 
-(cd ${PREFIX}/${LIB_DIR} &&
-  tar --strip-components=1 -xvzf ${BUILD_DIR}/flume-ng-dist/target/*flume-*-bin.tar.gz)
+(cd ${PREFIX}/${FLUME_DIR} &&
+  tar --strip-components=1 -xvzf ${BUILD_DIR}/flume-ng-dist/target/apache-flume-*-bin.tar.gz)
 
 # Take out useless things or we've installed elsewhere
 for x in flume-ng-* \
@@ -117,8 +118,12 @@ for x in flume-ng-* \
           README \
           RELEASE-NOTES \
           bin/ia64 \
-          bin/amd64; do
-  rm -rf ${PREFIX}/$LIB_DIR/$x 
+          bin/amd64 \
+          cloudera/CHANGES.cloudera.txt \
+          cloudera/apply-patches \
+          cloudera/build.properties \
+          cloudera/patches; do
+  rm -rf ${PREFIX}/$FLUME_DIR/$x 
 done
 
 
@@ -141,12 +146,13 @@ chmod 755 $wrapper
 
 install -d -m 0755 $PREFIX/$ETC_DIR/conf.empty
 (cd ${BUILD_DIR}/conf && tar cf - .) | (cd $PREFIX/$ETC_DIR/conf.empty && tar xf -)
-# XXX FIXME: We should handle this upstream more gracefully
-sed -i -e "s|flume\.log\.dir=.*|flume.log.dir=/var/log/flume|" $PREFIX/$ETC_DIR/conf.empty/log4j.properties
+sed -i -e "s|flume\.log\.dir=.*|flume.log.dir=/var/log/flume-ng|" $PREFIX/$ETC_DIR/conf.empty/log4j.properties
 touch $PREFIX/$ETC_DIR/conf.empty/flume.conf
+# workaround for CDH-9780
+ln -s conf.empty $PREFIX/$ETC_DIR/conf.dist
 
-unlink $PREFIX/$LIB_DIR/conf || /bin/true
-ln -s /etc/flume/conf $PREFIX/$LIB_DIR/conf
+unlink $PREFIX/$FLUME_DIR/conf || /bin/true
+ln -s /etc/flume-ng/conf $PREFIX/$FLUME_DIR/conf
 
 # Docs
 install -d -m 0755 ${DOC_DIR_PREFIX}/${DOC_DIR}
@@ -157,9 +163,12 @@ for x in CHANGELOG \
           README \
           RELEASE-NOTES ; do
   if [ -x $x ] ; then
-    cp -r $x $PREFIX/${DOC_DIR}
+    cp -r $x ${DOC_DIR_PREFIX}/${DOC_DIR}
   fi
 done
 mv $PREFIX/$FLUME_DIR/docs/*  ${DOC_DIR_PREFIX}/${DOC_DIR}/
 rm -rf $PREFIX/$FLUME_DIR/docs
 
+# Cloudera specific
+install -d -m 0755 $PREFIX/$FLUME_DIR/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$FLUME_DIR/cloudera/

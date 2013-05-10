@@ -16,11 +16,11 @@
 
 set -ex
 
-. `dirname $0`/bigtop.bom
+MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
+    mvn clean install -DskipTests -Dhadoop.profile=2 "$@" 
 
-export MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m"
+MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
+    mvn clean source:jar javadoc:javadoc install -DskipTests -Dhadoop.profile=2 -Psite ${DO_MAVEN_DEPLOY} "$@" 
 
-mvn -DskipTests -Dhadoop.profile=2  \
-  -Dhadoop.version=$HADOOP_VERSION  \
-  -Dhbase.version=$HBASE_VERSION    \
-  clean install "$@"
+mkdir build
+cp flume-ng-dist/target/apache-flume-${FULL_VERSION}-bin.tar.gz build/flume-ng-${FULL_VERSION}.tar.gz
