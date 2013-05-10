@@ -16,17 +16,22 @@
 
 set -ex
 
-. `dirname ${0}`/bigtop.bom
-
-BUILD_OPTS="-Dforrest.home=${FORREST_HOME}                         \
+BUILD_OPTS="-Dversion=${FULL_VERSION} -Dforrest.home=$FORREST_HOME \
             -Dreactor.repo=file://${HOME}/.m2/repository           \
-            -Dversion=${HCATALOG_VERSION}                          \
-            -Dmvn.hadoop.profile=hadoop23                          \
-            -Dhadoop23.version=${HADOOP_VERSION}                   \
-            -Dhbase.version=${HBASE_VERSION}                       \
-            -Dhive.version=${HIVE_VERSION}                         \
-            -Dpig.version=${PIG_VERSION}                           \
-            -Dzookeeper.version=${ZOOKEEPER_VERSION}"
+            -Dmvn.hadoop.profile=hadoop23"
 
 
 ant $BUILD_OPTS src-release package "$@"
+
+# If DO_MAVEN_DEPLOY == deploy, run the generate-maven-artifacts target
+if [ "${DO_MAVEN_DEPLOY}" == "deploy" ]; then
+    ant $BUILD_OPTS mvn-deploy "$@"
+fi
+
+# Add sources to the binary installation
+cd build
+tar xzf hcatalog-src-${FULL_VERSION}.tar.gz
+mv hcatalog-${FULL_VERSION} hcatalog-src-${FULL_VERSION}/dist
+mv hcatalog-src-${FULL_VERSION} hcatalog-${FULL_VERSION}
+rm hcatalog-${FULL_VERSION}.tar.gz
+tar czf hcatalog-${FULL_VERSION}.tar.gz hcatalog-${FULL_VERSION}

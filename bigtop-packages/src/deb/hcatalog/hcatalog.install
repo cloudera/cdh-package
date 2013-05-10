@@ -1,4 +1,5 @@
 /etc/hcatalog/conf.dist
+/usr/lib/hcatalog/cloudera
 /usr/lib/hcatalog/bin
 /usr/lib/hcatalog/etc/hcatalog
 /usr/lib/hcatalog/libexec

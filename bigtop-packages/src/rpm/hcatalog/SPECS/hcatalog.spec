@@ -19,7 +19,7 @@
 %define man_dir %{_mandir}
 %define hcatalog_svcs hcatalog-server webhcat-server
 # After we run "ant package" we'll find the distribution here
-%define hcatalog_dist build/hcatalog-%{hcatalog_base_version}
+%define hcatalog_dist build/hcatalog-%{hcatalog_patched_version}/dist
 
 %if  %{!?suse_version:1}0
 
@@ -54,7 +54,7 @@ URL: http://incubator.apache.org/hcatalog
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch
-Source0: %{name}-%{hcatalog_base_version}.tar.gz
+Source0: %{name}-%{hcatalog_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_hcatalog.sh
 Source3: hcatalog.1
@@ -133,10 +133,10 @@ Requires: redhat-lsb
 Server for WEBHcat.
 
 %prep
-%setup -n %{name}-src-%{hcatalog_base_version}
+%setup -n %{name}-%{hcatalog_patched_version}
 
 %build
-env bash %{SOURCE1}
+env FULL_VERSION=%{hcatalog_patched_version} bash %{SOURCE1}
 
 #########################
 #### INSTALL SECTION ####
@@ -204,6 +204,7 @@ fi
 %files
 %defattr(-,root,root,755)
 %config(noreplace) %attr(755,root,root) %{conf_hcatalog}.dist
+%{usr_lib_hcatalog}/cloudera
 %{usr_lib_hcatalog}/bin
 %{usr_lib_hcatalog}/etc/hcatalog
 %{usr_lib_hcatalog}/libexec

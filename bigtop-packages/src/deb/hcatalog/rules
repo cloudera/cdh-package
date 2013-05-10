@@ -33,7 +33,7 @@ override_dh_auto_clean:
 
 override_dh_auto_build:
 	# we'll just use the build from the tarball.
-	env bash -x debian/do-component-build
+	env FULL_VERSION=${HCATALOG_PATCHED_VERSION} bash -x debian/do-component-build
 
 svcs=hcatalog-server webhcat-server
 
@@ -47,7 +47,7 @@ $(svcs): debian/init.d.tmpl
 override_dh_auto_install: $(svcs)
 	cp debian/hcatalog.1 .
 	sh -x debian/install_hcatalog.sh \
-	  --build-dir=build/hcatalog-$(strip ${HCATALOG_BASE_VERSION}) \
+	  --build-dir=build/hcatalog-$(strip ${HCATALOG_PATCHED_VERSION})/dist \
 	  --prefix=debian/tmp \
           --doc-dir=debian/tmp/usr/share/doc/${hcatalog_pkg_name} \
           --examples-dir=debian/tmp/usr/share/doc/${hcatalog_pkg_name}/examples
