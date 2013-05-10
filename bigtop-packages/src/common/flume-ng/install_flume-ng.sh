@@ -39,6 +39,7 @@ OPTS=$(getopt \
   -l 'prefix:' \
   -l 'doc-dir:' \
   -l 'lib-dir:' \
+  -l 'doc-dir-prefix:' \
   -l 'bin-dir:' \
   -l 'examples-dir:' \
   -l 'build-dir:' -- "$@")
@@ -62,6 +63,9 @@ while true ; do
         ;;
         --lib-dir)
         LIB_DIR=$2 ; shift 2
+        --doc-dir-prefix)
+        DOC_DIR_PREFIX=$2 ; shift 2
+        ;;
         ;;
         --bin-dir)
         BIN_DIR=$2 ; shift 2
@@ -89,6 +93,7 @@ done
 
 MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 DOC_DIR=${DOC_DIR:-/usr/share/doc/flume}
+DOC_DIR_PREFIX=${DOC_DIR_PREFIX:-$PREFIX}
 LIB_DIR=${LIB_DIR:-/usr/lib/flume}
 BIN_DIR=${BIN_DIR:-/usr/lib/flume/bin}
 CONF_DIST_DIR=/etc/flume/conf.dist/
@@ -129,8 +134,7 @@ if [ -n "\$FLUME_PID_FILE" ]; then
   echo \$$ > \$FLUME_PID_FILE
 fi
 
-# See FLUME-920
-exec bash /usr/lib/flume/bin/flume-ng "\$@"
+exec /usr/lib/flume-ng/bin/flume-ng "\$@"
 EOF
 chmod 755 $wrapper
 
@@ -145,8 +149,7 @@ unlink $PREFIX/$LIB_DIR/conf || /bin/true
 ln -s /etc/flume/conf $PREFIX/$LIB_DIR/conf
 
 # Docs
-rm -rf $PREFIX/$LIB_DIR/docs
-install -d -m 0755 $PREFIX/${DOC_DIR}
+install -d -m 0755 ${DOC_DIR_PREFIX}/${DOC_DIR}
 for x in CHANGELOG \
           DEVNOTES \
           LICENSE \
@@ -157,3 +160,6 @@ for x in CHANGELOG \
     cp -r $x $PREFIX/${DOC_DIR}
   fi
 done
+mv $PREFIX/$FLUME_DIR/docs/*  ${DOC_DIR_PREFIX}/${DOC_DIR}/
+rm -rf $PREFIX/$FLUME_DIR/docs
+

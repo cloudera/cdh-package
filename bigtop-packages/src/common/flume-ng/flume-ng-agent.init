@@ -75,7 +75,7 @@ FLUME_SHUTDOWN_TIMEOUT=${FLUME_SHUTDOWN_TIMEOUT:-60}
 start() {
   [ -x $exec ] || exit $ERROR_PROGRAM_NOT_INSTALLED
 
-  checkstatus
+  checkstatus > /dev/null 2>&1
   status=$?
   if [ "$status" -eq "$STATUS_RUNNING" ]; then
     exit 0
@@ -90,8 +90,8 @@ start() {
 
 stop() {
   if [ ! -e $FLUME_PID_FILE ]; then
-    log_failure_msg "Flume agent is not running"
-    exit 0
+    log_success_msg "Flume agent is not running"
+    return 0
   fi
 
   log_success_msg "Stopping $desc (flume-agent): "

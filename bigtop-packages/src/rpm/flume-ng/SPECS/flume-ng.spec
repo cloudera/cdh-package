@@ -111,6 +111,16 @@ Requires: redhat-lsb
 %description agent
 Flume is a reliable, scalable, and manageable distributed data collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.  It can efficiently collect, aggregate, and move large amounts of log data.  It has a simple, but flexible, architecture based on streaming data flows.  It is robust and fault tolerant with tunable reliability mechanisms and many failover and recovery mechanisms.  The system is centrally managed and allows for intelligent dynamic management. It uses a simple extensible data model that allows for online analytic applications.
 
+
+%package doc
+Summary: Flume Documentation
+Group: Documentation
+BuildArch: noarch
+
+%description doc
+Documentation for Flume
+
+
 %prep
 %setup -n %{flume_folder}
 
@@ -137,10 +147,6 @@ chmod 755 $init_file
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
 %__cp %{SOURCE4} $RPM_BUILD_ROOT/etc/default/%{name}-agent
 
-# Get rid of hadoop jar, and instead link to installed hadoop
-rm $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-* || true
-ln -s /usr/lib/hadoop/hadoop-common.jar $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-common.jar
-ln -s /usr/lib/hadoop/hadoop-auth.jar $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-auth.jar
 
 %pre
 getent group flume >/dev/null || groupadd -r flume
@@ -174,8 +180,6 @@ fi
 
 %files 
 %defattr(644,root,root,755)
-%doc %{doc_flume}
-
 
 %dir %{etc_flume}.empty
 %dir %{lib_flume}
@@ -191,3 +195,8 @@ fi
 %files agent
 %attr(0755,root,root)/%{initd_dir}/%{name}-agent
 %attr(0644,root,root) %config(noreplace) /etc/default/%{name}-agent
+
+%files doc
+%defattr(644,root,root,755)
+%doc %{doc_flume}/
+
