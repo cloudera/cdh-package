@@ -35,15 +35,15 @@ override_dh_auto_build:
 	# I could not find a way to add debian/ to RAT exclude list through cmd line
 	# or to unbind rat:check goal
 	# So I am redirecting its attention with a decoy
-       env FULL_VERSION=$(build_version) \
-               sh debian/do-component-build -Drat.basedir=${PWD}/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository
+	env FULL_VERSION=$(build_version) \
+	  sh debian/do-component-build -Drat.basedir=${PWD}/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository
 
 override_dh_auto_install:
-       sh -x debian/install_flume-ng.sh \
-         --build-dir=${PWD} \
-         --doc-dir=/usr/share/doc/flume-ng-doc \
-         --doc-dir-prefix=debian/flume-ng-doc \
-         --prefix=debian/flume-ng
-       install -d -m 0755 debian/flume-ng-agent/etc/default
-       cp debian/flume-ng-agent.default debian/flume-ng-agent/etc/default/flume-ng-agent
-       cp -f debian/flume-ng-agent.init.debian debian/flume-ng-agent.init
+	sh -x debian/install_flume-ng.sh \
+	  --build-dir=${PWD} \
+	  --doc-dir=/usr/share/doc/flume-ng-doc \
+	  --doc-dir-prefix=debian/flume-ng-doc \
+	  --prefix=debian/flume-ng
+	install -d -m 0755 debian/flume-ng-agent/etc/default
+	cp debian/flume-ng-agent.default debian/flume-ng-agent/etc/default/flume-ng-agent
+	cp -f debian/flume-ng-agent.init.debian debian/flume-ng-agent.init
