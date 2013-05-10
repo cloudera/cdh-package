@@ -48,7 +48,7 @@
 Name: hcatalog
 Version: %{hcatalog_version}
 Release: %{hcatalog_release}
-Summary: Apache Hcatalog (incubating) is a data warehouse infrastructure built on top of Hadoop
+Summary: Apache Hcatalog is a data warehouse infrastructure built on top of Hadoop
 License: Apache License v2.0
 URL: http://incubator.apache.org/hcatalog
 Group: Development/Libraries
@@ -66,7 +66,7 @@ Source8: init.d.tmpl
 Requires: hadoop, hive, bigtop-utils
 
 %description 
-Apache HCatalog (incubating) is a table and storage management service for data created using Apache Hadoop.
+Apache HCatalog is a table and storage management service for data created using Apache Hadoop.
 This includes:
     * Providing a shared schema and data type mechanism.
     * Providing a table abstraction so that users need not be concerned with where or how their data is stored.
