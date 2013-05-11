@@ -67,7 +67,6 @@ while true ; do
         --flume-dir)
         FLUME_DIR=$2 ; shift 2
         ;;
-        ;;
         --bin-dir)
         BIN_DIR=$2 ; shift 2
         ;;
