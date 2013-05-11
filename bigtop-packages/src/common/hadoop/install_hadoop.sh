@@ -454,6 +454,9 @@ for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} 
    done)
 done
 
+# CDH3/4 MR1 specific: we make fair scheduler available by default
+cp ${MAPREDUCE_MR1_DIR}/contrib/fairscheduler/hadoop-fairscheduler*.jar ${MAPREDUCE_MR1_DIR}/lib
+
 # Now create a client installation area full of symlinks
 install -d -m 0755 ${CLIENT_DIR}
 for file in `cat ${BUILD_DIR}/hadoop-client.list` ; do
