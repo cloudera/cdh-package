@@ -18,40 +18,38 @@
 set -e
 
 # summary of how this script can be called:
-#        * <prerm> `remove'
-#        * <old-prerm> `upgrade' <new-version>
-#        * <new-prerm> `failed-upgrade' <old-version>
-#        * <conflictor's-prerm> `remove' `in-favour' <package> <new-version>
-#        * <deconfigured's-prerm> `deconfigure' `in-favour'
-#          <package-being-installed> <version> `removing'
+#        * <postinst> `configure' <most-recently-configured-version>
+#        * <old-postinst> `abort-upgrade' <new version>
+#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
+#          <new-version>
+#        * <postinst> `abort-remove'
+#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
+#          <failed-install-package> <version> `removing'
 #          <conflicting-package> <version>
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-APP=@APP@
+APP=shell
 export ROOT=/usr/share/hue
 APP_DIR=$ROOT/apps/$APP
 export DESKTOP_LOGLEVEL=WARN
 export DESKTOP_LOG_DIR=/var/log/hue
-env_python="$ROOT/build/env/bin/python"
-app_reg="$ROOT/tools/app_reg/app_reg.py"
 
 case "$1" in
-    remove|upgrade|deconfigure)
-        if test -e $app_reg -a -e $env_python ; then
-	    $env_python $app_reg --remove $APP ||:
-        fi
-        find $APP_DIR -name \*.py[co] -exec rm -f {} \; ||:
-        find $APP_DIR -name \*.egg-info -prune -exec rm -Rf {} \; ||:
+    configure)
+        (cd $ROOT; $ROOT/build/env/bin/python $ROOT/tools/app_reg/app_reg.py --remove $APP) ||:
+        (cd $ROOT; $ROOT/build/env/bin/python $ROOT/tools/app_reg/app_reg.py --install $APP_DIR)
+        (cd $ROOT; /bin/bash ./tools/relocatable.sh)
         chown -R hue:hue /var/log/hue || :
         chown hue:hue /usr/share/hue/desktop /usr/share/hue/desktop/desktop.db  || :
+        chmod 4750 $APP_DIR/src/shell/build/setuid
     ;;
 
-    failed-upgrade)
+    abort-upgrade|abort-remove|abort-deconfigure)
     ;;
 
     *)
-        echo "prerm called with unknown argument \`$1'" >&2
+        echo "postinst called with unknown argument \`$1'" >&2
         exit 1
     ;;
 esac

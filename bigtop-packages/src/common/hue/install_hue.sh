@@ -91,8 +91,7 @@ PREFIX=`echo $PREFIX | sed -e 's#/*$##'`
 BUILD_DIR=`echo $BUILD_DIR | sed -e 's#/*$##'`
 
 CONF_DIR=${CONF_DIR:-/etc/hue}
-LIB_DIR=${LIB_DIR:-/usr/lib/hue}
-VAR_DIR=${VAR_DIR:-/var/lib/hue}
+LIB_DIR=${LIB_DIR:-/usr/share/hue}
 LOG_DIR=${LOG_DIR:-/var/log/hue}
 HADOOP_DIR=${HADOOP_DIR:-/usr/lib/hadoop/lib}
 
@@ -112,43 +111,17 @@ cp -f $BUILD_DIR/desktop/libs/hadoop/java-lib/$PLUGIN_NAME $PREFIX/$HADOOP_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/apps/shell/src/shell/build/
 cp -f $BUILD_DIR/apps/shell/src/shell/build/setuid $PREFIX/$LIB_DIR/apps/shell/src/shell/build
 
-# Create a stash for mutable DB files
-install -d -m 0755 $PREFIX/$LIB_DIR/seed/all
-install -d -m 0755 $PREFIX/$LIB_DIR/seed/common
-mv $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$LIB_DIR/seed/all
-mv $PREFIX/$LIB_DIR/app.reg $PREFIX/$LIB_DIR/seed/all
-mv $PREFIX/$LIB_DIR/build/env/lib/*/site-packages/hue.pth $PREFIX/$LIB_DIR/seed/all
-
-# Remove Hue database and then recreate it, but with just the "right" apps
-rm -f $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$LIB_DIR/app.reg
-APPS="about filebrowser help proxy useradmin shell oozie jobbrowser jobsub metastore"
-export DESKTOP_LOG_DIR=$BUILD_DIR
-export DESKTOP_LOGLEVEL=WARN
-export ROOT=$PREFIX/$LIB_DIR
-for app in $APPS ; do
-  (cd $PREFIX/$LIB_DIR ; ./build/env/bin/python tools/app_reg/app_reg.py --install apps/$app)
-done
+# Remove the misc. files
 find $PREFIX/$LIB_DIR -iname \*.py[co]  -exec rm -f {} \;
 
 # Making the resulting tree relocatable
 (cd $PREFIX/$LIB_DIR ; bash tools/relocatable.sh)
 
-# Move desktop.db, app.reg and hue.pth to a var location
-install -d -m 0755 $PREFIX/$VAR_DIR
-mv $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$LIB_DIR/seed/common
-ln -s $VAR_DIR/desktop.db $PREFIX/$LIB_DIR/desktop/desktop.db
-mv $PREFIX/$LIB_DIR/app.reg $PREFIX/$LIB_DIR/seed/common
-ln -s $VAR_DIR/app.reg $PREFIX/$LIB_DIR/app.reg
-mv $PREFIX/$LIB_DIR/build/env/lib/*/site-packages/hue.pth $PREFIX/$LIB_DIR/seed/common
-(cd $PREFIX/$LIB_DIR/build/env/lib/*/site-packages ; ln -s $VAR_DIR/hue.pth hue.pth)
-
 # Install conf files
 install -d -m 0755 $PREFIX/$CONF_DIR
-mv -f $PREFIX/$LIB_DIR/desktop/conf $PREFIX/${CONF_DIR}/conf.empty
-ln -fs $CONF_DIR/conf $PREFIX/$LIB_DIR/desktop/conf
-sed -i -e '/\[\[database\]\]/a\
-    engine=sqlite3\
-    name=/var/lib/hue/desktop.db' $PREFIX/${CONF_DIR}/conf.empty/hue.ini
+cp $PREFIX/$LIB_DIR/desktop/conf/* $PREFIX/${CONF_DIR}
+rm -rf $PREFIX/$LIB_DIR/desktop/conf
+ln -fs $CONF_DIR $PREFIX/$LIB_DIR/desktop/conf
 
 # Relink logs subdirectory just in case
 install -d -m 0755 $PREFIX/$LOG_DIR
@@ -188,6 +161,10 @@ done
 
 # Remove bogus files
 rm -fv `find $PREFIX -iname "build_log.txt"`
+
+# Remove desktop.db and app.reg
+rm -f $PREFIX/$LIB_DIR/desktop/desktop.db
+rm -f $PREFIX/$LIB_DIR/app.reg
 
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera

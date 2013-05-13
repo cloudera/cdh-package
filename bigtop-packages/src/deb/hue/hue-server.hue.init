@@ -1,13 +1,15 @@
 #!/bin/bash
 #
-# Licensed to the Apache Software Foundation (ASF) under one or more
-# contributor license agreements.  See the NOTICE file distributed with
-# this work for additional information regarding copyright ownership.
-# The ASF licenses this file to You under the Apache License, Version 2.0
-# (the "License"); you may not use this file except in compliance with
-# the License.  You may obtain a copy of the License at
+# (c) Copyright 2011 Cloudera, Inc.
+# Licensed to Cloudera, Inc. under one
+# or more contributor license agreements. See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership. Cloudera, Inc. licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License. You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,7 +32,7 @@
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-DAEMON=/usr/lib/hue/build/env/bin/supervisor # Introduce the server's location here
+DAEMON=/usr/share/hue/build/env/bin/supervisor # Introduce the server's location here
 NAME=hue              			# Introduce the short server's name here
 DESC="Hue for Hadoop"                	# Introduce a short description here
 LOGDIR=/var/log/hue  			# Log directory to use
@@ -115,13 +117,13 @@ running() {
 start_server() {
 # Start the process using the wrapper
 	export PYTHON_EGG_CACHE='/tmp/.hue-python-eggs'
-        mkdir -p /usr/lib/hue/pids/ 
+        mkdir -p /usr/share/hue/pids/ 
         mkdir -p ${PYTHON_EGG_CACHE}
         mkdir -p $(dirname $PIDFILE) $LOGDIR
         chown -R $DAEMONUSER $(dirname $PIDFILE) $LOGDIR ${PYTHON_EGG_CACHE}
         # dont setuid, since supervisor will drop privileges on its
         # own
-        PATH=/usr/lib/hue/build/env/bin:$PATH start-stop-daemon --start --quiet --pidfile $PIDFILE \
+        start-stop-daemon --start --quiet --pidfile $PIDFILE \
                     --exec $DAEMON -- $DAEMON_OPTS
         errcode=$?
         return $errcode

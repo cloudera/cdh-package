@@ -1,20 +1,4 @@
 #!/bin/bash
-#
-# Licensed to the Apache Software Foundation (ASF) under one or more
-# contributor license agreements.  See the NOTICE file distributed with
-# this work for additional information regarding copyright ownership.
-# The ASF licenses this file to You under the Apache License, Version 2.0
-# (the "License"); you may not use this file except in compliance with
-# the License.  You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 # preinst script for hue
 #
 # see: dh_installdeb(1)
@@ -37,10 +21,28 @@ case "$1" in
                   --system \
                   --disabled-login \
                   --group \
-                  --home /usr/lib/hue \
+                  --home /usr/share/hue \
                   --gecos "Hue daemon" \
                   $USER >/dev/null
         fi
+
+        # In upgrade, make a copy of the database, if it's there.
+        if [ "$1" == "upgrade" ] ; then
+                echo "... stopping any running Hue"
+                /etc/init.d/hue stop || :
+                OLD_DESKTOP_DB=/usr/share/hue/desktop/desktop.db
+                if [ -e $OLD_DESKTOP_DB ]; then
+                        echo ... backing up $OLD_DESKTOP_DB as ${OLD_DESKTOP_DB}.bak.$2
+                        cp -a $OLD_DESKTOP_DB ${OLD_DESKTOP_DB}.bak.$2
+                fi
+                OLD_DESKTOP_LOGS=/usr/share/hue/desktop/logs.$(date +'%Y%m%d.%H%M%S')
+                NEW_DESKTOP_LOGS=$OLD_DESKTOP_LOGS.bak
+                if [ -e $OLD_DESKTOP_LOGS ]; then
+                        echo ... preserving $OLD_DESKTOP_LOGS as $NEW_DESKTOP_LOGS
+                        mv $OLD_DESKTOP_LOGS $NEW_DESKTOP_LOGS
+                fi
+        fi
+
     ;;
 
     abort-upgrade)

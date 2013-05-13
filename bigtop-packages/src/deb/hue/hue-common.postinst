@@ -1,20 +1,4 @@
 #!/bin/bash
-#
-# Licensed to the Apache Software Foundation (ASF) under one or more
-# contributor license agreements.  See the NOTICE file distributed with
-# this work for additional information regarding copyright ownership.
-# The ASF licenses this file to You under the Apache License, Version 2.0
-# (the "License"); you may not use this file except in compliance with
-# the License.  You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 # postinst script for Hue
 #
 # see: dh_installdeb(1)
@@ -33,38 +17,27 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
+# We dont want ugly printouts of status during
+# install, etc
+export DESKTOP_LOGLEVEL=WARN
+export DESKTOP_LOG_DIR=/var/log/hue
+
+
 case "$1" in
     configure)
-	# initialize seed databases if there's none
-        HUE_STATE=/var/lib/hue
-        if [ ! -e $HUE_STATE/desktop.db ] && [ ! -e $HUE_STATE/app.reg ] && [ ! -e $HUE_STATE/hue.pth ] ; then
-          OLD_DESKTOP_DB=/usr/share/hue/desktop/desktop.db
-          OLD_APP_REG=/usr/share/hue/app.reg
-          OLD_PTH=`echo /usr/share/hue/build/env/lib/*/site-packages/hue.pth`
-          if [ -d /usr/share/hue ] && [ -e "$OLD_DESKTOP_DB" ] && [ -e "$OLD_APP_REG" ] && [ -e "$OLD_PTH" ] ; then
-            cp "$OLD_DESKTOP_DB" "$OLD_APP_REG" "$OLD_PTH" /var/lib/hue 2>/dev/null
-            if [ $? -ne 0 ] ; then
-              cp /usr/lib/hue/seed/common/* /var/lib/hue
-            fi
-          else
-            cp /usr/lib/hue/seed/common/* /var/lib/hue
-          fi
+        rm -f .installed.cfg build/env/stamp
+        find /usr/share/hue -name \*.pyc -exec rm {} \;
+        if [ ! -z "$2" ]; then
+                OLD_DB=/usr/share/hue/desktop/desktop.db.bak.$2
+                if [ -e $OLD_DB ]; then
+                        echo Upgrading old database...
+                        cp $OLD_DB /usr/share/hue/desktop/desktop.db
+                fi
         fi
-        chown -R hue:hue /var/log/hue /var/lib/hue
-
-        # Install config alternatives
-        update-alternatives  --install /etc/hue/conf hue-conf /etc/hue/conf.empty 30
-
-        # Take care of hue-shell setuid binary
-        SETUID=/usr/lib/hue/apps/shell/src/shell/build/setuid
-        chown root:hue $SETUID
-        chmod 4750 $SETUID
-
-        # This is only here for the benefit of CM. We have to keep it until CDH5.
-        if [ -d /usr/share/hue ] ; then
-          mv /usr/share/hue /usr/share/hue.$$ || :
-          ln -s /usr/lib/hue /usr/share/hue || :
-        fi
+        mkdir -p $DESKTOP_LOG_DIR || :
+        /usr/share/hue/build/env/bin/hue syncdb --noinput
+        chown -R hue:hue $DESKTOP_LOG_DIR /usr/share/hue/desktop/desktop.db || :
+        chown hue:hue /usr/share/hue/desktop || :
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

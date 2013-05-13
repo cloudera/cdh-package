@@ -1,13 +1,15 @@
 #!/bin/bash
 #
-# Licensed to the Apache Software Foundation (ASF) under one or more
-# contributor license agreements.  See the NOTICE file distributed with
-# this work for additional information regarding copyright ownership.
-# The ASF licenses this file to You under the Apache License, Version 2.0
-# (the "License"); you may not use this file except in compliance with
-# the License.  You may obtain a copy of the License at
+# (c) Copyright 2011 Cloudera, Inc.
+# Licensed to Cloudera, Inc. under one
+# or more contributor license agreements. See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership. Cloudera, Inc. licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License. You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,27 +23,27 @@
 #
 # chkconfig: 2345 90 10
 # description: Hue web server
-# pidfile: /usr/lib/hue/pids/supervisor.pid
+# pidfile: /usr/share/hue/pids/supervisor.pid
 
 . /etc/init.d/functions
 
 LOCKFILE=/var/lock/subsys/hue
-DAEMON=/usr/lib/hue/build/env/bin/supervisor # Introduce the server's location here
+DAEMON=/usr/share/hue/build/env/bin/supervisor # Introduce the server's location here
 LOGDIR=/var/log/hue  # Log directory to use
 PIDFILE=/var/run/hue/supervisor.pid
 USER=hue
-EXEC=/usr/lib/hue/build/env/bin/python
+EXEC=/usr/share/hue/build/env/bin/python
 DAEMON_OPTS="-p $PIDFILE -l $LOGDIR -d"
 HUE_SHUTDOWN_TIMEOUT=15
 
 hue_start() {
         export PYTHON_EGG_CACHE='/tmp/.hue-python-eggs'
-        RE_REGISTER=/usr/lib/hue/.re_register
+        RE_REGISTER=/usr/share/hue/.re_register
         if [ -e $RE_REGISTER ]; then
             # Do app_reg on upgraded apps. This is a workaround for DISTRO-11.
             # We can probably take it out after another release.
             DO="/sbin/runuser -s /bin/bash $USER -c"
-            APP_REG="/usr/lib/hue/tools/app_reg/app_reg.py"
+            APP_REG="/usr/share/hue/tools/app_reg/app_reg.py"
             # Upgraded apps write their paths in the re_rgister file.
             RE_REG_LOG=/var/log/hue/hue_re_register.log
 
@@ -70,7 +72,7 @@ hue_start() {
             return 0
         fi
         # the supervisor itself will setuid down to $USER
-        env - PATH=/usr/lib/hue/build/env/bin:$PATH $DAEMON $DAEMON_OPTS
+        env - PATH=$PATH $DAEMON $DAEMON_OPTS
         ret=$?
         base=$(basename $0)
         if [ $ret -eq 0 ]; then

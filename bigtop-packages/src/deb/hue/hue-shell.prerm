@@ -28,7 +28,7 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-APP=@APP@
+APP=shell
 export ROOT=/usr/share/hue
 APP_DIR=$ROOT/apps/$APP
 export DESKTOP_LOGLEVEL=WARN
