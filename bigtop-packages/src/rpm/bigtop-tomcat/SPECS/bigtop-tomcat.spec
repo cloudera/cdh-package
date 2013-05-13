@@ -46,9 +46,9 @@ bash %{SOURCE1}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 bash %{SOURCE2} \
-          --build-dir=build \
-	  --doc-dir=%{doc_tomcat} \
-          --prefix=$RPM_BUILD_ROOT
+    --build-dir=build \
+    --doc-dir=%{doc_tomcat} \
+    --prefix=$RPM_BUILD_ROOT
 
 %files 
 %defattr(-,root,root)
