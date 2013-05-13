@@ -41,6 +41,8 @@ Requires: %{name}-proxy = %{version}-%{release}
 Requires: %{name}-shell = %{version}-%{release}
 Requires: %{name}-oozie = %{version}-%{release}
 Requires: %{name}-impala = %{version}-%{release}
+Requires: %{name}-pig = %{version}-%{release}
+Requires: %{name}-metastore = %{version}-%{release}
 # hue-user is a virtual package
 Requires: %{name}-user
 
@@ -98,6 +100,8 @@ AutoReqProv: no
 %define about_app_dir %{hue_dir}/apps/about
 %define beeswax_app_dir %{hue_dir}/apps/beeswax
 %define oozie_app_dir %{hue_dir}/apps/oozie
+%define pig_app_dir %{hue_dir}/apps/pig
+%define metastore_app_dir %{hue_dir}/apps/metastore
 %define filebrowser_app_dir %{hue_dir}/apps/filebrowser
 %define help_app_dir %{hue_dir}/apps/help
 %define jobbrowser_app_dir %{hue_dir}/apps/jobbrowser
@@ -292,6 +296,8 @@ fi
 %exclude %{proxy_app_dir}
 %exclude %{useradmin_app_dir}
 %exclude %{impala_app_dir}
+%exclude %{pig_app_dir}
+%exclude %{metastore_app_dir}
 
 %exclude %{shell_app_dir}
 
@@ -387,6 +393,7 @@ Requires: %{name}-jobbrowser = %{version}-%{release}
 Requires: %{name}-filebrowser = %{version}-%{release}
 Requires: %{name}-jobsub = %{version}-%{release}
 Requires: %{name}-help = %{version}-%{release}
+Requires: %{name}-metastore = %{version}-%{release}
 Requires: hive
 
 %description -n %{name}-beeswax
@@ -573,6 +580,7 @@ Requires: %{name}-jobbrowser = %{version}-%{release}
 Requires: %{name}-filebrowser = %{version}-%{release}
 Requires: %{name}-jobsub = %{version}-%{release}
 Requires: %{name}-help = %{version}-%{release}
+Requires: %{name}-metastore = %{version}-%{release}
 
 %description -n %{name}-impala
 A web interface for Impala.
@@ -586,6 +594,42 @@ and import and export data.
 %files -n %{name}-impala
 %defattr(-,root,root)
 %{impala_app_dir}
+
+#### HUE-PIG PLUGIN ######
+%package -n %{name}-pig
+Summary: A UI for Pig on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+Requires(pre): %{name}-common = %{version}-%{release}
+Requires(preun): %{name}-common = %{version}-%{release}
+
+%description -n %{name}-pig
+A web interface for Pig.
+
+It allows users to construct and run Pig jobs.
+
+%app_post_macro pig
+%app_preun_macro pig
+
+%files -n %{name}-pig
+%{pig_app_dir}
+
+#### HUE-PIG PLUGIN ######
+%package -n %{name}-metastore
+Summary: A UI for table metastore on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+Requires(pre): %{name}-common = %{version}-%{release}
+Requires(preun): %{name}-common = %{version}-%{release}
+
+%description -n %{name}-metastore
+A web interface to table metastore.
+
+%app_post_macro metastore
+%app_preun_macro metastore
+
+%files -n %{name}-metastore
+%{metastore_app_dir}
 
 
 ############################################################

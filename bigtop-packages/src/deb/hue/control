@@ -10,7 +10,7 @@ Package: hue-common
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${build:SYS-PYTHON}, libsasl2-modules-gssapi-mit, libxslt1.1, make
 Conflicts: cloudera-desktop
-Recommends: hadoop, hue-useradmin, hue-about, hue-help, hue-filebrowser, hue-jobbrowser, hue-jobsub, hue-beeswax, hue-proxy, hue-oozie, hue-impala
+Recommends: hadoop, hue-useradmin, hue-about, hue-help, hue-filebrowser, hue-jobbrowser, hue-jobsub, hue-beeswax, hue-proxy, hue-oozie, hue-impala, hue-pig, hue-metastore
 Description: A browser-based desktop interface for Hadoop
  Hue is a browser-based desktop interface for interacting with Hadoop.
  It supports a file browser, job tracker interface, cluster health monitor, and more.
@@ -25,7 +25,7 @@ Description: Plug-ins for Hadoop to enable integration with Hue
 
 Package: hue
 Architecture: all
-Depends: hadoop, bigtop-utils, hue-plugins (= ${source:Version}), hue-common (= ${source:Version}), hue-user, hue-about (= ${source:Version}), hue-help (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-jobsub (= ${source:Version}), hue-beeswax (= ${source:Version}), hue-proxy (= ${source:Version}), hue-shell (= ${source:Version}), hue-oozie (= ${source:Version})
+Depends: hadoop, bigtop-utils, hue-plugins (= ${source:Version}), hue-common (= ${source:Version}), hue-user, hue-about (= ${source:Version}), hue-help (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-jobsub (= ${source:Version}), hue-beeswax (= ${source:Version}), hue-proxy (= ${source:Version}), hue-shell (= ${source:Version}), hue-oozie (= ${source:Version}), hue-pig (= ${source:Version}), hue-metastore (= ${source:Version})
 Description: The hue metapackage
  .
 
@@ -43,7 +43,7 @@ Description: The server scripts for Hue.
 
 Package: hue-beeswax
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-jobsub (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version}), hive
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-jobsub (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version}), hue-metastore (= ${source:Version}), hive
 Description: A UI for Hive on Hue
  Beeswax is a web interface for Hive.
  .
@@ -105,10 +105,24 @@ Provides: hue-user
 
 Package: hue-impala
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-jobsub (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-jobsub (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version}), hue-metastore (= ${source:Version})
 Description: A UI for Impala on Hue
  A web interface for Impala.
  .
  It allows users to construct and run queries on Impala, manage tables,
  and import and export data.
+
+Package: hue-pig
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-jobsub (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version})
+Description: A UI for Pig on Hue
+ A web interface for Pig.
+ .
+ It allows users to construct and run Pig jobs.
+ 
+Package: hue-metastore
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-jobsub (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version})
+Description: A UI for table metastore on Hue
+ A web interface to table metastore.
 
