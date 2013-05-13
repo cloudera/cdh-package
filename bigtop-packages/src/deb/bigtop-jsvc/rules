@@ -27,9 +27,9 @@ export DH_OPTIONS=-s
 	dh $@
 
 override_dh_auto_build:
-	bash debian/do-component-build -Divy.home=${HOME}/.ivy2
+	env FULL_VERSION=${BIGTOP_JSVC_PATCHED_VERSION} bash debian/do-component-build -Divy.home=${HOME}/.ivy2
 
 override_dh_auto_install:
 	sh -x debian/install_jsvc.sh \
-	  --build-dir=.              \
+	  --build-dir=build/bigtop-jsvc-${BIGTOP_JSVC_PATCHED_VERSION} \
 	  --prefix=debian/tmp

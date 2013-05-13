@@ -30,7 +30,7 @@ URL: http://commons.apache.org/daemon/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: ASL 2.0
-Source0: commons-daemon-%{bigtop_jsvc_base_version}.tar.gz
+Source0: bigtop-jsvc-%{bigtop_jsvc_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_jsvc.sh
 BuildRequires: ant, autoconf, automake, gcc
@@ -39,18 +39,18 @@ BuildRequires: ant, autoconf, automake, gcc
 jsvc executes classfile that implements a Daemon interface.
 
 %prep
-%setup -n commons-daemon-%{bigtop_jsvc_base_version}-native-src
+%setup -n bigtop-jsvc-%{bigtop_jsvc_patched_version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %build
-bash %{SOURCE1}
+env FULL_VERSION=%{bigtop_jsvc_patched_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
-          --build-dir=.         \
+          --build-dir=build/bigtop-jsvc-%{bigtop_jsvc_patched_version}  \
           --bin-dir=%{bin_jsvc} \
           --doc-dir=%{doc_jsvc} \
           --man-dir=%{man_dir}  \
