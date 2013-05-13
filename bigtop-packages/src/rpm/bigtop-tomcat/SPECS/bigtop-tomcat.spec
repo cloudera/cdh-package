@@ -29,7 +29,7 @@ Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0 
-Source0: apache-tomcat-%{bigtop_tomcat_base_version}.tar.gz
+Source0: bigtop-tomcat-%{bigtop_tomcat_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_tomcat.sh
 
@@ -38,15 +38,15 @@ Apache Tomcat is an open source software implementation of the
 Java Servlet and JavaServer Pages technologies.
 
 %prep
-%setup -n apache-tomcat-%{bigtop_tomcat_base_version}-src
+%setup -n bigtop-tomcat-%{bigtop_tomcat_patched_version}
 
 %build
-bash %{SOURCE1}
+env FULL_VERSION=%{bigtop_tomcat_patched_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
 bash %{SOURCE2} \
-    --build-dir=build \
+    --build-dir=build/bigtop-tomcat-%{bigtop_tomcat_patched_version} \
     --doc-dir=%{doc_tomcat} \
     --prefix=$RPM_BUILD_ROOT
 

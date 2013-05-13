@@ -27,10 +27,10 @@ export DH_OPTIONS
 	dh $@
 
 override_dh_auto_build:
-	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
+	env FULL_VERSION=${BIGTOP_TOMCAT_PATCHED_VERSION} bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
 
 override_dh_auto_install:
 	bash -x debian/install_tomcat.sh                             \
-	  --build-dir=build                                          \
+	  --build-dir=build/bigtop-tomcat-${BIGTOP_TOMCAT_PATCHED_VERSION} \
 	  --doc-dir=/usr/share/doc/bigtop-tomcat \
 	  --prefix=debian/bigtop-tomcat
