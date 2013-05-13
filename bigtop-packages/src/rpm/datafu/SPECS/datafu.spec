@@ -34,7 +34,7 @@ Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{datafu_name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0 
-Source0: %{datafu_name}-%{datafu_base_version}.tar.gz
+Source0: %{datafu_name}-%{datafu_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{datafu_name}.sh
 Requires: hadoop-client, bigtop-utils >= 0.6
@@ -53,10 +53,10 @@ Convenience utility functions (e.g., assertions, easier writing of EvalFuncs)
 and more...
 
 %prep
-%setup -n %{datafu_name}-%{datafu_base_version}
+%setup -n %{datafu_name}-%{datafu_patched_version}
 
 %build
-bash $RPM_SOURCE_DIR/do-component-build
+env FULL_VERSION=%{datafu_patched_version} bash $RPM_SOURCE_DIR/do-component-build
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
@@ -70,3 +70,6 @@ sh $RPM_SOURCE_DIR/install_datafu.sh \
 %files 
 %defattr(-,root,root,755)
 %{lib_datafu}
+%{lib_datafu}/datafu/cloudera/cdh_version.properties
+
+
