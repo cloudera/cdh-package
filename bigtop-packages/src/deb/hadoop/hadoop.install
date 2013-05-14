@@ -6,7 +6,8 @@
 /etc/hadoop/conf.empty/ssl-server.xml.example
 /etc/hadoop/conf.empty/core-site.xml
 /etc/hadoop/conf.empty/configuration.xsl
-/etc/hadoop/conf.empty/hadoop-env.sh
+# FIXME: CDH-12105
+# /etc/hadoop/conf.empty/hadoop-env.sh
 /etc/hadoop/conf.empty/hadoop-policy.xml
 /etc/default/hadoop
 /usr/lib/hadoop/cloudera

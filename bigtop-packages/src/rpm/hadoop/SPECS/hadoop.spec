@@ -743,7 +743,8 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/ssl-client.xml.example
 %config(noreplace) %{etc_hadoop}/conf.empty/ssl-server.xml.example
 %config(noreplace) %{etc_hadoop}/conf.empty/configuration.xsl
-%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-env.sh
+# FIXME: CDH-12105
+# %config(noreplace) %{etc_hadoop}/conf.empty/hadoop-env.sh
 %config(noreplace) %{etc_hadoop}/conf.empty/hadoop-policy.xml
 %config(noreplace) /etc/default/hadoop
 %{etc_hadoop}/conf.dist
