@@ -255,7 +255,6 @@ __EOT__
 cat <<__EOT__
 SOLR_DIRNAME=\${PARCEL_DIRNAME:-"SOLR-$DISTRO_LESS_FULL_VERSION"}
 export CDH_SOLR_HOME=\$PARCELS_ROOT/\$SOLR_DIRNAME/lib/solr
-export CDH_FLUME_PLUGINS_DIRS=\$PARCELS_ROOT/\$SOLR_DIRNAME/lib/flume-ng
 __EOT__
 ) > build/meta/solr_env.sh
 
