@@ -54,7 +54,7 @@ install: debian/cdh-parcel-$(version)/opt/cloudera/parcels/CDH-${version_release
 
 debian/cdh-parcel-$(version)/opt/cloudera/parcels/CDH-${version_release}:
 	mkdir -p $@
-	mv build/usr/{bin,lib}* build/meta build/etc $@
+	mv build/usr/{bin,share,lib}* build/meta build/etc $@
 	sed -e 's#@VERSION@#$(version)#' < debian/cdh-parcel.postinst > debian/cdh-parcel-$(version).postinst
 	echo /opt > debian/cdh-parcel-$(version).install
 

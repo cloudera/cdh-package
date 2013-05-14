@@ -155,29 +155,33 @@ for link in `find build/usr/lib/ -type l` ; do
                 rm -f $link
                 ln -s $TOPDIR/lib/`echo $target |sed -e 's#/usr/lib/##'` $link
                 ;;
+    /usr/share/hue/*)
+                rm -f $link
+                ln -s $TOPDIR/share/`echo $target |sed -e 's#/usr/share##'` $link
   esac
 done
 
 # Links to python libs under virtualenv in Hue have to absolute.
 # This code only applies to debian since these links are relative
 # only in Hue's debian package
-for link in `find build/usr/lib/hue/build/env/lib/python* -type l`; do
+for link in `find build/usr/share/hue/build/env/lib/python* -type l`; do
   target=`readlink $link`
   rm -f $link
   ln -s `echo $target | sed -e 's#\(\.\./\)\(\.\./\)*#/usr/#'` $link
 done
 
 # FIXME: special handling for Hue
-rm -f build/usr/lib/hue/desktop/conf
-cp -r build/etc/hue/conf.empty build/usr/lib/hue/desktop/conf
-pushd build/usr/lib/hue
+HUE_APPS=`ls build/usr/share/hue/apps | grep -v Makefile | xargs`
+rm -f build/usr/share/hue/desktop/conf
+cp -r build/etc/hue build/usr/share/hue/desktop/conf
+pushd build/usr/share/hue
  /bin/bash -x ./tools/relocatable.sh
- mv -f `pwd`/seed/all/desktop.db `pwd`/desktop
- mv -f `pwd`/seed/all/app.reg `pwd`
- mv -f `pwd`/seed/all/hue.pth `pwd`/build/env/lib/*/site-packages
+ for app in $HUE_APPS ; do
+   ROOT=`pwd` DESKTOP_LOGLEVEL=WARN DESKTOP_LOG_DIR=/tmp ./build/env/bin/python ./tools/app_reg/app_reg.py --install `pwd`/apps/$app
+ done
  /bin/bash -x ./tools/relocatable.sh
  find . -name '*.py[oc]' -exec rm -f {} \;
- sed -i -e '/"path"/s#:.*".*lib/hue#: ".#g' app.reg
+ sed -i -e '/"path"/s#:.*".*share/hue#: ".#g' app.reg
 popd
 
 # Figure out the location of bigtop-utils
@@ -230,7 +234,7 @@ cat <<__EOT__
 __EOT__
 
 JSON_IS_STUPID=""
-for comp in build/usr/lib/*/cloudera/cdh_version.properties; do
+for comp in build/usr/lib/*/cloudera/cdh_version.properties build/usr/share/*/cloudera/cdh_version.properties; do
   cat <<__EOT__
     ${JSON_IS_STUPID}{ "name":     "`sed -ne 's/^cloudera.pkg.name=//p' $comp`",
       "version":  "`sed -ne 's/^version=//p' $comp`",
@@ -288,7 +292,7 @@ cat <<__EOT__
      },
      "hue": {
        "longname"    : "Hue",
-       "home"        : "/usr/lib/hue",
+       "home"        : "/usr/share/hue",
        "shell"       : "/bin/false",
        "extra_groups": [ ]
      },
@@ -345,17 +349,17 @@ cat > build/meta/permissions.json <<__EOT__
     "group": "yarn",
     "permissions": "6050"
   },
-  "lib/hue/apps/shell/src/shell/build/setuid": {
+  "share/hue/apps/shell/src/shell/build/setuid": {
     "user":  "root",
     "group": "hue",
     "permissions": "4750"
   },
-  "lib/hue/desktop": {
+  "share/hue/desktop": {
     "user":  "hue",
     "group": "hue",
     "permissions": "0755"
   },
-  "lib/hue/desktop/desktop.db": {
+  "share/hue/desktop/desktop.db": {
     "user":  "hue",
     "group": "hue",
     "permissions": "0644"
@@ -381,7 +385,7 @@ export CDH_YARN_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/hadoop-yarn
 export CDH_HBASE_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/hbase
 export CDH_ZOOKEEPER_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/zookeeper
 export CDH_HIVE_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/hive
-export CDH_HUE_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/hue
+export CDH_HUE_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/share/hue
 export CDH_OOZIE_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/oozie
 export CDH_HUE_PLUGINS_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/hadoop
 export CDH_FLUME_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/flume-ng
