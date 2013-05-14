@@ -99,10 +99,10 @@ ETC_DIR=${ETC_DIR:-/etc/flume-ng}
 
 # Create the search package
 install -d -m 0755 ${PREFIX}/${LIB_DIR}/lib
-cp ${BUILD_DIR}/search-contrib/target/*.jar ${PREFIX}/${LIB_DIR}
-# cp ${BUILD_DIR}/search-warc-parser/target/*.jar ${PREFIX}/${LIB_DIR}
-cp ${BUILD_DIR}/search-mr/target/*.jar ${PREFIX}/${LIB_DIR}
-cp ${BUILD_DIR}/search-core/target/*.jar ${PREFIX}/${LIB_DIR}
+for i in search-solrcell search-mr search-core search-contrib \
+         cdk-morphlines/cdk-morphlines-core cdk-morphlines/cdk-morphlines-avro cdk-morphlines/cdk-morphlines-tika ; do
+  cp -f ${BUILD_DIR}/$i/target/*.jar ${PREFIX}/${LIB_DIR}
+done
 (cd ${PREFIX}/${LIB_DIR} ; rm -f *-tests.jar *-sources.jar)
 
 # Plugin jars
@@ -119,15 +119,11 @@ done
 # FIXME: once solr-mr and core indexer go upstream we need to rationalize this
 install -d -m 0755 ${PREFIX}/${SOLR_MR_DIR}
 cp ${BUILD_DIR}/search-mr/target/*.jar ${PREFIX}/${SOLR_MR_DIR}
+(cd ${PREFIX}/${SOLR_MR_DIR} ; rm -f *-tests.jar *-sources.jar)
 
 # Sample (twitter) configs
 install -d -m 0755 ${PREFIX}/${DOC_DIR}
 cp -r ${BUILD_DIR}/samples ${PREFIX}/${DOC_DIR}/examples
-# FIXME: sed-away test specific stuff
-sed -i -e '/TestParser/d' ${PREFIX}/${DOC_DIR}/examples/solr-nrt/tika-config.xml
-sed -i -e '/agent.sinks.solrSink.collection.collection1.solr.home/s#^.*$#agent.sinks.solrSink.collection.collection1.solr.home = '${DOC_DIR}/examples/solr-nrt/collection1# \
-       -e '/agent.sinks.solrSink.tika.config/s#^.*$#agent.sinks.solrSink.tika.config = '${DOC_DIR}/examples/solr-nrt/tika-config.xml# \
-    ${PREFIX}/${DOC_DIR}/examples/solr-nrt/twitter-flume.conf
 
 # Cloudera specific
 #install -d -m 0755 $PREFIX/$FLUME_DIR/cloudera
