@@ -128,7 +128,7 @@ getent passwd solr > /dev/null || useradd -c "Solr" -s /sbin/nologin -g solr -r 
 
 %post
 %{alternatives_cmd} --install %{config_solr} %{solr_name}-conf %{config_solr}.dist 30
-[ -e /var/lib/solr/solr.xml ] || /usr/bin/solrctl nodeconfig >/dev/null 2>&1 || :
+# [ -e /var/lib/solr/solr.xml ] || /usr/bin/solrctl nodeconfig >/dev/null 2>&1 || :
 touch /var/lib/solr/solr.cloud.ini || :
 chown solr:solr /var/lib/solr/* || :
 cat <<__EOT__

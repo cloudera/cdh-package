@@ -20,7 +20,7 @@ case "$1" in
     configure)
         # Install config alternatives
         update-alternatives  --install /etc/solr/conf solr-conf /etc/solr/conf.dist 30
-        [ -e /var/lib/solr/solr.xml ] || /usr/bin/solrctl nodeconfig >/dev/null 2>&1 || :
+        # [ -e /var/lib/solr/solr.xml ] || /usr/bin/solrctl nodeconfig >/dev/null 2>&1 || :
         touch /var/lib/solr/solr.cloud.ini || :
 	chown -R solr:solr /var/log/solr /var/lib/solr /var/run/solr
         cat <<-__EOT__
