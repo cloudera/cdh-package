@@ -319,12 +319,6 @@ cat <<__EOT__
        "home"        : "/var/run/sqoop2",
        "shell"       : "/sbin/nologin",
        "extra_groups": [ "sqoop" ]
-     },
-     "hcatalog": {
-       "longname"    : "HCatalog User",
-       "home"        : "/var/run/hcatalog",
-       "shell"       : "/sbin/nologin",
-       "extra_groups": [ ]
      }
   },
 
