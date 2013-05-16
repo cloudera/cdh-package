@@ -55,11 +55,13 @@ Description: Shared metadata repository for Hive
 Package: hive-hbase
 Architecture: all
 Depends: hive (= ${source:Version}), hbase
+Conflicts: hive (<< ${source:Version})
 Description: Provides integration between Apache HBase and Apache Hive
  This optional package provides integration between Apache HBase and Apache Hive
 
 Package: hive-jdbc
 Architecture: all
 Depends: hadoop-client
+Conflicts: hive (<< ${source:Version})
 Description: Provides libraries necessary to connect to Apache Hive via JDBC
  This package provides libraries necessary to connect to Apache Hive via JDBC
