@@ -226,10 +226,6 @@ fi
 %doc %{doc_hive}
 %{man_dir}/man1/hive.1.*
 %exclude %{usr_lib_hive}/lib/hbase.jar
-
-%files hbase
-%defattr(-,root,root,755)
-%{usr_lib_hive}/lib/hbase.jar
 %exclude %{usr_lib_hive}/lib/hive-jdbc-*.jar
 %exclude %{usr_lib_hive}/lib/hive-metastore-*.jar
 %exclude %{usr_lib_hive}/lib/hive-serde-*.jar
@@ -240,6 +236,10 @@ fi
 %exclude %{usr_lib_hive}/lib/slf4j-*.jar
 %exclude %{usr_lib_hive}/lib/log4j-*.jar
 %exclude %{usr_lib_hive}/lib/commons-logging-*.jar
+
+%files hbase
+%defattr(-,root,root,755)
+%{usr_lib_hive}/lib/hbase.jar
 
 %files jdbc
 %defattr(-,root,root,755)
