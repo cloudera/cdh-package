@@ -42,8 +42,7 @@ override_dh_auto_install: metastore server server2
 	sh debian/install_hive.sh \
 	  --prefix=debian/${hive_pkg_name} \
 	  --build-dir=src/build/dist \
-	  --doc-dir=debian/${hive_pkg_name}/usr/share/doc/${hive_pkg_name} \
-	  --python-dir=debian/python-${hive_pkg_name}/usr/share/python-support/python-${hive_pkg_name}/${hive_pkg_name}
+	  --doc-dir=debian/${hive_pkg_name}/usr/share/doc/${hive_pkg_name}
 	# We need to get rid of jars that happen to be shipped in other CDH packages
 	rm -f debian/${hive_pkg_name}/usr/lib/hive/lib/hbase-*.jar debian/${hive_pkg_name}/usr/lib/hive/lib/zookeeper-*.jar
 	mkdir -p debian/${hive_pkg_name}-hbase/usr/lib/hive/lib
