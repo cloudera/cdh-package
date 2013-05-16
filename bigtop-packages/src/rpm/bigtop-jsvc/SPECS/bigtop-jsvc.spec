@@ -17,9 +17,11 @@
 %if  %{?suse_version:1}0
 %define bin_jsvc /usr/lib/bigtop-utils
 %define doc_jsvc %{_docdir}/%{name}
+%define compat_jsvc %{nil}
 %else
 %define bin_jsvc /usr/lib/bigtop-utils
 %define doc_jsvc %{_docdir}/%{name}-%{bigtop_jsvc_version}
+%define compat_jsvc %{_libexecdir}/bigtop-utils
 %endif
 
 Name: bigtop-jsvc
@@ -56,9 +58,16 @@ sh %{SOURCE2} \
           --man-dir=%{man_dir}  \
           --prefix=$RPM_BUILD_ROOT
 
+if [ -n "%{compat_jsvc}" ] ; then 
+  %__install -d -m 0755 $RPM_BUILD_ROOT/%{compat_jsvc}
+  %__cp $RPM_BUILD_ROOT/%{bin_jsvc}/*  $RPM_BUILD_ROOT/%{compat_jsvc}
+fi
+
+
 %files
 %defattr(-,root,root)
 %{bin_jsvc}
+%{compat_jsvc}
 %doc %{doc_jsvc}
 
 
