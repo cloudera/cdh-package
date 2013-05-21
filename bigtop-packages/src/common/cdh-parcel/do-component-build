@@ -401,7 +401,7 @@ BINARIES="beeline flume-ng hadoop hadoop-0.20 hadoop-fuse-dfs hbase hdfs hive \
           sqoop-version whirr yarn zookeeper-client zookeeper-server-cleanup \
           zookeeper-server zookeeper-server-cleanup zookeeper-server-initialize sqoop2 hcat"
 
-CONFDIRS="hbase hive mahout oozie pig sqoop zookeeper solr sqoop2 hcatalog webhcat"
+CONFDIRS="hbase hive mahout oozie pig sqoop zookeeper sqoop2 hcatalog webhcat"
 # Some services are 'special' and use conf.empty instead of conf.dist
 EMPTY_CONFDIRS="flume-ng hadoop hadoop-httpfs"
 
