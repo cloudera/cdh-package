@@ -22,6 +22,7 @@
 %define man_dir /usr/share/man
 %define run_solr /var/run/%{solr_name}
 %define svc_solr %{name}-indexer
+%define user_solr hbase 
 
 %if  %{?suse_version:1}0
 %define doc_solr %{_docdir}/hbase-solr-doc
@@ -53,7 +54,7 @@ Source0: hbase-solr-%{hbase_solr_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_hbase_solr.sh
 Source3: init.d.tmpl
-Requires: bigtop-utils
+Requires: bigtop-utils, hbase, solr
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
@@ -109,9 +110,9 @@ init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{svc_solr}
 bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/hbase-solr-indexer.svc rpm $init_file
 chmod 755 $init_file
 
-%pre
-getent group solr >/dev/null || groupadd -r solr
-getent passwd solr > /dev/null || useradd -c "Solr" -s /sbin/nologin -g solr -r -d %{run_solr} solr 2> /dev/null || :
+#%pre
+#getent group solr >/dev/null || groupadd -r %{user_solr}
+#getent passwd solr > /dev/null || useradd -c "Solr" -s /sbin/nologin -g %{user_solr} -r -d %{run_solr} %{user_solr} 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{config_solr} %{solr_name}-conf %{config_solr}.dist 30
@@ -142,8 +143,9 @@ fi
 %defattr(-,root,root,755)
 %config(noreplace) %{config_solr}.dist
 %{lib_solr}
+/usr/lib/hbase
 %{bin_solr}/hbase-indexer
-%defattr(-,solr,solr,755)
+%defattr(-,%{user_solr},%{user_solr},755)
 /var/run/hbase-solr
 /var/log/hbase-solr
 

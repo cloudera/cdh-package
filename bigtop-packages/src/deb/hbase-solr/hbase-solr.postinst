@@ -20,6 +20,7 @@ case "$1" in
     configure)
         # Install config alternatives
         update-alternatives  --install /etc/hbase-solr/conf hbase-solr-conf /etc/hbase-solr/conf.dist 30
+	chown hbase:hbase /var/run/hbase-solr /var/log/hbase-solr
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

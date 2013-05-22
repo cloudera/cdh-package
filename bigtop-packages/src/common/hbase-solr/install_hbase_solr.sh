@@ -92,21 +92,61 @@ MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 DOC_DIR=${DOC_DIR:-/usr/share/doc/hbase-solr}
 DOC_DIR_PREFIX=${DOC_DIR_PREFIX:-$PREFIX}
 CONF_DIR=${CONF_DIR:-/etc/hbase-solr/}
+HBASE_DIR=${HBASE_DIR:-/usr/lib/hbase/}
 
-# Create the search package
+# Create the indexer package
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
 tar -C ${PREFIX}/${LIB_DIR} --strip-components=1 -xzf ${PWD}/target/hbase-indexer*.tar.gz
+
+# Add a few files to the HBase
+install -d -m 0755 ${PREFIX}/${HBASE_DIR}/lib
+cp ${PREFIX}/${LIB_DIR}/lib/hbase-sep-* ${PREFIX}/${HBASE_DIR}/lib
 
 # Conf dir
 install -d -m 0755 ${PREFIX}/${CONF_DIR}
 mv ${PREFIX}/${LIB_DIR}/conf ${PREFIX}/${CONF_DIR}/conf.dist
-mv ${PREFIX}/${LIB_DIR}/bin/hbase-indexer-config.sh ${PREFIX}/${CONF_DIR}/conf.dist
 ln -s ${CONF_DIR}/conf.dist ${PREFIX}/${LIB_DIR}/conf
 
 # Demo files
 install -d -m 0755 ${PREFIX}/${DOC_DIR}
 mv ${PREFIX}/${LIB_DIR}/demo ${PREFIX}/${DOC_DIR}/demo
 mv ${PREFIX}/${LIB_DIR}/{LICENSE.txt,README.md} ${PREFIX}/${DOC_DIR}
+cat > ${PREFIX}/${DOC_DIR}/demo/sample.xml <<'__EOT__'
+<?xml version="1.0"?>
+<indexer table="record">
+  <field name="data" value="data:*" type="string"/>
+</indexer>
+__EOT__
+
+cat > ${PREFIX}/${DOC_DIR}/demo/hbase-site.xml <<'__EOT__'
+<configuration>
+  <!-- SEP is basically replication, so enable it -->
+  <property>
+    <name>hbase.replication</name>
+    <value>true</value>
+  </property>
+  <!-- Source ratio of 100% makes sure that each SEP consumer is actually
+       used (otherwise, some can sit idle, especially with small clusters) -->
+  <property>
+    <name>replication.source.ratio</name>
+    <value>1.0</value>
+  </property>
+  <!-- Maximum number of hlog entries to replicate in one go. If this is
+       large, and a consumer takes a while to process the events, the
+       HBase rpc call will time out. -->
+  <property>
+    <name>replication.source.nb.capacity</name>
+    <value>1000</value>
+  </property>
+  <!-- A custom replication source that fixes a few things and adds
+       some functionality (doesn't interfere with normal replication
+       usage). -->
+  <property>
+    <name>replication.replicationsource.implementation</name>
+    <value>com.ngdata.sep.impl.SepReplicationSource</value>
+  </property>
+</configuration>
+__EOT__
 
 # User visible files
 install -d -m 0755 $PREFIX/${BIN_DIR}
@@ -120,7 +160,7 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-exec ${LIB_DIR}/bin/hbase-indexer
+exec ${LIB_DIR}/bin/hbase-indexer "\$@"
 __EOT__
 chmod 755 $PREFIX/${BIN_DIR}/hbase-indexer
 

@@ -16,7 +16,68 @@
 DAEMON="hbase-solr-indexer"
 DESC="HBase Solr Indexer"
 EXEC_PATH="/usr/bin/hbase-indexer"
-SVC_USER="${solr}"
+SVC_USER="hbase"
 DAEMON_FLAGS=""
 CONF_DIR="/etc/hbase-solr/conf"
-PIDFILE="/var/run/hbase-solr/hbase-solr-$SVC_USER.pid}"
+PIDFILE="/var/run/hbase-solr/hbase-solr-$SVC_USER.pid"
+OUTFILE="/var/log/hbase-solr/hbase-solr-$SVC_USER.out"
+
+generate_start() {
+
+echo OUTFILE="\"$OUTFILE\""
+
+cat <<'__EOT__'
+
+start() {
+  [ -x $EXEC_PATH ] || exit $ERROR_PROGRAM_NOT_INSTALLED
+  [ -d $CONF_DIR ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
+  log_success_msg "Starting ${DESC}: "
+
+  su -s /bin/bash $SVC_USER  -c "/bin/bash -c 'echo \$\$ >${PIDFILE} && $EXEC_PATH --config '$CONF_DIR' server $DAEMON_FLAGS >> $OUTFILE 2>&1 </dev/null' &"
+
+  # Some processes are slow to start
+  sleep $SLEEP_TIME
+  checkstatusofproc
+  RETVAL=$?
+
+  [ $RETVAL -eq $RETVAL_SUCCESS ] && touch $LOCKFILE
+  return $RETVAL
+}
+
+__EOT__
+
+}
+
+generate_stop() {
+
+cat <<'__EOT__'
+stop() {
+  log_success_msg "Stopping ${DESC}: "
+  # FIXME: workaround for BIGTOP-537
+  checkstatusofproc
+  if [ "$?" = "$STATUS_RUNNING" ] ; then
+
+    SHUTDOWN_TIMEOUT=${SHUTDOWN_TIMEOUT:-60}
+
+    if [ -f $PIDFILE ]; then
+      PID=`cat $PIDFILE`
+      if [ -n $PID ]; then
+        kill -TERM $PID &>/dev/null
+        for i in `seq 1 ${SHUTDOWN_TIMEOUT}` ; do
+          kill -0 $PID &>/dev/null || break
+          sleep 1
+        done
+        kill -KILL $PID &>/dev/null
+      fi
+    fi
+
+    RETVAL=$?
+  else
+    RETVAL=$RETVAL_SUCCESS
+  fi
+
+  [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE
+}
+__EOT__
+
+}

@@ -23,7 +23,7 @@ Homepage: http://www.ngdata.com/
 
 Package: hbase-solr
 Architecture: all
-Depends: bigtop-utils
+Depends: bigtop-utils, hbase, solr
 Description: NGData HBase Solr indexer
  NGData HBase Solr indexer 
 
