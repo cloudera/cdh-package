@@ -31,7 +31,7 @@
 %define service_dep      aaa_base
 %global initd_dir %{_sysconfdir}/rc.d
 %else
-%define doc_solr %{_docdir}/hbase-solr-doc-%{solr_version}
+%define doc_solr %{_docdir}/hbase-solr-doc-%{hbase_solr_version}
 %define alternatives_cmd alternatives
 %define chkconfig_dep    chkconfig
 %define service_dep      initscripts
