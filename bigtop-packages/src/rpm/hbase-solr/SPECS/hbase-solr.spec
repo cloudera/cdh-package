@@ -54,6 +54,7 @@ Source0: hbase-solr-%{hbase_solr_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_hbase_solr.sh
 Source3: init.d.tmpl
+Source4: hbase-solr-indexer.svc
 Requires: bigtop-utils, hbase, solr
 
 # CentOS 5 does not have any dist macro
@@ -107,7 +108,7 @@ bash $RPM_SOURCE_DIR/install_hbase_solr.sh \
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{svc_solr}
-bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/hbase-solr-indexer.svc rpm $init_file
+bash %{SOURCE3} %{SOURCE4} rpm $init_file
 chmod 755 $init_file
 
 #%pre
