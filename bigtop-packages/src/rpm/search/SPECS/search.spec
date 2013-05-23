@@ -59,7 +59,7 @@ License: APL2
 Source0: search-%{search_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_solr_sink.sh
-Requires: bigtop-utils
+Requires: bigtop-utils >= 0.6
 
 %description
 Cloudera Search Project
@@ -95,7 +95,7 @@ sh %{SOURCE2} \
 %package -n solr-mapreduce
 Summary: Solr mapreduce indexer
 Group: Development/Libraries
-Requires: hadoop-client, bigtop-utils
+Requires: hadoop-client, bigtop-utils >= 0.6
 
 %description -n solr-mapreduce
 Solr mapreduce indexer

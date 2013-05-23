@@ -23,7 +23,7 @@ Homepage: http://flume.apache.org
 
 Package: search
 Architecture: all
-Depends: bigtop-utils
+Depends: bigtop-utils (>= 0.6)
 Description: Cloudera Search Project
  Cloudera Search Project
 
@@ -35,7 +35,7 @@ Description: Flume NG Solr Sink
 
 Package: solr-mapreduce
 Architecture: all
-Depends: hadoop-client, bigtop-utils
+Depends: hadoop-client, bigtop-utils (>= 0.6)
 Description: Solr mapreduce indexer
  Solr mapreduce indexer
 

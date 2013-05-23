@@ -55,7 +55,7 @@ Source1: do-component-build
 Source2: install_hbase_solr.sh
 Source3: init.d.tmpl
 Source4: hbase-solr-indexer.svc
-Requires: bigtop-utils, hbase, solr
+Requires: bigtop-utils >= 0.6, hbase, solr
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
