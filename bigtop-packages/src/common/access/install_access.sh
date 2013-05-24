@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
+set -ex
 
 usage() {
   echo "
@@ -92,22 +92,26 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
-LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/hadoop}
+LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/hive}
 install -d -m 0755 $LIB_DIR/lib
-for library in \
-        access-tests/target/access-tests access-core/target/access-core \
-        access-provider/access-provider-file/target/access-provider-file; do
-    cp $library*.jar $LIB_DIR/lib/
+
+(cd ${LIB_DIR} &&
+  tar --strip-components=1 -xvzf ${BUILD_DIR}/access-dist/target/access-*-dist.tar.gz)
+
+# Take out useless things
+for x in access-* \
+         .gitignore \
+         pom.xml; do
+  rm -rf ${LIB_DIR}/$x
 done
 
-for plugin in hive; do
-    PLUGIN_LIB_JAR=access-binding/access-binding-${plugin}/target/access-binding-${plugin}-*.jar
-    PLUGIN_LIB_DIR=${HIVE_LIB_DIR:-$PREFIX/usr/lib/${plugin}/lib}
-    install -d -m 0755 $PLUGIN_LIB_DIR
-    cp $PLUGIN_LIB_JAR $PLUGIN_LIB_DIR/
+# Take out extra jars from the tarball
+for x in access-tests \
+         access-dist \
+         commons-beanutils; do
+  rm -f ${LIB_DIR}/lib/$x*.jar
 done
 
 # Cloudera specific
-install -d -m 0755 $LIB_DIR/access/cloudera
-cp cloudera/cdh_version.properties $LIB_DIR/access/cloudera/
-
+#install -d -m 0755 $LIB_DIR/access/cloudera
+#cp cloudera/cdh_version.properties $LIB_DIR/access/cloudera/

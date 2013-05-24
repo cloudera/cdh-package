@@ -16,7 +16,7 @@
 # disable repacking jars
 %define __os_install_post %{nil}
 
-Name: hadoop-access
+Name: hive-access
 Version: %{access_version}
 Release: %{access_release}
 Summary: Authorization component
@@ -28,38 +28,24 @@ License: ASL 2.0
 Source0: access-%{access_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_access.sh
-Requires: hadoop-hdfs
+Requires: hadoop-hdfs, hive
 
 %description
-Cloudera authorization component
+Cloudera authorization component and the corresponding Hive plugin
 
 %prep
-%setup -n access-%{access_patched_version}
+%setup -n access-%{access_base_version}
 
 %build
 env FULL_VERSION=%{access_patched_version} bash $RPM_SOURCE_DIR/do-component-build
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh $RPM_SOURCE_DIR/install_access.sh \
-          --build-dir=build \
+sh %{SOURCE2} \
+          --build-dir=$PWD \
           --prefix=$RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,755)
-/usr/lib/hadoop/access/cloudera
-/usr/lib/hadoop/lib/access-provider-*.jar
-/usr/lib/hadoop/lib/access-core-*.jar
-/usr/lib/hadoop/lib/access-tests-*.jar
-
-%package hive
-Summary: Hive plugin
-Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}, hive
-
-%description hive
-Hive plugin for the Cloudera authorization component
-
-%files hive
-%defattr(-,root,root,755)
-/usr/lib/hive/lib/access-binding-hive-*.jar
+#/usr/lib/hive/access/cloudera
+/usr/lib/hive/lib

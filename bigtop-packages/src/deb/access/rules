@@ -31,9 +31,10 @@ override_dh_auto_build:
 	# failing on the debian/ subdirectory
 	rm -rf bigtop-empty
 	mkdir -p bigtop-empty
-	bash debian/do-component-build -Drat.basedir=`pwd`/bigtop-empty
+	env FULL_VERSION=$(build_version) \
+	  bash debian/do-component-build -Drat.basedir=`pwd`/bigtop-empty
 
 override_dh_auto_install:
 	sh -x debian/install_access.sh \
-	  --build-dir=dist \
+	  --build-dir=${PWD} \
 	  --prefix=debian/tmp

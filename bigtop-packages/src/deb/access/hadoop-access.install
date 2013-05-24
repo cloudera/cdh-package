@@ -1,5 +1,0 @@
-/usr/lib/hadoop/access/cloudera
-/usr/lib/hadoop/lib/access-provider-*.jar
-/usr/lib/hadoop/lib/access-core-*.jar
-/usr/lib/hadoop/lib/access-tests-*.jar
-

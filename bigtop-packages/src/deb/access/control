@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Source: hadoop-access
+Source: hive-access
 Section: misc
 Priority: extra
 Maintainer: Cloudera, inc. <access-dev@cloudera.org>
@@ -21,12 +21,7 @@ Build-Depends: debhelper (>= 7)
 Standards-Version: 3.8.0
 Homepage: https://github.com/cloudera/access
 
-Package: hadoop-access
+Package: hive-access
 Architecture: all
-Depends: hadoop-hdfs
-Description: Cloudera authorization component
-
-Package: hadoop-access-hive
-Architecture: all
-Depends: hadoop-access, hive
-Description: Hive plugin for Cloudera authorization component
+Depends: hadoop-hdfs, hive
+Description: Cloudera authorization component and the corresponding Hive plugin
