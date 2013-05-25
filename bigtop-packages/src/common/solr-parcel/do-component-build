@@ -255,6 +255,11 @@ __EOT__
 cat <<__EOT__
 SOLR_DIRNAME=\${PARCEL_DIRNAME:-"SOLR-$DISTRO_LESS_FULL_VERSION"}
 export CDH_SOLR_HOME=\$PARCELS_ROOT/\$SOLR_DIRNAME/lib/solr
+if [ -z \$FLUME_PLUGINS_DIRS ]; then
+  export FLUME_PLUGINS_DIRS=\$PARCELS_ROOT/\$SOLR_DIRNAME/lib/flume-plugin
+else
+  export FLUME_PLUGINS_DIRS=\$FLUME_PLUGINS_DIRS:\$PARCELS_ROOT/\$SOLR_DIRNAME/lib/flume-plugin
+fi
 __EOT__
 ) > build/meta/solr_env.sh
 
@@ -390,3 +395,14 @@ for file in `find build/usr/bin -type f`; do
   -e 's:/etc/default:$BIN_DIR/../etc/default:' \
   -e 's:#!/bin/sh:#!/bin/bash:' $file
 done
+
+# Flume plugin directory has certain limitations. It expects the path you provide to have a bunch of directories
+# Each of these directories is called a plugin directory. Inside this plugin directory should be lib, libext and native folders
+# that include the relevant bits for the plugin. This doesn't work well in parcels because we can only specify <parcel root>/lib
+# as flume plugin dir but that would mean that other jars like search jars, etc. would be included in flume's classpath. There are
+# way to many jars in question here so we can't ignore it. Hence we have to do this hack where we create a separate top level directory
+# exists only in Solr parcels and inside it is a link that points to flume-ng in <parcel root>/lib/, this way we add one more level
+# of indirection that is required by Flume plugins dir functionality without adding any unnecessary jars to flume's classpath
+rm -rf build/usr/lib/flume-plugin
+mkdir build/usr/lib/flume-plugin
+ln -s ../flume-ng build/usr/lib/flume-plugin/flume-ng
