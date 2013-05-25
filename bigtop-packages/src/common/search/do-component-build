@@ -16,12 +16,8 @@
 
 set -ex
 
-TAR_NAME=search-${FULL_VERSION}
-
 mvn clean install -DskipTests $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
 
-# Creating a fake tarball
 rm -rf build
-mkdir -p build/${TAR_NAME}
-cp -r `ls -d * | grep -v build` build/${TAR_NAME}
-tar -C build -czf build/${TAR_NAME}.tar.gz ${TAR_NAME}
+mkdir build
+cp search-dist/*/*search-dist.tar.gz build/search-${FULL_VERSION}.tar.gz

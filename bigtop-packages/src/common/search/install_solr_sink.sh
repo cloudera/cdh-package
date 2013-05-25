@@ -102,6 +102,7 @@ install -d -m 0755 ${PREFIX}/${LIB_DIR}/lib
 for i in search-solrcell search-mr search-core search-contrib \
          cdk-morphlines/cdk-morphlines-core cdk-morphlines/cdk-morphlines-avro cdk-morphlines/cdk-morphlines-tika ; do
   cp -f ${BUILD_DIR}/$i/target/*.jar ${PREFIX}/${LIB_DIR}
+  cp -f ${BUILD_DIR}/$i/target/lib/*.jar ${PREFIX}/${LIB_DIR}/lib
 done
 (cd ${PREFIX}/${LIB_DIR} ; rm -f *-tests.jar *-sources.jar)
 

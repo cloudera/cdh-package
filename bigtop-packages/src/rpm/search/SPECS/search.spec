@@ -73,7 +73,7 @@ Requires: flume-ng
 Flume NG Solr Sink
 
 %prep
-%setup -n %{name}-%{search_patched_version}
+%setup -n cloudera-%{name}-%{search_patched_version}
 
 %build
 env FULL_VERSION=%{search_patched_version} bash -x %{SOURCE1}
