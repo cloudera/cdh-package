@@ -121,6 +121,10 @@ condrestart(){
   [ -e ${LOCKFILE} ] && restart || :
 }
 
+init(){
+  rm -rf /var/lib/solr/*
+}
+
 case "$1" in
   start)
     start
@@ -137,8 +141,11 @@ case "$1" in
   condrestart|try-restart)
     condrestart
     ;;
+  init)
+    init
+    ;;
   *)
-    echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart}"
+    echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart|init}"
     exit 1
 esac
 
