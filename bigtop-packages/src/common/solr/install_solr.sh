@@ -115,7 +115,6 @@ cp -ra ${BUILD_DIR}/example/hdfs/collection1/conf $PREFIX/$LIB_DIR/coreconfig-te
 
 install -d -m 0755 $PREFIX/$LIB_DIR/contrib
 cp -ra ${BUILD_DIR}/contrib/velocity $PREFIX/$LIB_DIR/contrib
-cp -ra ${BUILD_DIR}/contrib/extraction $PREFIX/$LIB_DIR/contrib
 
 install -d -m 0755 $PREFIX/$LIB_DIR/server/webapps/solr
 (cd $PREFIX/$LIB_DIR/server/webapps/solr ; jar xf ../../../*.war)
