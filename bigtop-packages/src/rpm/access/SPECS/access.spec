@@ -34,7 +34,7 @@ Requires: hadoop-hdfs, hive
 Cloudera authorization component and the corresponding Hive plugin
 
 %prep
-%setup -n access-%{access_base_version}
+%setup -n access-%{access_patched_version}
 
 %build
 env FULL_VERSION=%{access_patched_version} bash $RPM_SOURCE_DIR/do-component-build
