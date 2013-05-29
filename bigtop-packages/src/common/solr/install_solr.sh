@@ -176,14 +176,13 @@ die() {
   exit 1
 }
 
-# SolrCloud and Non-SolrCloud modes should not step on each other toes,
-# which means going from one to the other would require full reconfig
-if [ -e \${SOLR_DATA:-/var/lib/solr/}/solr.cloud.ini ] ; then
-  [ -n "\$SOLR_ZK_ENSEMBLE" ] || die "Error: Solr is configured for for SolrCloud mode but SOLR_ZK_ENSEMBLE is not set"
-  CATALINA_OPTS="\${CATALINA_OPTS} -DzkHost=\${SOLR_ZK_ENSEMBLE}"
-else
-  [ -z "\$SOLR_ZK_ENSEMBLE" ] || die "Error: Solr is configured for for Non SolrCloud mode but SOLR_ZK_ENSEMBLE is set"
+# Preflight checks:
+# 1. We are only supporting SolrCloud mode
+if [ -z "\$SOLR_ZK_ENSEMBLE" ] ; then
+  die "Error: SOLR_ZK_ENSEMBLE is not set in /etc/default/solr"
 fi
+
+CATALINA_OPTS="\${CATALINA_OPTS} -DzkHost=\${SOLR_ZK_ENSEMBLE} -Dsolr.solrxml.location=zookeeper"
 
 if [ -n "\$SOLR_HDFS_HOME" ] ; then
   CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.hdfs.home=\${SOLR_HDFS_HOME}"
