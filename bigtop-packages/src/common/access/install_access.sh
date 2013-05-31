@@ -112,6 +112,10 @@ for x in access-tests \
   rm -f ${LIB_DIR}/lib/$x*.jar
 done
 
+install -d -m 0755 ${LIB_DIR}/access
+mv ${LIB_DIR}/NOTICE ${LIB_DIR}/access
+mv ${LIB_DIR}/LICENSE.txt ${LIB_DIR}/access
+
 # Cloudera specific
 #install -d -m 0755 $LIB_DIR/access/cloudera
 #cp cloudera/cdh_version.properties $LIB_DIR/access/cloudera/

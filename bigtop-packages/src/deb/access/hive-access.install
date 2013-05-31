@@ -1,2 +1,3 @@
 /usr/lib/hive/lib/*.jar
-#/usr/lib/hive/access/cloudera
+/usr/lib/hive/access/NOTICE
+/usr/lib/hive/access/LICENSE.txt

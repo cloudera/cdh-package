@@ -47,5 +47,5 @@ sh %{SOURCE2} \
 
 %files
 %defattr(-,root,root,755)
-#/usr/lib/hive/access/cloudera
+/usr/lib/hive/access
 /usr/lib/hive/lib
