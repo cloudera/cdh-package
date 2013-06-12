@@ -46,17 +46,6 @@ Requires: %{name}-metastore = %{version}-%{release}
 # hue-user is a virtual package
 Requires: %{name}-user
 
-%description -n hue
-Will install the entire set of hue and its plugins/applications
-
-%files -n hue
-
-%description
-The hue metapackage, including hue-common and all hue applications.
-
-##############################
-
-
 ################ RPM CUSTOMIZATION ##############################
 
 # Disable automatic Provides generation - otherwise we will claim to provide all of the
@@ -82,8 +71,10 @@ AutoReqProv: no
 
 # Init.d directory has different locations dependeing on the OS
 %if  %{!?suse_version:1}0
+%define alternatives_cmd alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 %else
+%define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d
 %endif
 
@@ -109,6 +100,7 @@ AutoReqProv: no
 %define proxy_app_dir %{hue_dir}/apps/proxy
 %define shell_app_dir %{hue_dir}/apps/shell
 %define useradmin_app_dir %{hue_dir}/apps/useradmin
+%define etc_hue /etc/hue/conf 
 %define impala_app_dir %{hue_dir}/apps/impala
 
 # Path to the HADOOP_HOME to build against - these
@@ -128,8 +120,7 @@ if [ "$1" != 1 ] ; then \
 fi \
 %{hue_dir}/build/env/bin/python %{hue_dir}/tools/app_reg/app_reg.py --install %{apps_dir}/%1 \
 (cd %{hue_dir} ; /bin/bash ./tools/relocatable.sh) \
-chown -R hue:hue /var/log/hue \
-chown hue:hue %{hue_dir}/desktop %{hue_dir}/desktop/desktop.db
+chown -R hue:hue /var/log/hue /var/lib/hue
 
 # Preun macro for apps
 %define app_preun_macro() \
@@ -144,17 +135,16 @@ if [ "$1" = 0 ] ; then \
   find %{apps_dir}/%1 -name \*.egg-info -type f -print0 | xargs -0 /bin/rm -fR   \
 fi \
 find %{apps_dir}/%1 -iname \*.py[co] -type f -print0 | xargs -0 /bin/rm -f \
-chown -Rf hue:hue /var/log/hue \
-chown -f hue:hue %{hue_dir}/desktop %{hue_dir}/desktop/desktop.db ||:
+chown -R hue:hue /var/log/hue /var/lib/hue || :
 
 %description
 Hue is a browser-based desktop interface for interacting with Hadoop.
 It supports a file browser, job tracker interface, cluster health monitor, and more.
 
+%files -n hue
 
 %clean
 %__rm -rf $RPM_BUILD_ROOT
-
 
 %prep
 %setup -n %{name}-%{hue_patched_version}
@@ -189,9 +179,10 @@ BuildRequires: python-devel, python-setuptools, gcc, gcc-c++
 BuildRequires: libxml2-devel, libxslt-devel, zlib-devel
 BuildRequires: cyrus-sasl-devel
 BuildRequires: openssl
-#BuildRequires: hadoop, bigtop-utils
+BuildRequires: krb5-devel
 Group: Applications/Engineering
 Requires: cyrus-sasl-gssapi, libxml2, libxslt, zlib, python, sqlite
+# The only reason we need the following is because we also have AutoProv: no
 Conflicts: cloudera-desktop
 Provides: %{name}-common = %{version}, config(%{name}-common) = %{version}
 
@@ -221,10 +212,30 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
 getent group %{username} 2>/dev/null >/dev/null || /usr/sbin/groupadd -r %{username}
 getent passwd %{username} 2>&1 > /dev/null || /usr/sbin/useradd -c "Hue" -s /sbin/nologin -g %{username} -r -d %{hue_dir} %{username} 2> /dev/null || :
 
+OLD_DESKTOP_DB=/usr/share/hue/desktop/desktop.db
+OLD_APP_REG=/usr/share/hue/app.reg
+OLD_PTH_FILE=`echo /usr/share/hue/build/env/lib/python*/site-packages/hue.pth | cut -f1 -d\  `
+VAR_LIB=/var/lib/hue
+
+# Seeding mutable files
+mkdir -p ${VAR_LIB} || :
+for mfile in ${OLD_DESKTOP_DB} ${OLD_APP_REG} ${OLD_PTH_FILE} ; do
+  if [ ! -e ${VAR_LIB}/`basename $mfile` -a -e $mfile ] ; then
+    cp $mfile ${VAR_LIB} || :
+  fi
+done
+
 # If there is an old DB in place, make a backup.
 if [ -e %{hue_dir}/desktop/desktop.db ]; then
   echo "Backing up previous version of Hue database..."
   cp -a %{hue_dir}/desktop/desktop.db %{hue_dir}/desktop/desktop.db.rpmsave.$(date +'%Y%m%d.%H%M%S')
+fi
+
+# Ditto for logs
+if [ -e %{hue_dir}/desktop/logs ]; then
+  NAME=%{hue_dir}/desktop/logs.$(date +'%Y%m%d.%H%M%S')
+  echo "Preserving existing log files under $NAME"
+  mv %{hue_dir}/desktop/logs %{hue_dir}/desktop/logs.$(date +'%Y%m%d.%H%M%S') || :
 fi
 
 ########################################
@@ -232,11 +243,21 @@ fi
 # sequence trying to change a subdiretory 
 # into a symlink
 ########################################
+%post -n %{name}-common -p /bin/bash
 
-if [ -e %{hue_dir}/desktop/logs ]; then
-  NAME=%{hue_dir}/desktop/logs.$(date +'%Y%m%d.%H%M%S')
-  echo "Preserving existing log files under $NAME"
-  mv %{hue_dir}/desktop/logs %{hue_dir}/desktop/logs.$(date +'%Y%m%d.%H%M%S') || :
+%{alternatives_cmd} --install %{etc_hue} hue-conf /etc/hue 30
+
+export DESKTOP_LOGLEVEL=WARN
+export DESKTOP_LOG_DIR=/var/log/hue
+mkdir -p $DESKTOP_LOG_DIR || :
+/usr/share/hue/build/env/bin/hue syncdb --noinput
+
+# initialize seed databases if there's none
+chown -R hue:hue /var/log/hue /var/lib/hue
+
+%preun -n %{name}-common -p /bin/bash
+if [ "$1" = 0 ]; then
+        %{alternatives_cmd} --remove hue-conf /etc/hue || :
 fi
 
 ########################################
@@ -248,21 +269,22 @@ if [ -d %{hue_dir} ]; then
   find %{hue_dir} -name \*.py[co] -exec rm -f {} \;
 fi
 
-if [ $1 -eq 0 ]; then
-  # TODO this seems awfully aggressive
-  # NOTE  Despite dependency, hue-common could get removed before the apps are.
-  #       We should remove app.reg because apps won't have a chance to
-  #       unregister themselves.
-  # FIXME: workaround for CDH-11067
-  [ -e /usr/share/hue/desktop/desktop.db ] && ([ ! -e /var/lib/hue-db-backup ] && (install -d -o hue -g hue /var/lib/hue-db-backup || mkdir -p /var/lib/hue-db-backup) || true) && (umask 077; cp /usr/share/hue/desktop/desktop.db /var/lib/hue-db-backup/desktop.db.$(date +'%%Y%%m%%d.%%H%%M%%S')) || true
-  rm -Rf %{hue_dir}/desktop %{hue_dir}/build %{hue_dir}/pids %{hue_dir}/app.reg
-fi
+##################################################
+# Post-transaction (runs when old package is gone)
+##################################################
+%posttrans -n %{name}-common -p /bin/bash
+# This is only here because post-rm scripts of previous
+# package could have removed the convenience links
+(VAR_DIR=/var/lib/hue
+ ln -s ${VAR_DIR}/desktop.db %{hue_dir}/desktop/desktop.db
+ ln -s ${VAR_DIR}/app.reg %{hue_dir}/app.reg
+ ln -s ${VAR_DIR}/hue.pth `echo %{hue_dir}/build/env/lib/python*/site-packages`/hue.pth) >/dev/null 2>&1 || :
 
 %files -n %{name}-common
 %defattr(-,root,root)
 %attr(0755,root,root) %config(noreplace) /etc/hue/
 %dir %{hue_dir}
-%attr(0755,hue,hue) %{hue_dir}/desktop
+%{hue_dir}/desktop
 %{hue_dir}/ext
 %{hue_dir}/LICENSE.txt
 %{hue_dir}/Makefile
@@ -277,11 +299,13 @@ fi
 %{hue_dir}/build/env/include/
 %{hue_dir}/build/env/lib*/
 %{hue_dir}/build/env/stamp
+%{hue_dir}/app.reg
 %{hue_dir}/apps/Makefile
 %{hue_dir}/cloudera/cdh_version.properties
 %dir %{hue_dir}/apps
 %attr(0755,root,root) %{initd_dir}/hue
-
+%attr(0755,%{username},%{username}) /var/log/hue
+%attr(0755,%{username},%{username}) /var/lib/hue
 
 
 %exclude %{hadoop_lib}
@@ -310,8 +334,9 @@ fi
 %package -n %{name}-server
 Summary: Service Scripts for Hue
 Requires: %{name}-common = %{version}-%{release}
+Requires(pre): %{name}-common = %{version}-%{release}
+Requires(preun): %{name}-common = %{version}-%{release}
 Requires: /sbin/chkconfig
-Requires(pre): %{name} = %{version}-%{release}
 Group: Applications/Engineering
 
 %description -n %{name}-server
@@ -323,7 +348,7 @@ This package provides the service scripts for Hue server.
 
 # Install and start init scripts
 
-%post -n %{name}  
+%post -n %{name}-server 
 /sbin/chkconfig --add hue
 
 ########################################
@@ -419,7 +444,6 @@ Requires(pre): %{name}-common = %{version}-%{release}
 Requires(preun): %{name}-common = %{version}-%{release}
 Requires: %{name}-jobbrowser = %{version}-%{release}
 Requires: %{name}-filebrowser = %{version}-%{release}
-Requires: %{name}-jobsub = %{version}-%{release}
 Requires: %{name}-help = %{version}-%{release}
 
 %description -n %{name}-oozie
@@ -509,6 +533,9 @@ Requires: make
 Requires: %{name}-common = %{version}-%{release}
 Requires(pre): %{name}-common = %{version}-%{release}
 Requires(preun): %{name}-common = %{version}-%{release}
+Requires: %{name}-oozie = %{version}-%{release}
+Requires(pre): %{name}-oozie = %{version}-%{release}
+Requires(preun): %{name}-oozie = %{version}-%{release}
 Requires: %{name}-jobbrowser = %{version}-%{release}
 Requires: %{name}-help = %{version}-%{release}
 

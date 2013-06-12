@@ -2,6 +2,7 @@
 /etc/hue/log4j.properties
 /etc/hue/log.conf
 /usr/share/hue/desktop
+/usr/share/hue/app.reg
 /usr/share/hue/ext
 /usr/share/hue/LICENSE.txt
 /usr/share/hue/Makefile
@@ -18,4 +19,5 @@
 /usr/share/hue/build/env/stamp
 /usr/share/hue/apps/Makefile
 /usr/share/hue/cloudera/cdh_version.properties
-
+/var/log/hue
+/var/lib/hue

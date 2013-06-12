@@ -40,8 +40,7 @@ case "$1" in
         (cd $ROOT; $ROOT/build/env/bin/python $ROOT/tools/app_reg/app_reg.py --remove $APP) ||:
         (cd $ROOT; $ROOT/build/env/bin/python $ROOT/tools/app_reg/app_reg.py --install $APP_DIR)
         (cd $ROOT; /bin/bash ./tools/relocatable.sh)
-        chown -R hue:hue /var/log/hue || :
-        chown hue:hue /usr/share/hue/desktop /usr/share/hue/desktop/desktop.db  || :
+        chown -R hue:hue /var/log/hue /var/lib/hue || :
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

@@ -2,7 +2,7 @@ Source: hue
 Section: misc
 Priority: extra
 Maintainer: Cloudera, inc. <cdh-dev@cloudera.org>
-Build-Depends: debhelper (>= 7), ant, python2.4-dev | python2.5-dev | python2.6-dev | python2.7-dev, libxml2-dev, libxslt1-dev, zlib1g-dev, libsqlite3-dev, libldap2-dev, libsasl2-dev, libmysqlclient-dev, make, python-setuptools
+Build-Depends: debhelper (>= 7.0.50~), ant, python2.4-dev | python2.5-dev | python2.6-dev | python2.7-dev, libxml2-dev, libxslt1-dev, zlib1g-dev, libsqlite3-dev, libldap2-dev, libsasl2-dev, libmysqlclient-dev, make, python-setuptools
 Depends: libsasl2, libsqlite3, zlib1g, libxslt1, libxml2Standards-Version: 3.8.0
 Homepage: http://github.com/cloudera/hue
 
@@ -52,7 +52,7 @@ Description: A UI for Hive on Hue
 
 Package: hue-oozie
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-jobsub (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version})
 Description: A UI for Oozie on Hue
  A web interface for Oozie.
  .
@@ -78,7 +78,7 @@ Description: A UI for viewing Hadoop map-reduce jobs
 
 Package: hue-jobsub
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hadoop, bigtop-utils, hue-jobbrowser (= ${source:Version}), hue-help (= ${source:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hadoop, bigtop-utils, hue-jobbrowser (= ${source:Version}), hue-oozie (= ${source:Version}), hue-help (= ${source:Version})
 Description: A UI for designing and submitting map-reduce jobs to Hadoop
  Jobsub is a web interface for designing and submitting map-reduce jobs to Hadoop.
 

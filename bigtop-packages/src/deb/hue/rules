@@ -1,4 +1,20 @@
 #!/usr/bin/make -f
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 # -*- makefile -*-
 
 # Uncomment this to turn on verbose mode.
@@ -18,6 +34,9 @@ $(APPS:%=debian/hue-%.prerm): debian/hue-app.prerm.tpl
 $(APPS:%=debian/hue-%.install):
 	echo "/usr/share/hue/apps/$(patsubst debian/hue-%.install,%,$@)" > $@
 
+%:
+	dh $@
+
 HUE_DIR ?= /usr/share/hue
 PKG_DESKTOP=$(CURDIR)/debian/tmp
 
@@ -28,78 +47,16 @@ PKG_ROOT=$(CURDIR)/debian
 
 export MAVEN_OPTIONS=-Dmaven.repo.local=${HOME}/.m2/repository
 
-# We require sun java6 because it just works better
-export JAVA_HOME=/usr/lib/jvm/java-6-sun
-
-configure: configure-stamp
-configure-stamp:
-	dh_testdir
-	touch configure-stamp
-
-
-build: build-stamp
-
-build-stamp: configure-stamp
-	dh_testdir
+override_dh_auto_build:
 	bash -x debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
-	touch $@
 
-clean:
-	dh_testdir
-	dh_testroot
-	rm -f build-stamp configure-stamp debian/substvars
-
-	make clean
-
-	dh_clean
-
-
-install: build $(APPS:%=debian/hue-%.postinst) $(APPS:%=debian/hue-%.prerm) $(APPS:%=debian/hue-%.install)
-	dh_testdir
-	dh_testroot
-	dh_prep
-	dh_installdirs
+override_dh_auto_install: build $(APPS:%=debian/hue-%.postinst) $(APPS:%=debian/hue-%.prerm) $(APPS:%=debian/hue-%.install)
 	bash -x debian/install_hue.sh --build-dir=${PWD} --prefix=${PWD}/debian/tmp
 	sed -e 's,^,build:,;' ${PKG_DESKTOP_DIR}/Makefile.buildvars \
 	  | tr _ - >> debian/hue-common.substvars
-	# Remove Hue database
-	rm -f $(PKG_DESKTOP)/$(HUE_DIR)/desktop/desktop.db
-	dh_install --sourcedir=debian/tmp --list-missing
 
-# Build architecture-independent files here.
-binary-indep: install
-# We have nothing to do by default.
+override_dh_installinit:
+	dh_installinit --name=hue
 
-# Build architecture-dependent files here.
-binary-arch: install
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs
-	dh_installdocs
-	dh_installexamples
-#	dh_install
-#	dh_installmenu
-#	dh_installdebconf
-#	dh_installlogrotate
-#	dh_installemacsen
-#	dh_installpam
-#	dh_installmime
-#	dh_python
-	dh_installinit --no-start --name=hue
-#	dh_installcron
-#	dh_installinfo
-	dh_installman
-	dh_link
-	dh_strip
-	dh_compress
-	dh_fixperms
-#	dh_perl
-#	dh_makeshlibs
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install configure
+override_dh_auto_test:
+	@echo Tests are disabled

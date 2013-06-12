@@ -1,5 +1,1 @@
-hue-common (@HUE_VERSION@-1) cloudera; urgency=low
-
-  * Upstream update.
-
- -- The Hue Team <bcwalrus@cloudera.com>  @DEBIAN_DATE@
+--- This is auto-generated 

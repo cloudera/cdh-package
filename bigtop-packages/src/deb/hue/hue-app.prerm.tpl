@@ -43,8 +43,7 @@ case "$1" in
         fi
         find $APP_DIR -name \*.py[co] -exec rm -f {} \; ||:
         find $APP_DIR -name \*.egg-info -prune -exec rm -Rf {} \; ||:
-        chown -R hue:hue /var/log/hue || :
-        chown hue:hue /usr/share/hue/desktop /usr/share/hue/desktop/desktop.db  || :
+        chown -R hue:hue /var/log/hue /var/lib/hue || :
     ;;
 
     failed-upgrade)
