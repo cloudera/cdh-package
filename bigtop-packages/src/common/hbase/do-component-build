@@ -15,10 +15,7 @@
 # limitations under the License.
 
 build_args="clean -Pnative -DskipTests -Dhadoop.profile=2.0 source:jar install site javadoc:javadoc assembly:assembly $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository"
-security=true
-if $security ; then
-    build_args="$build_args -Psecurity"
-fi
+
 set -ex
 
 mvn $build_args "$@"
@@ -27,8 +24,6 @@ mkdir -p build
 for x in target/*.tar.gz ; do
   tar -C build -xzf $x
 done
-if $security ; then
-    mv build/hbase-${FULL_VERSION}-security build/hbase-${FULL_VERSION}
-fi
+
 cp -r target/site/apidocs build/hbase-${FULL_VERSION}/docs
 (cd build && tar --exclude='*/native/lib*' --exclude='*/lib/native/*' -czf hbase-${FULL_VERSION}.tar.gz hbase-${FULL_VERSION})
