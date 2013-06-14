@@ -99,12 +99,12 @@ ETC_DIR=${ETC_DIR:-/etc/flume-ng}
 
 # Create the search package
 install -d -m 0755 ${PREFIX}/${LIB_DIR}/lib
-for i in search-solrcell search-mr search-core search-contrib \
-         cdk-morphlines/cdk-morphlines-core cdk-morphlines/cdk-morphlines-avro cdk-morphlines/cdk-morphlines-tika ; do
+for i in search-mr search-contrib cdk-morphlines/cdk-morphlines-* ; do
   cp -f ${BUILD_DIR}/$i/target/*.jar ${PREFIX}/${LIB_DIR}
   cp -f ${BUILD_DIR}/$i/target/lib/*.jar ${PREFIX}/${LIB_DIR}/lib
 done
 (cd ${PREFIX}/${LIB_DIR} ; rm -f *-tests.jar *-sources.jar)
+cp -f ${BUILD_DIR}/search-dist/target/lib/*.jar ${PREFIX}/${LIB_DIR}/lib
 
 # Plugin jars
 install -d -m 0755 ${PREFIX}/${FLUME_DIR}/lib
