@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-build_args="clean -Pnative -DskipTests -Dhadoop.profile=2.0 source:jar install site javadoc:javadoc assembly:assembly $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository"
+build_args="clean install javadoc:aggregate site assembly:single -DskipTests -Dassembly.file=hbase-assembly/src/main/assembly/src.xml -Prelease $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository"
 
 set -ex
 
