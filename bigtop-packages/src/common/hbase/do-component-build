@@ -21,7 +21,7 @@ set -ex
 mvn $build_args "$@"
 
 mkdir -p build
-for x in target/*.tar.gz ; do
+for x in hbase-assembly/target/*.tar.gz ; do
   tar -C build -xzf $x
 done
 
