@@ -105,7 +105,7 @@ install -d -m 0755 ${PREFIX}/${FLUME_DIR}
   tar --strip-components=1 -xvzf ${BUILD_DIR}/flume-ng-dist/target/apache-flume-*-bin.tar.gz)
 
 # Take out useless things or we've installed elsewhere
-for x in flume-ng-* \
+for x in flume-* \
           .gitignore \
           conf \
           pom.xml \
