@@ -163,9 +163,9 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
-%__install -m 0644 %{SOURCE6} $RPM_BUILD_ROOT/etc/default/%{name}-metastore
-%__install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT/etc/default/%{name}-server
-%__install -m 0644 %{SOURCE9} $RPM_BUILD_ROOT/etc/default/%{name}-server2
+%__install -m 0644 $RPM_SOURCE_DIR/hive-metastore.default $RPM_BUILD_ROOT/etc/default/%{name}-metastore
+%__install -m 0644 $RPM_SOURCE_DIR/hive-server.default $RPM_BUILD_ROOT/etc/default/%{name}-server
+%__install -m 0644 $RPM_SOURCE_DIR/hive-server2.default $RPM_BUILD_ROOT/etc/default/%{name}-server2
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/log/%{name}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{name}
