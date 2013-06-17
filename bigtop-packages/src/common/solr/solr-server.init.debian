@@ -48,7 +48,7 @@ SOLR_LOCK_DIR="/var/lock/subsys/"
 LOCKFILE="${SOLR_LOCK_DIR}/solr"
 desc="Solr server daemon"
 
-EXEC_PATH=$SOLR_HOME/bin/solrd
+EXEC_PATH=". /etc/default/solr ; . $SOLR_HOME/bin/solrd"
 SOLR_PID_FILE=${SOLR_RUN_DIR}/solr.pid
 
 # These directories may be tmpfs and may or may not exist

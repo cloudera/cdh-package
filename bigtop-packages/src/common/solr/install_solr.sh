@@ -152,10 +152,8 @@ install -d -m 0755 $PREFIX/${CONF_DIR}.dist
 cp ${BUILD_DIR}/example/resources/log4j.properties $PREFIX/${CONF_DIR}.dist
 
 # Copy in the wrapper
-cat > $PREFIX/$LIB_DIR/bin/solrd <<EOF
+cat > $PREFIX/$LIB_DIR/bin/solrd <<'EOF'
 #!/bin/bash
-
-[ -f /etc/default/solr ] && . /etc/default/solr
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then
@@ -164,61 +162,83 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-export CATALINA_HOME=$LIB_DIR/../bigtop-tomcat
-export CATALINA_BASE=$LIB_DIR/server
+# resolve links - $0 may be a softlink
+PRG="${0}"
 
-export CATALINA_TMPDIR=\${SOLR_DATA:-/var/lib/solr/}
-export CATALINA_PID=\${SOLR_RUN:-/var/run/solr/}solr.pid
-export CATALINA_OUT=\${SOLR_LOG:-/var/log/solr}/solr.out
+while [ -h "${PRG}" ]; do
+  ls=`ls -ld "${PRG}"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "${PRG}"`/"$link"
+  fi
+done
+
+BASEDIR=`dirname ${PRG}`
+BASEDIR=`cd ${BASEDIR}/..;pwd`
+
+SOLR_PORT=${SOLR_PORT:-8983}
+SOLR_ADMIN_PORT=${SOLR_ADMIN_PORT:-8984}
+SOLR_LOG=${SOLR_LOG:-/var/log/solr}
+SOLR_HOME=${SOLR_HOME:-/var/lib/solr}
+SOLR_LOG4J_CONFIG=${SOLR_LOG4J_CONFIG:-/etc/solr/conf/log4j.properties}
+
+export CATALINA_HOME=${CATALINA_HOME:-$BASEDIR/../bigtop-tomcat}
+export CATALINA_BASE=${CATALINA_BASE:-$BASEDIR/server}
+
+export CATALINA_TMPDIR=${SOLR_DATA:-/var/lib/solr/}
+export CATALINA_PID=${SOLR_RUN:-/var/run/solr}/solr.pid
+export CATALINA_OUT=${SOLR_LOG:-/var/log/solr}/solr.out
 
 die() {
-  echo "\$@" >&2
+  echo "$@" >&2
   exit 1
 }
 
 # Preflight checks:
 # 1. We are only supporting SolrCloud mode
-if [ -z "\$SOLR_ZK_ENSEMBLE" ] ; then
+if [ -z "$SOLR_ZK_ENSEMBLE" ] ; then
   die "Error: SOLR_ZK_ENSEMBLE is not set in /etc/default/solr"
 fi
 
-CATALINA_OPTS="\${CATALINA_OPTS} -DzkHost=\${SOLR_ZK_ENSEMBLE} -Dsolr.solrxml.location=zookeeper"
+CATALINA_OPTS="${CATALINA_OPTS} -DzkHost=${SOLR_ZK_ENSEMBLE} -Dsolr.solrxml.location=zookeeper"
 
-if [ -n "\$SOLR_HDFS_HOME" ] ; then
-  CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.hdfs.home=\${SOLR_HDFS_HOME}"
+if [ -n "$SOLR_HDFS_HOME" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.hdfs.home=${SOLR_HDFS_HOME}"
 fi
 
-if [ -n "\$SOLR_HDFS_CONFIG" ] ; then
-  CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.hdfs.confdir=\${SOLR_HDFS_CONFIG}"
+if [ -n "$SOLR_HDFS_CONFIG" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.hdfs.confdir=${SOLR_HDFS_CONFIG}"
 fi
 
-if [ "\$SOLR_KERBEROS_ENABLED" == "true" ] ; then
-  CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.hdfs.security.kerberos.enabled=\${SOLR_KERBEROS_ENABLED}"
+if [ "$SOLR_KERBEROS_ENABLED" == "true" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.hdfs.security.kerberos.enabled=${SOLR_KERBEROS_ENABLED}"
 fi
 
-if [ -n "\$SOLR_KERBEROS_KEYTAB" ] ; then
-  CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.hdfs.security.kerberos.keytabfile=\${SOLR_KERBEROS_KEYTAB}"
+if [ -n "$SOLR_KERBEROS_KEYTAB" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.hdfs.security.kerberos.keytabfile=${SOLR_KERBEROS_KEYTAB}"
 fi
 
-if [ -n "\$SOLR_KERBEROS_PRINCIPAL" ] ; then
-  CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.hdfs.security.kerberos.principal=\${SOLR_KERBEROS_PRINCIPAL}"
+if [ -n "$SOLR_KERBEROS_PRINCIPAL" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.hdfs.security.kerberos.principal=${SOLR_KERBEROS_PRINCIPAL}"
 fi
 
 # FIXME: we need to set this because of the jetty-centric default solr.xml
-CATALINA_OPTS="\${CATALINA_OPTS} -Dhost=\$HOSTNAME -Djetty.port=\${SOLR_PORT:-8080}"
+CATALINA_OPTS="${CATALINA_OPTS} -Dhost=$HOSTNAME -Djetty.port=$SOLR_PORT"
 
-export CATALINA_OPTS="\${CATALINA_OPTS} -Dsolr.host=\$HOSTNAME
-                                        -Dsolr.port=\${SOLR_PORT:-8080}
-                                        -Dlog4j.configuration=file://\${SOLR_LOG4J_CONFIG:-/etc/solr/conf/log4j.properties}
-                                        -Dsolr.log=\${SOLR_LOG:-/var/log/solr}
-                                        -Dsolr.admin.port=\${SOLR_ADMIN_PORT:-8081}
-                                        -Dsolr.solr.home=\${SOLR_HOME:-/var/lib/solr}"
+export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.host=$HOSTNAME
+                                        -Dsolr.port=$SOLR_PORT
+                                        -Dlog4j.configuration=file://$SOLR_LOG4J_CONFIG
+                                        -Dsolr.log=$SOLR_LOG
+                                        -Dsolr.admin.port=$SOLR_ADMIN_PORT
+                                        -Dsolr.solr.home=$SOLR_HOME"
 
 # FIXME: for some reason catalina doesn't use CATALINA_OPTS for stop action
 #        and thus doesn't know the admin port
-export JAVA_OPTS="\$CATALINA_OPTS"
+export JAVA_OPTS="$CATALINA_OPTS"
 
-exec \${CATALINA_HOME}/bin/catalina.sh "\$@"
+exec ${CATALINA_HOME}/bin/catalina.sh "$@"
 EOF
 chmod 755 $PREFIX/$LIB_DIR/bin/solrd
 
