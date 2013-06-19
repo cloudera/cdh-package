@@ -163,7 +163,7 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
 fi
 
 # resolve links - $0 may be a softlink
-PRG="${0}"
+PRG="${BASH_SOURCE[0]}"
 
 while [ -h "${PRG}" ]; do
   ls=`ls -ld "${PRG}"`
