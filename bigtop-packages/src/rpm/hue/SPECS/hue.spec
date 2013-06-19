@@ -303,7 +303,6 @@ fi
 %{hue_dir}/apps/Makefile
 %{hue_dir}/cloudera/cdh_version.properties
 %dir %{hue_dir}/apps
-%attr(0755,root,root) %{initd_dir}/hue
 %attr(0755,%{username},%{username}) /var/log/hue
 %attr(0755,%{username},%{username}) /var/lib/hue
 
