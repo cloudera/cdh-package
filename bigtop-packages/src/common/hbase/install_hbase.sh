@@ -113,7 +113,7 @@ install -d -m 0755 $PREFIX/$MAN_DIR
 install -d -m 0755 $PREFIX/$THRIFT_DIR
 
 cp -ra $BUILD_DIR/lib/* ${PREFIX}/${LIB_DIR}/lib/
-cp $BUILD_DIR/hbase*.jar $PREFIX/$LIB_DIR
+mv $PREFIX/$LIB_DIR/lib/hbase*.jar $PREFIX/$LIB_DIR/
 cp -a $BUILD_DIR/docs/* $PREFIX/$DOC_DIR
 cp $BUILD_DIR/*.txt $PREFIX/$DOC_DIR/
 cp -a $BUILD_DIR/hbase-webapps $PREFIX/$LIB_DIR
@@ -127,13 +127,15 @@ for file in rolling-restart.sh graceful_stop.sh local-regionservers.sh \
   rm -f $PREFIX/$BIN_DIR/$file
 done
 
-cp $BUILD_DIR/src/main/resources/org/apache/hadoop/hbase/thrift/Hbase.thrift $PREFIX/$THRIFT_DIR/hbase1.thrift
-cp $BUILD_DIR/src/main/resources/org/apache/hadoop/hbase/thrift2/hbase.thrift $PREFIX/$THRIFT_DIR/hbase2.thrift
+cp $BUILD_DIR/hbase-server/src/main/resources/org/apache/hadoop/hbase/thrift/Hbase.thrift $PREFIX/$THRIFT_DIR/hbase1.thrift
+cp $BUILD_DIR/hbase-server/src/main/resources/org/apache/hadoop/hbase/thrift2/hbase.thrift $PREFIX/$THRIFT_DIR/hbase2.thrift
 
 ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
 
-# Make a symlink of hbase.jar to hbase-version.jar
-ln -s `cd $PREFIX/$LIB_DIR ; ls hbase*jar | grep -v tests.jar` $PREFIX/$LIB_DIR/hbase.jar
+# Make a symlink of hbase*.jar to hbase*-version.jar
+for lib in client common examples hadoop2-compat hadoop-compat it prefix-tree protocol server; do
+    ln -s `cd $PREFIX/$LIB_DIR ; ls hbase-$lib*jar | grep -v tests` $PREFIX/$LIB_DIR/hbase-$lib.jar
+done
 
 wrapper=$PREFIX/usr/bin/hbase
 mkdir -p `dirname $wrapper`
