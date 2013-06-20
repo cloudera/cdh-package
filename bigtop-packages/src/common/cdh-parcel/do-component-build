@@ -18,8 +18,8 @@ set -ex
 
 [ -f cdh-parcel.props ] && . cdh-parcel.props
 
-PKG_ARCHIVE=${PKG_ARCHIVE:-"http://repos.jenkins.cloudera.com/cdh4.1.4-nightly/"}
-CDH_VERSION=${CDH_VERSION:-"4.1.4"}
+PKG_ARCHIVE=${PKG_ARCHIVE:-"http://repos.jenkins.cloudera.com/cdh4.1.5-nightly/"}
+CDH_VERSION=${CDH_VERSION:-"4.1.5"}
 
 # If PKG_FORMAT not specified assume tarballs
 if [ -z "$PKG_FORMAT" ] ; then
