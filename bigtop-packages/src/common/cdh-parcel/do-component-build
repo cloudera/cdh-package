@@ -257,7 +257,7 @@ cat <<__EOT__
   "users": {
      "flume": {
        "longname"    : "Flume",
-       "home"        : "/var/run/flume",
+       "home"        : "/var/lib/flume-ng",
        "shell"       : "/bin/false",
        "extra_groups": [ ]
      },
