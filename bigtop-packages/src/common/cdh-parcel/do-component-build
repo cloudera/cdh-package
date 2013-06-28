@@ -172,12 +172,19 @@ done
 
 # FIXME: special handling for Hue
 HUE_APPS=`ls build/usr/share/hue/apps | grep -v Makefile | xargs`
+
+# Removing the broken symlinks to the mutable files
+rm -f build/usr/share/hue/desktop/desktop.db
+rm -f build/usr/share/hue/app.reg
+rm -f build/usr/share/hue/build/env/lib/python*/site-packages/hue.pth
+
 rm -f build/usr/share/hue/desktop/conf
 cp -r build/etc/hue build/usr/share/hue/desktop/conf
 pushd build/usr/share/hue
  /bin/bash -x ./tools/relocatable.sh
  for app in $HUE_APPS ; do
-   ROOT=`pwd` DESKTOP_LOGLEVEL=WARN DESKTOP_LOG_DIR=/tmp ./build/env/bin/python ./tools/app_reg/app_reg.py --install `pwd`/apps/$app
+   ROOT=`pwd` HUE_APP_REG_DIR=. HUE_PTH_DIR=`ls -d build/env/lib/python*/site-packages/` DESKTOP_DB_CONFIG=sqlite3:desktop.db \
+         DESKTOP_LOGLEVEL=WARN DESKTOP_LOG_DIR=/tmp ./build/env/bin/python ./tools/app_reg/app_reg.py --install `pwd`/apps/$app
  done
  /bin/bash -x ./tools/relocatable.sh
  find . -name '*.py[oc]' -exec rm -f {} \;
