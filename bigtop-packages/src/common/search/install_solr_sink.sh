@@ -97,35 +97,22 @@ CONF_DIR=/etc/flume-ng/
 CONF_DIST_DIR=/etc/flume-ng/conf.dist/
 ETC_DIR=${ETC_DIR:-/etc/flume-ng}
 
+# Untar the build tar
+(cd ${BUILD_DIR}/search-dist/target ; tar --strip-components=1 -xzf cloudera-search*.tar.gz)
+
 # Create the search package
-install -d -m 0755 ${PREFIX}/${LIB_DIR}/lib
-for i in search-mr search-contrib cdk-morphlines/cdk-morphlines-* ; do
-  cp -f ${BUILD_DIR}/$i/target/*.jar ${PREFIX}/${LIB_DIR}
-  cp -f ${BUILD_DIR}/$i/target/lib/*.jar ${PREFIX}/${LIB_DIR}/lib
-done
-(cd ${PREFIX}/${LIB_DIR} ; rm -f *-tests.jar *-sources.jar)
-cp -f ${BUILD_DIR}/search-dist/target/lib/*.jar ${PREFIX}/${LIB_DIR}/lib
+install -d -m 0755 ${PREFIX}/${LIB_DIR}
+cp -r ${BUILD_DIR}/search-dist/target/dist/* ${PREFIX}/${LIB_DIR}
 
 # Plugin jars
 install -d -m 0755 ${PREFIX}/${FLUME_DIR}/lib
-cp ${BUILD_DIR}/search-flume/target/*.jar ${PREFIX}/${FLUME_DIR}/lib
-cp ${BUILD_DIR}/search-flume/target/lib/*.jar ${PREFIX}/${FLUME_DIR}/lib
-cp ${BUILD_DIR}/search-contrib/target/*-jar-with-dependencies.jar ${PREFIX}/${FLUME_DIR}/lib
-(cd ${PREFIX}/${FLUME_DIR}/lib ; rm -f *-tests.jar *-sources.jar `ls flume-ng-*jar | grep -v flume-ng-solr`)
-# FIXME: this *really* needs to get fixed
-for f in avro commons-cli commons-io commons-lang guava jsr305 paranamer snappy-java zookeeper xz- httpcore- commons-compress- ; do
-  rm -f ${PREFIX}/${FLUME_DIR}/lib/${f}*
-done
+mv -f ${PREFIX}/${LIB_DIR}/flume-ng-solr-sink* ${PREFIX}/${FLUME_DIR}/lib
+mv -f ${PREFIX}/${LIB_DIR}/search-contrib* ${PREFIX}/${FLUME_DIR}/lib
 
-# FIXME: once solr-mr and core indexer go upstream we need to rationalize this
+# FIXME: once solr-mr
 install -d -m 0755 ${PREFIX}/${SOLR_MR_DIR}
-cp ${BUILD_DIR}/search-mr/target/*.jar ${PREFIX}/${SOLR_MR_DIR}
-(cd ${PREFIX}/${SOLR_MR_DIR} ; rm -f *-tests.jar *-sources.jar)
+mv -f ${PREFIX}/${LIB_DIR}/search-mr*.jar ${PREFIX}/${SOLR_MR_DIR}
 
 # Sample (twitter) configs
 install -d -m 0755 ${PREFIX}/${DOC_DIR}
 cp -r ${BUILD_DIR}/samples ${PREFIX}/${DOC_DIR}/examples
-
-# Cloudera specific
-#install -d -m 0755 $PREFIX/$FLUME_DIR/cloudera
-#cp cloudera/cdh_version.properties $PREFIX/$FLUME_DIR/cloudera/
