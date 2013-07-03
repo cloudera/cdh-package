@@ -106,8 +106,13 @@ cp -r ${BUILD_DIR}/search-dist/target/dist/* ${PREFIX}/${LIB_DIR}
 
 # Plugin jars
 install -d -m 0755 ${PREFIX}/${FLUME_DIR}/lib
-mv -f ${PREFIX}/${LIB_DIR}/flume-ng-solr-sink* ${PREFIX}/${FLUME_DIR}/lib
 mv -f ${PREFIX}/${LIB_DIR}/search-contrib* ${PREFIX}/${FLUME_DIR}/lib
+
+#mv -f ${PREFIX}/${LIB_DIR}/flume-ng-solr-sink* ${PREFIX}/${FLUME_DIR}/lib
+cp ${BUILD_DIR}/search-dist/flume-ng-solr-sink-dist/target/lib/* ${PREFIX}/${FLUME_DIR}/lib
+(cd ${PREFIX}/${FLUME_DIR}/lib ; rm -f for i in avro-*.jar avro-ipc-*.jar commons-cli-*.jar commons-compress-*.jar commons-io-*.jar commons-lang-*.jar gson-*.jar guava-*.jar jsr305-*.jar libthrift-*.jar log4j-*.jar netty-*.Final.jar paranamer-*.jar servlet-api-*.jar slf4j-api-*.jar slf4j-log4j12-*.jar snappy-java-*.jar velocity-*.jar xz-1.0.jar zookeeper-*.jar flume-ng-configuration-*.jar flume-ng-core-*.jar flume-ng-sdk-*.jar
+)
+
 
 # FIXME: once solr-mr
 install -d -m 0755 ${PREFIX}/${SOLR_MR_DIR}
