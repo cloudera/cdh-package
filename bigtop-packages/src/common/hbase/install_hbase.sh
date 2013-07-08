@@ -139,7 +139,7 @@ done
 
 wrapper=$PREFIX/usr/bin/hbase
 mkdir -p `dirname $wrapper`
-cat > $wrapper <<EOF
+cat > $wrapper <<'EOF'
 #!/bin/sh
 
 . /etc/default/hbase
@@ -147,11 +147,15 @@ cat > $wrapper <<EOF
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-export HADOOP_CONF=\${HADOOP_CONF:-/etc/hadoop/conf}
-export ZOOKEEPER_HOME=\${ZOOKEEPER_HOME:-/usr/lib/zookeeper}
-export HBASE_CLASSPATH=\$HADOOP_CONF:\$HADOOP_HOME/*:\$HADOOP_HOME/lib/*:\$ZOOKEEPER_HOME/*:\$ZOOKEEPER_HOME/lib/*:\$HBASE_CLASSPATH
+export HBASE_HOME=${HBASE_HOME:-/usr/lib/hbase}
+export HADOOP_CONF=${HADOOP_CONF:-/etc/hadoop/conf}
+export ZOOKEEPER_HOME=${ZOOKEEPER_HOME:-/usr/lib/zookeeper}
+HBASE_JARS="$HADOOP_CONF $HADOOP_HOME/* $HADOOP_HOME/lib/*"
+HBASE_JARS="$HBASE_JARS $ZOOKEEPER_HOME/* $ZOOKEEPER_HOME/lib/*"
+HBASE_JARS="$JARS $HBASE_HOME/* $HBASE_CLASSPATH"
+export HBASE_CLASSPATH=$(JARS=($HBASE_JARS); IFS=:; echo "${JARS[*]}:${HBASE_CLASSPATH}")
 
-exec /usr/lib/hbase/bin/hbase "\$@"
+exec /usr/lib/hbase/bin/hbase "$@"
 EOF
 chmod 755 $wrapper
 

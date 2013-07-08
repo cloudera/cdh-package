@@ -27,6 +27,7 @@ cat <<'__EOT__'
 
 hbase_env() {
     export HBASE_HOME=/usr/lib/hbase
+    export HBASE_CLASSPATH=$(JARS=("$HBASE_HOME"/*.jar); IFS=:; echo "${JARS[*]}:${HBASE_CLASSPATH}")
     . /etc/default/hbase
 }
 

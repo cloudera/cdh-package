@@ -57,6 +57,7 @@
 export HBASE_HOME=${HBASE_HOME:-/usr/lib/hbase}
 export HBASE_PID_DIR=${HBASE_PID_DIR:-/var/run/hbase}
 export HBASE_LOG_DIR=${HBASE_LOG_DIR:-/var/log/hbase}
+export HBASE_CLASSPATH=$(JARS=("$HBASE_HOME"/*.jar); IFS=:; echo "${JARS[*]}:${HBASE_CLASSPATH}")
 
 install -d -m 0755 -o hbase -g hbase ${HBASE_PID_DIR}
 
