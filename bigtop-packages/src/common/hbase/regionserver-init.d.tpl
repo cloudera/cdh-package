@@ -216,6 +216,9 @@ multi_hbase_daemon() {
         su -s /bin/bash hbase -c "${DAEMON_SCRIPT} ${COMMAND} regionserver ${HBASE_MULTI_ARGS} >> ${LOG_FILE}"
         if [[ "$COMMAND" == "stop" ]] ; then
             rm -f $PID_FILE
+        else
+            # The process forks, so creating the PID file is asynchronous
+            sleep 1
         fi
         if hbase_check_pidfile $PID_FILE ; then
             echo "$RUNNING"
@@ -317,6 +320,8 @@ start() {
     fi
     echo -n "Starting $DESC: "
     su -s /bin/sh hbase -c "$DAEMON_SCRIPT start @HBASE_DAEMON@"
+    # The process forks, so creating the PID file is asynchronous
+    sleep 1
     if hbase_check_pidfile $PID_FILE ; then
         echo "$NAME."
     else
