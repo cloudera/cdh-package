@@ -43,6 +43,8 @@ Requires: %{name}-oozie = %{version}-%{release}
 Requires: %{name}-impala = %{version}-%{release}
 Requires: %{name}-pig = %{version}-%{release}
 Requires: %{name}-metastore = %{version}-%{release}
+Requires: %{name}-hbase = %{version}-%{release}
+Requires: %{name}-sqoop = %{version}-%{release}
 # hue-user is a virtual package
 Requires: %{name}-user
 
@@ -102,6 +104,8 @@ AutoReqProv: no
 %define useradmin_app_dir %{hue_dir}/apps/useradmin
 %define etc_hue /etc/hue/conf 
 %define impala_app_dir %{hue_dir}/apps/impala
+%define hbase_app_dir %{hue_dir}/apps/hbase
+%define sqoop_app_dir %{hue_dir}/apps/sqoop
 
 # Path to the HADOOP_HOME to build against - these
 # are not substituted into the build products anywhere!
@@ -321,6 +325,8 @@ fi
 %exclude %{impala_app_dir}
 %exclude %{pig_app_dir}
 %exclude %{metastore_app_dir}
+%exclude %{hbase_app_dir}
+%exclude %{sqoop_app_dir}
 
 %exclude %{shell_app_dir}
 
@@ -640,7 +646,7 @@ It allows users to construct and run Pig jobs.
 %files -n %{name}-pig
 %{pig_app_dir}
 
-#### HUE-PIG PLUGIN ######
+#### HUE-METASTORE PLUGIN ######
 %package -n %{name}-metastore
 Summary: A UI for table metastore on Hue
 Group: Applications/Engineering
@@ -656,6 +662,42 @@ A web interface to table metastore.
 
 %files -n %{name}-metastore
 %{metastore_app_dir}
+
+#### HUE-HBASE PLUGIN ######
+%package -n %{name}-hbase
+Summary: A UI for HBase on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+Requires(pre): %{name}-common = %{version}-%{release}
+Requires(preun): %{name}-common = %{version}-%{release}
+
+%description -n %{name}-hbase
+A web interface for HBase.
+
+It allows users to construct and run HBase queries.
+
+%app_post_macro hbase
+%app_preun_macro hbase
+
+%files -n %{name}-hbase
+%{hbase_app_dir}
+
+#### HUE-SQOOP PLUGIN ######
+%package -n %{name}-sqoop
+Summary: A UI for Sqoop on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+Requires(pre): %{name}-common = %{version}-%{release}
+Requires(preun): %{name}-common = %{version}-%{release}
+
+%description -n %{name}-sqoop
+A web interface for Sqoop.
+
+%app_post_macro sqoop
+%app_preun_macro sqoop
+
+%files -n %{name}-sqoop
+%{sqoop_app_dir}
 
 
 ############################################################
