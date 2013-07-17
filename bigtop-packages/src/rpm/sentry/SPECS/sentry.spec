@@ -16,28 +16,28 @@
 # disable repacking jars
 %define __os_install_post %{nil}
 
-Name: hive-access
-Version: %{access_version}
-Release: %{access_release}
+Name: sentry
+Version: %{sentry_version}
+Release: %{sentry_release}
 Summary: Authorization component
 URL: https://github.com/cloudera/access
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{datafu_name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0
-Source0: access-%{access_patched_version}.tar.gz
+Source0: sentry-%{sentry_patched_version}.tar.gz
 Source1: do-component-build
-Source2: install_access.sh
+Source2: install_sentry.sh
 Requires: hadoop-hdfs, hive
 
 %description
 Cloudera authorization component and the corresponding Hive plugin
 
 %prep
-%setup -n access-%{access_patched_version}
+%setup -n sentry-%{sentry_patched_version}
 
 %build
-env FULL_VERSION=%{access_patched_version} bash $RPM_SOURCE_DIR/do-component-build
+env FULL_VERSION=%{sentry_patched_version} bash $RPM_SOURCE_DIR/do-component-build
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
@@ -47,5 +47,5 @@ sh %{SOURCE2} \
 
 %files
 %defattr(-,root,root,755)
-/usr/lib/hive/access
+/usr/lib/hive/sentry
 /usr/lib/hive/lib

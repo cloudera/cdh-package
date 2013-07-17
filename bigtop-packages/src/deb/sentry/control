@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Source: hive-access
+Source: sentry
 Section: misc
 Priority: extra
 Maintainer: Cloudera, inc. <access-dev@cloudera.org>
@@ -21,7 +21,7 @@ Build-Depends: debhelper (>= 7)
 Standards-Version: 3.8.0
 Homepage: https://github.com/cloudera/access
 
-Package: hive-access
+Package: sentry
 Architecture: all
 Depends: hadoop-hdfs, hive
 Description: Cloudera authorization component and the corresponding Hive plugin
