@@ -177,13 +177,14 @@ HUE_APPS=`ls build/usr/share/hue/apps | grep -v Makefile | xargs`
 rm -f build/usr/share/hue/desktop/desktop.db
 rm -f build/usr/share/hue/app.reg
 rm -f build/usr/share/hue/build/env/lib/python*/site-packages/hue.pth
+rm -f build/usr/share/hue/build/env/lib/python*/site-packages/hue.link.pth
 
 rm -f build/usr/share/hue/desktop/conf
 cp -r build/etc/hue build/usr/share/hue/desktop/conf
 pushd build/usr/share/hue
  /bin/bash -x ./tools/relocatable.sh
  for app in $HUE_APPS ; do
-   ROOT=`pwd` HUE_APP_REG_DIR=. HUE_PTH_DIR=`ls -d build/env/lib/python*/site-packages/` DESKTOP_DB_CONFIG=sqlite3:desktop.db \
+   ROOT=`pwd` HUE_APP_REG_DIR=. HUE_PTH_DIR=`ls -d build/env/lib/python*/site-packages/` DESKTOP_DB_CONFIG=sqlite3:desktop/desktop.db \
          DESKTOP_LOGLEVEL=WARN DESKTOP_LOG_DIR=/tmp ./build/env/bin/python ./tools/app_reg/app_reg.py --install `pwd`/apps/$app
  done
  /bin/bash -x ./tools/relocatable.sh
