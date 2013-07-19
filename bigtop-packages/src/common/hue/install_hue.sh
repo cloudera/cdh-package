@@ -178,11 +178,14 @@ rm -fv `find $PREFIX -iname "build_log.txt"`
 rm -f $PREFIX/$LIB_DIR/desktop/desktop.db
 rm -f $PREFIX/$LIB_DIR/app.reg
 rm -f $PREFIX/$LIB_DIR/build/env/lib/*/site-packages/hue.pth
+rm -f $PREFIX/$LIB_DIR/build/env/lib/*/site-packages/hue.link.pth
 
 # Provide convenience links to the mutable files
 ln -s ${VAR_DIR}/desktop.db $PREFIX/$LIB_DIR/desktop/desktop.db
 ln -s ${VAR_DIR}/app.reg $PREFIX/$LIB_DIR/app.reg
-ln -s ${VAR_DIR}/hue.pth `echo $PREFIX/$LIB_DIR/build/env/lib/python*/site-packages`/hue.pth
+PTH_BASE_DIR=`echo $PREFIX/$LIB_DIR/build/env/lib/python*/site-packages`
+ln -s ${VAR_DIR}/hue.pth ${PTH_BASE_DIR}/hue.pth
+ln -s hue.pth ${PTH_BASE_DIR}/hue.link.pth
 
 # Initialize /var dirs
 install -d -m 0755 $PREFIX/${VAR_DIR}
