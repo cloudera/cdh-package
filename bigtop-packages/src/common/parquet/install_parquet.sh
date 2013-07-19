@@ -79,3 +79,7 @@ install -d -m 0755 $PREFIX/$LIB_DIR
 for jar in `find $BUILD_DIR -name *.jar | grep -v '\-tests.jar'`; do
     cp $jar $PREFIX/$LIB_DIR/
 done
+
+# Cloudera specific
+install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
