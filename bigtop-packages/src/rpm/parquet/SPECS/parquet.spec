@@ -14,6 +14,7 @@
 # limitations under the License.
 
 %define lib_parquet /usr/lib/parquet
+%define hadoop_home /usr/lib/hadoop
 
 # disable repacking jars
 %define __os_install_post %{nil}
@@ -30,6 +31,7 @@ License: ASL 2.0
 Source0: parquet-%{parquet_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_parquet.sh
+Requires: hadoop
 
 
 %description 
@@ -56,3 +58,4 @@ sh $RPM_SOURCE_DIR/install_parquet.sh \
 %files 
 %defattr(-,root,root,755)
 %{lib_parquet}
+%{hadoop_home}/*.jar
