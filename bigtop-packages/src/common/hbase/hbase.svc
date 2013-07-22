@@ -52,6 +52,9 @@ start() {
 
     su -s /bin/sh hbase -c "${EXEC_PATH} start @HBASE_DAEMON@"
 
+    # The process forks, so creating the PID file is asynchronous
+    sleep 1
+
     checkstatusofproc
     RETVAL=$?
     [ $RETVAL -eq $STATUS_RUNNING ] && touch $LOCKFILE
