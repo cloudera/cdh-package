@@ -255,6 +255,10 @@ done
 cat <<__EOT__
   ],
 
+  "provides": [
+    "cdh"
+  ],
+
   "users": {
      "flume": {
        "longname"    : "Flume",

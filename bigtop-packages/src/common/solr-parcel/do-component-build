@@ -225,6 +225,13 @@ done
 cat <<__EOT__
   ],
 
+  "provides": [
+    "solr",
+    "flume-plugin",
+    "hbase-plugin",
+    "hue-plugin"
+  ],
+
   "users": {
      "solr": {
        "longname"    : "Solr",
