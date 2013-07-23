@@ -224,6 +224,26 @@ if [ -n "$SOLR_KERBEROS_PRINCIPAL" ] ; then
   CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.hdfs.security.kerberos.principal=${SOLR_KERBEROS_PRINCIPAL}"
 fi
 
+if [ -n "$SOLR_AUTHENTICATION_TYPE" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authentication.type=${SOLR_AUTHENTICATION_TYPE}"
+fi
+
+if [ -n "$SOLR_AUTHENTICATION_KERBEROS_KEYTAB" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authentication.kerberos.keytab=${SOLR_AUTHENTICATION_KERBEROS_KEYTAB}"
+fi
+
+if [ -n "$SOLR_AUTHENTICATION_KERBEROS_PRINCIPAL" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authentication.kerberos.principal=${SOLR_AUTHENTICATION_KERBEROS_PRINCIPAL}"
+fi
+
+if [ -n "$SOLR_AUTHENTICATION_KERBEROS_NAME_RULES" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authentication.kerberos.name.rules=${SOLR_AUTHENTICATION_KERBEROS_NAME_RULES}"
+fi
+
+if [ -n "$SOLR_AUTHENTICATION_SIMPLE_ALLOW_ANON" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authentication.simple.anonymous.allowed=${SOLR_AUTHENTICATION_SIMPLE_ALLOW_ANON}"
+fi
+
 # FIXME: we need to set this because of the jetty-centric default solr.xml
 CATALINA_OPTS="${CATALINA_OPTS} -Dhost=$HOSTNAME -Djetty.port=$SOLR_PORT"
 
