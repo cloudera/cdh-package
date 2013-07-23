@@ -166,3 +166,8 @@ chmod 755 $PREFIX/${BIN_DIR}/hbase-indexer
 
 # Initialize a few /var locations
 install -d -m 0755 $PREFIX/var/{run,log}/hbase-solr
+
+# Cloudera specific
+install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
+
