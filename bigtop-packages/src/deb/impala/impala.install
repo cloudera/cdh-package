@@ -1,0 +1,9 @@
+/usr/lib/impala
+/usr/bin/statestored
+/usr/bin/impalad
+/var/log/impala
+/var/run/impala
+/var/lib/impala
+/etc/default/impala
+/etc/impala/conf.dist
+/etc/security/limits.d/impala.conf

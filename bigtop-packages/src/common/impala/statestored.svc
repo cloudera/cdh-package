@@ -1,0 +1,91 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+DAEMON="statestored"
+DESC="Impala State Store Server"
+EXEC_PATH="/usr/bin/statestored"
+PROC_NAME="statestored"
+SVC_USER="impala"
+DEFAULTS_FILE="impala"
+DAEMON_FLAGS="\${IMPALA_STATE_STORE_ARGS}"
+CONF_DIR="/etc/impala/conf"
+RUNDIR=/var/run/impala
+PIDFILE="${RUNDIR}/${DAEMON}-${SVC_USER}.pid"
+LOCKDIR="/var/lock/subsys"
+LOCKFILE="statestored"
+PRIORITY=91
+
+generate_environment() {
+cat <<'__EOT__'
+
+if [ -f /etc/default/impala ] ; then
+  . /etc/default/impala
+fi
+
+export ENABLE_CORE_DUMPS
+export IMPALA_HOME
+export IMPALA_BIN
+export IMPALA_CONF_DIR
+export HADOOP_CONF_DIR
+export HIVE_CONF_DIR
+export HBASE_CONF_DIR
+export LIBHDFS_OPTS
+export MYSQL_CONNECTOR
+export HIVE_HOME
+export HBASE_HOME
+
+__EOT__
+}
+
+generate_start() {
+
+cat <<'__EOT__'
+start() {
+  [ -x $EXEC_PATH ] || exit $ERROR_PROGRAM_NOT_INSTALLED
+  [ -d $CONF_DIR ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
+
+  checkstatus >/dev/null 2>/dev/null
+  status=$?
+  if [ "$status" -eq "$STATUS_RUNNING" ]; then
+    log_success_msg "${DESC} is running"
+    exit 0
+  fi
+
+  log_success_msg "Starting ${DESC}: "
+
+  /bin/su -s /bin/bash -c "/bin/bash -c 'cd ${RUNDIR} && echo \$\$ > ${PIDFILE} && exec ${EXEC_PATH} ${DAEMON_FLAGS} >>${IMPALA_LOG_DIR}/impala-state-store.log 2>&1' &" $SVC_USER
+  RETVAL=$?
+  [ $RETVAL -eq 0 ] && touch $LOCKFILE
+  return $RETVAL
+}
+__EOT__
+
+}
+
+generate_stop() {
+
+cat <<'__EOT__'
+stop() {
+  log_success_msg "Stopping ${DESC}: "
+
+  killproc -p $PIDFILE $EXEC_PATH
+  RETVAL=$?
+
+  [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE
+  return $RETVAL
+}
+__EOT__
+
+}
