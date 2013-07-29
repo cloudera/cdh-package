@@ -59,7 +59,6 @@ Source0: %{name}-%{sqoop2_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: sqoop.sh
-Source4: sqoop.properties
 Source5: catalina.properties
 Source6: catalina.properties.mr1
 Source8: sqoop2.default

@@ -133,8 +133,11 @@ install -m 0644 ${DIST_DIR}/client/lib/*.jar ${PREFIX}/${LIB_DIR}/client-lib/
 install -m 0755 ${DIST_DIR}/bin/sqoop.sh ${PREFIX}/${BIN_DIR}/
 install -m 0755 ${DIST_DIR}/bin/sqoop-sys.sh ${PREFIX}/${BIN_DIR}/
 
+install -m 0644 ${DIST_DIR}/server/conf/sqoop.properties ${PREFIX}/${CONF_DIR}/sqoop.properties
+sed -i 's#@LOGDIR@#/var/log/sqoop2#' ${PREFIX}/${CONF_DIR}/sqoop.properties
+sed -i 's#@BASEDIR@#/var/lib/sqoop2#' ${PREFIX}/${CONF_DIR}/sqoop.properties
+
 install -m 0644 ${DIST_DIR}/server/conf/sqoop_bootstrap.properties ${PREFIX}/${CONF_DIR}
-install -m 0644 ${EXTRA_DIR}/sqoop.properties ${PREFIX}/${CONF_DIR}
 install -m 0644 ${EXTRA_DIR}/sqoop2.default ${PREFIX}/etc/default/sqoop2-server
 rm ${EXTRA_DIR}/sqoop2.default # Otherwise debhelper will re-install this
 
