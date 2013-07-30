@@ -532,7 +532,6 @@ done
 # HCatalog also looks for certain environment variables.
 HCATALOG_SCRIPTS="hcat"
 for file in $HCATALOG_SCRIPTS; do
-  sed -i -e 's#. /etc/default/hadoop##' build/usr/bin/$file
   sed -i '1a \
   export HADOOP_HOME=$LIB_DIR/hadoop \
   export HCAT_HOME=$LIB_DIR/hcatalog \

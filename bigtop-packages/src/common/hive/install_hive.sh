@@ -118,10 +118,13 @@ for file in hive beeline hiveserver2
 do
   wrapper=$BIN_DIR/$file
   cat >>$wrapper <<EOF
-#!/bin/sh
+#!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
+
+BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
+[ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/hbase ] && . ${BIGTOP_DEFAULTS_DIR}/hbase
 
 export HIVE_HOME=$INSTALLED_LIB_DIR
 exec $INSTALLED_LIB_DIR/bin/$file "\$@"

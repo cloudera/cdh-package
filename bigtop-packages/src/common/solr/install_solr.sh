@@ -155,6 +155,9 @@ cp ${BUILD_DIR}/example/resources/log4j.properties $PREFIX/${CONF_DIR}.dist
 cat > $PREFIX/$LIB_DIR/bin/solrd <<'EOF'
 #!/bin/bash
 
+BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
+[ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/solr ] && . ${BIGTOP_DEFAULTS_DIR}/solr
+
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then
   . /usr/libexec/bigtop-detect-javahome
