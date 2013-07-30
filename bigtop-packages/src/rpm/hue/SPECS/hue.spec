@@ -45,6 +45,7 @@ Requires: %{name}-pig = %{version}-%{release}
 Requires: %{name}-metastore = %{version}-%{release}
 Requires: %{name}-hbase = %{version}-%{release}
 Requires: %{name}-sqoop = %{version}-%{release}
+Requires: %{name}-search = %{version}-%{release}
 # hue-user is a virtual package
 Requires: %{name}-user
 
@@ -106,6 +107,7 @@ AutoReqProv: no
 %define impala_app_dir %{hue_dir}/apps/impala
 %define hbase_app_dir %{hue_dir}/apps/hbase
 %define sqoop_app_dir %{hue_dir}/apps/sqoop
+%define search_app_dir %{hue_dir}/apps/search
 
 # Path to the HADOOP_HOME to build against - these
 # are not substituted into the build products anywhere!
@@ -327,6 +329,7 @@ fi
 %exclude %{metastore_app_dir}
 %exclude %{hbase_app_dir}
 %exclude %{sqoop_app_dir}
+%exclude %{search_app_dir}
 
 %exclude %{shell_app_dir}
 
@@ -700,6 +703,24 @@ A web interface for Sqoop.
 %files -n %{name}-sqoop
 %{sqoop_app_dir}
 
+#### HUE-SEARCH PLUGIN ######
+%package -n %{name}-search
+Summary: A UI for Search on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}, %{name}-user = %{version}-%{release}, %{name}-about = %{version}-%{release}, %{name}-help = %{version}-%{release}
+Requires(pre): %{name}-common = %{version}-%{release}
+Requires(preun): %{name}-common = %{version}-%{release}
+
+%description -n %{name}-search
+A web interface for Search.
+
+It allows users to interact with Solr
+
+%app_post_macro search
+%app_preun_macro search
+
+%files -n %{name}-search
+%{search_app_dir}
 
 ############################################################
 # Arch packages - plugins and conf
