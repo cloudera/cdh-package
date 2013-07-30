@@ -96,7 +96,7 @@ HBASE_DIR=${HBASE_DIR:-/usr/lib/hbase/}
 
 # Create the indexer package
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
-tar -C ${PREFIX}/${LIB_DIR} --strip-components=1 -xzf ${PWD}/target/hbase-indexer*.tar.gz
+tar -C ${PREFIX}/${LIB_DIR} --strip-components=1 -xzf ${PWD}/hbase-indexer-dist/target/hbase-indexer*.tar.gz
 
 # Add a few files to the HBase
 install -d -m 0755 ${PREFIX}/${HBASE_DIR}/lib

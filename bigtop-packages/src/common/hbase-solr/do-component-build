@@ -20,7 +20,7 @@ TAR_NAME=hbase-solr-${FULL_VERSION}
 
 # CDH_VERSIONS="-Dversion.solr=4.3.0-cdh4.2.0_search0.1.4-SNAPSHOT"
 
-mvn clean install assembly:assembly -DskipTests $DO_MAVEN_DEPLOY $CDH_VERSIONS -Dmaven.repo.local=${HOME}/.m2/repository "$@"
+mvn clean install -Pdist -DskipTests $DO_MAVEN_DEPLOY $CDH_VERSIONS -Dmaven.repo.local=${HOME}/.m2/repository "$@"
 
 # Creating a fake tarball
 rm -rf build
