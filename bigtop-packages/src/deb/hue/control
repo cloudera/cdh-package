@@ -52,7 +52,7 @@ Description: A UI for Hive on Hue
 
 Package: hue-oozie
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version}), hue-jobsub (= ${source:Version})
 Description: A UI for Oozie on Hue
  A web interface for Oozie.
  .

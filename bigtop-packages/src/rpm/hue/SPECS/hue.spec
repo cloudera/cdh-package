@@ -450,6 +450,7 @@ Requires(preun): %{name}-common = %{version}-%{release}
 Requires: %{name}-jobbrowser = %{version}-%{release}
 Requires: %{name}-filebrowser = %{version}-%{release}
 Requires: %{name}-help = %{version}-%{release}
+Requires: %{name}-jobsub = %{version}-%{release}
 
 %description -n %{name}-oozie
 A web interface for Oozie.
