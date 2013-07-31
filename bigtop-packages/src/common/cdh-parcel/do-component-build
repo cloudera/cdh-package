@@ -522,7 +522,7 @@ SQOOP1_SCRIPTS="sqoop sqoop-*"
 for file in $SQOOP1_SCRIPTS; do
   sed -i '1a \
   export HADOOP_COMMON_HOME=$LIB_DIR/hadoop\
-  export YARN_HOME=$LIB_DIR/hadoop-yarn\
+  export HADOOP_YARN_HOME=$LIB_DIR/hadoop-yarn\
   export HADOOP_MAPRED_HOME=$LIB_DIR/hadoop-0.20-mapreduce\
   export HADOOP_HDFS_HOME=$LIB_DIR/hadoop-hdfs\
   export HBASE_HOME=$LIB_DIR/hbase\
