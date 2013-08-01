@@ -244,6 +244,10 @@ if [ -n "$SOLR_AUTHENTICATION_SIMPLE_ALLOW_ANON" ] ; then
   CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authentication.simple.anonymous.allowed=${SOLR_AUTHENTICATION_SIMPLE_ALLOW_ANON}"
 fi
 
+if [ -n "$SOLR_AUTHENTICATION_JAAS_CONF" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Djava.security.auth.login.config=${SOLR_AUTHENTICATION_JAAS_CONF}"
+fi
+
 # FIXME: we need to set this because of the jetty-centric default solr.xml
 CATALINA_OPTS="${CATALINA_OPTS} -Dhost=$HOSTNAME -Djetty.port=$SOLR_PORT"
 
