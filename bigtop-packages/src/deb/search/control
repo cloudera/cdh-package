@@ -27,12 +27,6 @@ Depends: bigtop-utils (>= 0.6)
 Description: Cloudera Search Project
  Cloudera Search Project
 
-Package: flume-ng-solr
-Architecture: all
-Depends: flume-ng
-Description: Flume NG Solr Sink
- Flume NG Solr Sink
-
 Package: solr-mapreduce
 Architecture: all
 Depends: hadoop-client, bigtop-utils (>= 0.6)
