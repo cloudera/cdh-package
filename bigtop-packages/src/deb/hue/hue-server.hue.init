@@ -30,7 +30,7 @@
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-DAEMON=/usr/share/hue/build/env/bin/supervisor # Introduce the server's location here
+DAEMON=/usr/lib/hue/build/env/bin/supervisor # Introduce the server's location here
 NAME=hue              			# Introduce the short server's name here
 DESC="Hue for Hadoop"                	# Introduce a short description here
 LOGDIR=/var/log/hue  			# Log directory to use
@@ -114,13 +114,13 @@ running() {
 start_server() {
 # Start the process using the wrapper
 	export PYTHON_EGG_CACHE='/tmp/.hue-python-eggs'
-        mkdir -p /usr/share/hue/pids/ 
+        mkdir -p /usr/lib/hue/pids/ 
         mkdir -p ${PYTHON_EGG_CACHE}
         mkdir -p $(dirname $PIDFILE) $LOGDIR
         chown -R $DAEMONUSER $(dirname $PIDFILE) $LOGDIR ${PYTHON_EGG_CACHE}
         # dont setuid, since supervisor will drop privileges on its
         # own
-        start-stop-daemon --start --quiet --pidfile $PIDFILE \
+        PATH=/usr/lib/hue/build/env/bin:$PATH start-stop-daemon --start --quiet --pidfile $PIDFILE \
                     --exec $DAEMON -- $DAEMON_OPTS
         errcode=$?
         return $errcode

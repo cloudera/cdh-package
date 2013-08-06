@@ -91,7 +91,7 @@ PREFIX=`echo $PREFIX | sed -e 's#/*$##'`
 BUILD_DIR=`echo $BUILD_DIR | sed -e 's#/*$##'`
 
 CONF_DIR=${CONF_DIR:-/etc/hue}
-LIB_DIR=${LIB_DIR:-/usr/share/hue}
+LIB_DIR=${LIB_DIR:-/usr/lib/hue}
 VAR_DIR=${VAR_DIR:-/var/lib/hue}
 LOG_DIR=${LOG_DIR:-/var/log/hue}
 HADOOP_DIR=${HADOOP_DIR:-/usr/lib/hadoop/lib}
@@ -102,38 +102,40 @@ BUNDLED_BUILD_DIR=$PREFIX/$LIB_DIR/build
 (cd $BUILD_DIR ; PREFIX=`dirname $PREFIX/$LIB_DIR` make install)
 
 # Install plugins
-PLUGIN_NAME=`basename $BUILD_DIR/desktop/libs/hadoop/java-lib/*plugin*jar`
-install -d -m 0755 $PREFIX/$LIB_DIR/desktop/libs/hadoop/java-lib
-cp $BUILD_DIR/desktop/libs/hadoop/java-lib/$PLUGIN_NAME $PREFIX/$LIB_DIR/desktop/libs/hadoop/java-lib
 install -d -m 0755 $PREFIX/$HADOOP_DIR
-cp -f $BUILD_DIR/desktop/libs/hadoop/java-lib/$PLUGIN_NAME $PREFIX/$HADOOP_DIR
+ln -fs $LIB_DIR/desktop/libs/hadoop/java-lib/*plugin*jar $PREFIX/$HADOOP_DIR
 
 # Hue Shell specific
 install -d -m 0755 $PREFIX/$LIB_DIR/apps/shell/src/shell/build/
 cp -f $BUILD_DIR/apps/shell/src/shell/build/setuid $PREFIX/$LIB_DIR/apps/shell/src/shell/build
 
-# Remove the misc. files
+# Remove Hue database and then recreate it, but with just the "right" apps
+rm -f $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$LIB_DIR/app.reg
+APPS="about filebrowser help proxy useradmin shell oozie jobbrowser jobsub"
+export DESKTOP_LOG_DIR=$BUILD_DIR
+export DESKTOP_LOGLEVEL=WARN
+export ROOT=$PREFIX/$LIB_DIR
+for app in $APPS ; do
+  (cd $PREFIX/$LIB_DIR ; ./build/env/bin/python tools/app_reg/app_reg.py --install apps/$app)
+done
 find $PREFIX/$LIB_DIR -iname \*.py[co]  -exec rm -f {} \;
 
 # Making the resulting tree relocatable
 (cd $PREFIX/$LIB_DIR ; bash tools/relocatable.sh)
 
+# Move desktop.db to a var location
+install -d -m 0755 $PREFIX/$VAR_DIR
+mv $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$VAR_DIR
+
 # Install conf files
 install -d -m 0755 $PREFIX/$CONF_DIR
-cp $PREFIX/$LIB_DIR/desktop/conf/* $PREFIX/${CONF_DIR}
-rm -rf $PREFIX/$LIB_DIR/desktop/conf
+mv -f $PREFIX/$LIB_DIR/desktop/conf $PREFIX/${CONF_DIR}/conf.empty
 ln -fs $CONF_DIR/conf $PREFIX/$LIB_DIR/desktop/conf
 sed -i -e '/\[\[database\]\]/a\
     engine=sqlite3\
-    name=/var/lib/hue/desktop.db' $PREFIX/${CONF_DIR}/hue.ini
-
-# Override location of app.reg, hue.pth and desktop.db files
-sed -i -e '/^HUE_APP_REG_DIR =/s#^.*$#HUE_APP_REG_DIR = os.environ.get("HUE_APP_REG_DIR", "/var/lib/hue/")#' \
-       -e '/^HUE_PTH_DIR =/s#^.*$#HUE_PTH_DIR = os.environ.get("HUE_PTH_DIR", "/var/lib/hue/")#' \
-    $PREFIX/$LIB_DIR/tools/app_reg/common.py
-
-# An assertion to make sure we got it right
-[ `grep /var/lib/hue/ $PREFIX/$LIB_DIR/tools/app_reg/common.py | wc -l` -eq 2 ] || exit 1
+    name=/var/lib/hue/desktop.db' $PREFIX/${CONF_DIR}/conf.empty/hue.ini
+sed -i -e '/\[\[yarn_clusters\]\]/,+20s@## submit_to=False@submit_to=True@' \
+    $PREFIX/${CONF_DIR}/conf.empty/hue.ini
 
 # Relink logs subdirectory just in case
 install -d -m 0755 $PREFIX/$LOG_DIR
@@ -173,27 +175,3 @@ done
 
 # Remove bogus files
 rm -fv `find $PREFIX -iname "build_log.txt"`
-
-# Remove desktop.db and app.reg
-rm -f $PREFIX/$LIB_DIR/desktop/desktop.db
-rm -f $PREFIX/$LIB_DIR/app.reg
-rm -f $PREFIX/$LIB_DIR/build/env/lib/*/site-packages/hue.pth
-rm -f $PREFIX/$LIB_DIR/build/env/lib/*/site-packages/hue.link.pth
-
-# Provide convenience links to the mutable files
-ln -s ${VAR_DIR}/desktop.db $PREFIX/$LIB_DIR/desktop/desktop.db
-ln -s ${VAR_DIR}/app.reg $PREFIX/$LIB_DIR/app.reg
-PTH_BASE_DIR=`echo $PREFIX/$LIB_DIR/build/env/lib/python*/site-packages`
-ln -s ${VAR_DIR}/hue.pth ${PTH_BASE_DIR}/hue.pth
-ln -s hue.pth ${PTH_BASE_DIR}/hue.link.pth
-
-# Initialize /var dirs
-install -d -m 0755 $PREFIX/${VAR_DIR}
-install -d -m 0755 $PREFIX/${LOG_DIR}
-
-# Cloudera specific
-install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
-cp $BUILD_DIR/cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera
-install -d -m 0755 $PREFIX/$HADOOP_DIR/../cloudera
-grep -v 'cloudera.pkg.name=' < $BUILD_DIR/cloudera/cdh_version.properties > $PREFIX/$HADOOP_DIR/../cloudera/cm_version.properties
-echo 'cloudera.pkg.name=hue-plugins' >> $PREFIX/$HADOOP_DIR/../cloudera/cm_version.properties

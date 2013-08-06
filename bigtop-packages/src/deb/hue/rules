@@ -23,7 +23,7 @@
 # Implicit targets
 SHELL := /bin/bash
 
-APPS=beeswax about filebrowser help jobbrowser jobsub oozie proxy useradmin impala pig metastore hbase sqoop search
+APPS=beeswax pig
 
 $(APPS:%=debian/hue-%.postinst): debian/hue-app.postinst.tpl
 	sed -e 's#@APP@#$(patsubst debian/hue-%.postinst,%,$@)#'  < $< > $@
@@ -31,28 +31,15 @@ $(APPS:%=debian/hue-%.postinst): debian/hue-app.postinst.tpl
 $(APPS:%=debian/hue-%.prerm): debian/hue-app.prerm.tpl
 	sed -e 's#@APP@#$(patsubst debian/hue-%.prerm,%,$@)#'  < $< > $@
 
-$(APPS:%=debian/hue-%.install):
-	echo "/usr/share/hue/apps/$(patsubst debian/hue-%.install,%,$@)" > $@
-
 %:
 	dh $@
-
-HUE_DIR ?= /usr/share/hue
-PKG_DESKTOP=$(CURDIR)/debian/tmp
-
-PKG_DESKTOP_DIR=$(PKG_DESKTOP)/usr/share/hue
-PKG_HADOOP_LIB_DIR=$(PKG_DESKTOP)/usr/lib/hadoop/lib
-
-PKG_ROOT=$(CURDIR)/debian
-
-export MAVEN_OPTIONS=-Dmaven.repo.local=${HOME}/.m2/repository
 
 override_dh_auto_build:
 	bash -x debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
 
-override_dh_auto_install: build $(APPS:%=debian/hue-%.postinst) $(APPS:%=debian/hue-%.prerm) $(APPS:%=debian/hue-%.install)
+override_dh_auto_install: build $(APPS:%=debian/hue-%.postinst) $(APPS:%=debian/hue-%.prerm)
 	bash -x debian/install_hue.sh --build-dir=${PWD} --prefix=${PWD}/debian/tmp
-	sed -e 's,^,build:,;' ${PKG_DESKTOP_DIR}/Makefile.buildvars \
+	sed -e 's,^,build:,;' debian/tmp/usr/lib/hue/Makefile.buildvars \
 	  | tr _ - >> debian/hue-common.substvars
 
 override_dh_installinit:

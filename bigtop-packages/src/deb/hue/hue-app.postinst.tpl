@@ -30,7 +30,7 @@ set -e
 # the debian-policy package
 
 APP=@APP@
-export ROOT=/usr/share/hue
+export ROOT=/usr/lib/hue
 APP_DIR=$ROOT/apps/$APP
 export DESKTOP_LOGLEVEL=WARN
 export DESKTOP_LOG_DIR=/var/log/hue
@@ -39,8 +39,7 @@ case "$1" in
     configure)
         (cd $ROOT; $ROOT/build/env/bin/python $ROOT/tools/app_reg/app_reg.py --remove $APP) ||:
         (cd $ROOT; $ROOT/build/env/bin/python $ROOT/tools/app_reg/app_reg.py --install $APP_DIR)
-        (cd $ROOT; /bin/bash ./tools/relocatable.sh)
-        chown -R hue:hue /var/log/hue /var/lib/hue || :
+        chown -R hue:hue /var/log/hue /var/lib/hue
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

@@ -30,11 +30,6 @@ set -e
 # the debian-policy package
 
 USER=hue
-OLD_DESKTOP_DB=/usr/share/hue/desktop/desktop.db
-OLD_APP_REG=/usr/share/hue/app.reg
-OLD_PTH_FILE=`echo /usr/share/hue/build/env/lib/python*/site-packages/hue.pth | cut -f1 -d\  `
-VAR_LIB=/var/lib/hue
-
 case "$1" in
     install|upgrade)
         if ! getent passwd $USER >/dev/null; then
@@ -42,31 +37,19 @@ case "$1" in
                   --system \
                   --disabled-login \
                   --group \
-                  --home /usr/share/hue \
+                  --home /usr/lib/hue \
                   --gecos "Hue daemon" \
                   $USER >/dev/null
         fi
 
-        # Seeding mutable files
-        mkdir -p ${VAR_LIB} || :
-        for mfile in ${OLD_DESKTOP_DB} ${OLD_APP_REG} ${OLD_PTH_FILE} ; do
-          if [ ! -e ${VAR_LIB}/`basename $mfile` -a -e $mfile ] ; then
-            cp $mfile ${VAR_LIB} || :
-          fi
-        done
-
         # In upgrade, make a copy of the database, if it's there.
         if [ "$1" == "upgrade" ] ; then
+                echo "... stopping any running Hue"
                 /etc/init.d/hue stop || :
+                OLD_DESKTOP_DB=/usr/share/hue/desktop/desktop.db
                 if [ -e $OLD_DESKTOP_DB ]; then
                         echo ... backing up $OLD_DESKTOP_DB as ${OLD_DESKTOP_DB}.bak.$2
                         cp -a $OLD_DESKTOP_DB ${OLD_DESKTOP_DB}.bak.$2
-                fi
-                OLD_DESKTOP_LOGS=/usr/share/hue/desktop/logs.$(date +'%Y%m%d.%H%M%S')
-                NEW_DESKTOP_LOGS=$OLD_DESKTOP_LOGS.bak
-                if [ -e $OLD_DESKTOP_LOGS ]; then
-                        echo ... preserving $OLD_DESKTOP_LOGS as $NEW_DESKTOP_LOGS
-                        mv $OLD_DESKTOP_LOGS $NEW_DESKTOP_LOGS
                 fi
         fi
 

@@ -29,7 +29,7 @@ set -e
 # the debian-policy package
 
 APP=@APP@
-export ROOT=/usr/share/hue
+export ROOT=/usr/lib/hue
 APP_DIR=$ROOT/apps/$APP
 export DESKTOP_LOGLEVEL=WARN
 export DESKTOP_LOG_DIR=/var/log/hue

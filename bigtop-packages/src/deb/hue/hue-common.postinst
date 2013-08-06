@@ -33,22 +33,28 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-# We dont want ugly printouts of status during
-# install, etc
-export DESKTOP_LOGLEVEL=WARN
-export DESKTOP_LOG_DIR=/var/log/hue
-
-
 case "$1" in
     configure)
+        # tweak permissions
+        chown -R hue:hue /var/log/hue /var/lib/hue
+
         # Install config alternatives
-        update-alternatives  --install /etc/hue/conf hue-conf /etc/hue 30
- 
-        rm -f .installed.cfg build/env/stamp
-        find /usr/share/hue -name \*.pyc -exec rm {} \;
-        mkdir -p $DESKTOP_LOG_DIR || :
-        /usr/share/hue/build/env/bin/hue syncdb --noinput
-        chown -R hue:hue $DESKTOP_LOG_DIR /var/lib/hue  || :
+        update-alternatives  --install /etc/hue/conf hue-conf /etc/hue/conf.empty 30
+
+        # If we're upgrading, copy their backed up db from the old version
+        # and syncdb.
+        if [ ! -z "$2" ]; then
+                OLD_DB=/usr/share/hue/desktop/desktop.db.bak.$2
+                if [ -e $OLD_DB ]; then
+                        echo Upgrading old database...
+                        cp $OLD_DB /usr/share/hue/desktop/desktop.db
+                fi
+        fi
+
+        # Take care of hue-shell setuid binary
+        SETUID=/usr/lib/hue/apps/shell/src/shell/build/setuid
+        chown root:hue $SETUID
+        chmod 4750 $SETUID
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

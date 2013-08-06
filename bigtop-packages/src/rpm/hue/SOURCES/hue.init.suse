@@ -49,7 +49,7 @@ RETVAL=0
 LOCKFILE=/var/lock/subsys/hue_webserver
 LOGDIR=/var/log/hue  # Log directory to use
 PIDFILE=/var/run/hue/supervisor.pid
-DAEMON=/usr/share/hue/build/env/bin/supervisor # Introduce the server's location here
+DAEMON=/usr/lib/hue/build/env/bin/supervisor # Introduce the server's location here
 DAEMON_OPTS="-p $PIDFILE -l $LOGDIR -d"
 DESC="Hue web server"
 USER=hue
@@ -67,7 +67,7 @@ hue_start() {
     chown -R $USER $dir
   done
 
-  start_daemon -u $USER $DAEMON $DAEMON_OPTS
+  PATH=/usr/lib/hue/build/env/bin:$PATH start_daemon -u $USER $DAEMON $DAEMON_OPTS
   RETVAL=$?
   echo
   [ $RETVAL -eq 0 ] && touch $LOCKFILE
