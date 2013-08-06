@@ -125,7 +125,8 @@ find $PREFIX/$LIB_DIR -iname \*.py[co]  -exec rm -f {} \;
 
 # Move desktop.db to a var location
 install -d -m 0755 $PREFIX/$VAR_DIR
-mv $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$VAR_DIR
+mv $BUILD_DIR/desktop/desktop.db $PREFIX/$VAR_DIR/
+mv $PREFIX/$LIB_DIR/app.reg $PREFIX/$VAR_DIR/
 
 # Install conf files
 install -d -m 0755 $PREFIX/$CONF_DIR
@@ -175,3 +176,11 @@ done
 
 # Remove bogus files
 rm -fv `find $PREFIX -iname "build_log.txt"`
+
+# Cloudera specific
+install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
+cp $BUILD_DIR/cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera
+install -d -m 0755 $PREFIX/$HADOOP_DIR/../cloudera
+grep -v 'cloudera.pkg.name=' < $BUILD_DIR/cloudera/cdh_version.properties > $PREFIX/$HADOOP_DIR/../cloudera/cm_version.properties
+echo 'cloudera.pkg.name=hue-common' >> $PREFIX/$HADOOP_DIR/../cloudera/cm_version.properties
+

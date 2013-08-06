@@ -21,7 +21,7 @@ Group: Applications/Engineering
 Summary: The hue metapackage
 License: ASL 2.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
-Source0: %{name}-%{hue_base_version}.tar.gz
+Source0: %{name}-%{hue_patched_version}.tar.gz
 Source1: %{name}.init
 Source2: %{name}.init.suse
 Source3: do-component-build
@@ -31,6 +31,10 @@ Requires: %{name}-common = %{version}-%{release}
 Requires: %{name}-server = %{version}-%{release}
 Requires: %{name}-beeswax = %{version}-%{release}
 Requires: %{name}-pig = %{version}-%{release}
+Requires: %{name}-impala = %{version}-%{release}
+Requires: %{name}-hbase = %{version}-%{release}
+Requires: %{name}-sqoop = %{version}-%{release}
+Requires: %{name}-search = %{version}-%{release}
 
 ################ RPM CUSTOMIZATION ##############################
 # Disable automatic Provides generation - otherwise we will claim to provide all of the
@@ -77,7 +81,7 @@ AutoReqProv: no
 %define beeswax_app_dir %{hue_dir}/apps/beeswax
 %define oozie_app_dir %{hue_dir}/apps/oozie
 %define pig_app_dir %{hue_dir}/apps/pig
-%define catalog_app_dir %{hue_dir}/apps/catalog
+%define metastore_app_dir %{hue_dir}/apps/metastore
 %define filebrowser_app_dir %{hue_dir}/apps/filebrowser
 %define help_app_dir %{hue_dir}/apps/help
 %define jobbrowser_app_dir %{hue_dir}/apps/jobbrowser
@@ -86,6 +90,10 @@ AutoReqProv: no
 %define shell_app_dir %{hue_dir}/apps/shell
 %define useradmin_app_dir %{hue_dir}/apps/useradmin
 %define etc_hue /etc/hue/conf 
+%define impala_app_dir %{hue_dir}/apps/impala
+%define hbase_app_dir %{hue_dir}/apps/hbase
+%define sqoop_app_dir %{hue_dir}/apps/sqoop
+%define search_app_dir %{hue_dir}/apps/search
 
 # Path to the HADOOP_HOME to build against - these
 # are not substituted into the build products anywhere!
@@ -130,7 +138,7 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
 %__rm -rf $RPM_BUILD_ROOT
 
 %prep
-%setup -n %{name}-%{hue_base_version}
+%setup -n %{name}-%{hue_patched_version}
 
 ########################################
 # Build
@@ -166,6 +174,7 @@ BuildRequires: krb5-devel
 Group: Applications/Engineering
 Requires: cyrus-sasl-gssapi, libxml2, libxslt, zlib, python, sqlite
 # The only reason we need the following is because we also have AutoProv: no
+Conflicts: cloudera-desktop
 Provides: config(%{name}-common) = %{version}
 
 %if  %{?suse_version:1}0
@@ -250,8 +259,8 @@ fi
 %{hue_dir}/build/env/include/
 %{hue_dir}/build/env/lib*/
 %{hue_dir}/build/env/stamp
-%{hue_dir}/app.reg
 %{hue_dir}/apps/Makefile
+%{hue_dir}/cloudera/cdh_version.properties
 %dir %{hue_dir}/apps
 # Hue core apps
 %{about_app_dir}
@@ -262,7 +271,7 @@ fi
 %{proxy_app_dir}
 %{useradmin_app_dir}
 %{shell_app_dir}
-%{catalog_app_dir}
+%{metastore_app_dir}
 %{oozie_app_dir}
 %attr(4750,root,hue) %{shell_app_dir}/src/shell/build/setuid
 %attr(0755,%{username},%{username}) /var/log/hue
@@ -271,6 +280,10 @@ fi
 # beeswax and pig are packaged as a plugin app
 %exclude %{beeswax_app_dir}
 %exclude %{pig_app_dir}
+%exclude %{impala_app_dir}
+%exclude %{hbase_app_dir}
+%exclude %{sqoop_app_dir}
+%exclude %{search_app_dir}
 
 ############################################################
 # No-arch packages - plugins and conf
@@ -345,3 +358,76 @@ It allows users to construct and run Pig jobs.
 
 %files -n %{name}-pig
 %{pig_app_dir}
+
+#### HUE-IMPALA PLUGIN ######
+%package -n %{name}-impala
+Summary: A UI for Impala on Hue
+Group: Applications/Engineering
+Requires: make
+Requires: %{name}-common = %{version}-%{release}
+
+
+%description -n %{name}-impala
+A web interface for Impala.
+
+It allows users to construct and run queries on Impala, manage tables,
+and import and export data.
+
+%app_post_macro impala
+%app_preun_macro impala
+
+%files -n %{name}-impala
+%defattr(-, %{username}, %{username})
+%{impala_app_dir}
+
+#### HUE-HBASE PLUGIN ######
+%package -n %{name}-hbase
+Summary: A UI for HBase on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+
+%description -n %{name}-hbase
+A web interface for HBase.
+
+It allows users to construct and run HBase queries.
+
+%app_post_macro hbase
+%app_preun_macro hbase
+
+%files -n %{name}-hbase
+%defattr(-, %{username}, %{username})
+%{hbase_app_dir}
+
+#### HUE-SQOOP PLUGIN ######
+%package -n %{name}-sqoop
+Summary: A UI for Sqoop on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+
+%description -n %{name}-sqoop
+A web interface for Sqoop.
+
+%app_post_macro sqoop
+%app_preun_macro sqoop
+
+%files -n %{name}-sqoop
+%defattr(-, %{username}, %{username})
+%{sqoop_app_dir}
+
+#### HUE-SEARCH PLUGIN ######
+%package -n %{name}-search
+Summary: A UI for Search on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+
+%description -n %{name}-search
+A web interface for Search.
+
+It allows users to interact with Solr
+
+%app_post_macro search
+%app_preun_macro search
+
+%files -n %{name}-search
+%defattr(-, %{username}, %{username})
+%{search_app_dir}

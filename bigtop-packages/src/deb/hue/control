@@ -16,7 +16,7 @@
 Source: hue
 Section: misc
 Priority: extra
-Maintainer: Apache Bigtopr <dev@bigtop.apache.org>
+Maintainer: Apache Bigtop <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 7.0.50~), python2.4-dev | python2.5-dev | python2.6-dev | python2.7-dev, libxml2-dev, libxslt1-dev, zlib1g-dev, libsqlite3-dev, libldap2-dev, libsasl2-dev, libmysqlclient-dev, make, python-setuptools, libkrb5-dev
 Depends: libsasl2, libsqlite3, zlib1g, libxslt1, libxml2
 Standards-Version: 3.8.0
@@ -25,6 +25,7 @@ Homepage: http://github.com/cloudera/hue
 Package: hue-common
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${build:SYS-PYTHON}, libsasl2-modules-gssapi-mit, libxslt1.1, make
+Conflicts: cloudera-desktop
 Description: A browser-based desktop interface for Hadoop
  Hue is a browser-based desktop interface for interacting with Hadoop.
  It supports a file browser, job tracker interface, cluster health monitor, and more.
@@ -59,3 +60,33 @@ Description: A UI for Pig on Hue
  .
  It allows users to construct and run Pig jobs.
 
+Package: hue-impala
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-jobsub (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version}), hue-metastore (= ${source:Version})
+Description: A UI for Impala on Hue
+ A web interface for Impala.
+ .
+ It allows users to construct and run queries on Impala, manage tables,
+ and import and export data.
+
+Package: hue-hbase
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version})
+Description: A UI for HBase on Hue
+ A web interface for HBase.
+ .
+ It allows users to run HBase queries
+
+Package: hue-sqoop
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version})
+Description: A UI for Sqoop on Hue
+ A web interface to Sqoop.
+
+Package: hue-search
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hue-jobbrowser (= ${source:Version}), hue-filebrowser (= ${source:Version}), hue-help (= ${source:Version})
+Description: A UI for Search on Hue
+ A web interface to Search.
+ .
+ It allows users to interact with Solr

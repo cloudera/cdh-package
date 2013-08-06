@@ -1,5 +1,5 @@
 /etc/hue/conf.empty
-/usr/lib/hue/app.reg
+/var/lib/hue/app.reg
 /usr/lib/hue/desktop
 /usr/lib/hue/ext
 /usr/lib/hue/LICENSE.txt
@@ -25,5 +25,6 @@
 /usr/lib/hue/apps/shell
 /usr/lib/hue/apps/useradmin
 /usr/lib/hue/apps/oozie
+/usr/lib/hue/cloudera/cdh_version.properties
 /var/log/hue
 /var/lib/hue
