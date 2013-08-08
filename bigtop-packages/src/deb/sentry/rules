@@ -35,6 +35,6 @@ override_dh_auto_build:
 	  bash debian/do-component-build -Drat.basedir=`pwd`/bigtop-empty
 
 override_dh_auto_install:
-	sh -x debian/install_sentry.sh \
+	bash -x debian/install_sentry.sh \
 	  --build-dir=${PWD} \
 	  --prefix=debian/tmp

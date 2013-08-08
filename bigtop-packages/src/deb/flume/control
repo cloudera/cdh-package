@@ -23,7 +23,7 @@ Homepage: http://incubator.apache.org/projects/flume.html
 
 Package: flume
 Architecture: all
-Depends: zookeeper (>= 3.3.1), adduser, hadoop-client, bigtop-utils
+Depends: zookeeper (>= 3.3.1), adduser, hadoop-client, bigtop-utils (>= 0.6)
 Description: reliable, scalable, and manageable distributed data collection application
  Flume is a reliable, scalable, and manageable distributed data collection
  application for collecting data such as logs and delivering it to data stores

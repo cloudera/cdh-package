@@ -34,7 +34,7 @@ override_dh_auto_build:
 	  -Drat.basedir=$${PWD}/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository
 
 override_dh_auto_install:
-	sh -x debian/install_sqoop2.sh \
+	bash -x debian/install_sqoop2.sh \
 	  --build-dir=build/sqoop2-${SQOOP2_PATCHED_VERSION} \
 	  --doc-dir=/usr/share/doc/sqoop2 \
 	  --prefix=debian/tmp \

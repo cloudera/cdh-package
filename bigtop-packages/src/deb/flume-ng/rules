@@ -36,10 +36,10 @@ override_dh_auto_build:
 	# or to unbind rat:check goal
 	# So I am redirecting its attention with a decoy
 	env FULL_VERSION=$(build_version) \
-	  sh debian/do-component-build -Drat.basedir=$${PWD}/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository
+	  bash debian/do-component-build -Drat.basedir=$${PWD}/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository
 
 override_dh_auto_install:
-	sh -x debian/install_flume-ng.sh \
+	bash -x debian/install_flume-ng.sh \
 	  --build-dir=${PWD} \
 	  --doc-dir=/usr/share/doc/flume-ng-doc \
 	  --doc-dir-prefix=debian/flume-ng-doc \

@@ -31,7 +31,7 @@ override_dh_auto_build:
 	env FULL_VERSION=${MAHOUT_PATCHED_VERSION} bash -x debian/do-component-build
 
 override_dh_auto_install:
-	sh -x debian/install_mahout.sh \
+	bash -x debian/install_mahout.sh \
 	  --build-dir=build/mahout-${MAHOUT_PATCHED_VERSION} \
 	  --doc-dir=/usr/share/doc/mahout-doc \
 	  --prefix=debian/tmp

@@ -154,11 +154,7 @@ cat > $PREFIX/${BIN_DIR}/hbase-indexer <<__EOT__
 #!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
-if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-  . /usr/libexec/bigtop-detect-javahome
-elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-  . /usr/lib/bigtop-utils/bigtop-detect-javahome
-fi
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
 
 exec ${LIB_DIR}/bin/hbase-indexer "\$@"
 __EOT__

@@ -31,6 +31,6 @@ override_dh_auto_build:
 	env FULL_VERSION=${DATAFU_PATCHED_VERSION} bash debian/do-component-build -Divy.home=${HOME}/.ivy2
 
 override_dh_auto_install:
-	sh -x debian/install_datafu.sh \
+	bash -x debian/install_datafu.sh \
 	  --build-dir=dist \
 	  --prefix=debian/tmp

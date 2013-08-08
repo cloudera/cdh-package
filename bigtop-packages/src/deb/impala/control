@@ -23,7 +23,7 @@ Homepage: http://cloudera.com/impala
 
 Package: impala
 Architecture: all
-Depends: ${misc:Depends}, adduser, bigtop-utils, libssl0.9.8 | libssl1.0.0, hadoop, hadoop-hdfs, hadoop-yarn, hadoop-mapreduce, hbase, hive, zookeeper
+Depends: ${misc:Depends}, adduser, bigtop-utils (>= 0.6), libssl0.9.8 | libssl1.0.0, hadoop, hadoop-hdfs, hadoop-yarn, hadoop-mapreduce, hbase, hive, zookeeper
 Description: Application for executing real-time queries on top of Hadoop
 
 Package: impala-shell

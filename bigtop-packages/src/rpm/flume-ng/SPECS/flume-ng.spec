@@ -123,11 +123,11 @@ Documentation for Flume NG
 %setup -n apache-flume-%{flume_ng_patched_version}-bin
 
 %build
-env FULL_VERSION=%{flume_ng_patched_version} sh %{SOURCE1}
+env FULL_VERSION=%{flume_ng_patched_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh %{SOURCE2} \
+bash %{SOURCE2} \
           --build-dir=$PWD \
           --prefix=$RPM_BUILD_ROOT \
 	  --doc-dir=%{doc_flume}

@@ -16,7 +16,7 @@ start() {
   log_success_msg "Starting ${DESC}: "
 
   LOG_FILE=/var/log/llama/llama.out
-  su -s /bin/sh $SVC_USER -c \
+  su -s /bin/bash $SVC_USER -c \
     "nohup $EXEC_PATH > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PIDFILE"
 
   return 0

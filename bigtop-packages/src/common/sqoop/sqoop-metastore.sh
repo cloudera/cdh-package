@@ -35,11 +35,7 @@
 set -e
 
 # Autodetect JAVA_HOME if not defined
-if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-  . /usr/libexec/bigtop-detect-javahome
-elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-  . /usr/lib/bigtop-utils/bigtop-detect-javahome
-fi
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
 
 BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
 [ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/hadoop ] && . ${BIGTOP_DEFAULTS_DIR}/hadoop
@@ -127,11 +123,11 @@ start() {
     # The dir should be recreated first.
     local piddir=`dirname "$PID_FILE"`
     install -d -m 0755 -o sqoop -g sqoop "$piddir"
-    su -s /bin/sh sqoop -c \
+    su -s /bin/bash sqoop -c \
          "/usr/lib/sqoop/bin/start-metastore.sh -p $PID_FILE -l $LOGDIR"
 }
 stop() {
-    su -s /bin/sh sqoop -c \
+    su -s /bin/bash sqoop -c \
         "/usr/lib/sqoop/bin/stop-metastore.sh -p $PID_FILE"
 }
 

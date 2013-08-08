@@ -31,11 +31,7 @@
 . /etc/rc.d/init.d/functions
 
 # Autodetect JAVA_HOME if not defined
-if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-  . /usr/libexec/bigtop-detect-javahome
-elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-  . /usr/lib/bigtop-utils/bigtop-detect-javahome
-fi
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
 
 desc="Flume @FLUME_DAEMON@ daemon"
 
@@ -55,13 +51,13 @@ checkstatus(){
 start() {
   echo -n $"Starting $desc (flume-@FLUME_DAEMON@): "
 
-  su -s /bin/sh flume -c "/usr/bin/env FLUME_CLASSPATH=':/usr/lib/hadoop/client/*' ${FLUME_HOME}/bin/flume-daemon.sh start @FLUME_DAEMON@"
+  su -s /bin/bash flume -c "/usr/bin/env FLUME_CLASSPATH=':/usr/lib/hadoop/client/*' ${FLUME_HOME}/bin/flume-daemon.sh start @FLUME_DAEMON@"
   echo
 }
 
 stop() {
   echo -n $"Stopping $desc (flume-@FLUME_DAEMON@): "
-  su -s /bin/sh  flume -c "/usr/bin/env FLUME_CLASSPATH=':/usr/lib/hadoop/client/*' ${FLUME_HOME}/bin/flume-daemon.sh stop @FLUME_DAEMON@"
+  su -s /bin/bash  flume -c "/usr/bin/env FLUME_CLASSPATH=':/usr/lib/hadoop/client/*' ${FLUME_HOME}/bin/flume-daemon.sh stop @FLUME_DAEMON@"
   [ $? -eq 0 ] && rm -f $FLUME_PID
   echo
 }

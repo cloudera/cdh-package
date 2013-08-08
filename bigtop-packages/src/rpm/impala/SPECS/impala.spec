@@ -73,7 +73,7 @@ Source4: init.d.tmpl
 Source5: impala.conf
 Source6: impalad.svc
 Source7: statestored.svc
-Requires: bigtop-utils, /usr/sbin/useradd, /usr/sbin/usermod, openssl
+Requires: bigtop-utils >= 0.6, /usr/sbin/useradd, /usr/sbin/usermod, openssl
 Requires: hadoop, hadoop-hdfs, hadoop-yarn, hadoop-mapreduce, hbase, hive, zookeeper
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 Requires: redhat-lsb

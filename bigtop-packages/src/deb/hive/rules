@@ -40,7 +40,7 @@ override_dh_auto_install: metastore server server2
 	cp debian/hive-site.xml .
 	cp debian/hive.1 .
 	cp debian/hive-hcatalog.1 .
-	sh debian/install_hive.sh \
+	bash debian/install_hive.sh \
 	  --prefix=debian/tmp \
 	  --build-dir=src/build/dist \
 	  --doc-dir=debian/tmp/usr/share/doc/${hive_pkg_name}

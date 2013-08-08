@@ -42,7 +42,7 @@ build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
 	# Temporarily disabled - we'll just use the build from the tarball.
 	env FULL_VERSION=${FLUME_PATCHED_VERSION} \
-		sh debian/do-component-build
+		bash debian/do-component-build
 	mkdir -p debian/tmp
 	tar cf - --exclude=debian/\* . | (cd debian/tmp && tar xf -)
 	touch $@
@@ -55,7 +55,7 @@ install-indep:	master node
 	dh_testdir
 	dh_testroot
 #	ant package
-	sh -x debian/install_flume.sh \
+	bash -x debian/install_flume.sh \
 	  --build-dir=. \
 	  --prefix=debian/flume 
 	dh_install -i
