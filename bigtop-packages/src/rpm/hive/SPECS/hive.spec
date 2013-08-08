@@ -83,7 +83,7 @@ Source14: hive-hcatalog-server.svc
 Source15: hive-webhcat-server.svc
 Source16: hive-hcatalog-server.default
 Source17: hive-webhcat-server.default
-Requires: hadoop-client, bigtop-utils >= 0.6, hbase, zookeeper, %{name}-hbase, %{name}-jdbc
+Requires: hadoop-client, bigtop-utils >= 0.6, hbase, zookeeper, %{name}-hbase = %{version}-%{release}, %{name}-jdbc = %{version}-%{release}
 Conflicts: hadoop-hive
 Obsoletes: %{name}-webinterface
 
@@ -138,8 +138,7 @@ This optional package hosts a metadata server for Hive clients across a network 
 %package hbase
 Summary: Provides integration between Apache HBase and Apache Hive
 Group: Development/Libraries
-Requires: hbase
-
+Requires: hive = %{version}-%{release}, hbase
 
 %description hbase
 This optional package provides integration between Apache HBase and Apache Hive
