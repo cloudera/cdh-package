@@ -437,7 +437,6 @@ Summary: Hadoop JobTracker
 Group: System/Daemons
 Requires: %{name}-0.20-mapreduce = %{version}-%{release}
 Conflicts: hadoop-0.20-jobtracker, %{name}-jobtrackerha
-BuildArch: noarch
 
 %description 0.20-mapreduce-jobtracker
 The jobtracker is a central service which is responsible for managing
@@ -450,7 +449,6 @@ Summary: Hadoop Task Tracker
 Group: System/Daemons
 Requires: %{name}-0.20-mapreduce = %{version}-%{release}
 Conflicts: hadoop-0.20-tasktracker
-BuildArch: noarch
 
 %description 0.20-mapreduce-tasktracker
 The tasktracker has a fixed number of work slots.  The jobtracker
@@ -474,7 +472,6 @@ Summary: Hadoop JobTracker High Availability
 Group: System/Daemons
 Requires: %{name}-0.20-mapreduce = %{version}-%{release}
 Conflicts: hadoop-0.20-jobtracker, %{name}-0.20-mapreduce-jobtracker
-BuildArch: noarch
 
 %description 0.20-mapreduce-jobtrackerha
 The Hadoop MapReduce JobTracker High Availability Daemon provides a
@@ -494,7 +491,6 @@ with an available work slot.
 Summary: Hadoop MapReduce failover controller
 Group: System/Daemons
 Requires: %{name}-0.20-mapreduce-jobtrackerha = %{version}-%{release}, zookeeper >= 3.4.0
-BuildArch: noarch
 
 %description 0.20-mapreduce-zkfc
 The Hadoop MapReduce failover controller is a Zookeeper client which also
