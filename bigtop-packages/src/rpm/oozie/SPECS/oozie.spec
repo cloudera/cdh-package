@@ -197,6 +197,7 @@ fi
 %{lib_oozie}/oozie-server-ssl
 %{lib_oozie}/oozie-server-0.20-ssl
 %{lib_oozie}/libext
+%{lib_oozie}/cloudera/
 %{initd_dir}/oozie
 %defattr(-, oozie, oozie)
 %dir %{_localstatedir}/log/oozie
@@ -210,6 +211,5 @@ fi
 %dir %{lib_oozie}/bin
 %{lib_oozie}/bin/oozie
 %{lib_oozie}/lib
-%{lib_oozie}/cloudera/
 %doc %{doc_oozie}
 %{man_dir}/man1/oozie.1.*

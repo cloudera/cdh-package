@@ -221,5 +221,5 @@ ln -s ../webapps-ssl ${SERVER_LIB_DIR}/oozie-server-0.20-ssl/webapps
 cp ${SERVER_LIB_DIR}/oozie-server-0.20/conf/ssl/ssl-server.xml ${SERVER_LIB_DIR}/oozie-server-0.20-ssl/conf/server.xml
 
 # Cloudera specific
-install -d -m 0755 ${CLIENT_LIB_DIR}/cloudera
-cp ${BUILD_DIR}/cloudera/cdh_version.properties ${CLIENT_LIB_DIR}/cloudera/
+install -d -m 0755 ${SERVER_LIB_DIR}/cloudera
+cp ${BUILD_DIR}/cloudera/cdh_version.properties ${SERVER_LIB_DIR}/cloudera/
