@@ -53,6 +53,8 @@ install: debian/cdh-parcel-$(version)/opt/cloudera/parcels/CDH-${version_release
 	@echo building client
 
 debian/cdh-parcel-$(version)/opt/cloudera/parcels/CDH-${version_release}:
+	cp debian/hadoop-fuse-dfs.patch .
+	patch -p0 < hadoop-fuse-dfs.patch
 	mkdir -p $@
 	mv build/usr/{bin,share,lib}* build/meta build/etc $@
 	sed -e 's#@VERSION@#$(version)#' < debian/cdh-parcel.postinst > debian/cdh-parcel-$(version).postinst

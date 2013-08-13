@@ -1,0 +1,10 @@
+--- build/usr/bin/hadoop-fuse-dfs	2013-06-12 16:30:12.000000000 -0700
++++ build/usr/bin/hadoop-fuse-dfs	2013-06-12 17:18:35.000000000 -0700
+@@ -28,6 +28,7 @@
+   export LD_LIBRARY_PATH=/usr/lib
+   for f in `find ${JAVA_HOME}/ -name client -prune -o -name libjvm.so -exec dirname {} \;`; do
+     export LD_LIBRARY_PATH=$f:${LD_LIBRARY_PATH}
++    export LD_LIBRARY_PATH="${BIN_DIR}/../lib64":${LD_LIBRARY_PATH}
+   done
+ fi
+ 
