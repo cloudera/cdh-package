@@ -26,6 +26,7 @@ License:	APL2
 URL:		http://cloudera.com
 Source0:        cdh-parcel-%{cdh_parcel_patched_version}.tar.gz
 Source1:	do-component-build
+Source2:        hadoop-fuse-dfs.patch
 
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
@@ -65,6 +66,8 @@ PKG_FORMAT=rpm FULL_VERSION=%{cdh_parcel_version}-%{cdh_parcel_release} CDH_PARC
 CDH_CUSTOMER_PATCH=%{cdh_customer_patch} CDH_PARCEL_BASE_VERSION=%{cdh_parcel_version} bash -x %{SOURCE1}
 
 %install
+patch -p0 < %{SOURCE2}
+
 # the following stops rpm from complaining
 chmod 555 $PWD/build/usr/lib/hadoop-yarn/bin/container-executor
 chmod 555 $PWD/build/usr/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
