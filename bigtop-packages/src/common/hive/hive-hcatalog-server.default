@@ -12,12 +12,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-DAEMON="hcatalog-server"
-DESC="HCatalog server"
-EXEC_PATH="/usr/lib/hcatalog/sbin/hcat_server.sh"
-SVC_USER="hive"
-WORKING_DIR="/var/run/hcatalog"
-DAEMON_FLAGS=""
-CONF_DIR="/etc/hcatalog/conf"
-# FIXME: HCATALOG-636
-PIDFILE="/var/run/hcatalog/hcat.pid"
+
+export METASTORE_PORT=9083
+
+export HADOOP_PREFIX=/usr
+export HCAT_LOG_DIR=/var/log/hive-hcatalog
+export HCAT_PID_DIR=/var/lib/hive-hcatalog
+export HCAT_HOME=/usr/lib/hive-hcatalog
+# FIXME: HCATALOG-636 (and also HIVE-2757)
+export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
+export HIVE_HOME=/usr/lib/hive
+export HIVE_CONF_DIR=/etc/hive/conf

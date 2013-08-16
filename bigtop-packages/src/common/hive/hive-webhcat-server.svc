@@ -1,4 +1,3 @@
-#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,25 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-set -ex
-
-BUILD_OPTS="-Dversion=${FULL_VERSION} -Dforrest.home=$FORREST_HOME \
-            -Dreactor.repo=file://${HOME}/.m2/repository           \
-            -Dmvn.hadoop.profile=hadoop23"
-
-
-ant $BUILD_OPTS src-release package "$@"
-
-# If DO_MAVEN_DEPLOY == deploy, run the generate-maven-artifacts target
-if [ "${DO_MAVEN_DEPLOY}" == "deploy" ]; then
-    ant $BUILD_OPTS mvn-deploy "$@"
-fi
-
-# Add sources to the binary installation
-cd build
-tar xzf hcatalog-src-${FULL_VERSION}.tar.gz
-mv hcatalog-${FULL_VERSION} hcatalog-src-${FULL_VERSION}/dist
-mv hcatalog-src-${FULL_VERSION} hcatalog-${FULL_VERSION}
-rm hcatalog-${FULL_VERSION}.tar.gz
-tar czf hcatalog-${FULL_VERSION}.tar.gz hcatalog-${FULL_VERSION}
+DAEMON="hive-webhcat-server"
+DESC="WEBHCat server"
+EXEC_PATH="/usr/lib/hive-hcatalog/sbin/webhcat_server.sh"
+SVC_USER="hive"
+DAEMON_FLAGS=""
+CONF_DIR="/etc/hive-webhcat/conf"
+# FIXME: HCATALOG-636
+PIDFILE="/var/lib/hive-hcatalog/webhcat.pid"
+WORKING_DIR="/var/lib/hive-hcatalog"

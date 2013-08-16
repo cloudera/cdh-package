@@ -1,0 +1,5 @@
+/etc/hive-webhcat
+/usr/lib/hive-hcatalog/etc/webhcat
+/usr/lib/hive-hcatalog/share/webhcat
+/usr/lib/hive-hcatalog/sbin/webhcat_config.sh
+/usr/lib/hive-hcatalog/sbin/webhcat_server.sh

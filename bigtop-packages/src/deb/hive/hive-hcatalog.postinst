@@ -1,3 +1,4 @@
+#!/bin/sh
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -12,12 +13,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-DAEMON="webhcat-server"
-DESC="WEBHCat server"
-EXEC_PATH="/usr/lib/hcatalog/sbin/webhcat_server.sh"
-SVC_USER="hive"
-WORKING_DIR="/var/run/hcatalog"
-DAEMON_FLAGS=""
-CONF_DIR="/etc/webhcat/conf"
-# FIXME: HCATALOG-636
-PIDFILE="/var/run/hcatalog/webhcat.pid"
+
+set -e
+
+case "$1" in
+    configure)
+	chown hive:hive -R /var/lib/hive-hcatalog /var/log/hive-hcatalog
+        # Install config alternatives
+        update-alternatives  --install /etc/hive-hcatalog/conf hive-hcatalog-conf /etc/hive-hcatalog/conf.dist 30
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
