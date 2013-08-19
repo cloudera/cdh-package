@@ -103,7 +103,9 @@ BUNDLED_BUILD_DIR=$PREFIX/$LIB_DIR/build
 
 # Install plugins
 install -d -m 0755 $PREFIX/$HADOOP_DIR
-ln -fs $LIB_DIR/desktop/libs/hadoop/java-lib/*plugin*jar $PREFIX/$HADOOP_DIR
+PLUGIN_PATH='desktop/libs/hadoop/java-lib'
+PLUGIN_NAME=`basename $BUILD_DIR/$PLUGIN_PATH/*plugin*jar`
+ln -fs ../../hue/$PLUGIN_PATH/$PLUGIN_NAME $PREFIX/$HADOOP_DIR/
 
 # Hue Shell specific
 install -d -m 0755 $PREFIX/$LIB_DIR/apps/shell/src/shell/build/

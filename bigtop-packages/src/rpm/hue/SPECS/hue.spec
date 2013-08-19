@@ -27,6 +27,7 @@ Source2: %{name}.init.suse
 Source3: do-component-build
 Source4: install_hue.sh
 URL: http://github.com/cloudera/hue
+Requires: %{name}-plugins = %{version}-%{release}
 Requires: %{name}-common = %{version}-%{release}
 Requires: %{name}-server = %{version}-%{release}
 Requires: %{name}-beeswax = %{version}-%{release}
@@ -321,6 +322,22 @@ fi
 if [ $1 -ge 1 ]; then 
         service %{name} condrestart >/dev/null 2>&1 
 fi
+
+#### PLUGINS ######
+%package -n %{name}-plugins
+Summary: Hadoop plugins for Hue
+Requires: hadoop, bigtop-utils >= 0.6
+Group: Applications/Engineering
+Conflicts: cloudera-desktop-plugins
+%description -n %{name}-plugins
+Plugins for Hue
+
+This package should be installed on each node in the Hadoop cluster.
+
+%files -n %{name}-plugins
+%defattr(-,root,root)
+%{hadoop_lib}/
+%{hadoop_home}/cloudera/
 
 #### HUE-BEESWAX PLUGIN ######
 %package -n %{name}-beeswax
