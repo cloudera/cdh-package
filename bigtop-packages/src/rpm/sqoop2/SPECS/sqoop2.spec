@@ -180,7 +180,6 @@ fi
 %defattr(0755,sqoop2,sqoop)
 /var/lib/sqoop2
 
-
 %files client
 %attr(0755,root,root)
 /usr/bin/sqoop2
