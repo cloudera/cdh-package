@@ -279,6 +279,25 @@ if [ -n "$SOLR_AUTHENTICATION_JAAS_CONF" ] ; then
   CATALINA_OPTS="${CATALINA_OPTS} -Djava.security.auth.login.config=${SOLR_AUTHENTICATION_JAAS_CONF}"
 fi
 
+if [ -n "$SOLR_SECURITY_ALLOWED_PROXYUSERS" ] ; then
+  old_IFS=${IFS}
+  IFS=","
+  for user in $SOLR_SECURITY_ALLOWED_PROXYUSERS
+    do
+      hostsVar="SOLR_SECURITY_PROXYUSER_"$user"_HOSTS"
+      eval hostsVal=\$$hostsVar
+      if [ -n "$hostsVal" ] ; then
+        CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.security.proxyuser.${user}.hosts=${hostsVal}"
+      fi
+      groupsVar="SOLR_SECURITY_PROXYUSER_"$user"_GROUPS"
+      eval groupsVal=\$$groupsVar
+      if [ -n "$groupsVal" ] ; then
+        CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.security.proxyuser.${user}.groups=${groupsVal}"
+      fi
+    done
+  IFS=${old_IFS}
+fi
+
 # FIXME: we need to set this because of the jetty-centric default solr.xml
 CATALINA_OPTS="${CATALINA_OPTS} -Dhost=$HOSTNAME -Djetty.port=$SOLR_PORT"
 
