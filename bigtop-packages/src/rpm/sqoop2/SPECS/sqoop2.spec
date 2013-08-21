@@ -183,11 +183,11 @@ fi
 
 
 %files client
-%attr(0755,root,root)
+%defattr(0755,root,root)
 /usr/bin/sqoop2
 %{lib_sqoop}/bin/sqoop.sh
 %{lib_sqoop}/client-lib
-%{lib_sqoop}/cloudera/cdh_version.properties
+%{lib_sqoop}/cloudera
 
 %files server
 %attr(0755,root,root) %{initd_dir}/sqoop2-server
