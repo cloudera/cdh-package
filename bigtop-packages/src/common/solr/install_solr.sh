@@ -157,11 +157,17 @@ cp ${BUILD_DIR}/example/resources/log4j.properties $PREFIX/${CONF_DIR}.dist
 cat > $PREFIX/$LIB_DIR/bin/solrd <<'EOF'
 #!/bin/bash
 
+function info() {
+  echo "INFO:" "$@"
+}
+
 function tomcat_watchdog() {
-   eval exec {0..255}\>\&-
+   eval exec {3..255}\>\&-
    cd /
+   info "Starting a watchdog process monitoring $$"
    while true ; do
      sleep $SOLRD_WATCHDOG_TIMEOUT
+     info  "Sending a heartbeat request to http://$HOSTNAME:$SOLR_PORT/solr"
 
      HTTP_CODE=`curl -m$SOLRD_WATCHDOG_TIMEOUT --retry 5 -L -k -s --negotiate -u : -o /dev/null -w "%{http_code}" http://$HOSTNAME:$SOLR_PORT/solr`
      HTTP_CODE=${HTTP_CODE:-600}
@@ -171,18 +177,23 @@ function tomcat_watchdog() {
      # UNIX exit codes times 10 AND at the same time prints 000 as HTTP exit
      # code) we should also treat exit code of 0 as a failure. 
      if [ $HTTP_CODE -ge 500 -o $HTTP_CODE -eq 0 ] ; then
-       kill -9 `cat $CATALINA_PID`
+       info "Got $HTTP_CODE HTTP code from the Solr server. Watchdog is now killing it: $$"
+       kill -9 $$
        exit 0
      fi
 
      # If we're getting 4xx (client side error) we better exit silently
      # 401 (Unauthorized) is a special case of when we should keep running
      if [ $HTTP_CODE -ge 400 -a $HTTP_CODE -lt 500 -a $HTTP_CODE -ne 401 ] ; then
+       info "Got $HTTP_CODE HTTP code. This is confusing. Watchdog is now exiting..."
        exit 0
      fi
 
      # Finally check that the monitored process is still running (a bit of belt'n'suspenders)
-     kill -0 `cat $CATALINA_PID` || exit 0
+     if ! kill -0 $$ ; then
+       info "Looks like the Solr server exited. Watchdog is now exiting..."
+       exit 0
+     fi
    done
 }
 
@@ -312,7 +323,7 @@ export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.host=$HOSTNAME
 #        and thus doesn't know the admin port
 export JAVA_OPTS="$CATALINA_OPTS"
 
-if [ "$1" = "start" -a -n "$SOLRD_WATCHDOG_TIMEOUT" ] ; then
+if [ "$1" = "run" -a -n "$SOLRD_WATCHDOG_TIMEOUT" ] ; then
   tomcat_watchdog &
 fi
 
