@@ -1,0 +1,7 @@
+export LLAMA_AM_SERVER_HOME=/usr/lib/llama
+export LLAMA_AM_SERVER_CONF=/etc/llama/conf
+export LLAMA_AM_SERVER_LOG=/var/log/llama
+
+#export HADOOP_CLASSPATH=
+#export HADOOP_CLIENT_OPTS=
+#export LLAMA_AM_SERVER_OPTS=

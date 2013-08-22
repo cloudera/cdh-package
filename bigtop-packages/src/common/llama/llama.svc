@@ -1,0 +1,59 @@
+DAEMON="llama"
+DESC="Llama Application Master"
+EXEC_PATH="/usr/bin/llama"
+SVC_USER="${LLAMA_USER:-llama}"
+WORKING_DIR="/var/run/llama"
+DAEMON_FLAGS=""
+CONF_DIR="${LLAMA_CONFIG:-/etc/llama/conf}"
+PIDFILE="${LLAMA_PID:-/var/run/llama/llama-$SVC_USER.pid}"
+
+generate_start() {
+
+cat <<'__EOT__'
+start() {
+  [ -x $EXEC_PATH ] || exit $ERROR_PROGRAM_NOT_INSTALLED
+  [ -d $CONF_DIR ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
+  log_success_msg "Starting ${DESC}: "
+
+  LOG_FILE=/var/log/llama/llama.out
+  su -s /bin/sh $SVC_USER -c \
+    "nohup $EXEC_PATH > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PIDFILE"
+
+  return 0
+}
+__EOT__
+
+}
+
+generate_stop() {
+
+cat <<'__EOT__'
+stop() {
+  log_success_msg "Stopping ${DESC}: "
+  checkstatusofproc
+  if [ "$?" = "$STATUS_RUNNING" ] ; then
+
+    LLAMA_SHUTDOWN_TIMEOUT=${LLAMA_SHUTDOWN_TIMEOUT:-10}
+
+    if [ -f $PIDFILE ]; then
+      PID=`cat $PIDFILE`
+      if [ -n $PID ]; then
+        kill -TERM $PID &>/dev/null
+        for i in `seq 1 ${LLAMA_SHUTDOWN_TIMEOUT}` ; do
+          kill -0 ${PID} &>/dev/null || break
+          sleep 1
+        done
+        kill -KILL ${PID} &>/dev/null
+      fi
+    fi
+
+    RETVAL=$?
+  else
+    RETVAL=$RETVAL_SUCCESS
+  fi
+
+  [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE
+}
+__EOT__
+
+}
