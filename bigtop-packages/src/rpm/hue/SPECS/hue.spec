@@ -88,7 +88,6 @@ AutoReqProv: no
 %define jobbrowser_app_dir %{hue_dir}/apps/jobbrowser
 %define jobsub_app_dir %{hue_dir}/apps/jobsub
 %define proxy_app_dir %{hue_dir}/apps/proxy
-%define shell_app_dir %{hue_dir}/apps/shell
 %define useradmin_app_dir %{hue_dir}/apps/useradmin
 %define etc_hue /etc/hue/conf 
 %define impala_app_dir %{hue_dir}/apps/impala
@@ -271,10 +270,8 @@ fi
 %{jobsub_app_dir}
 %{proxy_app_dir}
 %{useradmin_app_dir}
-%{shell_app_dir}
 %{metastore_app_dir}
 %{oozie_app_dir}
-%attr(4750,root,hue) %{shell_app_dir}/src/shell/build/setuid
 %attr(0755,%{username},%{username}) /var/log/hue
 %attr(0755,%{username},%{username}) /var/lib/hue
 
