@@ -27,9 +27,9 @@ Source3: do-component-build
 Source4: install_hue.sh
 URL: http://github.com/cloudera/hue
 Vendor: Cloudera, Inc.
-Requires: %{name}-common, %{name}-user, %{name}-about, %{name}-help
-Requires(pre): %{name}-common
-Requires(preun): %{name}-common
+Requires: hue-common, hue-user, hue-about, hue-help
+Requires(pre): hue-common
+Requires(preun): hue-common
 AutoReqProv: no
 AutoProv: no
 
