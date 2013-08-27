@@ -860,7 +860,7 @@ fi
 %config(noreplace) /etc/security/limits.d/mapred.conf
 # FIXME: we need to think how to get rid of the following file
 %config(noreplace) /etc/default/hadoop-0.20-mapreduce
-%attr(4754,root,mapred) %{lib_mapreduce_mr1}/sbin/%{hadoop_arch}/task-controller
+%attr(4754,root,mapred) %{lib_mapreduce_mr1}/sbin/Linux/task-controller
 %{lib_mapreduce_mr1}
 %{bin_hadoop}/hadoop-0.20
 # %{man_hadoop}/man1/%{hadoop_name}.1.gz
