@@ -16,6 +16,8 @@
 
 set -ex
 
+export HADOOP_PROTOC_CDH5_PATH=/opt/toolchain/protobuf-2.5.0/bin/protoc
+
 # FIXME: this needs to go away once we start using an actuall source tarball
 [ -f pom.xml ] || cd src
 
