@@ -94,7 +94,7 @@ fi
 
 %pre node
 getent group llama >/dev/null || groupadd -r llama
-getent passwd llama > /dev/null || useradd -c "Llama" -s /bin/bash -g llama -r -d %{run_llama} llama 2> /dev/null || :
+getent passwd llama > /dev/null || useradd -c "Llama" -s /bin/bash -g llama -d %{run_llama} llama 2> /dev/null || :
 
 %post master
 chkconfig --add llama
