@@ -116,6 +116,9 @@ BIGTOP_DEFAULTS_DIR=\${BIGTOP_DEFAULTS_DIR-/etc/default}
 export HADOOP_CLASSPATH=\$(JARS=(${LIB_DIR}/*.jar ${LIB_DIR}/lib/*.jar); IFS=:; echo "\${JARS[*]}:\${HADOOP_CLASSPATH}")
 export HADOOP_CLASSPATH=/etc/hadoop/conf:\${HADOOP_CLASSPATH}
 
+export HADOOP_LIBEXEC_DIR=/usr/lib/hadoop/libexec
+export HADOOP_HOME=/usr/lib/hadoop
+
 exec ${LIB_DIR}/bin/llama "\$@"
 EOF
 
