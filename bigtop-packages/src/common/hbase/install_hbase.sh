@@ -149,14 +149,27 @@ BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
 export HBASE_HOME=${HBASE_HOME:-/usr/lib/hbase}
+
+ALL_PARAMS="$@"
+while [ $# -gt 1 ]; do
+  if [ "--config" = "$1" ]; then
+    shift && HBASE_CONF=$1 && shift && break;
+  else
+    shift
+  fi
+done
+HBASE_CONF=${HBASE_CONF:-${HBASE_HOME}/conf}
+
 export HADOOP_CONF=${HADOOP_CONF:-/etc/hadoop/conf}
 export ZOOKEEPER_HOME=${ZOOKEEPER_HOME:-/usr/lib/zookeeper}
 HBASE_JARS="$HADOOP_CONF $HADOOP_HOME/* $HADOOP_HOME/lib/*"
 HBASE_JARS="$HBASE_JARS $ZOOKEEPER_HOME/* $ZOOKEEPER_HOME/lib/*"
 HBASE_JARS="$HBASE_JARS $HBASE_HOME/* $HBASE_HOME/lib/*"
 export HBASE_CLASSPATH=$(JARS=($HBASE_JARS); IFS=:; echo "${JARS[*]}:${HBASE_CLASSPATH}")
+export HBASE_CLASSPATH=${HBASE_CONF}:${HBASE_CLASSPATH}
 
-exec /usr/lib/hbase/bin/hbase "$@"
+exec /usr/lib/hbase/bin/hbase $ALL_PARAMS
+
 EOF
 chmod 755 $wrapper
 
