@@ -129,7 +129,7 @@ install -d -m 0755 ${PREFIX}/${CONF_DIR}
 install -d -m 0755 ${PREFIX}/etc/default
 install -d -m 0755 ${PREFIX}/var/lib/sqoop2
 
-install -m 0644 ${DIST_DIR}/client/lib/*.jar ${PREFIX}/${LIB_DIR}/client-lib/
+install -m 0644 ${DIST_DIR}/shell/lib/*.jar ${PREFIX}/${LIB_DIR}/client-lib/
 install -m 0755 ${DIST_DIR}/bin/sqoop.sh ${PREFIX}/${BIN_DIR}/
 install -m 0755 ${DIST_DIR}/bin/sqoop-sys.sh ${PREFIX}/${BIN_DIR}/
 
