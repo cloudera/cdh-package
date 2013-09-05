@@ -159,6 +159,13 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
 # Build
 ########################################
 %build
+
+%if 0%{?rhel:%{rhel}} == 5
+# RHEL 5 slaves have both Python 2.4 and Python 2.6, and CDH 4 needs to use Python 2.4
+export SYS_PYTHON=`which python2.4`
+export SKIP_PYTHONDEV_CHECK=true
+%endif
+
 bash -x %{SOURCE3}  
 
 ########################################
