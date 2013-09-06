@@ -48,6 +48,11 @@ Architecture: all
 Depends: ${misc:Depends}, impala (= ${source:Version})
 Description: Impala State Store server
 
+Package: impala-catalog
+Architecture: all
+Depends: ${misc:Depends}, impala (= ${source:Version})
+Description: Impala Catalog server
+
 Package: impala-dbg
 Architecture: all
 Section: debug

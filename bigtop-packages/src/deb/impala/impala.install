@@ -1,6 +1,7 @@
 /usr/lib/impala
 /usr/bin/statestored
 /usr/bin/impalad
+/usr/bin/catalogd
 /var/log/impala
 /var/run/impala
 /var/lib/impala
