@@ -332,12 +332,19 @@ cat <<__EOT__
        "home"        : "/var/run/sqoop2",
        "shell"       : "/sbin/nologin",
        "extra_groups": [ "sqoop" ]
+     },
+     "llama": {
+       "longname"    : "Llama",
+       "home"        : "/var/run/llama",
+       "shell"       : "/bin/bash",
+       "extra_groups": [ "llama" ]
      }
   },
 
   "groups": [
      "hadoop",
-     "sqoop"
+     "sqoop",
+     "llama"
   ]
 }
 __EOT__
@@ -394,6 +401,8 @@ export CDH_FLUME_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/flume-ng
 export CDH_PIG_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/pig
 export CDH_HCAT_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/hcatalog
 export CDH_SQOOP2_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/sqoop2
+export CDH_LLAMA_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/llama
+export CDH_LLAMA_NODE_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/llama/nodemanagerlib
 export TOMCAT_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/bigtop-tomcat
 export JSVC_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/$BIGTOP_UTILS_HOME
 export CDH_HADOOP_BIN=\$CDH_HADOOP_HOME/bin/hadoop
@@ -407,9 +416,9 @@ BINARIES="beeline flume-ng hadoop hadoop-0.20 hadoop-fuse-dfs hbase hdfs hive \
           sqoop-eval sqoop-export sqoop-help sqoop-import sqoop-import-all-tables \
           sqoop-job sqoop-list-databases sqoop-list-tables sqoop-merge sqoop-metastore \
           sqoop-version whirr yarn zookeeper-client zookeeper-server-cleanup \
-          zookeeper-server zookeeper-server-cleanup zookeeper-server-initialize sqoop2 hcat"
+          zookeeper-server zookeeper-server-cleanup zookeeper-server-initialize sqoop2 hcat llama"
 
-CONFDIRS="hbase hive mahout oozie pig sqoop zookeeper sqoop2 hcatalog webhcat"
+CONFDIRS="hbase hive mahout oozie pig sqoop zookeeper sqoop2 hcatalog webhcat llama"
 # Some services are 'special' and use conf.empty instead of conf.dist
 EMPTY_CONFDIRS="flume-ng hadoop hadoop-httpfs"
 
