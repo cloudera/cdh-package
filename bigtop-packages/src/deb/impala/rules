@@ -41,6 +41,7 @@ override_dh_auto_install:
 	bash -x debian/install_impala.sh --build-dir=${PWD}/debian --prefix=${PWD}/debian/tmp --native-lib-dir=lib
 	bash debian/init.d.tmpl debian/impalad.svc deb debian/tmp/etc/init.d/impala-server
 	bash debian/init.d.tmpl debian/statestored.svc deb debian/tmp/etc/init.d/impala-state-store
+	bash debian/init.d.tmpl debian/catalogd.svc deb debian/tmp/etc/init.d/impala-catalog
 	mkdir -p debian/tmp/etc/security/limits.d
 	cp debian/impala.conf debian/tmp/etc/security/limits.d/
 

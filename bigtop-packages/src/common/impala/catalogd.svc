@@ -13,19 +13,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-DAEMON="statestored"
-DESC="Impala State Store Server"
-EXEC_PATH="/usr/bin/statestored"
-PROC_NAME="statestored"
+DAEMON="catalogd"
+DESC="Impala Catalog Server"
+EXEC_PATH="/usr/bin/catalogd"
+PROC_NAME="catalogd"
 SVC_USER="impala"
 DEFAULTS_FILE="impala"
-DAEMON_FLAGS="\${IMPALA_STATE_STORE_ARGS}"
+DAEMON_FLAGS="\${IMPALA_CATALOG_ARGS}"
 CONF_DIR="/etc/impala/conf"
 RUNDIR=/var/run/impala
 PIDFILE="${RUNDIR}/${DAEMON}-${SVC_USER}.pid"
 LOCKDIR="/var/lock/subsys"
-LOCKFILE="statestored"
-PRIORITY=90
+LOCKFILE="catalogd"
+PRIORITY=91
 
 generate_environment() {
 cat <<'__EOT__'
@@ -65,7 +65,7 @@ start() {
 
   log_success_msg "Starting ${DESC}: "
 
-  /bin/su -s /bin/bash -c "/bin/bash -c 'cd ${RUNDIR} && echo \$\$ > ${PIDFILE} && exec ${EXEC_PATH} ${DAEMON_FLAGS} >>${IMPALA_LOG_DIR}/impala-state-store.log 2>&1' &" $SVC_USER
+  /bin/su -s /bin/bash -c "/bin/bash -c 'cd ${RUNDIR} && echo \$\$ > ${PIDFILE} && exec ${EXEC_PATH} ${DAEMON_FLAGS} >>${IMPALA_LOG_DIR}/impala-catalog.log 2>&1' &" $SVC_USER
   RETVAL=$?
   [ $RETVAL -eq 0 ] && touch $LOCKFILE
   return $RETVAL

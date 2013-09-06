@@ -110,12 +110,14 @@ install -d -m 0755 ${LIB_DIR}
 install -d -m 0755 ${LIB_DIR}/sbin-retail
 cp be/build/release/service/* ${LIB_DIR}/sbin-retail
 cp be/build/release/statestore/statestored ${LIB_DIR}/sbin-retail/statestored
+cp be/build/release/catalog/catalogd ${LIB_DIR}/sbin-retail/catalogd
 rm ${LIB_DIR}/sbin-retail/*.a
 
 # install debug bits
 install -d -m 0755 ${LIB_DIR}/sbin-debug
 cp be/build/debug/service/* ${LIB_DIR}/sbin-debug
 cp be/build/debug/statestore/statestored ${LIB_DIR}/sbin-debug/statestored
+cp be/build/debug/catalog/catalogd ${LIB_DIR}/sbin-debug/catalogd
 rm ${LIB_DIR}/sbin-debug/*.a
 
 # install scripts
@@ -175,6 +177,7 @@ IMPALA_STATE_STORE_PORT=24000
 IMPALA_BACKEND_PORT=22000
 IMPALA_LOG_DIR=/var/log/impala
 
+IMPALA_CATALOG_ARGS=" -log_dir=\${IMPALA_LOG_DIR} "
 IMPALA_STATE_STORE_ARGS=" -log_dir=\${IMPALA_LOG_DIR} -state_store_port=\${IMPALA_STATE_STORE_PORT}"
 IMPALA_SERVER_ARGS=" \\
     -log_dir=\${IMPALA_LOG_DIR} \\
@@ -202,7 +205,7 @@ chmod 0644 ${ETC_DIR}/default/impala
 # finally install wrapper scripts
 install -d -m 0755 ${BIN_DIR}
 DO_EXEC="exec "
-for wrapper in impalad statestored ; do
+for wrapper in impalad statestored catalogd ; do
   cat > ${BIN_DIR}/${wrapper} <<__EOT__
 #!/bin/bash
 

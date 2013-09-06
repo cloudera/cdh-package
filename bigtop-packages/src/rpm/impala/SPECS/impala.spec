@@ -73,6 +73,7 @@ Source4: init.d.tmpl
 Source5: impala.conf
 Source6: impalad.svc
 Source7: statestored.svc
+Source8: catalogd.svc
 Requires: bigtop-utils >= 0.6, /usr/sbin/useradd, /usr/sbin/usermod, openssl
 Requires: hadoop, hadoop-hdfs, hadoop-yarn, hadoop-mapreduce, hbase, hive, zookeeper, hadoop-libhdfs
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
@@ -126,6 +127,14 @@ Requires: %{name} = %{version}-%{release}
 %description state-store
 Impala State Store server
 
+%package catalog
+Summary: Impala Catalog server
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+
+%description catalog
+Impala Catalog server
+
 # use the debug_package macro if needed
 %if  %{!?suse_version:1}0
 # RedHat does this by default
@@ -156,6 +165,7 @@ init_source=$RPM_SOURCE_DIR
 init_target=$RPM_BUILD_ROOT/%{initd_dir}
 bash $init_source/init.d.tmpl $init_source/impalad.svc rpm $init_target/impala-server
 bash $init_source/init.d.tmpl $init_source/statestored.svc rpm $init_target/impala-state-store
+bash $init_source/init.d.tmpl $init_source/catalogd.svc rpm $init_target/impala-catalog
 
 # Install security limits
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
@@ -200,6 +210,7 @@ getent passwd impala >/dev/null || /usr/sbin/useradd --comment "Impala" --shell 
 /usr/lib/impala
 /usr/bin/statestored
 /usr/bin/impalad
+/usr/bin/catalogd
 %attr(0755,impala,impala) %{impala_log}
 %attr(0755,impala,impala) %{impala_run}
 %attr(0755,impala,impala) %{impala_lib}
@@ -230,4 +241,5 @@ fi
 
 %service_macro server      impala-server
 %service_macro state-store impala-state-store
+%service_macro catalog     impala-catalog
 
