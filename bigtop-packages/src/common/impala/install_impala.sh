@@ -35,6 +35,7 @@ OPTS=$(getopt \
   -l 'doc-dir:' \
   -l 'man-dir:' \
   -l 'conf-dir:' \
+  -l 'native-lib-dir:' \
   -- "$@")
 
 if [ $? != 0 ] ; then
@@ -62,6 +63,9 @@ while true ; do
         --conf-dir)
         CONF_DIR=$2 ; shift 2
         ;;
+        --native-lib-dir)
+        NATIVE_LIB_DIR=$2 ; shift 2
+        ;;
         --)
         shift ; break
         ;;
@@ -86,6 +90,7 @@ BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/impala}
 MAN_DIR=${MAN_DIR:-$PREFIX/usr/man}
 CONF_DIR=${CONF_DIR:-$PREFIX/etc/impala/conf.dist}
+NATIVE_LIB_DIR=${NATIVE_LIB_DIR:-lib}
 
 # install java bits
 install -d -m 0755 ${LIB_DIR}
@@ -121,6 +126,23 @@ cp thirdparty/hadoop-*/lib/native/libhdfs.so* ${LIB_DIR}/lib
 cp thirdparty/hadoop-*/lib/native/libhadoop.so* ${LIB_DIR}/lib
 cp -fr fe/target/dependency/* ${LIB_DIR}/lib/
 cp fe/target/impala-frontend-*-SNAPSHOT.jar ${LIB_DIR}/lib
+
+# Replace bundled libraries with symlinks to packaged dependencies
+export DEPENDENCY_DIR=${PREFIX}/usr/lib/impala/lib
+function symlink_lib() {
+    file=$1
+    dir=$2
+    rm $file
+    base=`basename $file`
+    versionless=${base/-[0-9].*/.jar}
+    ln -s ../../$dir/`basename $versionless` $DEPENDENCY_DIR/
+}
+for file in $DEPENDENCY_DIR/hadoop*cdh*.jar; do symlink_lib $file hadoop/client; done
+for file in $DEPENDENCY_DIR/hbase*cdh*.jar; do symlink_lib $file hbase; done
+for file in $DEPENDENCY_DIR/hive*cdh*.jar; do symlink_lib $file hive/lib; done
+for file in $DEPENDENCY_DIR/zookeeper*cdh*.jar; do symlink_lib $file zookeeper; done
+for file in $DEPENDENCY_DIR/libhdfs*.so*; do symlink_lib $file ../${NATIVE_LIB_DIR}; done
+for file in $DEPENDENCY_DIR/libhadoop*.so*; do symlink_lib $file hadoop/lib/native; done
 
 # install Impala shell
 install -d -m 0755 ${LIB_DIR}-shell
@@ -233,20 +255,6 @@ __EOT__
 done
 
 install -d -m 0755 $CONF_DIR
-
-# Replace bundled libraries with symlinks to packaged dependencies
-export DEPENDENCY_DIR=${PREFIX}/usr/lib/impala/lib
-function symlink_lib() {
-    file=$1
-    dir=$2
-    rm $file
-    ln -s ../../$dir/`basename $file` $DEPENDENCY_DIR
-}
-for file in $DEPENDENCY_DIR/hadoop*cdh*.jar; do symlink_lib $file hadoop; done
-for file in $DEPENDENCY_DIR/hbase*cdh*.jar; do symlink_lib $file hbase; done
-for file in $DEPENDENCY_DIR/hive*cdh*.jar; do symlink_lib $file hive/lib; done
-for file in $DEPENDENCY_DIR/zookeeper*cdh*.jar; do symlink_lib $file zookeeper; done
-for file in $DEPENDENCY_DIR/libh*.so*; do symlink_lib $file hadoop/lib/native; done
 
 # Cloudera specific
 install -d -m 0755 $LIB_DIR/cloudera

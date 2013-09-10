@@ -328,12 +328,12 @@ fi
 %doc %{doc_hive}
 %{man_dir}/man1/hive.1.*
 %exclude %{usr_lib_hive}/lib/hbase.jar
-%exclude %{usr_lib_hive}/lib/hive-jdbc-*.jar
-%exclude %{usr_lib_hive}/lib/hive-metastore-*.jar
-%exclude %{usr_lib_hive}/lib/hive-serde-*.jar
-%exclude %{usr_lib_hive}/lib/hive-exec-*.jar
+%exclude %{usr_lib_hive}/lib/hive-jdbc*.jar
+%exclude %{usr_lib_hive}/lib/hive-metastore*.jar
+%exclude %{usr_lib_hive}/lib/hive-serde*.jar
+%exclude %{usr_lib_hive}/lib/hive-exec*.jar
 %exclude %{usr_lib_hive}/lib/libthrift-*.jar
-%exclude %{usr_lib_hive}/lib/hive-service-*.jar
+%exclude %{usr_lib_hive}/lib/hive-service*.jar
 %exclude %{usr_lib_hive}/lib/libfb303-*.jar
 %exclude %{usr_lib_hive}/lib/slf4j-*.jar
 %exclude %{usr_lib_hive}/lib/log4j-*.jar
@@ -345,12 +345,12 @@ fi
 
 %files jdbc
 %defattr(-,root,root,755)
-%{usr_lib_hive}/lib/hive-jdbc-*.jar
-%{usr_lib_hive}/lib/hive-metastore-*.jar
-%{usr_lib_hive}/lib/hive-serde-*.jar
-%{usr_lib_hive}/lib/hive-exec-*.jar
+%{usr_lib_hive}/lib/hive-jdbc*.jar
+%{usr_lib_hive}/lib/hive-metastore*.jar
+%{usr_lib_hive}/lib/hive-serde*.jar
+%{usr_lib_hive}/lib/hive-exec*.jar
 %{usr_lib_hive}/lib/libthrift-*.jar
-%{usr_lib_hive}/lib/hive-service-*.jar
+%{usr_lib_hive}/lib/hive-service*.jar
 %{usr_lib_hive}/lib/libfb303-*.jar
 %{usr_lib_hive}/lib/slf4j-*.jar
 %{usr_lib_hive}/lib/log4j-*.jar

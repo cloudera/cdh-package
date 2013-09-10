@@ -121,6 +121,11 @@ CONF_DIST_DIR=/etc/hive/conf.dist
 install -d -m 0755 ${HIVE_DIR}
 (cd ${BUILD_DIR} && tar -cf - .)|(cd ${HIVE_DIR} && tar -xf -)
 
+for jar in `ls ${HIVE_DIR}/lib/hive-*.jar`; do
+    base=`basename $jar`
+    (cd ${HIVE_DIR}/lib && ln -s $base ${base/-[0-9].*/.jar})
+done
+
 for thing in conf README.txt examples lib/py;
 do
   rm -rf ${HIVE_DIR}/$thing

@@ -139,7 +139,8 @@ env FULL_VERSION=%{impala_patched_version} bash %{SOURCE1}
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
           --build-dir=$RPM_SOURCE_DIR \
-          --prefix=$RPM_BUILD_ROOT
+          --prefix=$RPM_BUILD_ROOT \
+          --native-lib-dir=lib64
 
 # Install init scripts
 init_source=$RPM_SOURCE_DIR
