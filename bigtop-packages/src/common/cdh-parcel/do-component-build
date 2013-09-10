@@ -155,9 +155,9 @@ for link in `find build/usr/lib/ -type l` ; do
                 rm -f $link
                 ln -s $TOPDIR/lib/`echo $target |sed -e 's#/usr/lib/##'` $link
                 ;;
-    /usr/lib/hue/*)
+    /usr/share/*)
                 rm -f $link
-                ln -s $TOPDIR/lib/`echo $target |sed -e 's#/usr/lib##'` $link
+                ln -s $TOPDIR/share/`echo $target |sed -e 's#/usr/share##'` $link
   esac
 done
 
@@ -169,6 +169,10 @@ for link in `find build/usr/lib/hue/build/env/lib/python* -type l`; do
   rm -f $link
   ln -s `echo $target | sed -e 's#\(\.\./\)\(\.\./\)*#/usr/#'` $link
 done
+
+# Set up post install symlink for impala/sbin to point to impala/sbin-retail
+# In other words, use retail binary by default.
+ln -s sbin-retail build/usr/lib/impala/sbin
 
 # FIXME: special handling for Hue
 HUE_APPS=`ls build/usr/lib/hue/apps | grep -v Makefile | xargs`
@@ -257,7 +261,8 @@ cat <<__EOT__
   ],
 
   "provides": [
-    "cdh"
+    "cdh",
+    "impala"
   ],
 
   "users": {
@@ -338,13 +343,17 @@ cat <<__EOT__
        "home"        : "/var/run/llama",
        "shell"       : "/bin/bash",
        "extra_groups": [ "llama" ]
+     },
+     "impala": {
+       "longname"    : "Impala",
+       "home"        : "/var/run/impala",
+       "shell"       : "/bin/bash",
+       "extra_groups": [ "hive", "hdfs" ]
      }
   },
 
   "groups": [
-     "hadoop",
-     "sqoop",
-     "llama"
+     "hadoop"
   ]
 }
 __EOT__
@@ -407,6 +416,7 @@ export TOMCAT_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/bigtop-tomcat
 export JSVC_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/$BIGTOP_UTILS_HOME
 export CDH_HADOOP_BIN=\$CDH_HADOOP_HOME/bin/hadoop
 export HIVE_DEFAULT_XML=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/hive/conf/hive-default.xml
+export CDH_IMPALA_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/impala
 __EOT__
 ) > build/meta/cdh_env.sh
 
@@ -416,7 +426,7 @@ BINARIES="beeline flume-ng hadoop hadoop-0.20 hadoop-fuse-dfs hbase hdfs hive \
           sqoop-eval sqoop-export sqoop-help sqoop-import sqoop-import-all-tables \
           sqoop-job sqoop-list-databases sqoop-list-tables sqoop-merge sqoop-metastore \
           sqoop-version whirr yarn zookeeper-client zookeeper-server-cleanup \
-          zookeeper-server zookeeper-server-cleanup zookeeper-server-initialize sqoop2 hcat llama"
+          zookeeper-server zookeeper-server-cleanup zookeeper-server-initialize sqoop2 hcat llama impala-shell"
 
 CONFDIRS="hbase hive mahout oozie pig sqoop zookeeper sqoop2 hcatalog webhcat llama"
 # Some services are 'special' and use conf.empty instead of conf.dist
