@@ -36,17 +36,3 @@ ant -Dhadoop.security.version.prefix=0.23 \
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository
 cd cloudera/maven-packaging
 mvn -Dnot.cdh.release.build=false -Dmaven.repo.local=${HOME}/.m2/repository  install $DO_MAVEN_DEPLOY
-cd ../..
-
-# Build HCatalog
-BUILD_OPTS="-Dversion=${FULL_VERSION} -Dforrest.home=$FORREST_HOME \
-            -Dreactor.repo=file://${HOME}/.m2/repository           \
-            -Dmvn.hadoop.profile=hadoop23"
-
-cd hcatalog
-ant $BUILD_OPTS src-release package "$@"
-
-# If DO_MAVEN_DEPLOY == deploy, run the generate-maven-artifacts target
-if [ "${DO_MAVEN_DEPLOY}" == "deploy" ]; then
-    ant $BUILD_OPTS mvn-deploy "$@"
-fi
