@@ -36,6 +36,7 @@ Requires: %{name}-impala = %{version}-%{release}
 Requires: %{name}-hbase = %{version}-%{release}
 Requires: %{name}-sqoop = %{version}-%{release}
 Requires: %{name}-search = %{version}-%{release}
+Requires: %{name}-zookeeper = %{version}-%{release}
 
 ################ RPM CUSTOMIZATION ##############################
 # Disable automatic Provides generation - otherwise we will claim to provide all of the
@@ -94,6 +95,7 @@ AutoReqProv: no
 %define hbase_app_dir %{hue_dir}/apps/hbase
 %define sqoop_app_dir %{hue_dir}/apps/sqoop
 %define search_app_dir %{hue_dir}/apps/search
+%define zookeeper_app_dir %{hue_dir}/apps/zookeeper
 
 # Path to the HADOOP_HOME to build against - these
 # are not substituted into the build products anywhere!
@@ -295,6 +297,7 @@ fi
 %exclude %{hbase_app_dir}
 %exclude %{sqoop_app_dir}
 %exclude %{search_app_dir}
+%exclude %{zookeeper_app_dir}
 
 ############################################################
 # No-arch packages - plugins and conf
@@ -458,3 +461,19 @@ It allows users to interact with Solr
 %files -n %{name}-search
 %defattr(-, %{username}, %{username})
 %{search_app_dir}
+
+#### HUE-ZOOKEEPER PLUGIN ######
+%package -n %{name}-zookeeper
+Summary: A UI for ZooKeeper on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+
+%description -n %{name}-zookeeper
+A web interface for ZooKeeper.
+
+%app_post_macro zookeeper
+%app_preun_macro zookeeper
+
+%files -n %{name}-zookeeper
+%defattr(-, %{username}, %{username})
+%{zookeeper_app_dir}

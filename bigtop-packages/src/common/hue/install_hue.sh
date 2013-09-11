@@ -100,6 +100,7 @@ BUNDLED_BUILD_DIR=$PREFIX/$LIB_DIR/build
 
 # Install all the files 
 (cd $BUILD_DIR ; PREFIX=`dirname $PREFIX/$LIB_DIR` make install)
+rm -rf $PREFIX/$LIB_DIR/apps/logs
 
 # Install plugins
 install -d -m 0755 $PREFIX/$HADOOP_DIR
