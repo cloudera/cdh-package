@@ -18,8 +18,9 @@ set -ex
 
 [ -f cdh-parcel.props ] && . cdh-parcel.props
 
+# These two variables can be and usually are overriden from the Jenkins job
 PKG_ARCHIVE=${PKG_ARCHIVE:-"http://repos.jenkins.cloudera.com/cdh4-nightly/"}
-CDH_VERSION=${CDH_VERSION:-"4.5.0"}
+PKG_CDH_VERSION=${PKG_CDH_VERSION:-"4"}
 
 # If PKG_FORMAT not specified assume tarballs
 if [ -z "$PKG_FORMAT" ] ; then
@@ -27,7 +28,7 @@ if [ -z "$PKG_FORMAT" ] ; then
   mkdir build
   cat > build/cdh-parcel.props <<__EOT__
 PKG_ARCHIVE="$PKG_ARCHIVE"
-CDH_VERSION="$CDH_VERSION"
+PKG_CDH_VERSION="$PKG_CDH_VERSION"
 __EOT__
   tar -C build -czf build/cdh-parcel-${FULL_VERSION}.tar.gz cdh-parcel.props
   exit 0
@@ -50,22 +51,22 @@ fi
 if egrep -i $UBUNTU_RELEASES /etc/*release ;then
   for release in `echo $UBUNTU_RELEASES | tr '|' ' '` ; do
     if fgrep -q $release /etc/*release ; then
-      PKGS="`curl ${PKG_ARCHIVE}/ubuntu/${release}/${DEB_ARC}/cdh/dists/${release}-cdh${CDH_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
+      PKGS="`curl ${PKG_ARCHIVE}/ubuntu/${release}/${DEB_ARC}/cdh/dists/${release}-cdh${PKG_CDH_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
              sed -ne '/^Filename:/s#^Filename: #'"${PKG_ARCHIVE}/ubuntu/${release}/${DEB_ARC}/cdh/"'#p'`"
     fi
   done
 elif [ -f /etc/debian_version ] ;then
   release=squeeze
-  PKGS="`curl ${PKG_ARCHIVE}/debian/${release}/${DEB_ARC}/cdh/dists/${release}-cdh${CDH_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
+  PKGS="`curl ${PKG_ARCHIVE}/debian/${release}/${DEB_ARC}/cdh/dists/${release}-cdh${PKG_CDH_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
          sed -ne '/^Filename:/s#^Filename: #'"${PKG_ARCHIVE}/debian/${release}/${DEB_ARC}/cdh/"'#p'`"
 elif egrep -i $REDHAT_RELEASES /etc/*release ;then
   if fgrep "6." /etc/*release ;then
-    PKGS="${PKG_ARCHIVE}/redhat/6/${ARC}/cdh/${CDH_VERSION}/RPMS"
+    PKGS="${PKG_ARCHIVE}/redhat/6/${ARC}/cdh/${PKG_CDH_VERSION}/RPMS"
   else
-    PKGS="${PKG_ARCHIVE}/redhat/5/${ARC}/cdh/${CDH_VERSION}/RPMS"
+    PKGS="${PKG_ARCHIVE}/redhat/5/${ARC}/cdh/${PKG_CDH_VERSION}/RPMS"
   fi
 elif egrep -i $SUSE_RELEASES /etc/*release ;then
-  PKGS="${PKG_ARCHIVE}/sles/11/${ARC}/cdh/${CDH_VERSION}/RPMS/"
+  PKGS="${PKG_ARCHIVE}/sles/11/${ARC}/cdh/${PKG_CDH_VERSION}/RPMS/"
 else
   echo "Looks like we don't support the following OS:"
   cat /etc/*release
