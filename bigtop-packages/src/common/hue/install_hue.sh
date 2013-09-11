@@ -108,24 +108,31 @@ PLUGIN_PATH='desktop/libs/hadoop/java-lib'
 PLUGIN_NAME=`basename $BUILD_DIR/$PLUGIN_PATH/*plugin*jar`
 ln -fs ../../hue/$PLUGIN_PATH/$PLUGIN_NAME $PREFIX/$HADOOP_DIR/
 
-# Remove Hue database and then recreate it, but with just the "right" apps
-rm -f $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$LIB_DIR/app.reg
+# Remove app registry and then recreate it, but with just the "right" apps
+rm -f $PREFIX/$LIB_DIR/app.reg
 APPS="about filebrowser help proxy useradmin oozie jobbrowser jobsub"
 export DESKTOP_LOG_DIR=$BUILD_DIR
 export DESKTOP_LOGLEVEL=WARN
 export ROOT=$PREFIX/$LIB_DIR
 for app in $APPS ; do
-  (cd $PREFIX/$LIB_DIR ; ./build/env/bin/python tools/app_reg/app_reg.py --install apps/$app)
+  (cd $PREFIX/$LIB_DIR ; ./build/env/bin/python tools/app_reg/app_reg.py --install apps/$app --relative-paths)
 done
 find $PREFIX/$LIB_DIR -iname \*.py[co]  -exec rm -f {} \;
 
 # Making the resulting tree relocatable
 (cd $PREFIX/$LIB_DIR ; bash tools/relocatable.sh)
 
-# Move desktop.db to a var location
+# Move app.reg, hue.pth, and desktop.db to a var location
 install -d -m 0755 $PREFIX/$VAR_DIR
-mv $BUILD_DIR/desktop/desktop.db $PREFIX/$VAR_DIR/
+
 mv $PREFIX/$LIB_DIR/app.reg $PREFIX/$VAR_DIR/
+ln -s $VAR_DIR/app.reg $PREFIX/$LIB_DIR/
+
+mv $PREFIX/$LIB_DIR/build/env/lib/python*/site-packages/hue.pth $PREFIX/$VAR_DIR/
+ln -s $VAR_DIR/hue.pth $PREFIX/$LIB_DIR//build/env/lib/python*/site-packages/
+
+mv $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$VAR_DIR
+ln -s $VAR_DIR/desktop.db $PREFIX/$LIB_DIR/desktop/
 
 # Install conf files
 install -d -m 0755 $PREFIX/$CONF_DIR
@@ -160,8 +167,6 @@ for sm in $BUNDLED_BUILD_DIR/env/lib*; do
 done
 
 # Fix broken python scripts
-ALL_PTH_BORKED=`find $PREFIX -iname "*.pth"`
-ALL_REG_BORKED=`find $PREFIX -iname "app.reg"`
 ALL_PYTHON_BORKED=`find $PREFIX -iname "*.egg-link"`
 HUE_BIN_SCRIPTS=$BUNDLED_BUILD_DIR/env/bin/*
 HUE_EGG_SCRIPTS=$BUNDLED_BUILD_DIR/env/lib*/python*/site-packages/*/EGG-INFO/scripts/*

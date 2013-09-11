@@ -112,7 +112,7 @@ export DESKTOP_LOG_DIR=/var/log/hue \
 if [ "$1" != 1 ] ; then \
   echo %{hue_dir}/apps/%1 >> %{hue_dir}/.re_register \
 fi \
-%{hue_dir}/build/env/bin/python %{hue_dir}/tools/app_reg/app_reg.py --install %{apps_dir}/%1 \
+%{hue_dir}/build/env/bin/python %{hue_dir}/tools/app_reg/app_reg.py --install %{apps_dir}/%1 --relative-paths \
 chown -R hue:hue /var/log/hue /var/lib/hue
 
 # Preun macro for apps
@@ -274,6 +274,7 @@ fi
 %{hue_dir}/build/env/include/
 %{hue_dir}/build/env/lib*/
 %{hue_dir}/build/env/stamp
+%{hue_dir}/app.reg
 %{hue_dir}/apps/Makefile
 %{hue_dir}/cloudera/cdh_version.properties
 %dir %{hue_dir}/apps
