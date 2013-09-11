@@ -19,7 +19,7 @@ set -ex
 [ -f solr-parcel.props ] && . solr-parcel.props
 
 PKG_ARCHIVE=${PKG_ARCHIVE:-"http://repos.jenkins.cloudera.com/solr-beta-nightly/"}
-SOLR_VERSION=${SOLR_VERSION:-"1"}
+PKG_SOLR_VERSION=${PKG_SOLR_VERSION:-"1"}
 
 # If PKG_FORMAT not specified assume tarballs
 if [ -z "$PKG_FORMAT" ] ; then
@@ -27,7 +27,7 @@ if [ -z "$PKG_FORMAT" ] ; then
   mkdir build
   cat > build/solr-parcel.props <<__EOT__
 PKG_ARCHIVE="$PKG_ARCHIVE"
-SOLR_VERSION="$SOLR_VERSION"
+PKG_SOLR_VERSION="$PKG_SOLR_VERSION"
 __EOT__
   tar -C build -czf build/solr-parcel-${FULL_VERSION}.tar.gz solr-parcel.props
   exit 0
@@ -50,22 +50,22 @@ fi
 if egrep -i $UBUNTU_RELEASES /etc/*release ;then
   for release in `echo $UBUNTU_RELEASES | tr '|' ' '` ; do
     if fgrep -q $release /etc/*release ; then
-      PKGS="`curl ${PKG_ARCHIVE}/ubuntu/${release}/${DEB_ARC}/search/dists/${release}-search${SOLR_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
+      PKGS="`curl ${PKG_ARCHIVE}/ubuntu/${release}/${DEB_ARC}/search/dists/${release}-search${PKG_SOLR_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
              sed -ne '/^Filename:/s#^Filename: #'"${PKG_ARCHIVE}/ubuntu/${release}/${DEB_ARC}/search/"'#p'`"
     fi
   done
 elif [ -f /etc/debian_version ] ;then
   release=squeeze
-  PKGS="`curl ${PKG_ARCHIVE}/debian/${release}/${DEB_ARC}/search/dists/${release}-search${SOLR_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
+  PKGS="`curl ${PKG_ARCHIVE}/debian/${release}/${DEB_ARC}/search/dists/${release}-search${PKG_SOLR_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
          sed -ne '/^Filename:/s#^Filename: #'"${PKG_ARCHIVE}/debian/${release}/${DEB_ARC}/search/"'#p'`"
 elif egrep -i $REDHAT_RELEASES /etc/*release ;then
   if fgrep "6." /etc/*release ;then
-    PKGS="${PKG_ARCHIVE}/redhat/6/${ARC}/search/${SOLR_VERSION}/RPMS"
+    PKGS="${PKG_ARCHIVE}/redhat/6/${ARC}/search/${PKG_SOLR_VERSION}/RPMS"
   else
-    PKGS="${PKG_ARCHIVE}/redhat/5/${ARC}/search/${SOLR_VERSION}/RPMS"
+    PKGS="${PKG_ARCHIVE}/redhat/5/${ARC}/search/${PKG_SOLR_VERSION}/RPMS"
   fi
 elif egrep -i $SUSE_RELEASES /etc/*release ;then
-  PKGS="${PKG_ARCHIVE}/sles/11/${ARC}/search/${SOLR_VERSION}/RPMS/"
+  PKGS="${PKG_ARCHIVE}/sles/11/${ARC}/search/${PKG_SOLR_VERSION}/RPMS/"
 else
   echo "Looks like we don't support the following OS:"
   cat /etc/*release
