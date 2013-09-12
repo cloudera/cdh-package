@@ -87,11 +87,10 @@ LIB_DIR=${LIB_DIR:-/usr/lib/llama}
 CONF_DIR=${CONF_DIR:-/etc/llama/conf.dist}
 EXTRA_DIR=${EXTRA_DIR:-./}
 
-DIST_DIR=${BUILD_DIR}/llama-/llama-dist/target/llama-*-packaging/llama-*/
+DIST_DIR=${BUILD_DIR}/llama-*/llama-dist/target/llama-*/llama-*/
 YARN_DIR=${PREFIX}/usr/lib/hadoop-yarn
 
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
-cp -r ${DIST_DIR}/nodemanagerlib ${PREFIX}/${LIB_DIR}/
 cp -r ${DIST_DIR}/libexec ${PREFIX}/${LIB_DIR}/
 cp -r ${DIST_DIR}/lib ${PREFIX}/${LIB_DIR}/
 cp -r ${DIST_DIR}/bin ${PREFIX}/${LIB_DIR}/
@@ -124,11 +123,6 @@ EOF
 
 install -d -m 0755 ${PREFIX}/var/run/llama
 install -d -m 0755 ${PREFIX}/var/log/llama
-
-install -d -m 0755 ${YARN_DIR}
-for file in ${PREFIX}/${LIB_DIR}/nodemanagerlib/*.jar; do
-    ln -s ../llama/nodemanagerlib/`basename $file` ${YARN_DIR}/
-done
 
 # Cloudera specific
 install -d -m 0755 ${PREFIX}/${LIB_DIR}/cloudera

@@ -45,19 +45,19 @@ Source2: install_llama.sh
 Source3: llama.default
 Source4: llama.svc
 Source5: init.d.tmpl
-Requires: hadoop-yarn, llama-node
+Requires: hadoop-yarn
 Requires(post): %{alternatives_dep}
 Requires(preun): %{alternatives_dep}
 
 %description 
  Llama is a low-latency application master for hosting applications like Impala on a YARN cluster.
- This package should be installed on servers that are intended to serve as Application Masters.
+ This package should be installed on every node in the YARN / Impala cluster.
 
 %prep
 %setup -n llama-%{llama_patched_version}
 
 %build
-bash $RPM_SOURCE_DIR/do-component-build
+env FULL_VERSION=%{llama_patched_version} bash $RPM_SOURCE_DIR/do-component-build
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
@@ -67,22 +67,18 @@ bash $RPM_SOURCE_DIR/install_llama.sh \
           --extra-dir=$RPM_SOURCE_DIR
 bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/llama.svc rpm $RPM_BUILD_ROOT/etc/init.d/llama
 
-%package node
-Summary: YARN Node Manager plugin for Cloudera Llama
-Group: System/Daemons
-BuildArch: noarch
-
-%description node
- This package must be installed on every server in the YARN cluster that is running Llama.
-
 %package master
-Summary: Script for running the Llama Application Master
+Summary: Scripts for running the Llama Application Master
 Group: System/Daemons
 BuildArch: noarch
 Requires: llama
 
 %description master
- This package provides a SysV-style init script for managing the Llama service
+ This package provides an init script and chkconfig configuration for managing the Llama Application Master service
+
+%pre
+getent group llama >/dev/null || groupadd -r llama
+getent passwd llama > /dev/null || useradd -c "Llama" -s /bin/bash -g llama -d %{run_llama} llama 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{etc_llama}/conf llama-conf %{etc_llama}/conf.dist 30
@@ -91,10 +87,6 @@ Requires: llama
 if [ "$1" = 0 ]; then
     %{alternatives_cmd} --remove llama-conf %{etc_llama}/conf.dist || :
 fi
-
-%pre node
-getent group llama >/dev/null || groupadd -r llama
-getent passwd llama > /dev/null || useradd -c "Llama" -s /bin/bash -g llama -d %{run_llama} llama 2> /dev/null || :
 
 %post master
 chkconfig --add llama
@@ -116,18 +108,11 @@ fi
 %files
 %defattr(-,root,root,755)
 %attr(755, root, root) /usr/bin/llama
-%{etc_llama}/conf.dist
-/etc/default/llama
+%config(noreplace) %{etc_llama}/conf.dist
+%config(noreplace) /etc/default/llama
 %{lib_llama}
-%exclude %{lib_llama}/nodemanagerlib
 %defattr(-,llama,llama,755)
 %{log_llama}
-
-%files node
-%defattr(-,root,root,755)
-%{lib_llama}/nodemanagerlib
-/usr/lib/hadoop-yarn/*.jar
-%defattr(-,llama,llama,755)
 %{run_llama}
 
 %files master

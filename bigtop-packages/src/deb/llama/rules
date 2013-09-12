@@ -27,17 +27,12 @@ export DH_OPTIONS
 	dh $@
 
 override_dh_auto_build:
-	bash debian/do-component-build
+	env FULL_VERSION=${LLAMA_PATCHED_VERSION} bash debian/do-component-build
 
 override_dh_auto_install:
 	bash -x debian/install_llama.sh \
 	  --build-dir=./ \
 	  --prefix=debian/llama \
 	  --extra-dir=debian
-	mkdir -p debian/llama-node/usr/lib/llama
-	mv debian/llama/usr/lib/hadoop-yarn debian/llama-node/usr/lib/
-	mv debian/llama/usr/lib/llama/nodemanagerlib debian/llama-node/usr/lib/llama/
-	mkdir -p debian/llama-node/var/run
-	mv debian/llama/var/run/llama debian/llama-node/var/run/llama
 	mkdir -p debian/llama-master/etc/init.d/
 	bash debian/init.d.tmpl debian/llama.svc deb debian/llama-master/etc/init.d/llama

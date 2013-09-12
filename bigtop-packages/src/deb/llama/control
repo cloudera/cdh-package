@@ -23,19 +23,14 @@ Homepage: https://www.cloudera.com
 
 Package: llama
 Architecture: all
-Depends: hadoop-yarn, llama-node
+Depends: hadoop-yarn
 Description: Low Latency Application Master for running Impala on YARN
  Llama is a low-latency application master for hosting applications like Impala on a YARN cluster.
- This package should be installed on servers that are intended to serve as Application Masters.
-
-Package: llama-node
-Architecture: all
-Description: YARN Node Manager plugin for Cloudera Llama
- This package must be installed on every server in the YARN cluster that is running Llama.
+ This package should be installed on every node in the YARN / Impala cluster.
 
 Package: llama-master
 Architecture: all
 Depends: llama
-Description: Script for running the Llama Application Master
- This package provides a SysV-style init script for managing the Llama service.
+Description: Scripts for running the Llama Application Master
+ This package provides an init script and chkconfig configuration for managing the Llama Application Master service
 
