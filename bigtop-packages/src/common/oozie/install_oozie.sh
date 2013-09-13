@@ -153,6 +153,7 @@ DATA_DIR=${SERVER_PREFIX}/var/lib/oozie
 install -d -m 0755 ${SERVER_LIB_DIR}
 install -d -m 0755 ${SERVER_LIB_DIR}/bin
 install -d -m 0755 ${DATA_DIR}
+install -d -m 0755 ${DATA_DIR}/work
 for file in ooziedb.sh oozied.sh oozie-sys.sh ; do
   cp ${BUILD_DIR}/bin/$file ${SERVER_LIB_DIR}/bin
 done
@@ -194,6 +195,7 @@ done
 
 # Create an exploded-war oozie deployment in /usr/lib/oozie/oozie-server for MR2
 install -d -m 0755 ${SERVER_LIB_DIR}/oozie-server
+ln -s /var/lib/oozie/work ${SERVER_LIB_DIR}/oozie-server
 cp -R ${BUILD_DIR}/oozie-server/conf ${SERVER_LIB_DIR}/oozie-server/conf
 cp ${EXTRA_DIR}/context.xml ${SERVER_LIB_DIR}/oozie-server/conf/
 cp ${EXTRA_DIR}/catalina.properties ${SERVER_LIB_DIR}/oozie-server/conf/
