@@ -16,14 +16,21 @@
 
 set -ex
 
-CDK=build/cdk-${FULL_VERSION}
-
-rm -rf build
-mkdir -p $CDK/dist/lib
-cp -r * $CDK || :
-
-mvn clean install -DskipTests $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
-
-cp `find . -name \*.jar` $CDK/dist/lib || :
-mv `find $CDK -name cdk*.jar` $CDK/dist || :
-(cd build ; tar czf cdk-${FULL_VERSION}.tar.gz cdk-${FULL_VERSION})
+if [ -z "$GIT_REPO" ]; then
+    CDK=build/cdk-${FULL_VERSION}
+    
+    rm -rf build
+    mkdir -p $CDK/dist/lib
+    cp -r * $CDK || :
+    
+    mvn clean install -DskipTests $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
+    
+    cp `find . -name \*.jar` $CDK/dist/lib || :
+    mv `find $CDK -name cdk*.jar` $CDK/dist || :
+    (cd build ; tar czf cdk-${FULL_VERSION}.tar.gz cdk-${FULL_VERSION})
+else
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=cdk-${FULL_VERSION}/ --format=tar HEAD |gzip > build/cdk-${FULL_VERSION}.tar.gz
+fi

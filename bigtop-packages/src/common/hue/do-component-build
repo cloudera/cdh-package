@@ -16,18 +16,26 @@
 
 set -ex
 
-mvn -f maven/pom.xml clean install "$@"
+if [ -z "$GIT_REPO" ]; then
+    mvn -f maven/pom.xml clean install "$@"
 
-MAVEN_OPTIONS=$DO_MAVEN_DEPLOY make apps
-
+    MAVEN_OPTIONS=$DO_MAVEN_DEPLOY make apps
+    
 # Make the entire tree relocatable
-bash tools/relocatable.sh
+    bash tools/relocatable.sh
 
 # Cloudera specific
-if [ -f Makefile.tarball ] ; then
-  make prod
-  rm -rf build/release/prod/hue-*.tgz build/release/prod/hue-${FULL_VERSION}
-  mv build/release/prod/hue-* build/release/prod/hue-${FULL_VERSION}
-  cp -r cloudera build/release/prod/hue-${FULL_VERSION}
-  tar -C build/release/prod -czf build/hue-${FULL_VERSION}.tar.gz hue-${FULL_VERSION}
+    if [ -f Makefile.tarball ] ; then
+        make prod
+        rm -rf build/release/prod/hue-*.tgz build/release/prod/hue-${FULL_VERSION}
+        mv build/release/prod/hue-* build/release/prod/hue-${FULL_VERSION}
+        cp -r cloudera build/release/prod/hue-${FULL_VERSION}
+        tar -C build/release/prod -czf build/hue-${FULL_VERSION}.tar.gz hue-${FULL_VERSION}
+    fi
+    
+else
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=hue-${FULL_VERSION}/ --format=tar HEAD |gzip > build/hue-${FULL_VERSION}.tar.gz
 fi

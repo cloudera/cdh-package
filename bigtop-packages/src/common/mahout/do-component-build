@@ -16,13 +16,20 @@
 
 set -ex
 
-mvn clean install source:jar javadoc:jar -Dmahout.skip.distribution=false \
-    -Dhadoop.profile=23 -DskipTests \
-    $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
+if [ -z "$GIT_REPO" ]; then
+    mvn clean install source:jar javadoc:jar -Dmahout.skip.distribution=false \
+        -Dhadoop.profile=23 -DskipTests \
+        $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
+    
+    mkdir -p build/mahout-${FULL_VERSION}
+    for i in distribution/target/mahout*.tar.gz ; do
+        tar -C build/mahout-${FULL_VERSION} --strip-components=1 -xzf $i
+    done
 
-mkdir -p build/mahout-${FULL_VERSION}
-for i in distribution/target/mahout*.tar.gz ; do
-  tar -C build/mahout-${FULL_VERSION} --strip-components=1 -xzf $i
-done
-
-(cd build ; tar czf mahout-${FULL_VERSION}.tar.gz mahout-${FULL_VERSION})
+    (cd build ; tar czf mahout-${FULL_VERSION}.tar.gz mahout-${FULL_VERSION})
+else
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=mahout-${FULL_VERSION}/ --format=tar HEAD |gzip > build/mahout-${FULL_VERSION}.tar.gz
+fi

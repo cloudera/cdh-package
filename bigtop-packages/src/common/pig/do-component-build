@@ -17,40 +17,50 @@
 set -ex
 IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
 
-if ! [ -e $FORREST_HOME/bin/forrest ]; then
-  echo No FORREST_HOME set. Forrest documentation requires Forrest to be 1>&2
-  echo installed. 1>&2
-  exit 1
-fi
-
-BUILD_OPTS="-Djavac.version=1.6 -Dforrest.home=${FORREST_HOME}  -Dhadoopversion=23   \
+if [ -z "$GIT_REPO" ]; then
+    if ! [ -e $FORREST_HOME/bin/forrest ]; then
+        echo No FORREST_HOME set. Forrest documentation requires Forrest to be 1>&2
+        echo installed. 1>&2
+        exit 1
+    fi
+    
+    BUILD_OPTS="-Djavac.version=1.6 -Dforrest.home=${FORREST_HOME}  -Dhadoopversion=23   \
             -Dreactor.repo=file://${HOME}/.m2/repository -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP \
             -propertyfile cloudera/build.properties"
-
+    
 # FIXME: BIGTOP-894. Please get rid of the line below when Bigtop integrates a version of Pig that includes the fix for PIG-3262
-export LC_ALL=en_US.UTF-8
-
-rm -f test/org/apache/pig/test/TestHBaseStorage.java
-sed -i.orig -e 's#</modules>#<module organisation="org.apache.hadoop" name=".*" resolver="internal"/>\n</modules>#' ivy/ivysettings.xml
-
-ant $BUILD_OPTS clean jar jar-withouthadoop "$@"
-for build_file in contrib/piggybank/java/build.xml ; do
-  ant $BUILD_OPTS -buildfile $build_file clean jar "$@"
-done
-
+    export LC_ALL=en_US.UTF-8
+    
+    rm -f test/org/apache/pig/test/TestHBaseStorage.java
+    sed -i.orig -e 's#</modules>#<module organisation="org.apache.hadoop" name=".*" resolver="internal"/>\n</modules>#' ivy/ivysettings.xml
+    
+    ant $BUILD_OPTS clean jar jar-withouthadoop "$@"
+    for build_file in contrib/piggybank/java/build.xml ; do
+        ant $BUILD_OPTS -buildfile $build_file clean jar "$@"
+    done
+    
 # Additional JARs needed for Avro integration
-IVY_LIB=build/ivy/lib/Pig
-for jar_file in avro-* jackson-core-asl-* jackson-mapper-asl-* json-simple-* snappy-java-* ; do
+    IVY_LIB=build/ivy/lib/Pig
+    mkdir -p contrib/piggybank/java/lib/
+    
+    for jar_file in avro-* jackson-core-asl-* jackson-mapper-asl-* json-simple-* snappy-java-* ; do
 	cp $IVY_LIB/$jar_file.jar contrib/piggybank/java/lib/
-done
-
+    done
+    
 # Build pig tar and pigunit..
-ant $BUILD_OPTS tar pigunit-jar smoketests-jar "$@"
-
+    ant $BUILD_OPTS tar pigunit-jar smoketests-jar "$@"
+    
 # Clean up after piggybank.
-rm -rf contrib/piggybank/java/build
-
+    rm -rf contrib/piggybank/java/build
+    
 # Change to cloudera/maven directory, and install
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository
-cd cloudera/maven-packaging
-mvn -Dnot.cdh.release.build=false install -Dmaven.repo.local=${HOME}/.m2/repository $DO_MAVEN_DEPLOY
+    cd cloudera/maven-packaging
+    mvn -Dnot.cdh.release.build=false install -Dmaven.repo.local=${HOME}/.m2/repository $DO_MAVEN_DEPLOY
+else
+    mvn -f cloudera-pom.xml process-resources
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=pig-${FULL_VERSION}/ --format=tar HEAD |gzip > build/pig-${FULL_VERSION}.tar.gz
+fi

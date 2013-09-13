@@ -16,18 +16,25 @@
 
 set -ex
 
-rm -rf build .build
-mkdir -p .build/bigtop-jsvc-${FULL_VERSION}
-cp -r * .build/bigtop-jsvc-${FULL_VERSION}
-mv .build build
-
-rm -f jsvc
-
-pushd unix
-  ./configure --prefix=/usr
-  make
-  cp -f jsvc ../jsvc
-popd
-
-cp jsvc build/bigtop-jsvc-${FULL_VERSION}/jsvc
-tar -C build -czvf build/bigtop-jsvc-${FULL_VERSION}.tar.gz bigtop-jsvc-${FULL_VERSION}
+if [ -z "$GIT_REPO" ]; then
+    rm -rf build .build
+    mkdir -p .build/bigtop-jsvc-${FULL_VERSION}
+    cp -r * .build/bigtop-jsvc-${FULL_VERSION}
+    mv .build build
+    
+    rm -f jsvc
+    
+    pushd unix
+    ./configure --prefix=/usr
+    make
+    cp -f jsvc ../jsvc
+    popd
+    
+    cp jsvc build/bigtop-jsvc-${FULL_VERSION}/jsvc
+    tar -C build -czvf build/bigtop-jsvc-${FULL_VERSION}.tar.gz bigtop-jsvc-${FULL_VERSION}
+else
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=bigtop-jsvc-${FULL_VERSION}/ --format=tar HEAD |gzip > build/bigtop-jsvc-${FULL_VERSION}.tar.gz
+fi

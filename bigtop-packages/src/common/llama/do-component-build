@@ -16,14 +16,22 @@
 
 set -ex
 
-export THRIFT_HOME=/opt/toolchain/thrift-0.9.0
-export PATH=${THRIFT_HOME}/bin:${PATH}
-
-mvn install package -Pdist -DskipTests
-
-rm -rf build llama-${FULL_VERSION}
-ALL_FILES=`echo *`
-mkdir build llama-${FULL_VERSION}
-cp -r $ALL_FILES llama-${FULL_VERSION}
-tar czf build/llama-${FULL_VERSION}.tar.gz llama-${FULL_VERSION}
+if [ -z "$GIT_REPO" ]; then
+    export THRIFT_HOME=/opt/toolchain/thrift-0.9.0
+    export PATH=${THRIFT_HOME}/bin:${PATH}
+    
+    mvn install package -Pdist -DskipTests
+    
+    rm -rf build llama-${FULL_VERSION}
+    ALL_FILES=`echo *`
+    mkdir build llama-${FULL_VERSION}
+    cp -r $ALL_FILES llama-${FULL_VERSION}
+    tar czf build/llama-${FULL_VERSION}.tar.gz llama-${FULL_VERSION}
+else
+    git init
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=llama-${FULL_VERSION}/ --format=tar HEAD |gzip > build/llama-${FULL_VERSION}.tar.gz
+fi
 

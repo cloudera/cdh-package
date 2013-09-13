@@ -19,6 +19,9 @@ set -ex
 IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
 
 if [ ! -e build ]; then
+    if [ ! -e src/build ]; then
+        mkdir src/build
+    fi
     ln -s -f src/build .
 fi
 
@@ -26,13 +29,20 @@ if [ -f cloudera/build.properties ]; then
     cp -r cloudera/* src/cloudera
 fi
 
-cd src
+if [ -z "$GIT_REPO" ]; then
+    cd src
 
-ant -Dhadoop.security.version.prefix=0.23 \
-    -Dreactor.repo=file://${HOME}/.m2/repository -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP \
-    -propertyfile cdh.build.properties -Dinclude.postgres=true tar "$@"
-
+    ant -Dhadoop.security.version.prefix=0.23 \
+        -Dreactor.repo=file://${HOME}/.m2/repository -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP \
+        -propertyfile cdh.build.properties -Dinclude.postgres=true tar "$@"
+    
 # Change to cloudera/maven directory, and install
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository
-cd cloudera/maven-packaging
-mvn -Dnot.cdh.release.build=false -Dmaven.repo.local=${HOME}/.m2/repository  install $DO_MAVEN_DEPLOY
+    cd cloudera/maven-packaging
+    mvn -Dnot.cdh.release.build=false -Dmaven.repo.local=${HOME}/.m2/repository  install $DO_MAVEN_DEPLOY
+else
+    (cd src; mvn -f cloudera-pom.xml process-resources)
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    git archive --prefix=hive-${FULL_VERSION}/ --format=tar HEAD |gzip > build/hive-${FULL_VERSION}.tar.gz
+fi

@@ -16,8 +16,17 @@
 
 set -ex
 
-mvn clean install -DskipTests $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
+if [ -z "$GIT_REPO" ]; then
 
-rm -rf build
-mkdir build
-cp search-dist/*/*search-dist.tar.gz build/search-${FULL_VERSION}.tar.gz
+    mvn clean install -DskipTests $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
+    
+    rm -rf build
+    mkdir build
+    cp search-dist/*/*search-dist.tar.gz build/search-${FULL_VERSION}.tar.gz
+else
+    git init
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=search-${FULL_VERSION}/ --format=tar HEAD |gzip > build/search-${FULL_VERSION}.tar.gz
+fi

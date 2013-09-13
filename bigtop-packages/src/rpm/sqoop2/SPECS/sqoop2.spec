@@ -129,7 +129,8 @@ sh %{SOURCE2} \
           --doc-dir=%{doc_sqoop} \
           --prefix=$RPM_BUILD_ROOT \
           --extra-dir=$RPM_SOURCE_DIR \
-          --initd-dir=%{initd_dir}
+          --initd-dir=%{initd_dir} \
+          --dist-dir=dist/target/sqoop2-%{sqoop2_patched_version}
 
 # Install init script
 init_file=$RPM_BUILD_ROOT/%{initd_dir}/sqoop2-server

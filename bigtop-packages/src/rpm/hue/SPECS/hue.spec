@@ -153,13 +153,13 @@ export SYS_PYTHON=`which python2.6`
 export SKIP_PYTHONDEV_CHECK=true
 %endif
 
-bash -x %{SOURCE3}  
+env FULL_VERSION=%{hue_patched_version} bash -x %{SOURCE3}  
 
 ########################################
 # Install
 ########################################
 %install
-bash -x %{SOURCE4} --prefix=$RPM_BUILD_ROOT --build-dir=${PWD}
+bash -x %{SOURCE4} --prefix=$RPM_BUILD_ROOT --build-dir=${PWD}/build/release/prod/hue-%{hue_patched_version}
 
 %if  %{?suse_version:1}0
 orig_init_file=$RPM_SOURCE_DIR/%{name}.init.suse

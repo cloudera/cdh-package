@@ -120,7 +120,7 @@ Documentation for Flume NG
 
 
 %prep
-%setup -n apache-flume-%{flume_ng_patched_version}-bin
+%setup -n %{name}-%{flume_ng_patched_version}
 
 %build
 env FULL_VERSION=%{flume_ng_patched_version} bash %{SOURCE1}

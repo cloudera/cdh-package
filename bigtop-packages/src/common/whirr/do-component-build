@@ -16,9 +16,16 @@
 
 set -ex
 
-JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -DskipTests clean install $DO_MAVEN_DEPLOY "$@"
-JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -DskipTests -Pjavadoc site source:jar package assembly:assembly "$@" 
+if [ -z "$GIT_REPO" ]; then
+    JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -DskipTests clean install $DO_MAVEN_DEPLOY "$@"
+    JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -DskipTests -Pjavadoc site source:jar package assembly:assembly "$@" 
 
-mkdir build
-cp target/*.tar.gz build
-tar -C build --strip-components=1 -xzf target/*.tar.gz
+    mkdir build
+    cp target/*.tar.gz build
+    tar -C build --strip-components=1 -xzf target/*.tar.gz
+else
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir build
+    git archive --prefix=whirr-${FULL_VERSION}/ --format=tar HEAD |gzip > build/whirr-${FULL_VERSION}.tar.gz
+fi

@@ -571,8 +571,8 @@ env FULL_VERSION=%{hadoop_patched_version} HADOOP_VERSION=%{hadoop_version} HADO
 
 bash %{SOURCE2} \
   --distro-dir=$RPM_SOURCE_DIR \
-  --source-dir=$PWD/src \
-  --build-dir=$PWD/src/build/%{name}-%{hadoop_patched_version} \
+  --source-dir=$PWD \
+  --build-dir=$PWD/build/%{name}-%{hadoop_patched_version} \
   --hadoop-version=%{hadoop_patched_version} \
   --httpfs-dir=$RPM_BUILD_ROOT%{lib_httpfs} \
   --system-include-dir=$RPM_BUILD_ROOT%{_includedir} \

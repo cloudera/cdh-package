@@ -19,93 +19,97 @@ set -x
 # Resolve source directory
 #
 
+if [ -z "$GIT_REPO" ]; then
+
 # $0 may be a softlink
-PRG="$0"
-while [ -h "${PRG}" ]; do
-  ls=`ls -ld "${PRG}"`
-  link=`expr "$ls" : '.*-> \(.*\)$'`
-  if expr "$link" : '/.*' > /dev/null; then
-    PRG="$link"
-  else
-    PRG=`dirname "${PRG}"`/"$link"
-  fi
-done
+    PRG="$0"
+    while [ -h "${PRG}" ]; do
+        ls=`ls -ld "${PRG}"`
+        link=`expr "$ls" : '.*-> \(.*\)$'`
+        if expr "$link" : '/.*' > /dev/null; then
+            PRG="$link"
+        else
+            PRG=`dirname "${PRG}"`/"$link"
+        fi
+    done
 
-RELEASE_DIR=`dirname ${PRG}`
-RELEASE_DIR=`cd ${RELEASE_DIR}/..;pwd`
+    RELEASE_DIR=`dirname ${PRG}`
+    RELEASE_DIR=`cd ${RELEASE_DIR}/..;pwd`
 
-RELEASE_DIR=$PWD
+    cd ..
+    
+    RELEASE_DIR=$PWD
 
 #
 # Resolve build version
 #
-RELEASE_ENV_FILENAME=release.env
-RELEASE_ENV_FILE=${RELEASE_DIR}/cloudera/${RELEASE_ENV_FILENAME}
-if [ -f "${RELEASE_ENV_FILE}" ]; then
-  echo "Setting release environment using ${RELEASE_ENV_FILE}"
-  . ${RELEASE_ENV_FILE}
-fi
+    RELEASE_ENV_FILENAME=release.env
+    RELEASE_ENV_FILE=${RELEASE_DIR}/cloudera/${RELEASE_ENV_FILENAME}
+    if [ -f "${RELEASE_ENV_FILE}" ]; then
+        echo "Setting release environment using ${RELEASE_ENV_FILE}"
+        . ${RELEASE_ENV_FILE}
+    fi
 
 # IMPORTANT: THE FULL_VERSION, if set, will be used only for the final TARBALL,
 #            Everything inside of the TARBALL uses the version specified in the POM
-if [ -z "${FULL_VERSION}" ]; then
-  FULL_VERSION=${OOZIE_VERSION}
-  echo "Warning: FULL_VERSION not specified. Default version [${FULL_VERSION}] will be used."
-fi
-VERSION_SUFFIX="-${FULL_VERSION}"
+    if [ -z "${FULL_VERSION}" ]; then
+        FULL_VERSION=${OOZIE_VERSION}
+        echo "Warning: FULL_VERSION not specified. Default version [${FULL_VERSION}] will be used."
+    fi
+    VERSION_SUFFIX="-${FULL_VERSION}"
 
 #
 # Build Oozie
 #
 
-echo "Starting system build"
+    echo "Starting system build"
 
 # Test if there is a + sign in the dir path
 # We need to do this because in Linux Sun JVM inteprets '+' as ' ' in URLs
 # testcases uses URLs to access testcases directories and OpenJPA enhancer uses them as well
-WORKDIR=${RELEASE_DIR}
-if [[ "${WORKDIR}" == *\+* ]]; then
+    WORKDIR=${RELEASE_DIR}
+    if [[ "${WORKDIR}" == *\+* ]]; then
   # There is a + sign. Create a temp work dir
   # and copy over the files to that place
-  WORKDIR=`mktemp -d /tmp/oozie.XXXXXX`
-  echo "Created temporary workspace directory: ${WORKDIR}"
-  cp -R ${RELEASE_DIR}/* ${WORKDIR}
-fi
+        WORKDIR=`mktemp -d /tmp/oozie.XXXXXX`
+        echo "Created temporary workspace directory: ${WORKDIR}"
+        cp -R ${RELEASE_DIR}/* ${WORKDIR}
+    fi
 
 # Delete and recreate build directory
-BUILDDIR=${WORKDIR}/build
-rm -rf ${BUILDDIR}
-mkdir -p ${BUILDDIR}
+    BUILDDIR=${WORKDIR}/build
+    rm -rf ${BUILDDIR}
+    mkdir -p ${BUILDDIR}
 
-EXTRA_GOALS=""
+    EXTRA_GOALS=""
 
 # Check if maven deploy should be done or not
-if [ "${DO_MAVEN_DEPLOY}" = "deploy" ]; then
-  EXTRA_GOALS="${EXTRA_GOALS} source:jar deploy"
-fi
+    if [ "${DO_MAVEN_DEPLOY}" = "deploy" ]; then
+        EXTRA_GOALS="${EXTRA_GOALS} source:jar deploy"
+    fi
 
 # We need to build twice: once to generate the MR1 sharelib, again to generate the YARN sharelib
-MKDISTRO_OPTIONS="-DskipTests -Dnot.cdh.release.build=false ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository $@"
+    MKDISTRO_OPTIONS="-DskipTests -Dnot.cdh.release.build=false ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository $@"
 
-${WORKDIR}/bin/mkdistro.sh $MKDISTRO_OPTIONS -Pmr1
-MKDISTRO_RESULT_MR1=$?
-if [ "${MKDISTRO_RESULT_MR1}" != "0" ]; then
-  echo "ERROR: mkdistro.sh failed with error ${MKDISTRO_RESULT_MR1}"
-  echo "Build files from failed build: ${WORKDIR}"
-  exit ${MKDISTRO_RESULT_MR1}
-fi
-SHARELIB=./distro/target/oozie-*-distro/oozie-*/oozie-sharelib-*-sharelib.tar.gz
-cp $SHARELIB ./oozie-sharelib-${FULL_VERSION}.tar.gz
+    ${WORKDIR}/bin/mkdistro.sh $MKDISTRO_OPTIONS -Pmr1
+    MKDISTRO_RESULT_MR1=$?
+    if [ "${MKDISTRO_RESULT_MR1}" != "0" ]; then
+        echo "ERROR: mkdistro.sh failed with error ${MKDISTRO_RESULT_MR1}"
+        echo "Build files from failed build: ${WORKDIR}"
+        exit ${MKDISTRO_RESULT_MR1}
+    fi
+    SHARELIB=${WORKDIR}/distro/target/oozie-*-distro/oozie-*/oozie-sharelib-*-sharelib.tar.gz
+    cp $SHARELIB ${RELEASE_DIR}/oozie-sharelib-${FULL_VERSION}.tar.gz
 
-${WORKDIR}/bin/mkdistro.sh $MKDISTRO_OPTIONS
-MKDISTRO_RESULT=$?
-if [ "${MKDISTRO_RESULT}" != "0" ]; then
-  echo "ERROR: mkdistro.sh failed with error ${MKDISTRO_RESULT}"
-  echo "Build files from failed build: ${WORKDIR}"
-  exit ${MKDISTRO_RESULT}
-fi
-SHARELIB=./distro/target/oozie-*-distro/oozie-*/oozie-sharelib-*-sharelib.tar.gz
-cp $SHARELIB ./oozie-sharelib-${FULL_VERSION}-yarn.tar.gz
+    ${WORKDIR}/bin/mkdistro.sh $MKDISTRO_OPTIONS
+    MKDISTRO_RESULT=$?
+    if [ "${MKDISTRO_RESULT}" != "0" ]; then
+        echo "ERROR: mkdistro.sh failed with error ${MKDISTRO_RESULT}"
+        echo "Build files from failed build: ${WORKDIR}"
+        exit ${MKDISTRO_RESULT}
+    fi
+    SHARELIB=${WORKDIR}/distro/target/oozie-*-distro/oozie-*/oozie-sharelib-*-sharelib.tar.gz
+    cp $SHARELIB ${RELEASE_DIR}/oozie-sharelib-${FULL_VERSION}-yarn.tar.gz
 
 #
 # Expand Oozie TAR and create CDH Ooozie TAR
@@ -114,80 +118,86 @@ cp $SHARELIB ./oozie-sharelib-${FULL_VERSION}-yarn.tar.gz
 # (TODO: Consider doing the source copy before the build if we can assume a clean checkout.)
 #
 
-EXPTMPDIR=${BUILDDIR}/temp
-mkdir -p ${EXPTMPDIR}
-URLSAFE_VERSION_SUFFIX=`echo ${VERSION_SUFFIX}| sed -e "s/+/-/"`
-ORIGINAL_NAME=oozie${VERSION_SUFFIX}
-URLSAFE_NAME=oozie${URLSAFE_VERSION_SUFFIX}
-EXPDIR=${EXPTMPDIR}/${URLSAFE_NAME}
-(
-cd ${EXPTMPDIR}
-tar zxf ${WORKDIR}/distro/target/oozie-*.tar.gz
-if [ "${FULL_VERSION}" != "${OOZIE_VERSION}" ]; then
-  mv ${EXPTMPDIR}/oozie-* ${EXPDIR}
-fi
+    EXPTMPDIR=${BUILDDIR}/temp
+    mkdir -p ${EXPTMPDIR}
+    URLSAFE_VERSION_SUFFIX=`echo ${VERSION_SUFFIX}| sed -e "s/+/-/"`
+    ORIGINAL_NAME=oozie${VERSION_SUFFIX}
+    URLSAFE_NAME=oozie${URLSAFE_VERSION_SUFFIX}
+    EXPDIR=${EXPTMPDIR}/${URLSAFE_NAME}
+    (
+        cd ${EXPTMPDIR}
+        tar zxf ${WORKDIR}/distro/target/oozie-*.tar.gz
+        if [ "${FULL_VERSION}" != "${OOZIE_VERSION}" ]; then
+            mv ${EXPTMPDIR}/oozie-* ${EXPDIR}
+        fi
 
-cd ${EXPDIR}
-rm -rf ${EXPDIR}/oozie-client-*.tar.gz
+        cd ${EXPDIR}
+        rm -rf ${EXPDIR}/oozie-client-*.tar.gz
 
-SRCDIR=${EXPDIR}/src
-mkdir -p ${SRCDIR}
-for srcfile in ${WORKDIR}/*
-do
-  if [ "${srcfile}" != "${BUILDDIR}" ]; then
-    cp -R ${srcfile} ${SRCDIR}
-  fi
-done
-rm -rf ${SRCDIR}/target \
-       ${SRCDIR}/*/target \
-       ${SRCDIR}/core/build \
-       ${SRCDIR}/core/pig*.log \
-       ${SRCDIR}/core/pig*.properties \
-       ${SRCDIR}/examples/mem \
-       ${SRCDIR}/examples/oozietests \
-       ${SRCDIR}/mkdistro-*.out \
-       ${SRCDIR}/*.iml \
-       ${SRCDIR}/*/*.iml \
-       ${SRCDIR}/*.ipr \
-       ${SRCDIR}/*.iws 
+        SRCDIR=${EXPDIR}/src
+        mkdir -p ${SRCDIR}
+        for srcfile in ${WORKDIR}/*
+        do
+            if [ "${srcfile}" != "${BUILDDIR}" ]; then
+                cp -R ${srcfile} ${SRCDIR}
+            fi
+        done
+        rm -rf ${SRCDIR}/target \
+            ${SRCDIR}/*/target \
+            ${SRCDIR}/core/build \
+            ${SRCDIR}/core/pig*.log \
+            ${SRCDIR}/core/pig*.properties \
+            ${SRCDIR}/examples/mem \
+            ${SRCDIR}/examples/oozietests \
+            ${SRCDIR}/mkdistro-*.out \
+            ${SRCDIR}/*.iml \
+            ${SRCDIR}/*/*.iml \
+            ${SRCDIR}/*.ipr \
+            ${SRCDIR}/*.iws 
 
-cat > ${SRCDIR}/cloudera/${RELEASE_ENV_FILENAME} <<EOM
+        cat > ${SRCDIR}/cloudera/${RELEASE_ENV_FILENAME} <<EOM
 FULL_VERSION=${FULL_VERSION}
 export FULL_VERSION
 EOM
-cp ${SRCDIR}/LICENSE.txt ${EXPDIR}
-cp ${SRCDIR}/NOTICE.txt ${EXPDIR}
-cd ${EXPDIR}
-jar xf ${EXPDIR}/docs.zip
-rm -rf ${EXPDIR}/docs.zip
-rm -rf ${EXPDIR}/WEB-INF
-rm -rf ${EXPDIR}/META-INF
-cd ${EXPTMPDIR}
-if [ "${URLSAFE_NAME}" != "${ORIGINAL_NAME}" ]; then
-  mv ${URLSAFE_NAME} ${ORIGINAL_NAME}
-fi
+        cp ${SRCDIR}/LICENSE.txt ${EXPDIR}
+        cp ${SRCDIR}/NOTICE.txt ${EXPDIR}
+        cd ${EXPDIR}
+        jar xf ${EXPDIR}/docs.zip
+        rm -rf ${EXPDIR}/docs.zip
+        rm -rf ${EXPDIR}/WEB-INF
+        rm -rf ${EXPDIR}/META-INF
+        cd ${EXPTMPDIR}
+        if [ "${URLSAFE_NAME}" != "${ORIGINAL_NAME}" ]; then
+            mv ${URLSAFE_NAME} ${ORIGINAL_NAME}
+        fi
 
-rm ${ORIGINAL_NAME}/oozie-sharelib-*-sharelib.tar.gz
-mv ${ORIGINAL_NAME}/src/oozie-sharelib-*.tar.gz ${ORIGINAL_NAME}/
+        rm ${ORIGINAL_NAME}/oozie-sharelib-*-sharelib.tar.gz
+        mv ${ORIGINAL_NAME}/src/oozie-sharelib-*.tar.gz ${ORIGINAL_NAME}/
 
-tar cfz oozie${VERSION_SUFFIX}.tar.gz ${ORIGINAL_NAME}
-mv oozie${VERSION_SUFFIX}.tar.gz ${BUILDDIR}
-cd ${BUILDDIR}
-rm -rf ${EXPTMPDIR}
-)
+        tar cfz oozie${VERSION_SUFFIX}.tar.gz ${ORIGINAL_NAME}
+        mv oozie${VERSION_SUFFIX}.tar.gz ${BUILDDIR}
+        cd ${BUILDDIR}
+        rm -rf ${EXPTMPDIR}
+    )
 
 # If a temp work dir was created, move the files back to
 # basedir and clean it up.
 
-if [ "${WORKDIR}" != "${RELEASE_DIR}" ]; then
-  echo "Moving built files from temporary location to work dir"
-  mv ${WORKDIR}/build ${RELEASE_DIR}/build
-  rm -rf ${WORKDIR}
+    if [ "${WORKDIR}" != "${RELEASE_DIR}" ]; then
+        echo "Moving built files from temporary location to work dir"
+        mv ${WORKDIR}/build ${RELEASE_DIR}/build
+        rm -rf ${WORKDIR}
+    fi
+
+    echo "Build available at: ${RELEASE_DIR}/build"
+
+    (cd ${RELEASE_DIR} ; tar --strip-components 1 -xzvf build/oozie${VERSION_SUFFIX}.tar.gz; rm -f bin/mkdistro.sh)
+
+    echo "SUCCESS: Build complete"
+    exit 0
+else
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=oozie-${FULL_VERSION}/ --format=tar HEAD |gzip > build/oozie-${FULL_VERSION}.tar.gz
 fi
-
-echo "Build available at: ${RELEASE_DIR}/build"
-
-(cd ${RELEASE_DIR} ; tar --strip-components 1 -xzvf build/oozie${VERSION_SUFFIX}.tar.gz; rm -f bin/mkdistro.sh)
-
-echo "SUCCESS: Build complete"
-exit 0

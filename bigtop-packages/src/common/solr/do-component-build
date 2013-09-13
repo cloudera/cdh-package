@@ -16,41 +16,50 @@
 
 set -ex
 IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
-BUILD_OPTS="-Dversion=${FULL_VERSION}                                  \
+
+if [ -z "$GIT_REPO" ]; then
+    BUILD_OPTS="-Dversion=${FULL_VERSION}                                  \
             -Dslf4j.binding=slf4j-log4j12 -Dexclude.from.war=nothing   \
             -Divy.home=${HOME}/.ivy2 -Drepo.maven.org=$IVY_MIRROR_PROP \
             -Divy_install_path=${HOME}/.ant/lib -lib ${HOME}/.ant/lib  \
             -Dreactor.repo=file://${HOME}/.m2/repository"
 
 # FIXME: this needs to be fixed at the product level
-ant $BUILD_OPTS ivy-bootstrap
-mkdir -p solr/test-framework/lib || :
+    ant $BUILD_OPTS ivy-bootstrap
+    mkdir -p solr/test-framework/lib || :
 
-ant $BUILD_OPTS clean
+    ant $BUILD_OPTS clean
 
 # Build source package
-(cd solr ; ant $BUILD_OPTS package-local-src-tgz "$@")
+    (cd solr ; ant $BUILD_OPTS package-local-src-tgz "$@")
 
 # If DO_MAVEN_DEPLOY == deploy, run the generate-maven-artifacts target
-if [ "${DO_MAVEN_DEPLOY}" == "deploy" ]; then
-    ant $BUILD_OPTS generate-maven-artifacts "$@"
-fi
+    if [ "${DO_MAVEN_DEPLOY}" == "deploy" ]; then
+        ant $BUILD_OPTS generate-maven-artifacts "$@"
+    fi
 
 # Build Solr package (and if we didn't do generate-maven-artifacts, it'll build everything else it needs
-(cd solr ; ant $BUILD_OPTS create-package "$@")
+    (cd solr ; ant $BUILD_OPTS create-package "$@")
 
 # Putting the build artifact in place
-rm -rf build
-mkdir build
-pushd build
-  tar -xzf ../solr/build/solr-*-src.tgz
-  tar -C solr-* --strip-components=1 -xzf ../solr/package/solr-*.tgz
-  cp -r ../cloudera* solr-${FULL_VERSION}
-  cp -r ../cdh.build.properties solr-${FULL_VERSION}
-  tar -czf solr-${FULL_VERSION}.tar.gz solr-${FULL_VERSION}
-popd
+    rm -rf build
+    mkdir build
+    pushd build
+    tar -xzf ../solr/build/solr-*-src.tgz
+    tar -C solr-* --strip-components=1 -xzf ../solr/package/solr-*.tgz
+    cp -r ../cloudera* solr-${FULL_VERSION}
+    cp -r ../cdh.build.properties solr-${FULL_VERSION}
+    tar -czf solr-${FULL_VERSION}.tar.gz solr-${FULL_VERSION}
+    popd
 
 # Change to cloudera/maven directory, and install
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository
 # cd cloudera/maven-packaging
 # mvn -Dnot.cdh.release.build=false install -Dmaven.repo.local=${HOME}/.m2/repository $DO_MAVEN_DEPLOY
+else
+    mvn -f cloudera-pom.xml process-resources
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=solr-${FULL_VERSION}/ --format=tar HEAD |gzip > build/solr-${FULL_VERSION}.tar.gz
+fi

@@ -38,7 +38,8 @@ override_dh_auto_install:
 	  --build-dir=build/sqoop2-${SQOOP2_PATCHED_VERSION} \
 	  --doc-dir=/usr/share/doc/sqoop2 \
 	  --prefix=debian/tmp \
-	  --extra-dir=debian
+	  --extra-dir=debian \
+	  --dist-dir=dist/target/sqoop2-${SQOOP2_PATCHED_VERSION}
 	bash debian/init.d.tmpl debian/sqoop-server.svc deb debian/tmp/etc/init.d/sqoop2-server
 	dh_install --sourcedir=debian/tmp
 

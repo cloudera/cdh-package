@@ -56,8 +56,8 @@ override_dh_auto_install:
 	bash debian/install_hadoop.sh \
 	  --prefix=debian/tmp/ \
 	  --distro-dir=debian \
-          --source-dir=${PWD}/src \
-          --build-dir=${PWD}/src/build/hadoop-${HADOOP_PATCHED_VERSION} \
+          --source-dir=${PWD} \
+          --build-dir=${PWD}/build/hadoop-${HADOOP_PATCHED_VERSION} \
           --hadoop-version=${HADOOP_PATCHED_VERSION} \
 	  --httpfs-dir=debian/tmp/usr/lib/hadoop-httpfs \
 	  --httpfs-etc-dir=debian/tmp/etc/hadoop-httpfs \

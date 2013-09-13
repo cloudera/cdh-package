@@ -16,121 +16,122 @@
 
 set -ex
 
-export HADOOP_PROTOC_CDH5_PATH=/opt/toolchain/protobuf-2.5.0/bin/protoc
-
+if [ -z "$GIT_REPO" ]; then
+    export HADOOP_PROTOC_CDH5_PATH=/opt/toolchain/protobuf-2.5.0/bin/protoc
+    
 # FIXME: this needs to go away once we start using an actuall source tarball
-[ -f pom.xml ] || cd src
-
-if [ ! -d build/hadoop-${FULL_VERSION}/src ]; then
-    mkdir -p build/hadoop-${FULL_VERSION}/src 
-    tar --exclude='./build/*' -cf - . | (cd build/hadoop-${FULL_VERSION}/src ; tar xf -)
-fi
-
-if [ -z "$BUNDLE_SNAPPY" ] ; then
-  [ -f /usr/lib/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib -Drequire.snappy=true"
-  [ -f /usr/lib64/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib64 -Drequire.snappy=true"
-fi
-
+    [ -f pom.xml ] || cd src
+    
+    if [ ! -d build/hadoop-${FULL_VERSION}/src ]; then
+        mkdir -p build/hadoop-${FULL_VERSION}/src 
+        tar --exclude='./build/*' -cf - . | (cd build/hadoop-${FULL_VERSION}/src ; tar xf -)
+    fi
+    
+    if [ -z "$BUNDLE_SNAPPY" ] ; then
+        [ -f /usr/lib/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib -Drequire.snappy=true"
+        [ -f /usr/lib64/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib64 -Drequire.snappy=true"
+    fi
+    
 # Build artifacts
-MAVEN_SKIP_TESTS="-DskipTests -DskipTest -DskipITs"
-JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
-  MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
-  mvn $BUNDLE_SNAPPY \
-    -Pdist -Pnative -Pfuse -Psrc -Dtar -Drequire.fuse=true \
-    ${MAVEN_SKIP_TESTS} \
-    install \
-    "$@" \
-    $DO_MAVEN_DEPLOY
-JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn site site:stage ${MAVEN_SKIP_TESTS} $@
-
+    MAVEN_SKIP_TESTS="-DskipTests -DskipTest -DskipITs"
+    JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
+        MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
+        mvn $BUNDLE_SNAPPY \
+        -Pdist -Pnative -Pfuse -Psrc -Dtar -Drequire.fuse=true \
+        ${MAVEN_SKIP_TESTS} \
+        install \
+        "$@" \
+        $DO_MAVEN_DEPLOY
+    JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn site site:stage ${MAVEN_SKIP_TESTS} $@
+    
 # Copy generated docs
-mkdir -p build/hadoop-${FULL_VERSION}/share/doc/
-cp -r target/staging/hadoop-project/* build/hadoop-${FULL_VERSION}/share/doc/
-
+    mkdir -p build/hadoop-${FULL_VERSION}/share/doc/
+    cp -r target/staging/hadoop-project/* build/hadoop-${FULL_VERSION}/share/doc/
+    
 # Rebuild and now mvn deploy the tarball - note the '-pl hadoop-dist' - if we chdir into hadoop-dist and build, it fails.
-JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -pl hadoop-dist -Pdist -Psrc -Dtar ${MAVEN_SKIP_TESTS} -Dmaven.javadoc.skip=true -Dmaven.deploy.skip=false install "$@" $DO_MAVEN_DEPLOY
-
-(cd build/hadoop-${FULL_VERSION} ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${FULL_VERSION}.tar.gz)
-# (cd build/hadoop-${FULL_VERSION}/src ; tar --strip-components=1 -xzvf  ../../../hadoop-dist/target/hadoop-${FULL_VERSION}-src.tar.gz)
-(cd build/hadoop-${FULL_VERSION} ; cp -r ../../cloudera .)
-
+    JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -pl hadoop-dist -Pdist -Psrc -Dtar ${MAVEN_SKIP_TESTS} -Dmaven.javadoc.skip=true -Dmaven.deploy.skip=false install "$@" $DO_MAVEN_DEPLOY
+    
+    (cd build/hadoop-${FULL_VERSION} ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${FULL_VERSION}.tar.gz)
+# (cd build/hadoop-${FULL_VERSION}/src ; tar --strip-components=1 -xzvf  ../../../hadoop-dist/target/hadoop-${FULL_VERSION}.tar.gz)
+    (cd build/hadoop-${FULL_VERSION} ; cp -r ../../cloudera .)
+    
 # Build MR1
-IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
-IVY_EXTRA_ARGS="-Dmvnrepo=$IVY_MIRROR_PROP -Drepo.maven.org=$IVY_MIRROR_PROP"
+    IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
+    IVY_EXTRA_ARGS="-Dmvnrepo=$IVY_MIRROR_PROP -Drepo.maven.org=$IVY_MIRROR_PROP"
 # Copy them into the main build directory to be included in the tarball
-rm -rf hadoop-mapreduce1-project/build
+    rm -rf hadoop-mapreduce1-project/build
+    
+    (cd hadoop-mapreduce1-project ; ant \
+        -Dreactor.repo=file://$HOME/.m2/repository \
+        -Djdiff.stable=0.20.1 \
+        -Djdiff.build.dir=build/docs/jdiff-cloudera \
+        -propertyfile build.properties -Drepo.maven.org=${IVY_MIRROR_PROP} -Dmvnrepo=${IVY_MIRROR_PROP} \
+        ${IVY_EXTRA_ARGS} \
+        -propertyfile cloudera/build.properties api-report)
+    
+    MR1_VERSION=`grep '^version' hadoop-mapreduce1-project/build.properties | cut -f2 -d=`
 
-(cd hadoop-mapreduce1-project ; ant \
-  -Dreactor.repo=file://$HOME/.m2/repository \
-  -Djdiff.stable=0.20.1 \
-  -Djdiff.build.dir=build/docs/jdiff-cloudera \
-  -propertyfile build.properties -Drepo.maven.org=${IVY_MIRROR_PROP} -Dmvnrepo=${IVY_MIRROR_PROP} \
-  ${IVY_EXTRA_ARGS} \
-  -propertyfile cloudera/build.properties api-report)
+    mkdir -p hadoop-mapreduce1-project/build/hadoop-${MR1_VERSION}/docs/
+    
+    (cd hadoop-mapreduce1-project ; ant \
+        -Dreactor.repo=file://$HOME/.m2/repository \
+        -Dforrest.home=$FORREST_HOME \
+        -Dcompile.native=true -Dcompile.c++=true \
+        -Dhadoop.conf.dir=/etc/hadoop/conf \
+        -propertyfile cloudera/build.properties -Drepo.maven.org=${IVY_MIRROR_PROP} -Dmvnrepo=${IVY_MIRROR_PROP} \
+        ${IVY_EXTRA_ARGS} \
+        task-controller package-native tar)
+    
+    mv hadoop-mapreduce1-project/build/hadoop-${MR1_VERSION} hadoop-mapreduce1-project/build/hadoop-mr1
 
-MR1_VERSION=`grep '^version' hadoop-mapreduce1-project/build.properties | cut -f2 -d=`
-
-mkdir -p hadoop-mapreduce1-project/build/hadoop-${MR1_VERSION}/docs/
-
-(cd hadoop-mapreduce1-project ; ant \
-  -Dreactor.repo=file://$HOME/.m2/repository \
-  -Dforrest.home=$FORREST_HOME \
-  -Dcompile.native=true -Dcompile.c++=true \
-  -Dhadoop.conf.dir=/etc/hadoop/conf \
-  -propertyfile cloudera/build.properties -Drepo.maven.org=${IVY_MIRROR_PROP} -Dmvnrepo=${IVY_MIRROR_PROP} \
-  ${IVY_EXTRA_ARGS} \
-  task-controller package-native tar)
-
-mv hadoop-mapreduce1-project/build/hadoop-${MR1_VERSION} hadoop-mapreduce1-project/build/hadoop-mr1
-
-if [ -n "$DO_MAVEN_DEPLOY" ]; then
+    if [ -n "$DO_MAVEN_DEPLOY" ]; then
 # Change to cloudera/maven directory, and install
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository
-(cd hadoop-mapreduce1-project/cloudera/maven-packaging ; mvn -Dnot.cdh.release.build=false install $DO_MAVEN_DEPLOY)
-fi
-
+        (cd hadoop-mapreduce1-project/cloudera/maven-packaging ; mvn -Dnot.cdh.release.build=false install $DO_MAVEN_DEPLOY)
+    fi
+    
 # Create a manifest for the hadoop-0.20-client
-(cd hadoop-mapreduce1-project/cloudera/maven-packaging/hadoop-client ; mvn assembly:single)
-(cd hadoop-mapreduce1-project/cloudera/maven-packaging/hadoop-client/target/hadoop-client*/client ; ls) > hadoop-mapreduce1-project/build/hadoop-mr1/hadoop-client.list
-
+    (cd hadoop-mapreduce1-project/cloudera/maven-packaging/hadoop-client ; mvn assembly:single)
+    (cd hadoop-mapreduce1-project/cloudera/maven-packaging/hadoop-client/target/hadoop-client*/client ; ls) > hadoop-mapreduce1-project/build/hadoop-mr1/hadoop-client.list
+    
 # Move MR1 bits into the final destination
-mkdir -p build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
-mv build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce2
-ln -s mapreduce2 build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/*.jar build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/lib build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/contrib build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/webapps build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/docs build/hadoop-${FULL_VERSION}/share/doc/hadoop-mapreduce1
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/*.txt build/hadoop-${FULL_VERSION}/share/doc/hadoop-mapreduce1
+    mkdir -p build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
+    mv build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce2
+    ln -s mapreduce2 build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/*.jar build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/lib build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/contrib build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/webapps build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/docs build/hadoop-${FULL_VERSION}/share/doc/hadoop-mapreduce1
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/*.txt build/hadoop-${FULL_VERSION}/share/doc/hadoop-mapreduce1
+    
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/conf build/hadoop-${FULL_VERSION}/etc/hadoop-mapreduce1
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/example-confs/conf.pseudo build/hadoop-${FULL_VERSION}/etc/hadoop-mapreduce1-pseudo
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/example-confs/conf.secure build/hadoop-${FULL_VERSION}/etc/hadoop-mapreduce1-secure
 
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/conf build/hadoop-${FULL_VERSION}/etc/hadoop-mapreduce1
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/example-confs/conf.pseudo build/hadoop-${FULL_VERSION}/etc/hadoop-mapreduce1-pseudo
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/example-confs/conf.secure build/hadoop-${FULL_VERSION}/etc/hadoop-mapreduce1-secure
-
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/bin build/hadoop-${FULL_VERSION}/bin-mapreduce1
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/sbin/* build/hadoop-${FULL_VERSION}/sbin
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/c++/* build/hadoop-${FULL_VERSION}/examples
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/hadoop-client.list build/hadoop-${FULL_VERSION}/cloudera/hadoop-mapreduce1-client.list
-
-mv -f hadoop-mapreduce1-project/build/c++-examples build/hadoop-${FULL_VERSION}/examples-mapreduce1
-cp -r hadoop-mapreduce1-project/build/c++/* build/hadoop-${FULL_VERSION}/examples-mapreduce1
-
-BIN_EXCLUDE="--exclude=*/lib/native/lib*            \
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/bin build/hadoop-${FULL_VERSION}/bin-mapreduce1
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/sbin/* build/hadoop-${FULL_VERSION}/sbin
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/c++/* build/hadoop-${FULL_VERSION}/examples
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/hadoop-client.list build/hadoop-${FULL_VERSION}/cloudera/hadoop-mapreduce1-client.list
+    
+    mv -f hadoop-mapreduce1-project/build/c++-examples build/hadoop-${FULL_VERSION}/examples-mapreduce1
+    cp -r hadoop-mapreduce1-project/build/c++/* build/hadoop-${FULL_VERSION}/examples-mapreduce1
+    
+    BIN_EXCLUDE="--exclude=*/lib/native/lib*            \
              --exclude=*/examples/bin/*             \
              --exclude=*/bin/container-executor     \
              --exclude=*/bin/test-container-executor"
-(cd build && tar $BIN_EXCLUDE -czf hadoop-${FULL_VERSION}.tar.gz hadoop-${FULL_VERSION})
+    (cd build && tar $BIN_EXCLUDE -czf hadoop-${FULL_VERSION}.tar.gz hadoop-${FULL_VERSION})
 
 # Copy fuse output to the build directory
-cp hadoop-hdfs-project/hadoop-hdfs/target/native/main/native/fuse-dfs/fuse_dfs build/hadoop-${FULL_VERSION}/bin/
-
+    cp hadoop-hdfs-project/hadoop-hdfs/target/native/main/native/fuse-dfs/fuse_dfs build/hadoop-${FULL_VERSION}/bin/
+    
 # Create a manifest for hadoop client package
-(cd hadoop-client/target/hadoop-client-*/share/hadoop/client/lib ; ls) > build/hadoop-${FULL_VERSION}/hadoop-client.list
-
+    (cd hadoop-client/target/hadoop-client-*/share/hadoop/client/lib ; ls) > build/hadoop-${FULL_VERSION}/hadoop-client.list
+    
 # Create a manifest for hadoop MR1 client package
-mkdir hadoop-mr1-client
-cat > hadoop-mr1-client/pom.xml <<__EOT__
+    mkdir hadoop-mr1-client
+    cat > hadoop-mr1-client/pom.xml <<__EOT__
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -154,6 +155,12 @@ cat > hadoop-mr1-client/pom.xml <<__EOT__
   </dependencies>
 </project>
 __EOT__
-mvn -f hadoop-mr1-client/pom.xml dependency:copy-dependencies -DincludeScope=runtime
-(cd hadoop-mr1-client/target/dependency ; ls | grep -v hadoop-client) > build/hadoop-${FULL_VERSION}/hadoop-mr1-client.list
-rm -rf hadoop-mr1-client
+    mvn -f hadoop-mr1-client/pom.xml dependency:copy-dependencies -DincludeScope=runtime
+    (cd hadoop-mr1-client/target/dependency ; ls | grep -v hadoop-client) > build/hadoop-${FULL_VERSION}/hadoop-mr1-client.list
+    rm -rf hadoop-mr1-client
+else
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=hadoop-${FULL_VERSION}/ --format=tar HEAD |gzip > build/hadoop-${FULL_VERSION}.tar.gz
+fi

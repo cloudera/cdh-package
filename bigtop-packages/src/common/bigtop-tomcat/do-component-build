@@ -16,18 +16,25 @@
 
 set -ex
 
-rm -rf build .build
-mkdir -p .build/bigtop-tomcat-${FULL_VERSION}
-cp -r * .build/bigtop-tomcat-${FULL_VERSION}
-mv .build build
-
-rm -rf dl
-mkdir dl
-ant -Dbase.path=dl clean download -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
-ant -Dbase.path=dl -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
-ant -Dbase.path=dl -Dskip.installer=true -f dist.xml dist-static package-tgz -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
-
-tar -C build --strip-components=1 -xzf output/release/v*/bin/apache-tomcat-*[0-9].tar.gz
-
-tar -C build/bigtop-tomcat-${FULL_VERSION} --strip-components=1 -xzf output/release/v*/bin/apache-tomcat-*[0-9].tar.gz
-tar -C build -czvf build/bigtop-tomcat-${FULL_VERSION}.tar.gz bigtop-tomcat-${FULL_VERSION}
+if [ -z "$GIT_REPO" ]; then
+    rm -rf build .build
+    mkdir -p .build/bigtop-tomcat-${FULL_VERSION}
+    cp -r * .build/bigtop-tomcat-${FULL_VERSION}
+    mv .build build
+    
+    rm -rf dl
+    mkdir dl
+    ant -Dbase.path=dl clean download -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
+    ant -Dbase.path=dl -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
+    ant -Dbase.path=dl -Dskip.installer=true -f dist.xml dist-static package-tgz -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
+    
+    tar -C build --strip-components=1 -xzf output/release/v*/bin/apache-tomcat-*[0-9].tar.gz
+    
+    tar -C build/bigtop-tomcat-${FULL_VERSION} --strip-components=1 -xzf output/release/v*/bin/apache-tomcat-*[0-9].tar.gz
+    tar -C build -czvf build/bigtop-tomcat-${FULL_VERSION}.tar.gz bigtop-tomcat-${FULL_VERSION}
+else
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=bigtop-tomcat-${FULL_VERSION}/ --format=tar HEAD |gzip > build/bigtop-tomcat-${FULL_VERSION}.tar.gz
+fi
