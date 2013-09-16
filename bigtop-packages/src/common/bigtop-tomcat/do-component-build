@@ -33,6 +33,7 @@ if [ -z "$GIT_REPO" ]; then
     tar -C build/bigtop-tomcat-${FULL_VERSION} --strip-components=1 -xzf output/release/v*/bin/apache-tomcat-*[0-9].tar.gz
     tar -C build -czvf build/bigtop-tomcat-${FULL_VERSION}.tar.gz bigtop-tomcat-${FULL_VERSION}
 else
+    git init
     git add .
     git commit -a -m "Temporary commit for tarball"
     mkdir -p build

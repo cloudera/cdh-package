@@ -33,6 +33,7 @@ if [ -z "$GIT_REPO" ]; then
     cp jsvc build/bigtop-jsvc-${FULL_VERSION}/jsvc
     tar -C build -czvf build/bigtop-jsvc-${FULL_VERSION}.tar.gz bigtop-jsvc-${FULL_VERSION}
 else
+    git init
     git add .
     git commit -a -m "Temporary commit for tarball"
     mkdir -p build
