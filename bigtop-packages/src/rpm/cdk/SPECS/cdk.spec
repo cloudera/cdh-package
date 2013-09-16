@@ -53,7 +53,7 @@ env FULL_VERSION=%{cdk_patched_version} bash $RPM_SOURCE_DIR/do-component-build
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh $RPM_SOURCE_DIR/install_cdk.sh \
-          --build-dir=dist \
+          --build-dir=build/cdk-%{cdk_patched_version}/dist \
           --prefix=$RPM_BUILD_ROOT
 
 #######################
