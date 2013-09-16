@@ -130,37 +130,4 @@ if [ -z "$GIT_REPO" ]; then
     (cd hadoop-client/target/hadoop-client-*/share/hadoop/client/lib ; ls) > build/hadoop-${FULL_VERSION}/hadoop-client.list
     
 # Create a manifest for hadoop MR1 client package
-    mkdir hadoop-mr1-client
-    cat > hadoop-mr1-client/pom.xml <<__EOT__
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.apache.hadoop</groupId>
-    <artifactId>hadoop-project-dist</artifactId>
-    <version>2.1.0-cdh5.0.0-SNAPSHOT</version>
-    <relativePath>../hadoop-project-dist</relativePath>
-  </parent>
-  <groupId>org.apache.hadoop</groupId>
-  <artifactId>hadoop-client-mr1</artifactId>
-  <version>2.1.0-cdh5.0.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-client</artifactId>
-      <version>2.1.0-mr1-cdh5.0.0-SNAPSHOT</version>
-      <scope>runtime</scope>
-    </dependency>
-  </dependencies>
-</project>
-__EOT__
-    mvn -f hadoop-mr1-client/pom.xml dependency:copy-dependencies -DincludeScope=runtime
-    (cd hadoop-mr1-client/target/dependency ; ls | grep -v hadoop-client) > build/hadoop-${FULL_VERSION}/hadoop-mr1-client.list
-    rm -rf hadoop-mr1-client
-else
-    git add .
-    git commit -a -m "Temporary commit for tarball"
-    mkdir -p build
-    git archive --prefix=hadoop-${FULL_VERSION}/ --format=tar HEAD |gzip > build/hadoop-${FULL_VERSION}.tar.gz
-fi
+(cd hadoop-mapreduce1-project/cloudera/maven-packaging/hadoop-client/target/hadoop-client-*/client/ ; ls) > build/hadoop-${FULL_VERSION}/hadoop-mr1-client.list
