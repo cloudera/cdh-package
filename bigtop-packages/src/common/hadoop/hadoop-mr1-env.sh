@@ -12,19 +12,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-HADOOP_COMMON_DIR="./"
-HADOOP_COMMON_LIB_JARS_DIR="lib"
-HADOOP_COMMON_LIB_NATIVE_DIR="lib/native"
-HDFS_DIR="./"
-HDFS_LIB_JARS_DIR="lib"
-YARN_DIR="./"
-YARN_LIB_JARS_DIR="lib"
-MAPRED_DIR="./"
-MAPRED_LIB_JARS_DIR="lib"
 
-HADOOP_LIBEXEC_DIR=${HADOOP_LIBEXEC_DIR:-"/usr/lib/hadoop/libexec"}
-HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-"/etc/hadoop/conf"}
-HADOOP_COMMON_HOME=${HADOOP_COMMON_HOME:-"/usr/lib/hadoop"}
-HADOOP_HDFS_HOME=${HADOOP_HDFS_HOME:-"/usr/lib/hadoop-hdfs"}
-HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME:-"/usr/lib/hadoop-mapreduce"}
-HADOOP_YARN_HOME=${HADOOP_YARN_HOME:-"/usr/lib/hadoop-yarn"}
+# Set Hadoop-specific environment variables here.
+# Forcing MR1-based mapreduce implementaion. 
+# Make sure to comment out if you want to go back to the default or
+# if you want this to be tweakable on a per-user basis
+export HADOOP_MAPRED_HOME=/usr/lib/hadoop-0.20-mapreduce
+
+# The maximum amount of heap to use, in MB. Default is 1000.
+#export HADOOP_HEAPSIZE=
+#export HADOOP_NAMENODE_INIT_HEAPSIZE=""
+
+# Extra Java runtime options.  Empty by default.
+#export HADOOP_OPTS="-Djava.net.preferIPv4Stack=true $HADOOP_CLIENT_OPTS"
+#export HADOOP_CLIENT_OPTS="-Xmx128m $HADOOP_CLIENT_OPTS"

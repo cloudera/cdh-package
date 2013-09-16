@@ -417,6 +417,7 @@ cp ${BUILD_DIR}/etc/hadoop/log4j.properties $HADOOP_ETC_DIR/conf.pseudo
 # MR1
 cp -r $HADOOP_ETC_DIR/conf.pseudo $HADOOP_ETC_DIR/conf.pseudo.mr1
 rm -f $HADOOP_ETC_DIR/conf.pseudo.mr1/{yarn-site.xml,hadoop-env.sh}
+cp ${DISTRO_DIR}/hadoop-mr1-env.sh $HADOOP_ETC_DIR/conf.pseudo.mr1/hadoop-env.sh
 cp ${MAPREDUCE_MR1_DIR}/example-confs/conf.pseudo/mapred-site.xml $HADOOP_ETC_DIR/conf.pseudo.mr1
 cat >> $HADOOP_ETC_DIR/conf.pseudo.mr1/README <<__EOT__
 

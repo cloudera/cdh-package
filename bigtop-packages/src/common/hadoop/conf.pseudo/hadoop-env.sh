@@ -17,7 +17,7 @@
 # Forcing YARN-based mapreduce implementaion. 
 # Make sure to comment out if you want to go back to the default or
 # if you want this to be tweakable on a per-user basis
-export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce
+# export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce
 
 # The maximum amount of heap to use, in MB. Default is 1000.
 #export HADOOP_HEAPSIZE=
