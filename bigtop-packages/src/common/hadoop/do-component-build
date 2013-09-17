@@ -130,4 +130,10 @@ if [ -z "$GIT_REPO" ]; then
     (cd hadoop-client/target/hadoop-client-*/share/hadoop/client/lib ; ls) > build/hadoop-${FULL_VERSION}/hadoop-client.list
     
 # Create a manifest for hadoop MR1 client package
-(cd hadoop-mapreduce1-project/cloudera/maven-packaging/hadoop-client/target/hadoop-client-*/client/ ; ls) > build/hadoop-${FULL_VERSION}/hadoop-mr1-client.list
+    (cd hadoop-mapreduce1-project/cloudera/maven-packaging/hadoop-client/target/hadoop-client-*/client/ ; ls) > build/hadoop-${FULL_VERSION}/hadoop-mr1-client.list
+else
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=hadoop-${FULL_VERSION}/ --format=tar HEAD |gzip > build/hadoop-${FULL_VERSION}.tar.gz
+fi
