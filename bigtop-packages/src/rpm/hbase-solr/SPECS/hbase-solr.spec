@@ -144,7 +144,6 @@ fi
 %defattr(-,root,root,755)
 %config(noreplace) %{config_solr}.dist
 %{lib_solr}
-/usr/lib/hbase
 %{bin_solr}/hbase-indexer
 %defattr(-,%{user_solr},%{user_solr},755)
 /var/run/hbase-solr

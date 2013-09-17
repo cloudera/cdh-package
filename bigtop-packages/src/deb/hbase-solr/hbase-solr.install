@@ -1,6 +1,4 @@
 /etc/hbase-solr/conf.dist
-# /etc/default
 /usr/lib/hbase-solr
-/usr/lib/hbase
 /var
 /usr/bin/hbase-indexer
