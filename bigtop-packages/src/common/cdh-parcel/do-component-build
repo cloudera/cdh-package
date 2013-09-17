@@ -418,7 +418,7 @@ export CDH_OOZIE_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/oozie
 export CDH_HUE_PLUGINS_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/hadoop
 export CDH_FLUME_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/flume-ng
 export CDH_PIG_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/pig
-export CDH_HCAT_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/hcatalog
+export CDH_HCAT_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/hive-hcatalog
 export CDH_SQOOP2_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/sqoop2
 export CDH_LLAMA_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/llama
 export CDH_LLAMA_NODE_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/llama/nodemanagerlib
@@ -441,7 +441,7 @@ BINARIES="beeline flume-ng hadoop hadoop-0.20 hadoop-fuse-dfs hbase hdfs hive \
           zookeeper-server zookeeper-server-cleanup zookeeper-server-initialize sqoop2 \
           hcat llama impala-shell solrctl hbase-indexer"
 
-CONFDIRS="hbase hive mahout oozie pig sqoop zookeeper sqoop2 hcatalog webhcat llama solr"
+CONFDIRS="hbase hive mahout oozie pig sqoop zookeeper sqoop2 hive-hcatalog hive-webhcat llama solr"
 # Some services are 'special' and use conf.empty instead of conf.dist
 EMPTY_CONFDIRS="flume-ng hadoop hadoop-httpfs"
 
@@ -551,10 +551,11 @@ for file in $SQOOP1_SCRIPTS; do
   sed -i '1a \
   export HADOOP_COMMON_HOME=$LIB_DIR/hadoop\
   export HADOOP_YARN_HOME=$LIB_DIR/hadoop-yarn\
-  export HADOOP_MAPRED_HOME=$LIB_DIR/hadoop-0.20-mapreduce\
+  export HADOOP_MAPRED_HOME=$LIB_DIR/hadoop-mapreduce\
   export HADOOP_HDFS_HOME=$LIB_DIR/hadoop-hdfs\
   export HBASE_HOME=$LIB_DIR/hbase\
-  export HIVE_HOME=$LIB_DIR/hive' build/usr/bin/$file
+  export HIVE_HOME=$LIB_DIR/hive\
+  export HCAT_HOME=$LIB_DIR/hive-hcatalog' build/usr/bin/$file
 done
 
 # HCatalog also looks for certain environment variables.
@@ -562,7 +563,7 @@ HCATALOG_SCRIPTS="hcat"
 for file in $HCATALOG_SCRIPTS; do
   sed -i '1a \
   export HADOOP_HOME=$LIB_DIR/hadoop \
-  export HCAT_HOME=$LIB_DIR/hcatalog \
+  export HCAT_HOME=$LIB_DIR/hive-hcatalog \
   export HIVE_HOME=$LIB_DIR/hive' build/usr/bin/$file
 done
 
@@ -573,7 +574,7 @@ done
 PIG_SCRIPTS="pig"
 for file in $PIG_SCRIPTS; do
   sed -i '1a \
-  export HCAT_HOME=$LIB_DIR/hcatalog \
+  export HCAT_HOME=$LIB_DIR/hive-hcatalog \
   export HIVE_HOME=$LIB_DIR/hive' build/usr/bin/$file
 done
 
