@@ -39,7 +39,7 @@ override_dh_auto_build:
 	env FULL_VERSION=${HADOOP_PATCHED_VERSION} HADOOP_VERSION=${HADOOP_VERSION} HADOOP_ARCH=${native_dir} \
 	    bash debian/do-component-build
 
-hadoop_svcs=hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode \
+hadoop_svcs=hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode hdfs-portmap hdfs-nfs3\
             yarn-resourcemanager yarn-nodemanager yarn-proxyserver \
             mapreduce-historyserver httpfs 0.20-mapreduce-zkfc \
             0.20-mapreduce-jobtracker 0.20-mapreduce-jobtrackerha 0.20-mapreduce-tasktracker
