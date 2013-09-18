@@ -147,7 +147,7 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
 ########################################
 %build
 
-%if 0%{?rhel:%{rhel}} == 5
+%if 0%{?rhel:%{rhel}} < 6
 # Python 2.5+ is required, but RHEL 5's `python` is 2.4
 export SYS_PYTHON=`which python2.6`
 export SKIP_PYTHONDEV_CHECK=true
@@ -192,7 +192,7 @@ Requires: insserv, python-xml, python
 %else
 BuildRequires: /sbin/runuser, sqlite-devel, openldap-devel, mysql-devel, openssl-devel
 Requires: redhat-lsb
-%if 0%{?rhel:%{rhel}} == 5
+%if 0%{?rhel:%{rhel}} < 6
 # Python 2.5+ is required, but RHEL 5's `python` is 2.4
 BuildRequires: python26-devel, python26-distribute
 Requires: python26
