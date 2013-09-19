@@ -1,0 +1,12 @@
+Format: http://dep.debian.net/deps/dep5
+Source: https://avro.apache.org
+Upstream-Name: Avro
+
+Files: *
+Copyright: 2012, The Apache Software Foundation
+License: Apache-2.0
+
+License: Apache-2.0
+ On Debian systems, the complete text of the Apache 2.0 license
+ can be found in "/usr/share/common-licenses/Apache-2.0".
+
