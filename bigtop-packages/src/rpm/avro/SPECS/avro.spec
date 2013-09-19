@@ -27,8 +27,8 @@ Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/avro-%{version}-%{release}-XXXXXX)
 License: ASL 2.0 
-Source0: avro-%{avro_version}.tar.gz
-Source1: do-component-build 
+Source0: avro-%{avro_patched_version}.tar.gz
+Source1: do-component-build
 Source2: install_avro.sh
 
 %description
@@ -55,7 +55,7 @@ Group: Development/Tools
  JavaDocs for Avro libraries
 
 %prep
-%setup -n avro-src-%{avro_version}
+%setup -n avro-%{avro_patched_version}
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build

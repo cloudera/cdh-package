@@ -18,12 +18,12 @@ set -ex
 
 # Build Java libraries
 (cd lang/java;
-    mvn package -DskipTests -Dhadoop.version=2;
+    mvn package -DskipTests -Dhadoop.version=2 $@;
     rm -rf mapred/target/classes/;
-    mvn -P dist package -DskipTests -Davro.version=$VERSION javadoc:aggregate)
+    mvn -P dist package -DskipTests -Davro.version=$VERSION javadoc:aggregate $@)
 
-(cd lang/java/trevni/doc; mvn site)
-mvn -N -P copy-artifacts antrun:run
+(cd lang/java/trevni/doc; mvn site $@)
+mvn -N -P copy-artifacts antrun:run $@
 (cd doc; ant -Dforrest.home=${FORREST_HOME};)
 
 ALL_FILES=`ls`
