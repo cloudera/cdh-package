@@ -103,10 +103,13 @@ for x in $PREFIX/$LIB_DIR/zookeeper*jar ; do
   x=$(basename $x)
   ln -s $x $PREFIX/$LIB_DIR/zookeeper.jar
 done
-  
 
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
 cp $BUILD_DIR/lib/*.jar $PREFIX/$LIB_DIR/lib
+
+# Workaround for BIGTOP-583
+x=$(basename $PREFIX/$LIB_DIR/lib/slf4j-log4j12-*.jar)
+ln -fs $x $PREFIX/$LIB_DIR/lib/slf4j-log4j12.jar
 
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/$CONF_DIST_DIR
