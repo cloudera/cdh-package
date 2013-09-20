@@ -91,7 +91,7 @@ if [ -z "$GIT_REPO" ]; then
 # We need to build twice: once to generate the MR1 sharelib, again to generate the YARN sharelib
     MKDISTRO_OPTIONS="-DskipTests -Dnot.cdh.release.build=false ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository $@"
 
-    ${WORKDIR}/bin/mkdistro.sh $MKDISTRO_OPTIONS -Pmr1
+    JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" ${WORKDIR}/bin/mkdistro.sh $MKDISTRO_OPTIONS -Pmr1
     MKDISTRO_RESULT_MR1=$?
     if [ "${MKDISTRO_RESULT_MR1}" != "0" ]; then
         echo "ERROR: mkdistro.sh failed with error ${MKDISTRO_RESULT_MR1}"
@@ -101,7 +101,7 @@ if [ -z "$GIT_REPO" ]; then
     SHARELIB=${WORKDIR}/distro/target/oozie-*-distro/oozie-*/oozie-sharelib-*-sharelib.tar.gz
     cp $SHARELIB ${RELEASE_DIR}/oozie-sharelib-${FULL_VERSION}.tar.gz
 
-    ${WORKDIR}/bin/mkdistro.sh $MKDISTRO_OPTIONS
+    JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" ${WORKDIR}/bin/mkdistro.sh $MKDISTRO_OPTIONS
     MKDISTRO_RESULT=$?
     if [ "${MKDISTRO_RESULT}" != "0" ]; then
         echo "ERROR: mkdistro.sh failed with error ${MKDISTRO_RESULT}"
