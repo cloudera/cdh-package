@@ -17,8 +17,7 @@
 set -ex
 
 if [ -z "$GIT_REPO" ]; then
-    JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -DskipTests clean install $DO_MAVEN_DEPLOY "$@"
-    JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -DskipTests -Pjavadoc site source:jar package assembly:assembly "$@" 
+    JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -DskipTests clean install -Pjavadoc site assembly:assembly "$@" 
 
     mkdir build
     cp target/*.tar.gz build
