@@ -26,6 +26,8 @@ if [ -z "$JAVA_HOME" ]; then
     /usr/lib/jvm/java-7-oracle* \
     /usr/java/jdk1.7* \
     /usr/java/jre1.7* \
+    /usr/lib/jvm/java-1.7.0-oracle-1.7.0.* \
+    /usr/lib/jvm/java-1.7.0-oracle-1.7.0.*/jre/ \
     /usr/lib/jvm/j2sdk1.7-oracle \
     /usr/lib/jvm/j2sdk1.7-oracle/jre \
     /usr/lib/j2sdk1.6-sun \
@@ -41,6 +43,7 @@ if [ -z "$JAVA_HOME" ]; then
     /usr/lib/jvm/default-java \
     /usr/lib/jvm/java-openjdk \
     /usr/lib/jvm/jre-openjdk \
+    /usr/lib/jvm/java \
     /usr/lib/jvm/java-1.7.0-openjdk* \
     /usr/lib/jvm/java-7-openjdk* \
     /usr/lib/jvm/java-1.6.0-openjdk \
