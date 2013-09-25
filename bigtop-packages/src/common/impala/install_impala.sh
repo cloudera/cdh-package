@@ -36,6 +36,8 @@ OPTS=$(getopt \
   -l 'man-dir:' \
   -l 'conf-dir:' \
   -l 'native-lib-dir:' \
+  -l 'system-include-dir:' \
+  -l 'system-lib-dir:' \
   -- "$@")
 
 if [ $? != 0 ] ; then
@@ -65,6 +67,11 @@ while true ; do
         ;;
         --native-lib-dir)
         NATIVE_LIB_DIR=$2 ; shift 2
+        --system-include-dir)
+        SYSTEM_INCLUDE_DIR=$2 ; shift 2
+        ;;
+        --system-lib-dir)
+        SYSTEM_LIB_DIR=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -91,6 +98,8 @@ DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/impala}
 MAN_DIR=${MAN_DIR:-$PREFIX/usr/man}
 CONF_DIR=${CONF_DIR:-$PREFIX/etc/impala/conf.dist}
 NATIVE_LIB_DIR=${NATIVE_LIB_DIR:-lib}
+SYSTEM_INCLUDE_DIR=${SYSTEM_INCLUDE_DIR:-/usr/include}
+SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 
 # install java bits
 install -d -m 0755 ${LIB_DIR}
@@ -256,10 +265,21 @@ done
 
 install -d -m 0755 $CONF_DIR
 
+install -d -m 0755 $PREFIX/var/run/impala
+install -d -m 0755 $PREFIX/var/log/impala
+install -d -m 0755 $PREFIX/var/lib/impala
+
+install -d -m 0755 ${PREFIX}/${SYSTEM_INCLUDE_DIR}/impala_udf
+cp ./be/src/udf/*.h ${PREFIX}/${SYSTEM_INCLUDE_DIR}/impala_udf
+rm ${PREFIX}/${SYSTEM_INCLUDE_DIR}/impala_udf/udf-internal.h
+for header_file in ${PREFIX}/${SYSTEM_INCLUDE_DIR}/impala_udf/*.h; do
+    sed -i -e 's@#include "udf/\(.*\.h\)"@#include <impala_udf/\1>@' ${header_file}
+done
+install -d -m 0755 ${PREFIX}/${SYSTEM_LIB_DIR}
+cp be/build/release/udf/libImpalaUdf.a ${PREFIX}/${SYSTEM_LIB_DIR}/libImpalaUdf-retail.a
+cp be/build/debug/udf/libImpalaUdf.a ${PREFIX}/${SYSTEM_LIB_DIR}/libImpalaUdf-debug.a
+
 # Cloudera specific
 install -d -m 0755 $LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $LIB_DIR/cloudera/
 
-install -d -m 0755 $PREFIX/var/run/impala
-install -d -m 0755 $PREFIX/var/log/impala
-install -d -m 0755 $PREFIX/var/lib/impala
