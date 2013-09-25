@@ -90,6 +90,13 @@ Requires(preun): %{alternatives_dep}
 %description 
 Application for executing real-time queries on top of Hadoop
 
+%package udf-devel
+Summary: Impala UDF development package
+Group: Development/Libraries
+
+%description udf-devel
+Development headers and libraries for writing user-defined-functions for Impala queries
+
 %package shell
 Summary: Impala shell
 Group: Development/Libraries
@@ -140,7 +147,9 @@ env FULL_VERSION=%{impala_patched_version} bash %{SOURCE1}
 sh %{SOURCE2} \
           --build-dir=$RPM_SOURCE_DIR \
           --prefix=$RPM_BUILD_ROOT \
-          --native-lib-dir=lib64
+          --native-lib-dir=lib64 \
+          --system-include-dir=%{_includedir} \
+          --system-lib-dir=%{_libdir}
 
 # Install init scripts
 init_source=$RPM_SOURCE_DIR
@@ -162,6 +171,24 @@ getent passwd impala >/dev/null || /usr/sbin/useradd --comment "Impala" --shell 
 %{alternatives_cmd} --install /etc/impala/conf impala-conf /etc/impala/conf.dist        30
 %{alternatives_cmd} --install /usr/lib/impala/sbin %{name} /usr/lib/impala/sbin-retail  20
 %{alternatives_cmd} --install /usr/lib/impala/sbin %{name} /usr/lib/impala/sbin-debug   10
+
+%preun
+%{alternatives_cmd} --remove impala-conf /etc/impala/conf.dist || :
+%{alternatives_cmd} --remove %{name} /usr/lib/impala/sbin-retail || :
+%{alternatives_cmd} --remove %{name} /usr/lib/impala/sbin-debug || :
+
+%post udf-devel
+%{alternatives_cmd} --install %{_libdir}/libImpalaUdf.a libImpalaUdf %{_libdir}/libImpalaUdf-retail.a  20
+%{alternatives_cmd} --install %{_libdir}/libImpalaUdf.a libImpalaUdf %{_libdir}/libImpalaUdf-debug.a 10
+
+%preun udf-devel
+%{alternatives_cmd} --remove libImpalaUdf %{_libdir}/libImpalaUdf-retail.a || :
+%{alternatives_cmd} --remove libImpalaUdf %{_libdir}/libImpalaUdf-debug.a || :
+
+%files udf-devel
+%defattr(-,root,root)
+%{_includedir}/impala_udf
+%{_libdir}/libImpalaUdf*.a
 
 %files shell
 %defattr(-,root,root)

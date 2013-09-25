@@ -26,6 +26,12 @@ Architecture: all
 Depends: ${misc:Depends}, adduser, bigtop-utils (>= 0.6), libssl0.9.8 | libssl1.0.0, hadoop, hadoop-hdfs, hadoop-yarn, hadoop-mapreduce, hbase, hive, zookeeper, libhdfs0
 Description: Application for executing real-time queries on top of Hadoop
 
+Package: impala-udf-dev
+Architecture: all
+Depends: ${misc:Depends}
+Description: Impala UDF development package
+ Development headers and libraries for writing user-defined-functions for Impala queries
+
 Package: impala-shell
 Architecture: all
 Depends: ${misc:Depends}, python, python-setuptools
