@@ -102,6 +102,7 @@ rm ${LIB_DIR}/lib/sentry-tests*.jar ${LIB_DIR}/lib/sentry-dist*.jar
 
 install -d -m 0755 ${LIB_DIR}/sentry
 mv ${BUILD_DIR}/LICENSE.txt ${LIB_DIR}/sentry
+mv ${BUILD_DIR}/NOTICE.txt ${LIB_DIR}/sentry
 
 # Cloudera specific
 install -d -m 0755 $LIB_DIR/sentry/cloudera
