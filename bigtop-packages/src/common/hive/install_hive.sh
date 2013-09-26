@@ -186,6 +186,9 @@ rm -f ${HIVE_DIR}/lib/hive-hwi*.war
 # Cloudera specific
 install -d -m 0755 $HIVE_DIR/cloudera
 cp src/cloudera/cdh_version.properties $HIVE_DIR/cloudera/
+install -d -m 0755 $HCATALOG_DIR/cloudera
+grep -v 'cloudera.pkg.name=' src/cloudera/cdh_version.properties > $HCATALOG_DIR/cloudera/cdh_version.properties
+echo "cloudera.pkg.name=hive-hcatalog" >> $HCATALOG_DIR/cloudera/cdh_version.properties
 
 # Remove some source which gets installed
 rm -rf ${HIVE_DIR}/lib/php/ext

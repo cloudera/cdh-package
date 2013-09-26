@@ -321,7 +321,7 @@ fi
 %{usr_bin}/hive
 %{usr_bin}/beeline
 %{usr_bin}/hiveserver2
-%{var_lib_hive}
+%dir %{var_lib_hive}
 %attr(0755,hive,hive) %dir %{_localstatedir}/log/%{name}
 %attr(0755,hive,hive) %dir %{_localstatedir}/run/%{name}
 %doc %{doc_hive}
@@ -360,13 +360,14 @@ fi
 %config(noreplace) %attr(755,root,root) %{conf_hcatalog}.dist
 %attr(0775,hive,hive) %{var_lib_hcatalog}
 %attr(0775,hive,hive) %{var_log_hcatalog}
-%{usr_lib_hcatalog}
+%dir %{usr_lib_hcatalog}
 %{usr_lib_hcatalog}/bin
+%{usr_lib_hcatalog}/cloudera
 %{usr_lib_hcatalog}/etc/hcatalog
 %{usr_lib_hcatalog}/libexec
 %{usr_lib_hcatalog}/share/hcatalog
-%{usr_lib_hcatalog}/sbin/hcat_server.sh
 %{usr_lib_hcatalog}/sbin/update-hcatalog-env.sh
+%{usr_lib_hcatalog}/sbin/hcat*
 %{usr_bin}/hcat
 %{man_dir}/man1/hive-hcatalog.1.*
 
@@ -375,8 +376,7 @@ fi
 %config(noreplace) %attr(755,root,root) %{conf_webhcat}.dist
 %{usr_lib_hcatalog}/share/webhcat
 %{usr_lib_hcatalog}/etc/webhcat
-%{usr_lib_hcatalog}/sbin/webhcat_config.sh
-%{usr_lib_hcatalog}/sbin/webhcat_server.sh
+%{usr_lib_hcatalog}/sbin/webhcat*
 
 %define service_macro() \
 %files %1 \
