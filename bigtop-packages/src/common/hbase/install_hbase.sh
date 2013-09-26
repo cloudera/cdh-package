@@ -127,8 +127,8 @@ for file in rolling-restart.sh graceful_stop.sh local-regionservers.sh \
   rm -f $PREFIX/$BIN_DIR/$file
 done
 
-cp $BUILD_DIR/hbase-server/src/main/resources/org/apache/hadoop/hbase/thrift/Hbase.thrift $PREFIX/$THRIFT_DIR/hbase1.thrift
-cp $BUILD_DIR/hbase-server/src/main/resources/org/apache/hadoop/hbase/thrift2/hbase.thrift $PREFIX/$THRIFT_DIR/hbase2.thrift
+cp $BUILD_DIR/hbase-thrift/src/main/resources/org/apache/hadoop/hbase/thrift/Hbase.thrift $PREFIX/$THRIFT_DIR/hbase1.thrift
+cp $BUILD_DIR/hbase-thrift/src/main/resources/org/apache/hadoop/hbase/thrift2/hbase.thrift $PREFIX/$THRIFT_DIR/hbase2.thrift
 
 ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
 
