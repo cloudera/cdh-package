@@ -31,7 +31,7 @@ override_dh_auto_build:
 	# failing on the debian/ subdirectory
 	rm -rf bigtop-empty
 	mkdir -p bigtop-empty
-	env FULL_VERSION=$(build_version) \
+	env FULL_VERSION=$(SENTRY_PATCHED_VERSION) \
 	  bash debian/do-component-build -Drat.basedir=`pwd`/bigtop-empty
 
 override_dh_auto_install:

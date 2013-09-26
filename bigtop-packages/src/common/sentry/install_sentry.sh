@@ -95,27 +95,14 @@ done
 LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/hive}
 install -d -m 0755 $LIB_DIR/lib
 
-(cd ${LIB_DIR} &&
-  tar --strip-components=1 -xvzf ${BUILD_DIR}/sentry-dist/target/sentry-*-dist.tar.gz)
-
-# Take out useless things
-for x in sentry-* \
-         .gitignore \
-         pom.xml; do
-  rm -rf ${LIB_DIR}/$x
-done
-
-# Take out extra jars from the tarball
-for x in sentry-tests \
-         sentry-dist \
-         commons-beanutils; do
-  rm -f ${LIB_DIR}/lib/$x*.jar
-done
+TARBALL=`ls ${BUILD_DIR}/build/sentry-*.tar.gz`
+DIRECTORY=`basename ${TARBALL/.tar.gz/}`
+(cd ${LIB_DIR}/lib && tar --strip-components=2 -xvzf ${TARBALL} ${DIRECTORY}/lib)
+rm ${LIB_DIR}/lib/sentry-tests*.jar ${LIB_DIR}/lib/sentry-dist*.jar
 
 install -d -m 0755 ${LIB_DIR}/sentry
-mv ${LIB_DIR}/NOTICE ${LIB_DIR}/sentry
-mv ${LIB_DIR}/LICENSE.txt ${LIB_DIR}/sentry
+mv ${BUILD_DIR}/LICENSE.txt ${LIB_DIR}/sentry
 
 # Cloudera specific
-#install -d -m 0755 $LIB_DIR/sentry/cloudera
-#cp cloudera/cdh_version.properties $LIB_DIR/sentry/cloudera/
+install -d -m 0755 $LIB_DIR/sentry/cloudera
+cp cloudera/cdh_version.properties $LIB_DIR/sentry/cloudera/
