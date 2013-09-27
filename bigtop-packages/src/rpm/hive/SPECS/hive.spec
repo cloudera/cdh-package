@@ -83,7 +83,7 @@ Source14: hive-hcatalog-server.svc
 Source15: hive-webhcat-server.svc
 Source16: hive-hcatalog-server.default
 Source17: hive-webhcat-server.default
-Requires: hadoop-client, bigtop-utils >= 0.6, hbase, zookeeper, %{name}-hbase = %{version}-%{release}, %{name}-jdbc = %{version}-%{release}
+Requires: hadoop-client, bigtop-utils >= 0.6, zookeeper, %{name}-jdbc = %{version}-%{release}
 Conflicts: hadoop-hive
 Obsoletes: %{name}-webinterface
 
@@ -256,8 +256,12 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{name}
 
 # We need to get rid of jars that happen to be shipped in other CDH packages
-%__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/zookeeper-*.jar
-%__ln_s  /usr/lib/hbase/hbase.jar /usr/lib/zookeeper/zookeeper.jar  $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
+%__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-common*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-client*.jar \
+$RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-server*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-hadoop-compat*.jar \
+$RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-hadoop2-compat*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/zookeeper-*.jar
+%__ln_s  /usr/lib/hbase/hbase-common.jar /usr/lib/hbase/hbase-client.jar /usr/lib/hbase/hbase-server.jar \
+/usr/lib/hbase/hbase-hadoop-compat.jar /usr/lib/hbase/hbase-hadoop2-compat.jar \
+/usr/lib/zookeeper/zookeeper.jar  $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
 
 # Workaround for BIGTOP-583
 %__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/slf4j-log4j12-*.jar
@@ -326,7 +330,11 @@ fi
 %attr(0755,hive,hive) %dir %{_localstatedir}/run/%{name}
 %doc %{doc_hive}
 %{man_dir}/man1/hive.1.*
-%exclude %{usr_lib_hive}/lib/hbase.jar
+%exclude %{usr_lib_hive}/lib/hbase-common.jar
+%exclude %{usr_lib_hive}/lib/hbase-client.jar
+%exclude %{usr_lib_hive}/lib/hbase-server.jar
+%exclude %{usr_lib_hive}/lib/hbase-hadoop-compat.jar
+%exclude %{usr_lib_hive}/lib/hbase-hadoop2-compat.jar
 %exclude %{usr_lib_hive}/lib/hive-jdbc*.jar
 %exclude %{usr_lib_hive}/lib/hive-metastore*.jar
 %exclude %{usr_lib_hive}/lib/hive-serde*.jar
@@ -340,7 +348,11 @@ fi
 
 %files hbase
 %defattr(-,root,root,755)
-%{usr_lib_hive}/lib/hbase.jar
+%{usr_lib_hive}/lib/hbase-common.jar
+%{usr_lib_hive}/lib/hbase-client.jar
+%{usr_lib_hive}/lib/hbase-server.jar
+%{usr_lib_hive}/lib/hbase-hadoop-compat.jar
+%{usr_lib_hive}/lib/hbase-hadoop2-compat.jar
 
 %files jdbc
 %defattr(-,root,root,755)

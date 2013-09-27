@@ -36,7 +36,7 @@ override_dh_auto_build:
 server server2 metastore hcatalog-server webhcat-server:
 	bash debian/init.d.tmpl debian/hive-$@.svc deb debian/${hive_pkg_name}-$@.init
 
-override_dh_auto_install: metastore server server2
+override_dh_auto_install: metastore server server2 hcatalog-server webhcat-server
 	cp debian/hive-site.xml .
 	cp debian/hive.1 .
 	cp debian/hive-hcatalog.1 .
@@ -45,9 +45,15 @@ override_dh_auto_install: metastore server server2
 	  --build-dir=src/build/dist \
 	  --doc-dir=debian/tmp/usr/share/doc/${hive_pkg_name}
 	# We need to get rid of jars that happen to be shipped in other CDH packages
-	rm -f debian/tmp/usr/lib/hive/lib/hbase-*.jar debian/tmp/usr/lib/hive/lib/zookeeper-*.jar
-	ln -s /usr/lib/hbase/hbase.jar debian/tmp/usr/lib/hive/lib
+	rm -f debian/tmp/usr/lib/hive/lib/hbase-common*.jar debian/tmp/usr/lib/hive/lib/hbase-client*.jar \
+	  debian/tmp/usr/lib/hive/lib/hbase-server*.jar debian/tmp/usr/lib/hive/lib/hbase-hadoop-compat*.jar \
+	  debian/tmp/usr/lib/hive/lib/hbase-hadoop2-compat*.jar debian/tmp/usr/lib/hive/lib/zookeeper*.jar
+
+	ln -s /usr/lib/hbase/hbase-common.jar /usr/lib/hbase/hbase-client.jar /usr/lib/hbase/hbase-server.jar \
+	  /usr/lib/hbase/hbase-hadoop-compat.jar /usr/lib/hbase/hbase-hadoop2-compat.jar debian/tmp/usr/lib/hive/lib
+
 	ln -s  /usr/lib/zookeeper/zookeeper.jar debian/tmp/usr/lib/hive/lib
+
 	# Workaround for BIGTOP-583
 	rm -f debian/tmp/usr/lib/hive/lib/slf4j-log4j12-*.jar
 

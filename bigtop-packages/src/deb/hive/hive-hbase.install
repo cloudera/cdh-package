@@ -1,1 +1,5 @@
-/usr/lib/hive/lib/hbase.jar
+/usr/lib/hive/lib/hbase-common.jar
+/usr/lib/hive/lib/hbase-client.jar
+/usr/lib/hive/lib/hbase-server.jar
+/usr/lib/hive/lib/hbase-hadoop-compat.jar
+/usr/lib/hive/lib/hbase-hadoop2-compat.jar
