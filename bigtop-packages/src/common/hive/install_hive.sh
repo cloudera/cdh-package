@@ -195,6 +195,7 @@ rm -rf ${HIVE_DIR}/lib/php/ext
 
 install -d -m 0755 ${HCATALOG_DIR}
 mv ${HIVE_DIR}/hcatalog/* ${HCATALOG_DIR}
+rm -rf ${HIVE_DIR}/hcatalog
 install -d -m 0755 ${PREFIX}/etc/default
 for conf in `cd ${HCATALOG_DIR}/etc ; ls -d *` ; do
   install -d -m 0755 ${PREFIX}/etc/hive-$conf
