@@ -613,6 +613,3 @@ for server in $TOMCAT_SERVERS; do
     sed -i -e '/common.loader=/ s:/usr/lib/:${catalina.base}/../../:g' $file
   fi
 done
-
-# Explicitly removing docs since we don't want them in the parcel anyways
-rm -rf build/usr/share
