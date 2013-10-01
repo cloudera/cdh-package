@@ -183,7 +183,7 @@ BuildRequires: krb5-devel
 Group: Applications/Engineering
 Requires: cyrus-sasl-gssapi, libxml2, libxslt, zlib, sqlite
 # The only reason we need the following is because we also have AutoProv: no
-Conflicts: cloudera-desktop
+Conflicts: cloudera-desktop, hue-about, hue-filebrowser, hue-help, hue-jobbrowser, hue-jobsub, hue-metastore, hue-oozie, hue-proxy, hue-shell, hue-useradmin
 Provides: config(%{name}-common) = %{version}
 
 %if %{?suse_version:1}0
