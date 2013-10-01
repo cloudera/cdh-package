@@ -32,7 +32,7 @@ Description: A browser-based desktop interface for Hadoop
 
 Package: hue-plugins
 Architecture: all
-Depends: hadoop, bigtop-utils (>= 0.6)
+Depends: hue-common (= ${source:Version}), hadoop, bigtop-utils (>= 0.6)
 Conflicts: cloudera-desktop-plugins
 Description: Plug-ins for Hadoop to enable integration with Hue
  These plug-ins enable the Hadoop Daemons to communicate with Hue.

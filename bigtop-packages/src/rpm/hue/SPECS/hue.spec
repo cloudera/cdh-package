@@ -340,7 +340,7 @@ fi
 #### PLUGINS ######
 %package -n %{name}-plugins
 Summary: Hadoop plugins for Hue
-Requires: hadoop, bigtop-utils >= 0.6
+Requires: %{name}-common = %{version}-%{release}, hadoop, bigtop-utils >= 0.6
 Group: Applications/Engineering
 Conflicts: cloudera-desktop-plugins
 %description -n %{name}-plugins
