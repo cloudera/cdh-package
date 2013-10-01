@@ -67,14 +67,17 @@ CDH_CUSTOMER_PATCH=%{cdh_customer_patch} CDH_PARCEL_BASE_VERSION=%{cdh_parcel_ve
 
 %install
 patch -p0 < %{SOURCE2}
+tar -czf parcel-%{cdh_parcel_version}.tar.gz build
+
 
 # the following stops rpm from complaining
-chmod 555 $PWD/build/usr/lib/hadoop-yarn/bin/container-executor
-chmod 555 $PWD/build/usr/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
+#chmod 555 $PWD/build/usr/lib/hadoop-yarn/bin/container-executor
+#chmod 555 $PWD/build/usr/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
 
 DEST=$RPM_BUILD_ROOT/%{parcel_default_root}
 mkdir -p $DEST
-mv $PWD/build/usr/lib* $PWD/build/usr/bin $PWD/build/meta $PWD/build/etc $DEST
+mv parcel-%{cdh_parcel_version}.tar.gz $DEST
+#mv $PWD/build/usr/lib* $PWD/build/usr/bin $PWD/build/meta $PWD/build/etc $DEST
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -83,10 +86,10 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %attr(0755,root,root)   %{parcel_default_root}
-%attr(6050,root,yarn)   %{parcel_default_root}/lib/hadoop-yarn/bin/container-executor
-%attr(4754,root,mapred) %{parcel_default_root}/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
-%attr(0755,hue,hue)     %{parcel_default_root}/lib/hue/desktop
-%attr(0644,hue,hue)     %{parcel_default_root}/lib/hue/desktop/desktop.db
+#%attr(6050,root,yarn)   %{parcel_default_root}/lib/hadoop-yarn/bin/container-executor
+#%attr(4754,root,mapred) %{parcel_default_root}/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
+#%attr(0755,hue,hue)     %{parcel_default_root}/lib/hue/desktop
+#%attr(0644,hue,hue)     %{parcel_default_root}/lib/hue/desktop/desktop.db
 
 %changelog
 
