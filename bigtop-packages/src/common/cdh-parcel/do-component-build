@@ -433,7 +433,7 @@ __EOT__
 ) > build/meta/cdh_env.sh
 
 # cdh_alternatives.sh
-BINARIES="beeline flume-ng hadoop hadoop-0.20 hadoop-fuse-dfs hbase hbase-indexer \
+BINARIES="avro-tools beeline flume-ng hadoop hadoop-0.20 hadoop-fuse-dfs hbase hbase-indexer \
           hcat hdfs hive hiveserver2 impala-shell llama mahout mapred oozie pig \
           solrctl sqoop sqoop-codegen sqoop-create-hive-table \
           sqoop-eval sqoop-export sqoop-help sqoop-import sqoop-import-all-tables \
