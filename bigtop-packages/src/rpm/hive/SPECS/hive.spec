@@ -258,9 +258,9 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 # We need to get rid of jars that happen to be shipped in other CDH packages
 %__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-common*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-client*.jar \
 $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-server*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-hadoop-compat*.jar \
-$RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-hadoop2-compat*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/zookeeper-*.jar
+$RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-hadoop2-compat*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-protocol*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/zookeeper-*.jar
 %__ln_s  /usr/lib/hbase/hbase-common.jar /usr/lib/hbase/hbase-client.jar /usr/lib/hbase/hbase-server.jar \
-/usr/lib/hbase/hbase-hadoop-compat.jar /usr/lib/hbase/hbase-hadoop2-compat.jar \
+/usr/lib/hbase/hbase-hadoop-compat.jar /usr/lib/hbase/hbase-hadoop2-compat.jar /usr/lib/hbase/hbase-protocol.jar \
 /usr/lib/zookeeper/zookeeper.jar  $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
 
 # Workaround for BIGTOP-583
@@ -335,6 +335,7 @@ fi
 %exclude %{usr_lib_hive}/lib/hbase-server.jar
 %exclude %{usr_lib_hive}/lib/hbase-hadoop-compat.jar
 %exclude %{usr_lib_hive}/lib/hbase-hadoop2-compat.jar
+%exclude %{usr_lib_hive}/lib/hbase-protocol.jar
 %exclude %{usr_lib_hive}/lib/hive-jdbc*.jar
 %exclude %{usr_lib_hive}/lib/hive-metastore*.jar
 %exclude %{usr_lib_hive}/lib/hive-serde*.jar
@@ -353,6 +354,7 @@ fi
 %{usr_lib_hive}/lib/hbase-server.jar
 %{usr_lib_hive}/lib/hbase-hadoop-compat.jar
 %{usr_lib_hive}/lib/hbase-hadoop2-compat.jar
+%{usr_lib_hive}/lib/hbase-protocol.jar
 
 %files jdbc
 %defattr(-,root,root,755)
