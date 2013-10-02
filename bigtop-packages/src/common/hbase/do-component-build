@@ -21,7 +21,7 @@ if [ -z "$GIT_REPO" ]; then
         MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
     fi
 
-    build_args="clean javadoc:aggregate site assembly:single -DskipTests $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository"
+    build_args="clean $MAVEN_INST_DEPLOY javadoc:aggregate site assembly:single -DskipTests -Dmaven.repo.local=${HOME}/.m2/repository"
 
     set -ex
     
