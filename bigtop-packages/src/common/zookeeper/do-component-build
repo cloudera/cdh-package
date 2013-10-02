@@ -21,10 +21,12 @@ if [ -z "$GIT_REPO" ]; then
     
     ant -propertyfile cloudera/build.properties package tar  -Dversion=${FULL_VERSION} -Drepo.maven.org=${IVY_MIRROR_PROP} -Divy.home=${HOME}/.ivy2  "$@"
     
+    if [ -n "$DO_MAVEN_DEPLOY" ]; then
 # Change to cloudera/maven directory, and install
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository
-    cd cloudera/maven-packaging
-    mvn -Dnot.cdh.release.build=false -Dmaven.repo.local=${HOME}/.m2/repository  install $DO_MAVEN_DEPLOY
+        cd cloudera/maven-packaging
+        mvn -Dnot.cdh.release.build=false -Dmaven.repo.local=${HOME}/.m2/repository  install $DO_MAVEN_DEPLOY
+    fi
 else
     mvn -f cloudera-pom.xml process-resources
     git add .

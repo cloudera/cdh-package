@@ -18,12 +18,17 @@ set -ex
 
 if [ -z "$GIT_REPO" ]; then
     CDK=build/cdk-${FULL_VERSION}
+    if [ -z "${DO_MAVEN_DEPLOY}" ]; then
+        MAVEN_INST_DEPLOY=install
+    else
+        MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
+    fi
     
     rm -rf build
     mkdir -p $CDK/dist/lib
     cp -r * $CDK || :
     
-    mvn clean install -DskipTests $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
+    mvn clean -DskipTests $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
     
     cp `find . -name \*.jar` $CDK/dist/lib || :
     mv `find $CDK -name cdk*.jar` $CDK/dist || :

@@ -15,8 +15,13 @@
 # limitations under the License.
 
 if [ -z "$GIT_REPO" ]; then
+    if [ -z "${DO_MAVEN_DEPLOY}" ]; then
+        MAVEN_INST_DEPLOY=install
+    else
+        MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
+    fi
 
-    build_args="clean install javadoc:aggregate site assembly:single -DskipTests $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository"
+    build_args="clean javadoc:aggregate site assembly:single -DskipTests $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository"
 
     set -ex
     

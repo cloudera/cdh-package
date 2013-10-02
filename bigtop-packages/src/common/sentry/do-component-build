@@ -17,7 +17,12 @@
 set -ex
 
 if [ -z "$GIT_REPO" ]; then
-    mvn clean install -DskipTests $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository $@
+    if [ -z "${DO_MAVEN_DEPLOY}" ]; then
+        MAVEN_INST_DEPLOY=install
+    else
+        MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
+    fi
+    mvn clean -DskipTests $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository $@
     
     rm -rf build
     mkdir build

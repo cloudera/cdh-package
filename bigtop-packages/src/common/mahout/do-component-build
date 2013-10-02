@@ -17,9 +17,15 @@
 set -ex
 
 if [ -z "$GIT_REPO" ]; then
-    mvn clean install source:jar javadoc:jar -Dmahout.skip.distribution=false \
+    if [ -z "${DO_MAVEN_DEPLOY}" ]; then
+        MAVEN_INST_DEPLOY=install
+    else
+        MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
+    fi
+
+    mvn clean source:jar javadoc:jar -Dmahout.skip.distribution=false \
         -Dhadoop.profile=23 -DskipTests \
-        $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
+        $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
     
     mkdir -p build/mahout-${FULL_VERSION}
     for i in distribution/target/mahout*.tar.gz ; do
