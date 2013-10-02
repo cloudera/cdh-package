@@ -16,10 +16,19 @@
 
 set -ex
 
-mvn install -DskipTests
+if [ -z "$GIT_REPO" ]; then
 
-rm -rf build parquet-${FULL_VERSION}
-ALL_FILES=`echo *`
-mkdir build parquet-${FULL_VERSION}
-cp -r $ALL_FILES parquet-${FULL_VERSION}
-tar czf build/parquet-${FULL_VERSION}.tar.gz parquet-${FULL_VERSION}
+    MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn install -DskipTests
+    
+    rm -rf build parquet-${FULL_VERSION}
+    ALL_FILES=`echo *`
+    mkdir build parquet-${FULL_VERSION}
+    cp -r $ALL_FILES parquet-${FULL_VERSION}
+    tar czf build/parquet-${FULL_VERSION}.tar.gz parquet-${FULL_VERSION}
+else
+    git init
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=parquet-${FULL_VERSION}/ --format=tar HEAD |gzip > build/parquet-${FULL_VERSION}.tar.gz
+fi
