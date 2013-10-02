@@ -18,6 +18,12 @@ set -ex
 
 if [ -z "$GIT_REPO" ]; then
     export HADOOP_PROTOC_CDH5_PATH=/opt/toolchain/protobuf-2.5.0/bin/protoc
+
+    if [ -z "${DO_MAVEN_DEPLOY}" ]; then
+        MAVEN_INST_DEPLOY=install
+    else
+        MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
+    fi
     
 # FIXME: this needs to go away once we start using an actuall source tarball
     [ -f pom.xml ] || cd src
@@ -39,9 +45,8 @@ if [ -z "$GIT_REPO" ]; then
         mvn $BUNDLE_SNAPPY \
         -Pdist -Pnative -Pfuse -Psrc -Dtar -Drequire.fuse=true \
         ${MAVEN_SKIP_TESTS} \
-        install \
-        "$@" \
-        $DO_MAVEN_DEPLOY
+        $MAVEN_INST_DEPLOY \
+        "$@" 
     JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn site site:stage ${MAVEN_SKIP_TESTS} $@
     
 # Copy generated docs
@@ -49,7 +54,7 @@ if [ -z "$GIT_REPO" ]; then
     cp -r target/staging/hadoop-project/* build/hadoop-${FULL_VERSION}/share/doc/
     
 # Rebuild and now mvn deploy the tarball - note the '-pl hadoop-dist' - if we chdir into hadoop-dist and build, it fails.
-    JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -pl hadoop-dist -Pdist -Psrc -Dtar ${MAVEN_SKIP_TESTS} -Dmaven.javadoc.skip=true -Dmaven.deploy.skip=false install "$@" $DO_MAVEN_DEPLOY
+    JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -pl hadoop-dist -Pdist -Psrc -Dtar ${MAVEN_SKIP_TESTS} -Dmaven.javadoc.skip=true -Dmaven.deploy.skip=false $MAVEN_INST_DEPLOY "$@"
     
     (cd build/hadoop-${FULL_VERSION} ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${FULL_VERSION}.tar.gz)
 # (cd build/hadoop-${FULL_VERSION}/src ; tar --strip-components=1 -xzvf  ../../../hadoop-dist/target/hadoop-${FULL_VERSION}.tar.gz)
@@ -87,7 +92,7 @@ if [ -z "$GIT_REPO" ]; then
     if [ -n "$DO_MAVEN_DEPLOY" ]; then
 # Change to cloudera/maven directory, and install
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository
-        (cd hadoop-mapreduce1-project/cloudera/maven-packaging ; mvn -Dnot.cdh.release.build=false install $DO_MAVEN_DEPLOY)
+        (cd hadoop-mapreduce1-project/cloudera/maven-packaging ; mvn -Dnot.cdh.release.build=false $DO_MAVEN_DEPLOY)
     fi
     
 # Create a manifest for the hadoop-0.20-client
