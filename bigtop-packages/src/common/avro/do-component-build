@@ -16,18 +16,25 @@
 
 set -ex
 
-# Build Java libraries
-(cd lang/java;
-    mvn package -DskipTests -Dhadoop.version=2 $@;
-    rm -rf mapred/target/classes/;
-    mvn -P dist package -DskipTests -Davro.version=$VERSION javadoc:aggregate $@)
+if [ -z "$GIT_REPO" ]; then
+    # Build Java libraries
+    (cd lang/java;
+        mvn package -DskipTests -Dhadoop.version=2 $@;
+        rm -rf mapred/target/classes/;
+        mvn -P dist package -DskipTests -Davro.version=$VERSION javadoc:aggregate $@)
 
-(cd lang/java/trevni/doc; mvn site $@)
-mvn -N -P copy-artifacts antrun:run $@
-(cd doc; ant -Dforrest.home=${FORREST_HOME};)
+    (cd lang/java/trevni/doc; mvn site $@)
+    mvn -N -P copy-artifacts antrun:run $@
+    (cd doc; ant -Dforrest.home=${FORREST_HOME};)
 
-ALL_FILES=`ls`
-mkdir -p avro-${FULL_VERSION} build
-cp -r ${ALL_FILES} avro-${FULL_VERSION}/
-tar czf build/avro-${FULL_VERSION}.tar.gz avro-${FULL_VERSION}
+    ALL_FILES=`ls`
+    mkdir -p avro-${FULL_VERSION} build
+    cp -r ${ALL_FILES} avro-${FULL_VERSION}/
+    tar czf build/avro-${FULL_VERSION}.tar.gz avro-${FULL_VERSION}
+else
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=avro-${FULL_VERSION}/ --format=tar HEAD |gzip > build/avro-${FULL_VERSION}.tar.gz
+fi
 
