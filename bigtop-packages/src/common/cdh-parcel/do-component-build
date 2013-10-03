@@ -380,7 +380,7 @@ cat > build/meta/permissions.json <<__EOT__
   "lib/hadoop-yarn/bin/container-executor": {
     "user":  "root",
     "group": "yarn",
-    "permissions": "6050"
+    "permissions": "4754"
   },
   "lib/hue/desktop": {
     "user":  "hue",
