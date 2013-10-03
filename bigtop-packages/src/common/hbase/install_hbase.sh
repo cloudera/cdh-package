@@ -113,7 +113,12 @@ install -d -m 0755 $PREFIX/$MAN_DIR
 install -d -m 0755 $PREFIX/$THRIFT_DIR
 
 cp -ra $BUILD_DIR/lib/* ${PREFIX}/${LIB_DIR}/lib/
-mv $PREFIX/$LIB_DIR/lib/hbase*.jar $PREFIX/$LIB_DIR/
+
+# Make HBase JARs findable from both pre- and post-0.96 locations
+for lib in $PREFIX/$LIB_DIR/lib/hbase*.jar; do
+    ln -s lib/`basename $lib` $PREFIX/$LIB_DIR/
+done
+
 cp -a $BUILD_DIR/docs/* $PREFIX/$DOC_DIR
 cp $BUILD_DIR/*.txt $PREFIX/$DOC_DIR/
 cp -a $BUILD_DIR/hbase-webapps $PREFIX/$LIB_DIR
