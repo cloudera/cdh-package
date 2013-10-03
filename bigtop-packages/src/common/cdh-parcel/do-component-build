@@ -354,7 +354,7 @@ cat > build/meta/permissions.json <<__EOT__
   "lib/hadoop-yarn/bin/container-executor": {
     "user":  "root",
     "group": "yarn",
-    "permissions": "6050"
+    "permissions": "4754"
   },
   "share/hue/apps/shell/src/shell/build/setuid": {
     "user":  "root",
