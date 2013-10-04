@@ -67,6 +67,7 @@ while true ; do
         ;;
         --native-lib-dir)
         NATIVE_LIB_DIR=$2 ; shift 2
+        ;;
         --system-include-dir)
         SYSTEM_INCLUDE_DIR=$2 ; shift 2
         ;;
