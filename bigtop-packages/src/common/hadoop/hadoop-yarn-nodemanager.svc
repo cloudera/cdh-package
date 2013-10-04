@@ -22,3 +22,10 @@ DAEMON_FLAGS="$HADOOP_NAME"
 CONF_DIR="/etc/hadoop/conf"
 PIDFILE="/var/run/hadoop-yarn/yarn-$SVC_USER-$HADOOP_NAME.pid"
 CHKCONFIG="2345 95 15"
+
+generate_functions() {
+cat <<'__EOT__'
+  export HADOOP_CLASSPATH="$HADOOP_CLASSPATH:/usr/lib/llama/*:/usr/lib/llama/lib/*"
+__EOT__
+}
+
