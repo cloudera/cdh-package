@@ -613,6 +613,6 @@ for server in $TOMCAT_SERVERS; do
     sed -i -e '/common.loader=/ s:/usr/lib/:${catalina.base}/../../:g' $file
   fi
 done
-
+chmod -R 755      build/*
 chmod 555         build/usr/lib/hadoop-yarn/bin/container-executor
 chmod 555         build/usr/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
