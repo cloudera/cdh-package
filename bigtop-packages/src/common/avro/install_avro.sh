@@ -101,9 +101,10 @@ cp -p lang/java/**/target/*.jar ${PREFIX}/${LIB_DIR}/
 (cd ${PREFIX}/${LIB_DIR}; rm *-tests.jar *-nodeps.jar *-javadoc.jar *-sources.jar)
 
 # Install versionless symlinks
+versions='s#-[0-9.]\+-cdh[0-9\-\.]*\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
 for jar in `ls ${PREFIX}/${LIB_DIR}/*.jar`; do
     base=`basename $jar`
-    (cd ${PREFIX}/${LIB_DIR} && ln -s $base ${base/-[0-9]\.[0-9]\.[0-9]/})
+    (cd ${PREFIX}/${LIB_DIR} && ln -s $base `echo $base | sed -e $versions`)
 done
 
 # Install documentation
