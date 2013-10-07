@@ -22,6 +22,7 @@ Standards-Version: 3.8.0
 Homepage: https://github.com/cloudera/cdk
 
 Package: cdk
+Depends: avro-libs
 Architecture: all
 Description: Cloudera Development Kit.
  The Cloudera Development Kit, or CDK for short, is a set of libraries, 

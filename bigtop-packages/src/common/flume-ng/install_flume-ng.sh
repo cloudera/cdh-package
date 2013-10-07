@@ -171,3 +171,16 @@ rm -rf $PREFIX/$FLUME_DIR/docs
 # Cloudera specific
 install -d -m 0755 $PREFIX/$FLUME_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$FLUME_DIR/cloudera/
+
+# Replace every Avro jar with a symlink to the versionless symlinks in our Avro distribution
+# This regex matches upstream versions, plus CDH versions, betas and snapshots if they are present
+versions='s#-[0-9].[0-9].[0-9]\(-cdh[0-9\-\.]*\)\?\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
+for dir in $PREFIX/$FLUME_DIR/lib; do
+    for old_jar in `ls $dir/avro-*.jar` ; do
+        # Our Avro distribution does not include Cassandra or test JARs and we should remove them from the rest of CDH
+        if [[ "$old_jar" =~ "-cassandra" || "$old_jar" =~ "-tests" ]] ; then continue; fi
+        new_jar=`echo \`basename $old_jar\` | sed -e $versions`
+        rm $old_jar && ln -fs /usr/lib/avro/$new_jar $dir/
+    done
+done
+

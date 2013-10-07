@@ -84,6 +84,7 @@ Source15: hive-webhcat-server.svc
 Source16: hive-hcatalog-server.default
 Source17: hive-webhcat-server.default
 Requires: hadoop-client, bigtop-utils >= 0.6, zookeeper, %{name}-jdbc = %{version}-%{release}
+Requires: avro-libs
 Conflicts: hadoop-hive
 Obsoletes: %{name}-webinterface
 
@@ -155,6 +156,7 @@ This package provides libraries necessary to connect to Apache Hive via JDBC
 Summary: Apache Hcatalog is a data warehouse infrastructure built on top of Hadoop
 Group: Development/Libraries
 Requires: hadoop, hive, bigtop-utils >= 0.6
+Requires: avro-libs
 
 %description hcatalog
 Apache HCatalog is a table and storage management service for data created using Apache Hadoop.

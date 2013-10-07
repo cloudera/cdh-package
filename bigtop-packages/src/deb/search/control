@@ -23,7 +23,7 @@ Homepage: http://flume.apache.org
 
 Package: search
 Architecture: all
-Depends: bigtop-utils (>= 0.6)
+Depends: bigtop-utils (>= 0.6), avro-libs
 Description: Cloudera Search Project
  Cloudera Search Project
 

@@ -69,6 +69,7 @@ Requires: /usr/sbin/useradd
 Requires: coreutils
 Requires: hadoop-hdfs
 Requires: bigtop-utils >= 0.6
+Requires: avro-libs
 
 %if  0%{?mgaversion}
 Requires: bsh-utils

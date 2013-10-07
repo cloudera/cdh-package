@@ -21,12 +21,12 @@ usage() {
   echo "
 usage: $0 <options>
   Required not-so-options:
-     --build-dir=DIR             path to pig dist.dir
+     --build-dir=DIR             path to avro build dir
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --doc-dir=DIR               path to install docs into [/usr/share/doc/pig]
-     --lib-dir=DIR               path to install pig home [/usr/lib/pig]
+     --doc-dir=DIR               path to install docs into [/usr/share/doc/avro]
+     --lib-dir=DIR               path to install avro home [/usr/lib/avro]
      --installed-lib-dir=DIR     path where lib-dir will end up on target system
      --bin-dir=DIR               path to install bins [/usr/bin]
      --examples-dir=DIR          path to install examples [doc-dir/examples]

@@ -63,6 +63,7 @@ Source4: sqoop-metastore.sh.suse
 Buildarch: noarch
 BuildRequires: asciidoc, xmlto
 Requires: hadoop-client, bigtop-utils >= 0.6
+Requires: avro-libs
 
 %description 
 Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).

@@ -3,7 +3,7 @@ Source: https://avro.apache.org
 Upstream-Name: Avro
 
 Files: *
-Copyright: 2012, The Apache Software Foundation
+Copyright: 2013, The Apache Software Foundation
 License: Apache-2.0
 
 License: Apache-2.0

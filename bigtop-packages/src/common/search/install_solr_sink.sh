@@ -111,3 +111,16 @@ mv -f ${PREFIX}/${LIB_DIR}/search-mr*.jar ${PREFIX}/${SOLR_MR_DIR}
 # Sample (twitter) configs
 install -d -m 0755 ${PREFIX}/${DOC_DIR}
 cp -r ${BUILD_DIR}/samples ${PREFIX}/${DOC_DIR}/examples
+
+# Replace every Avro jar with a symlink to the versionless symlinks in our Avro distribution
+# This regex matches upstream versions, plus CDH versions, betas and snapshots if they are present
+versions='s#-[0-9].[0-9].[0-9]\(-cdh[0-9\-\.]*\)\?\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
+for dir in ${PREFIX}/${LIB_DIR}/lib ; do
+    for old_jar in `ls $dir/avro-*.jar` ; do
+        # Our Avro distribution does not include Cassandra or test JARs and we should remove them from the rest of CDH
+        if [[ "$old_jar" =~ "-cassandra" || "$old_jar" =~ "-tests" ]] ; then continue; fi
+        new_jar=`echo \`basename $old_jar\` | sed -e $versions`
+        rm $old_jar && ln -fs /usr/lib/avro/$new_jar $dir/
+    done
+done
+

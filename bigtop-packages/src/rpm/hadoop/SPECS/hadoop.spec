@@ -179,6 +179,7 @@ Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.6, zookeeper >= 3.4.0
 Requires: psmisc, %{netcat_package}
+Requires: avro-libs
 Conflicts: hadoop-0.20
 # Sadly, Sun/Oracle JDK in RPM form doesn't provide libjvm.so, which means we have
 # to set AutoReq to no in order to minimize confusion. Not ideal, but seems to work.
@@ -245,6 +246,7 @@ Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
 # Workaround for 4.0 to 4.X upgrade (CDH-7856) (upgrades from 4.1 onwards are fine)
 Requires: libhadoop.so.1.0.0%{requires_lib_tag}
+Requires: avro-libs
 
 %description yarn
 YARN (Hadoop NextGen MapReduce) is a general purpose data-computation framework.
@@ -265,6 +267,7 @@ the tasks.
 Summary: The Hadoop MapReduce (MRv2)
 Group: System/Daemons
 Requires: %{name}-yarn = %{version}-%{release}
+Requires: avro-libs
 
 %description mapreduce
 Hadoop MapReduce is a programming model and software framework for
@@ -275,6 +278,7 @@ in parallel on large clusters of hosts.
 Summary: Hadoop is a software platform for processing vast amounts of data
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}, %{name}-hdfs = %{version}-%{release}
+Requires: avro-libs
 
 %description 0.20-mapreduce
 Hadoop is a software platform that lets one easily write and
@@ -508,6 +512,7 @@ Requires: %{name}-yarn = %{version}-%{release}
 Requires: %{name}-mapreduce = %{version}-%{release}
 Requires: %{name}-0.20-mapreduce = %{version}-%{release}
 Requires(pre): %{name}-0.20-mapreduce = %{version}-%{release}
+Requires: avro-libs
 
 %description client
 Installation of this package will provide you with all the dependencies for Hadoop clients.

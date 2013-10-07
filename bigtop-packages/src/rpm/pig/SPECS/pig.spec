@@ -82,6 +82,7 @@ Source3: log4j.properties
 Source4: pig.1
 Source5: pig.properties
 Requires: hadoop-client, bigtop-utils >= 0.6
+Requires: avro-libs
 Conflicts: hadoop-pig
 
 %description 

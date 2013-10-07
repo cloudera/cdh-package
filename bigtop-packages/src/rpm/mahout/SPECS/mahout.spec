@@ -45,7 +45,7 @@ Source0: mahout-%{mahout_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{name}.sh
 Requires: hadoop-client, bigtop-utils >= 0.6
-
+Requires: avro-libs
 
 %description 
 Mahout's goal is to build scalable machine learning libraries. 
