@@ -72,7 +72,7 @@ override_dh_auto_install:
 	# Forcing Zookeeper dependency to be on the packaged jar
 	ln -sf /usr/lib/zookeeper/zookeeper.jar debian/tmp/usr/lib/hadoop/lib/zookeeper*.jar
 	# Workaround for BIGTOP-583
-	rm -f debian/tmp/usr/lib/hadoop-*/lib/slf4j-log4j12-*.jar
+	rm -f debian/tmp/usr/lib/hadoop*/lib/slf4j-log4j12-*.jar
 	ln -fs /usr/lib/zookeeper/lib/slf4j-log4j12.jar debian/tmp/usr/lib/hadoop/lib/slf4j-log4j12.jar
 	# FIXME: BIGTOP-463
 	mkdir -p debian/tmp/etc/default
