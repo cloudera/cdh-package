@@ -27,7 +27,7 @@ export DH_OPTIONS
 	dh $@
 
 override_dh_auto_build:
-	bash debian/do-component-build
+	env FULL_VERSION=${PARQUET_PATCHED_VERSION} bash debian/do-component-build
 
 override_dh_auto_install:
 	bash -x debian/install_parquet.sh \

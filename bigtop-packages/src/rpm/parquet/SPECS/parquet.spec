@@ -44,7 +44,7 @@ Requires: hadoop
 %setup -n parquet-%{parquet_patched_version}
 
 %build
-bash $RPM_SOURCE_DIR/do-component-build
+env FULL_VERSION=%{parquet_patched_version} bash $RPM_SOURCE_DIR/do-component-build
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
