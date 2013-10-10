@@ -30,6 +30,7 @@ Description: Tool for easy imports and exports of data sets between databases an
 
 Package: sqoop2-client
 Architecture: all
+Depends: bigtop-utils (>= 0.6)
 Description: Lightweight client for Sqoop 2.
 
 Package: sqoop2-server

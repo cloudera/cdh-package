@@ -78,6 +78,7 @@ lightweight client for executing imports and exports on the server.
 %package client
 Summary: Client for Sqoop 2.
 URL: http://sqoop.apache.org
+Requires: bigtop-utils >= 0.6
 Group: System/Daemons
 
 %package server
