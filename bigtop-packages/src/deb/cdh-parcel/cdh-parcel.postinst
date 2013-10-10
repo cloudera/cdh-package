@@ -30,7 +30,7 @@ PARCEL_DEFAULT_ROOT=/opt/cloudera/parcels/CDH-@VERSION@-@RELEASE@
 case "$1" in
     configure)
         #chown root:yarn   $PARCEL_DEFAULT_ROOT/lib/hadoop-yarn/bin/container-executor
-        #chmod 4754        $PARCEL_DEFAULT_ROOT/lib/hadoop-yarn/bin/container-executor
+        #chmod 6050        $PARCEL_DEFAULT_ROOT/lib/hadoop-yarn/bin/container-executor
         #chown root:mapred $PARCEL_DEFAULT_ROOT/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
         #chmod 4754        $PARCEL_DEFAULT_ROOT/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
         #chown hue:hue     $PARCEL_DEFAULT_ROOT/lib/hue/desktop

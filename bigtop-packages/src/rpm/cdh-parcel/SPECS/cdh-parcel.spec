@@ -86,7 +86,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %attr(0755,root,root)   %{parcel_default_root}
-#%attr(4754,root,yarn)   %{parcel_default_root}/lib/hadoop-yarn/bin/container-executor
+#%attr(6050,root,yarn)   %{parcel_default_root}/lib/hadoop-yarn/bin/container-executor
 #%attr(4754,root,mapred) %{parcel_default_root}/lib/hadoop-0.20-mapreduce/sbin/*/task-controller
 #%attr(0755,hue,hue)     %{parcel_default_root}/lib/hue/desktop
 #%attr(0644,hue,hue)     %{parcel_default_root}/lib/hue/desktop/desktop.db
