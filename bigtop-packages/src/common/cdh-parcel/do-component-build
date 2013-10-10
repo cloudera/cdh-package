@@ -605,7 +605,7 @@ this="$common_bin/$script"\
 sed -i 's#/usr/lib/#\$common_bin/../../#' $FILE
 
 # Updating catalina.properties in oozie and sqoop2 to not point to /usr/lib/hadoop absolute paths but relatively to hadoop location within the parcel
-TOMCAT_SERVERS="oozie/oozie-server oozie/oozie-server-0.20 sqoop2/sqoop-server sqoop2/sqoop-server-0.20"
+TOMCAT_SERVERS="oozie/oozie-server-ssl oozie/oozie-server-0.20-ssl oozie/oozie-server oozie/oozie-server-0.20 sqoop2/sqoop-server sqoop2/sqoop-server-0.20"
 for server in $TOMCAT_SERVERS; do
   file=build/usr/lib/$server/conf/catalina.properties
   if [ -e $file ];
