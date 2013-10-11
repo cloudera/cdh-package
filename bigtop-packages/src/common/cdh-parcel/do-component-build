@@ -167,7 +167,7 @@ done
 for link in `find build/usr/lib/hue/build/env/lib/python* -type l`; do
   target=`readlink $link`
   rm -f $link
-  ln -s `echo $target | sed -e 's#\(\.\./\)\(\.\./\)*#/usr/#'` $link
+  ln -s `echo $target | sed -e 's#\(\.\./\)\(\.\./\)*#/usr/lib/#'` $link
 done
 
 # Set up post install symlink for impala/sbin to point to impala/sbin-retail
