@@ -24,7 +24,7 @@
 /usr/lib/hue/apps/proxy
 /usr/lib/hue/apps/useradmin
 /usr/lib/hue/apps/oozie
-/usr/lib/hue/app/metastore
+/usr/lib/hue/apps/metastore
 /usr/lib/hue/cloudera/cdh_version.properties
 /var/log/hue
 /var/lib/hue
