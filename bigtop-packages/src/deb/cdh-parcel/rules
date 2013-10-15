@@ -58,7 +58,7 @@ debian/cdh-parcel-$(version)/opt/cloudera/parcels/CDH-${version_release}:
 	tar -czf parcel-${version_release}.tar.gz build
 	mkdir -p $@
 	mv parcel-${version_release}.tar.gz $@
-	#mv build/usr/{bin,lib}* build/meta build/etc $@
+	#mv build/usr/{bin,lib,share}* build/meta build/etc $@
 	sed -e 's#@VERSION@#$(version)#' < debian/cdh-parcel.postinst > debian/cdh-parcel-$(version).postinst
 	echo /opt > debian/cdh-parcel-$(version).install
 
