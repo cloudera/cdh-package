@@ -77,7 +77,7 @@ tar -czf parcel-%{cdh_parcel_version}.tar.gz build
 DEST=$RPM_BUILD_ROOT/%{parcel_default_root}
 mkdir -p $DEST
 mv parcel-%{cdh_parcel_version}.tar.gz $DEST
-#mv $PWD/build/usr/lib* $PWD/build/usr/bin $PWD/build/meta $PWD/build/etc $DEST
+#mv $PWD/build/usr/lib* $PWD/build/usr/bin $PWD/build/usr/share $PWD/build/meta $PWD/build/etc $DEST
 
 %clean
 rm -rf $RPM_BUILD_ROOT
