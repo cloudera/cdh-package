@@ -53,7 +53,7 @@ Description: Service Scripts for Hue
 
 Package: hue-beeswax
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hive
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hive, libsasl2-modules
 Description: A UI for Hive on Hue
  Beeswax is a web interface for Hive.
  .

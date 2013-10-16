@@ -357,7 +357,7 @@ This package should be installed on each node in the Hadoop cluster.
 %package -n %{name}-beeswax
 Summary: A UI for Hive on Hue
 Group: Applications/Engineering
-Requires: %{name}-common = %{version}-%{release}, hive, make
+Requires: %{name}-common = %{version}-%{release}, hive, make, cyrus-sasl-plain
 
 %description -n %{name}-beeswax
 Beeswax is a web interface for Hive.
