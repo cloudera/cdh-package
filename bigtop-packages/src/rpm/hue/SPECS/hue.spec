@@ -446,6 +446,7 @@ Requires: %{name}-jobsub = %{version}-%{release}
 Requires: %{name}-help = %{version}-%{release}
 Requires: %{name}-metastore = %{version}-%{release}
 Requires: hive
+Requires: cyrus-sasl-plain
 
 %description -n %{name}-beeswax
 Beeswax is a web interface for Hive.
