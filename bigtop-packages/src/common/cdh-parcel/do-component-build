@@ -433,12 +433,12 @@ __EOT__
 ) > build/meta/cdh_env.sh
 
 # cdh_alternatives.sh
-BINARIES="avro-tools beeline flume-ng hadoop hadoop-0.20 hadoop-fuse-dfs hbase hbase-indexer \
-          hcat hdfs hive hiveserver2 impala-shell llama mahout mapred oozie pig \
+BINARIES="avro-tools beeline catalogd flume-ng hadoop hadoop-0.20 hadoop-fuse-dfs hbase hbase-indexer \
+          hcat hdfs hive hiveserver2 impala-shell impalad llama mahout mapred oozie pig \
           solrctl sqoop sqoop-codegen sqoop-create-hive-table \
           sqoop-eval sqoop-export sqoop-help sqoop-import sqoop-import-all-tables \
           sqoop-job sqoop-list-databases sqoop-list-tables sqoop-merge sqoop-metastore \
-          sqoop-version sqoop2 whirr yarn zookeeper-client \
+          sqoop-version sqoop2 statestored whirr yarn zookeeper-client \
           zookeeper-server zookeeper-server-cleanup zookeeper-server-initialize"
 
 CONFDIRS="hbase hbase-solr hive hive-hcatalog hive-webhcat impala llama mahout oozie pig solr sqoop sqoop2 zookeeper"
