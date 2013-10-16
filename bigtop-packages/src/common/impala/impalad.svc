@@ -27,7 +27,7 @@ LOCKDIR="/var/lock/subsys"
 LOCKFILE="impalad"
 PRIORITY=92
 
-generate_environment() {
+generate_functions() {
 cat <<'__EOT__'
 
 if [ -f /etc/default/impala ] ; then
