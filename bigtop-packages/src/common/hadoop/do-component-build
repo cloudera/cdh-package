@@ -16,8 +16,6 @@
 
 set -ex
 
-rm -rf ~/.m2/repository/com/cloudera
-
 if [ -z "$GIT_REPO" ]; then
     export HADOOP_PROTOC_CDH5_PATH=/opt/toolchain/protobuf-2.5.0/bin/protoc
 
