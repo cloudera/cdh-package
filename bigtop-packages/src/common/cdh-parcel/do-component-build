@@ -620,7 +620,14 @@ rm -rf build/usr/lib/debug
 # Get rid of most of man pages
 rm -rf build/usr/share/man
 # Remove all docs but those of oozie, search, solr-doc and MR1
-find build/usr/share/doc/* -maxdepth 0  | grep -E -v 'oozie|search|solr-doc|hadoop-0.20-mapreduce' | xargs rm -rf
+DOC_DIR="build/usr/share/doc"
+
+#If you are sles, then you put docs in a different location, grumble grumble
+if egrep -i $SUSE_RELEASES /etc/*release ;then
+  DOC_DIR="build/usr/share/doc/packages"
+fi
+
+find $DOC_DIR/* -maxdepth 0  | grep -E -v 'oozie|search|solr-doc|hadoop-0.20-mapreduce' | xargs rm -rf
 
 chmod -R 755      build/*
 chmod 555         build/usr/lib/hadoop-yarn/bin/container-executor
