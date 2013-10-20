@@ -153,6 +153,8 @@ BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
+ALL_PARAMS="$@"
+
 export HADOOP_CONF=${HADOOP_CONF:-/etc/hadoop/conf}
 export ZOOKEEPER_HOME=${ZOOKEEPER_HOME:-/usr/lib/zookeeper}
 export HBASE_CLASSPATH=$HADOOP_CONF:$HADOOP_HOME/*:$HADOOP_HOME/lib/*:$ZOOKEEPER_HOME/*:$ZOOKEEPER_HOME/lib/*:$HBASE_CLASSPATH
