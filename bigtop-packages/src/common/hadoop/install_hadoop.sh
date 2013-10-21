@@ -371,9 +371,8 @@ cp -r ${BUILD_DIR}/share/doc/* ${DOC_DIR}/
 MR1_EXAMPLES=`dirname ${DOC_DIR}`/hadoop-0.20-mapreduce/examples
 install -d -m 0755 ${MR1_EXAMPLES}
 cp -r ${BUILD_DIR}/src/hadoop-mapreduce1-project/src/examples ${MR1_EXAMPLES}/src
-for x in ${MAPREDUCE_MR1_DIR}/*examples*jar ${MAPREDUCE_MR1_DIR}/hadoop-examples.jar ; do
-  ln -sf `echo $x | sed -e "s,$PREFIX,,"` ${MR1_EXAMPLES}
-done
+cp ${MAPREDUCE_MR1_DIR}/hadoop-examples*jar ${MR1_EXAMPLES}
+(cd ${MR1_EXAMPLES} ; ln -s hadoop-examples*jar hadoop-examples.jar)
 
 # LNRC (MR1)
 cp ${BUILD_DIR}/share/doc/hadoop-mapreduce1/{LICENSE,NOTICE,README,CHANGES}.txt ${MAPREDUCE_MR1_DIR}
