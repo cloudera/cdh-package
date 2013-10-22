@@ -182,10 +182,8 @@ rm -f build/usr/lib/hue/desktop/desktop.db
 rm -f build/usr/lib/hue/app.reg
 rm -f build/usr/lib/hue/build/env/lib/python*/site-packages/hue.pth
 
-rm -f build/usr/lib/hue/desktop/conf
 rm -f build/usr/lib/hue/desktop/logs
 mkdir build/usr/lib/hue/desktop/logs
-cp -r build/etc/hue build/usr/lib/hue/desktop/conf
 pushd build/usr/lib/hue
  /bin/bash -x ./tools/relocatable.sh
  for app in $HUE_APPS ; do
