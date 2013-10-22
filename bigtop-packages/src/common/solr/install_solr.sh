@@ -113,7 +113,6 @@ cp -ra ${BUILD_DIR}/dist/*.*ar $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist/solrj-lib $PREFIX/$LIB_DIR/lib
 cp -ra ${BUILD_DIR}/example/solr/collection1/conf $PREFIX/$LIB_DIR/coreconfig-template
 cp -fa cloudera/solrconfig.xml $PREFIX/$LIB_DIR/coreconfig-template
-cp -fa cloudera/schema.xml $PREFIX/$LIB_DIR/coreconfig-template
 
 install -d -m 0755 $PREFIX/$LIB_DIR/contrib
 cp -ra ${BUILD_DIR}/contrib/velocity $PREFIX/$LIB_DIR/contrib
