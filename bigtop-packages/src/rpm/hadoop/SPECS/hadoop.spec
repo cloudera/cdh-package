@@ -881,6 +881,7 @@ fi
 
 %files 0.20-mapreduce
 %defattr(-,root,root)
+%config(noreplace) %{etc_hadoop}/conf.empty/fair-scheduler.xml
 %config(noreplace) /etc/security/limits.d/mapred.conf
 # FIXME: we need to think how to get rid of the following file
 %config(noreplace) /etc/default/hadoop-0.20-mapreduce

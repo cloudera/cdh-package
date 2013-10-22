@@ -2,4 +2,5 @@
 /usr/lib/hadoop-0.20-mapreduce
 /etc/default/hadoop-0.20
 /etc/security/limits.d/mapred.conf
+/etc/hadoop/conf.empty/fair-scheduler.xml
 # /usr/share/doc/hadoop-0.20-mapreduce
