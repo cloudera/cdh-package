@@ -45,7 +45,7 @@ mkdir build
 pushd build
   tar -xzf ../solr/build/solr-*-src.tgz
   tar -C solr-* --strip-components=1 -xzf ../solr/package/solr-*.tgz
-  cp -r ../cloudera* solr-${FULL_VERSION}
+  cp -r ../cloudera* ../sentry solr-${FULL_VERSION}
   cp -r ../cdh.build.properties solr-${FULL_VERSION}
   tar -czf solr-${FULL_VERSION}.tar.gz solr-${FULL_VERSION}
 popd
