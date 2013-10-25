@@ -308,15 +308,15 @@ start() {
     if [ -n "${OFFSETS_FROM_CLI}${OFFSETS_FROM_DEFAULT}" ] ; then
         if hbase_check_pidfile $PID_FILE ; then
             echo "$NAME has already been started - cannot start other @HBASE_DAEMON@ daemons."
-            exit 1
+            return 1
         fi
         multi_hbase_daemon "start"
-        exit $?
+        return $?
     fi
     multi_hbase_daemon_check_pidfiles > /dev/null
     if [ "$?" != "$NO_DAEMONS_RUNNING" ] ; then
       echo "Cannot start $NAME - other @HBASE_DAEMON@ daemons have already been started."
-      exit 1
+      return 1
     fi
     echo -n "Starting $DESC: "
     su -s /bin/bash hbase -c "$DAEMON_SCRIPT start @HBASE_DAEMON@"
@@ -324,8 +324,10 @@ start() {
     sleep 1
     if hbase_check_pidfile $PID_FILE ; then
         echo "$NAME."
+        return $ALL_DAEMONS_RUNNING
     else
         echo "ERROR."
+        return $NO_DAEMONS_RUNNING
     fi
 }
 stop() {
@@ -338,8 +340,10 @@ stop() {
     su -s /bin/bash hbase -c "$DAEMON_SCRIPT stop @HBASE_DAEMON@"
     if hbase_check_pidfile $PID_FILE ; then
         echo "ERROR."
+        return 1
     else
         echo "$NAME."
+        return 0
     fi
 }
 
@@ -385,7 +389,7 @@ status() {
     else
         IFS=''
         echo $MULTI_HBASE_DAEMON_STATUS_TEXT
-        return $MULTI_HBASE_DAEMONS_STATUS
+        return $MULTI_HBASE_DAEMON_STATUS
     fi
 }
 
@@ -412,7 +416,6 @@ case "$1" in
   ;;
   restart)
         restart
-        exit $?
     ;;
   condrestart)
         condrestart
@@ -427,4 +430,4 @@ case "$1" in
   ;;
 esac
 
-exit 0
+exit $?
