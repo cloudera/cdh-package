@@ -64,14 +64,6 @@ Requires: bigtop-utils >= 0.6
 %description
 Cloudera Search Project
 
-%package -n flume-ng-solr
-Summary: Flume NG Solr Sink
-Group: Development/Libraries
-Requires: flume-ng
-
-%description -n flume-ng-solr
-Flume NG Solr Sink
-
 %prep
 %setup -n cloudera-%{name}-%{search_patched_version}
 
@@ -87,10 +79,6 @@ sh %{SOURCE2} \
 %files
 %{lib_dir}
 %{doc_dir}
-
-%files -n flume-ng-solr
-%defattr(644,root,root,755)
-%{lib_flume}/lib
 
 %package -n solr-mapreduce
 Summary: Solr mapreduce indexer

@@ -104,35 +104,6 @@ ETC_DIR=${ETC_DIR:-/etc/flume-ng}
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
 cp -r ${BUILD_DIR}/search-dist/target/dist/* ${PREFIX}/${LIB_DIR}
 
-# Plugin jars
-install -d -m 0755 ${PREFIX}/${FLUME_DIR}/lib
-mv -f ${PREFIX}/${LIB_DIR}/search-contrib* ${PREFIX}/${FLUME_DIR}/lib
-
-# FIXME: A really ugly workaround to make package work against CDH4.3
-#        and CDH4.4 at the same time
-(cd ${BUILD_DIR}/search-dist/flume-ng-solr-sink-dist/target/lib/;
-  rm -f avro-*.jar avro-ipc-*.jar commons-cli-*.jar commons-compress-*.jar \
-        commons-io-*.jar commons-lang-*.jar gson-*.jar guava-*.jar         \
-        jsr305-*.jar libthrift-*.jar log4j-*.jar netty-*.Final.jar         \
-        paranamer-*.jar servlet-api-*.jar slf4j-api-*.jar                  \
-        slf4j-log4j12-*.jar snappy-java-*.jar velocity-*.jar xz-1.0.jar    \
-        zookeeper-*.jar flume-ng-configuration-*.jar flume-ng-core-*.jar   \
-        flume-ng-sdk-*.jar httpcore-*.jar jackson-core-asl-*.jar           \
-        jackson-mapper-asl-*.jar jetty-*.jar jetty-util-*.jar              \
-        joda-time-*.jar vorbis-java-core-*-tests.jar hadoop*.jar           \
-        commons-collections*.jar commons-configuration*.jar jsp-api*.jar   \
-        junit-*.jar mockito-all-*.jar protobuf-*.jar httpclient*.jar       \
-        cdk-morphlines-all*.pom
-  for i in commons-logging*.jar commons-codec* jackson-core* flume-ng-morphline-solr-sink* ; do
-    mv $i search-$i
-  done
-)
-cp ${BUILD_DIR}/search-dist/flume-ng-solr-sink-dist/target/lib/* ${PREFIX}/${FLUME_DIR}/lib
-
-# FIXME: we have to replace a real solr-solrj.jar with a shaded copy
-rm -f ${PREFIX}/${FLUME_DIR}/lib/solr-solrj*.jar
-cp ${PREFIX}/${LIB_DIR}/solr-solrj-dist*.jar ${PREFIX}/${FLUME_DIR}/lib/
-
 # FIXME: once solr-mr
 install -d -m 0755 ${PREFIX}/${SOLR_MR_DIR}
 mv -f ${PREFIX}/${LIB_DIR}/search-mr*.jar ${PREFIX}/${SOLR_MR_DIR}
