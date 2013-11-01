@@ -21,11 +21,11 @@ usage() {
   echo "
 usage: $0 <options>
   Required not-so-options:
-     --build-dir=DIR             path to parquet tarball with binaries
+     --build-dir=DIR             path to parquet-format tarball with binaries
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --lib-dir=DIR               path to install parquet jar files
+     --lib-dir=DIR               path to install parquet-format jar files
      ... [ see source for more similar options ]
   "
   exit 1
@@ -88,6 +88,6 @@ for jar in `find $BUILD_DIR -name *.jar | grep -v '\-tests.jar'`; do
 done
 
 # Cloudera specific
-install -d -m 0755 $PREFIX/$LIB_DIR/parquet-mr/cloudera
-cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/parquet-mr/cloudera/
+install -d -m 0755 $PREFIX/$LIB_DIR/parquet-format/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/parquet-format/cloudera/
 

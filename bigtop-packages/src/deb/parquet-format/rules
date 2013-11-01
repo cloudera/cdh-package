@@ -1,3 +1,5 @@
+#!/usr/bin/make -f
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -12,20 +14,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# -*- makefile -*-
 
-Source: parquet
-Section: misc
-Priority: extra
-Maintainer: Bigtop <dev@bigtop.apache.org>
-Build-Depends: debhelper (>= 7.0.50~)
-Standards-Version: 3.8.0
-Homepage: https://parquet.io
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
 
-Package: parquet
-Architecture: all
-Depends: hadoop, parquet-format
-Description: A columnar storage format for Hadoop.
- Parquet-MR contains the java implementation of the Parquet format. Parquet is
- a columnar storage format for Hadoop; it provides efficient storage and
- encoding of data. Parquet uses the record shredding and assembly algorithm
- described in the Dremel paper to represent nested structures.
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	bash debian/do-component-build
+
+override_dh_auto_install:
+	sh -x debian/install_parquet-format.sh \
+	  --build-dir=./ \
+	  --prefix=debian/tmp

@@ -19,35 +19,33 @@
 # disable repacking jars
 %define __os_install_post %{nil}
 
-Name: parquet
-Version: %{parquet_version}
-Release: %{parquet_release}
-Summary: A columnar storage format for Hadoop.
+Name: parquet-format
+Version: %{parquet_format_version}
+Release: %{parquet_format_release}
+Summary: Format definitions for Parquet
 URL: http://parquet.io
 Group: Development/Libraries
 BuildArch: noarch
-Buildroot: %(mktemp -ud %{_tmppath}/parquet-%{version}-%{release}-XXXXXX)
+Buildroot: %(mktemp -ud %{_tmppath}/parquet-format-%{version}-%{release}-XXXXXX)
 License: ASL 2.0 
-Source0: parquet-%{parquet_patched_version}.tar.gz
+Source0: parquet-format-%{parquet_format_patched_version}.tar.gz
 Source1: do-component-build 
-Source2: install_parquet.sh
-Requires: hadoop, parquet-format
+Source2: install_parquet-format.sh
+Requires: hadoop
+Requires: parquet >= 1.2.3
 
-%description 
- Parquet-MR contains the java implementation of the Parquet format. Parquet is
- a columnar storage format for Hadoop; it provides efficient storage and
- encoding of data. Parquet uses the record shredding and assembly algorithm
- described in the Dremel paper to represent nested structures.
+%description
+Format definitions for Parquet
 
 %prep
-%setup -n parquet-%{parquet_patched_version}
+%setup -n parquet-format-%{parquet_format_patched_version}
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh $RPM_SOURCE_DIR/install_parquet.sh \
+sh $RPM_SOURCE_DIR/install_parquet-format.sh \
           --build-dir=./ \
           --prefix=$RPM_BUILD_ROOT
 
@@ -56,5 +54,5 @@ sh $RPM_SOURCE_DIR/install_parquet.sh \
 #######################
 %files 
 %defattr(-,root,root,755)
-%{lib_parquet}/*
+%{lib_parquet}
 %{hadoop_home}/*.jar

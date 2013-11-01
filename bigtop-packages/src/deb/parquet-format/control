@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Source: parquet
+Source: parquet-format
 Section: misc
 Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
@@ -21,11 +21,8 @@ Build-Depends: debhelper (>= 7.0.50~)
 Standards-Version: 3.8.0
 Homepage: https://parquet.io
 
-Package: parquet
+Package: parquet-format
 Architecture: all
-Depends: hadoop, parquet-format
-Description: A columnar storage format for Hadoop.
- Parquet-MR contains the java implementation of the Parquet format. Parquet is
- a columnar storage format for Hadoop; it provides efficient storage and
- encoding of data. Parquet uses the record shredding and assembly algorithm
- described in the Dremel paper to represent nested structures.
+Depends: hadoop, parquet (>= 1.2.3)
+Description: Format definitions for Parquet
+

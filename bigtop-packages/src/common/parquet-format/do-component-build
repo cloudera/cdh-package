@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,19 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Source: parquet
-Section: misc
-Priority: extra
-Maintainer: Bigtop <dev@bigtop.apache.org>
-Build-Depends: debhelper (>= 7.0.50~)
-Standards-Version: 3.8.0
-Homepage: https://parquet.io
+set -ex
 
-Package: parquet
-Architecture: all
-Depends: hadoop, parquet-format
-Description: A columnar storage format for Hadoop.
- Parquet-MR contains the java implementation of the Parquet format. Parquet is
- a columnar storage format for Hadoop; it provides efficient storage and
- encoding of data. Parquet uses the record shredding and assembly algorithm
- described in the Dremel paper to represent nested structures.
+make
+mvn package -DskipTests
+
+rm -rf build parquet-format-${FULL_VERSION}
+ALL_FILES=`echo *`
+mkdir build parquet-format-${FULL_VERSION}
+cp -r $ALL_FILES parquet-format-${FULL_VERSION}
+tar czf build/parquet-format-${FULL_VERSION}.tar.gz parquet-format-${FULL_VERSION}
