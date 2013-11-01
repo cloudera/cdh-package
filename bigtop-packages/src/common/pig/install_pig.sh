@@ -145,6 +145,11 @@ if [ -n "\$HBASE_BINARY" ] ; then
   export PIG_CLASSPATH=\$PIG_CLASSPATH:\`\$HBASE_BINARY classpath\`
 fi
 
+PARQUET_HOME=/usr/lib/parquet
+if [ -d "\$PARQUET_HOME" ] ; then
+  export PIG_CLASSPATH=\$PIG_CLASSPATH:\$PARQUET_HOME/*.jar
+fi
+
 exec $INSTALLED_LIB_DIR/bin/pig "\$@"
 EOF
 chmod 755 $PREFIX/$BIN_DIR/pig
