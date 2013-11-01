@@ -31,6 +31,7 @@ if [ -z "$GIT_REPO" ]; then
     if [ ! -d build/hadoop-${FULL_VERSION}/src ]; then
         mkdir -p build/hadoop-${FULL_VERSION}/src 
         tar --exclude='./build/*' -cf - . | (cd build/hadoop-${FULL_VERSION}/src ; tar xf -)
+        rm -rf build/hadoop-${FULL_VERSION}/src/cloudera build/hadoop-${FULL_VERSION}/src/.git
     fi
     
     if [ -z "$BUNDLE_SNAPPY" ] ; then
