@@ -184,6 +184,8 @@ fi
 %files client
 %defattr(0755,root,root)
 /usr/bin/sqoop2
+%dir %{lib_sqoop}
+%dir %{lib_sqoop}/bin
 %{lib_sqoop}/bin/sqoop.sh
 %{lib_sqoop}/client-lib
 %{lib_sqoop}/cloudera
