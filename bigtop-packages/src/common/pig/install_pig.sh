@@ -130,7 +130,7 @@ ln -s /etc/pig/conf $PREFIX/$LIB_DIR/conf
 # Copy in the /usr/bin/pig wrapper
 install -d -m 0755 $PREFIX/$BIN_DIR
 cat > $PREFIX/$BIN_DIR/pig <<EOF
-#!/bin/sh
+#!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
@@ -140,6 +140,11 @@ cat > $PREFIX/$BIN_DIR/pig <<EOF
 HBASE_BINARY=\`PATH=\${HBASE_HOME}:\$PATH which hbase\`
 if [ -n "\$HBASE_BINARY" ] ; then
   export PIG_CLASSPATH=\$PIG_CLASSPATH:\`\$HBASE_BINARY classpath\`
+fi
+
+PARQUET_HOME=/usr/lib/parquet
+if [ -d "\$PARQUET_HOME" ] ; then
+  export PIG_CLASSPATH=\$PIG_CLASSPATH:\$PARQUET_HOME/*.jar
 fi
 
 exec $INSTALLED_LIB_DIR/bin/pig "\$@"

@@ -40,6 +40,11 @@ start() {
 
     exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE` -Dhive.log.file=${DAEMON}.log -Dhive.log.threshold=INFO\""
 
+    PARQUET_HOME=/usr/lib/parquet
+    if [ -d "$PARQUET_HOME" ] ; then
+      exec_env="$exec_env HIVE_CLASSPATH=$HIVE_CLASSPATH:$PARQUET_HOME/*.jar"
+    fi
+
     su -s /bin/sh $SVC_USER -c "$exec_env nohup nice -n 0 \
         $EXEC_PATH --service metastore $PORT \
             > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PIDFILE"
