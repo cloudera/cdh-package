@@ -53,7 +53,7 @@ JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms25
 
 (cd build/hadoop-${FULL_VERSION} ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${FULL_VERSION}.tar.gz)
 # (cd build/hadoop-${FULL_VERSION}/src ; tar --strip-components=1 -xzvf  ../../../hadoop-dist/target/hadoop-${FULL_VERSION}-src.tar.gz)
-(cd build/hadoop-${FULL_VERSION} ; cp -r ../../../cloudera .)
+(cd build/hadoop-${FULL_VERSION} ; cp -r ../../../cloudera . || cp -r ../../cloudera .)
 
 # Build MR1
 IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
