@@ -222,6 +222,9 @@ cp -r ${BUILD_DIR}/share/hadoop/mapreduce1/* ${MAPREDUCE_MR1_DIR}
 for x in contrib/vaidya contrib/thriftfs contrib/hod contrib/failmon contrib/datajoin contrib/index ; do 
   rm -rf ${MAPREDUCE_MR1_DIR}/$x 
 done
+
+# Remove the convenience symlink so we can copy the stuff over
+rm ${MAPREDUCE_MR1_DIR}/bin
 cp -r ${BUILD_DIR}/bin-mapreduce1 ${MAPREDUCE_MR1_DIR}/bin
 cp -r ${BUILD_DIR}/sbin/Linux* ${MAPREDUCE_MR1_DIR}/sbin
 ln -s /etc/hadoop/conf ${MAPREDUCE_MR1_DIR}/conf
