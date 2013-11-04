@@ -164,14 +164,16 @@ function info() {
 }
 
 function tomcat_watchdog() {
+   local LOCAL_SOLR_URL="http://127.0.0.1:$SOLR_PORT/solr"
+
    eval exec {3..255}\>\&-
    cd /
    info "Starting a watchdog process monitoring $$"
    while true ; do
      sleep $SOLRD_WATCHDOG_TIMEOUT
-     info  "Sending a heartbeat request to http://$HOSTNAME:$SOLR_PORT/solr"
+     info  "Sending a heartbeat request to $LOCAL_SOLR_URL"
 
-     HTTP_CODE=`curl -m$SOLRD_WATCHDOG_TIMEOUT --retry 5 -L -k -s --negotiate -u : -o /dev/null -w "%{http_code}" http://$HOSTNAME:$SOLR_PORT/solr`
+     HTTP_CODE=`curl -m$SOLRD_WATCHDOG_TIMEOUT --retry 5 -L -k -s --negotiate -u : -o /dev/null -w "%{http_code}" "$LOCAL_SOLR_URL"`
      HTTP_CODE=${HTTP_CODE:-600}
 
      # If we're getting 5xx+ (server side error) kill the service and exit
