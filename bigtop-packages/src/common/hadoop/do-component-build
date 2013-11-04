@@ -123,6 +123,11 @@ if [ -z "$GIT_REPO" ]; then
     mv -f hadoop-mapreduce1-project/build/c++-examples build/hadoop-${FULL_VERSION}/examples-mapreduce1
     cp -r hadoop-mapreduce1-project/build/c++/* build/hadoop-${FULL_VERSION}/examples-mapreduce1
     
+# Creating a convenience symlink for MR1, this has no effect on any packaging work
+# or using MR1 or MR2 from tarballs. It's just one less step you have do *if*
+# you were using MR1 from tarballs.
+    (cd build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1 && ln -s ../../../bin-mapreduce1/ bin)
+
     BIN_EXCLUDE="--exclude=*/lib/native/lib*            \
              --exclude=*/examples/bin/*             \
              --exclude=*/bin/container-executor     \
