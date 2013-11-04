@@ -18,7 +18,9 @@ set -ex
 
 mvn -f maven/pom.xml clean install "$@"
 
-MAVEN_OPTIONS=$DO_MAVEN_DEPLOY make apps
+MAVEN_OPTIONS=$DO_MAVEN_DEPLOY make apps docs
+# Workaround for https://issues.cloudera.org/browse/HUE-1603
+rename .md .html docs/user-guide/*.md || :
 
 # Make the entire tree relocatable
 bash tools/relocatable.sh

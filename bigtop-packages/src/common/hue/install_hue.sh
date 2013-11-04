@@ -90,6 +90,7 @@ done
 PREFIX=`echo $PREFIX | sed -e 's#/*$##'`
 BUILD_DIR=`echo $BUILD_DIR | sed -e 's#/*$##'`
 
+DOC_DIR=${DOC_DIR:-/usr/share/doc/hue}
 CONF_DIR=${CONF_DIR:-/etc/hue}
 LIB_DIR=${LIB_DIR:-/usr/share/hue}
 VAR_DIR=${VAR_DIR:-/var/lib/hue}
@@ -173,6 +174,9 @@ done
 
 # Remove bogus files
 rm -fv `find $PREFIX -iname "build_log.txt"`
+
+install -d ${PREFIX}/${DOC_DIR}
+cp -r ${BUILD_DIR}/docs/* ${PREFIX}/${DOC_DIR}/
 
 # Remove desktop.db and app.reg
 rm -f $PREFIX/$LIB_DIR/desktop/desktop.db
