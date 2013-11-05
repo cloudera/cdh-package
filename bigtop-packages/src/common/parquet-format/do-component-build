@@ -16,6 +16,9 @@
 
 set -ex
 
+export THRIFT_HOME=/opt/toolchain/thrift-0.7.0
+export PATH=${THRIFT_HOME}/bin:${PATH}
+
 make
 mvn package -DskipTests
 
