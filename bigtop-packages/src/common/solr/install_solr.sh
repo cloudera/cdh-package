@@ -319,6 +319,14 @@ export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.host=$HOSTNAME
                                         -Dsolr.admin.port=$SOLR_ADMIN_PORT
                                         -Dsolr.solr.home=$SOLR_HOME"
 
+if [ -n "$SOLR_AUTHORIZATION_SENTRY_SITE" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authorization.sentry.site=${SOLR_AUTHORIZATION_SENTRY_SITE}"
+fi
+
+if [ -n "$SOLR_AUTHORIZATION_SUPERUSER" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authorization.superuser=${SOLR_AUTHORIZATION_SUPERUSER}"
+fi
+
 # FIXME: for some reason catalina doesn't use CATALINA_OPTS for stop action
 #        and thus doesn't know the admin port
 export JAVA_OPTS="$CATALINA_OPTS"
