@@ -49,17 +49,23 @@ if [ -z "$GIT_REPO" ]; then
         $MAVEN_INST_DEPLOY \
         "$@" 
     JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn site site:stage ${MAVEN_SKIP_TESTS} $@
-    
+
 # Copy generated docs
     mkdir -p build/hadoop-${FULL_VERSION}/share/doc/
     cp -r target/staging/hadoop-project/* build/hadoop-${FULL_VERSION}/share/doc/
-    
+
 # Rebuild and now mvn deploy the tarball - note the '-pl hadoop-dist' - if we chdir into hadoop-dist and build, it fails.
     JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -pl hadoop-dist -Pdist -Psrc -Dtar ${MAVEN_SKIP_TESTS} -Dmaven.javadoc.skip=true -Dmaven.deploy.skip=false $MAVEN_INST_DEPLOY "$@"
     
     (cd build/hadoop-${FULL_VERSION} ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${FULL_VERSION}.tar.gz)
 # (cd build/hadoop-${FULL_VERSION}/src ; tar --strip-components=1 -xzvf  ../../../hadoop-dist/target/hadoop-${FULL_VERSION}.tar.gz)
     (cd build/hadoop-${FULL_VERSION} ; cp -r ../../cloudera .)
+
+# Create an artificial C++ example dir
+    mkdir -p build/hadoop-${FULL_VERSION}/examples/{bin,lib} || :
+    cp hadoop-tools/hadoop-pipes/target/native/*.a build/hadoop-${FULL_VERSION}/examples/lib
+    cp hadoop-tools/hadoop-pipes/target/native/examples/* build/hadoop-${FULL_VERSION}/examples/bin
+    cp -r build/hadoop-${FULL_VERSION}/include build/hadoop-${FULL_VERSION}/examples
     
 # Build MR1
     IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
@@ -117,7 +123,6 @@ if [ -z "$GIT_REPO" ]; then
 
     mv -f hadoop-mapreduce1-project/build/hadoop-mr1/bin build/hadoop-${FULL_VERSION}/bin-mapreduce1
     mv -f hadoop-mapreduce1-project/build/hadoop-mr1/sbin/* build/hadoop-${FULL_VERSION}/sbin
-    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/c++/* build/hadoop-${FULL_VERSION}/examples
     mv -f hadoop-mapreduce1-project/build/hadoop-mr1/hadoop-client.list build/hadoop-${FULL_VERSION}/cloudera/hadoop-mapreduce1-client.list
     
     mv -f hadoop-mapreduce1-project/build/c++-examples build/hadoop-${FULL_VERSION}/examples-mapreduce1
@@ -128,8 +133,9 @@ if [ -z "$GIT_REPO" ]; then
 # you were using MR1 from tarballs.
     (cd build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1 && ln -s ../../../bin-mapreduce1/ bin)
 
-    BIN_EXCLUDE="--exclude=*/lib/native/lib*            \
-             --exclude=*/examples/bin/*             \
+    BIN_EXCLUDE="--exclude=*/lib/native/lib*        \
+             --exclude=*/examples*/bin/*            \
+             --exclude=*/examples*/lib/*            \
              --exclude=*/bin/container-executor     \
              --exclude=*/bin/test-container-executor"
     (cd build && tar $BIN_EXCLUDE -czf hadoop-${FULL_VERSION}.tar.gz hadoop-${FULL_VERSION})
