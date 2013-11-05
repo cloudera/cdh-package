@@ -36,4 +36,7 @@ rm -rf build impala-${FULL_VERSION}
 ALL_FILES=`echo *`
 mkdir build impala-${FULL_VERSION}
 cp -r $ALL_FILES impala-${FULL_VERSION}
-tar czf build/impala-${FULL_VERSION}.tar.gz impala-${FULL_VERSION}
+
+if [ -n "$TARBALL_ONLY" ]; then
+    tar czf build/impala-${FULL_VERSION}.tar.gz impala-${FULL_VERSION}
+fi
