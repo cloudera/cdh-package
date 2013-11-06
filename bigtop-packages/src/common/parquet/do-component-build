@@ -19,7 +19,7 @@ set -ex
 export THRIFT_HOME=/opt/toolchain/thrift-0.7.0
 export PATH=${THRIFT_HOME}/bin:${PATH}
 
-mvn install -DskipTests
+mvn install $DO_MAVEN_DEPLOY -DskipTests
 
 rm -rf build parquet-${FULL_VERSION}
 ALL_FILES=`echo *`
