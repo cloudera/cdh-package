@@ -147,9 +147,19 @@ perl -pi -e 's/\(contains no files\)//' build/meta/filelist.json
 perl -0pi -e's/,\n\    }/\n\    }/g' build/meta/filelist.json
 
 # Fix the symlinks
-for link in `find build/usr/lib/ -type l` ; do
+for link in `find build/usr/lib build/usr/share -type l` ; do
   target=`readlink $link`
-  TOPDIR=`echo $link | sed -e 's#^build/usr/lib/##' -e 's#[^/]\+#..#g'`
+ 
+  case $link in
+    build/usr/lib/*)
+                TOPDIR=`echo $link | sed -e 's#^build/usr/lib/##' -e 's#[^/]\+#..#g'`
+                ;;
+    build/usr/share/*)
+                TOPDIR=`echo $link | sed -e 's#^build/usr/share/##' -e 's#[^/]\+#..#g'`
+  esac
+
+  
+
   case $target in
     /usr/lib/*)
                 rm -f $link
@@ -157,7 +167,7 @@ for link in `find build/usr/lib/ -type l` ; do
                 ;;
     /usr/share/*)
                 rm -f $link
-                ln -s $TOPDIR/share/`echo $target |sed -e 's#/usr/share##'` $link
+                ln -s $TOPDIR/share/`echo $target |sed -e 's#/usr/share/##'` $link
   esac
 done
 
