@@ -172,7 +172,7 @@ if [ "${INITD_DIR}" != "" ]; then
 fi
 mv ${BUILD_DIR}/oozie-sharelib-*-yarn.tar.gz ${SERVER_LIB_DIR}/oozie-sharelib-yarn.tar.gz
 mv ${BUILD_DIR}/oozie-sharelib-*.tar.gz ${SERVER_LIB_DIR}/oozie-sharelib-mr1.tar.gz
-ln -s oozie-sharelib-mr1.tar.gz ${SERVER_LIB_DIR}/oozie-sharelib.tar.gz
+ln -s oozie-sharelib-yarn.tar.gz ${SERVER_LIB_DIR}/oozie-sharelib.tar.gz
 cp -R ${BUILD_DIR}/oozie-server/webapps ${SERVER_LIB_DIR}/webapps
 ln -s -f /etc/oozie/conf/oozie-env.sh ${SERVER_LIB_DIR}/bin
 
