@@ -57,5 +57,5 @@ sh $RPM_SOURCE_DIR/install_parquet.sh \
 #######################
 %files 
 %defattr(-,root,root,755)
-%{lib_parquet}/*.jar
+%{lib_parquet}/*
 %{hadoop_home}/*.jar
