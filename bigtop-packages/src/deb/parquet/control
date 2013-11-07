@@ -23,7 +23,7 @@ Homepage: https://parquet.io
 
 Package: parquet
 Architecture: all
-Depends: hadoop
+Depends: hadoop, parquet-format
 Description: A columnar storage format for Hadoop.
  Parquet-MR contains the java implementation of the Parquet format. Parquet is
  a columnar storage format for Hadoop; it provides efficient storage and

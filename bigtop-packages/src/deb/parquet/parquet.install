@@ -1,2 +1,2 @@
-/usr/lib/parquet
+/usr/lib/parquet/*.jar
 /usr/lib/hadoop/*.jar

@@ -88,6 +88,6 @@ for jar in `find $BUILD_DIR -name *.jar | grep -v '\-tests.jar'`; do
 done
 
 # Cloudera specific
-install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
-cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
+install -d -m 0755 $PREFIX/$LIB_DIR/parquet-mr/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/parquet-mr/cloudera/
 

@@ -31,7 +31,7 @@ License: ASL 2.0
 Source0: parquet-%{parquet_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_parquet.sh
-Requires: hadoop
+Requires: hadoop, parquet-format
 
 
 %description 
@@ -57,5 +57,5 @@ sh $RPM_SOURCE_DIR/install_parquet.sh \
 #######################
 %files 
 %defattr(-,root,root,755)
-%{lib_parquet}
+%{lib_parquet}/*.jar
 %{hadoop_home}/*.jar
