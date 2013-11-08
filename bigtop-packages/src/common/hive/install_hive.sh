@@ -125,11 +125,6 @@ do
 
 export HIVE_HOME=$INSTALLED_LIB_DIR
 
-PARQUET_HOME=/usr/lib/parquet
-if [ -d "\$PARQUET_HOME" ] ; then
-  export HIVE_CLASSPATH=\$HIVE_CLASSPATH:\$PARQUET_HOME/*.jar
-fi
-
 exec $INSTALLED_LIB_DIR/bin/$file "\$@"
 EOF
   chmod 755 $wrapper
