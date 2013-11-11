@@ -74,6 +74,7 @@ Source10: hive-metastore.svc
 Source11: hive-server2.default
 Source12: hive-server2.svc
 Requires: hadoop-client, bigtop-utils >= 0.6, hbase, zookeeper, %{name}-hbase = %{version}-%{release}, %{name}-jdbc = %{version}-%{release}
+Requires: parquet
 Conflicts: hadoop-hive
 Obsoletes: %{name}-webinterface
 
