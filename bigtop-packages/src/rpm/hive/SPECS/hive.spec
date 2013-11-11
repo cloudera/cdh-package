@@ -84,7 +84,7 @@ Source15: hive-webhcat-server.svc
 Source16: hive-hcatalog-server.default
 Source17: hive-webhcat-server.default
 Requires: hadoop-client, bigtop-utils >= 0.6, zookeeper, %{name}-jdbc = %{version}-%{release}
-Requires: avro-libs
+Requires: avro-libs, parquet
 Conflicts: hadoop-hive
 Obsoletes: %{name}-webinterface
 

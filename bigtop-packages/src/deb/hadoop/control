@@ -23,7 +23,7 @@ Homepage: http://hadoop.apache.org/core/
 
 Package: hadoop
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.6), zookeeper (>= 3.4.0), psmisc, netcat-openbsd, avro-libs
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.6), zookeeper (>= 3.4.0), psmisc, netcat-openbsd, avro-libs, parquet
 Description: A software platform for processing vast amounts of data
  Hadoop is a software platform that lets one easily write and
  run applications that process vast amounts of data.
