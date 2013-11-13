@@ -27,6 +27,13 @@ if [ -z "$GIT_REPO" ]; then
     mvn -N -P copy-artifacts antrun:run $@
     (cd doc; ant -Dforrest.home=${FORREST_HOME};)
 
+    # Some Avro docs get placed in folders with special characters in the name
+    (cd build;
+        mkdir -p avro-doc-placeholder
+        mv avro-doc-${FULL_VERSION}*/* avro-doc-placeholder/
+        rm -rf avro-doc-${FULL_VERSION}*
+        mv avro-doc-placeholder avro-doc-${FULL_VERSION})
+
     ALL_FILES=`ls`
     mkdir -p avro-${FULL_VERSION} build
     cp -r ${ALL_FILES} avro-${FULL_VERSION}/
