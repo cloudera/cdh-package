@@ -62,7 +62,7 @@ env FULL_VERSION=%{avro_patched_version} bash $RPM_SOURCE_DIR/do-component-build
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-bash $RPM_SOURCE_DIR/install_avro.sh \
+env FULL_VERSION=%{avro_patched_version} bash $RPM_SOURCE_DIR/install_avro.sh \
           --build-dir=./ \
           --prefix=$RPM_BUILD_ROOT
 

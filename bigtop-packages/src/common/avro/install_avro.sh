@@ -97,8 +97,15 @@ DOC_DIR=${DOC_DIR:-/usr/share/doc}
 
 # Install Java libraries
 mkdir -p ${PREFIX}/${LIB_DIR}
-cp -p lang/java/**/target/*.jar ${PREFIX}/${LIB_DIR}/
-(cd ${PREFIX}/${LIB_DIR}; rm *-tests.jar *-nodeps.jar *-javadoc.jar *-sources.jar)
+JARS=`ls dist/java/*.jar | grep ${FULL_VERSION}`
+cp -p ${JARS} ${PREFIX}/${LIB_DIR}/
+(cd ${PREFIX}/${LIB_DIR}; rm -f *-tests.jar *-nodeps.jar *-javadoc.jar *-sources.jar)
+
+# Apache Avro includes a -hadoop1 JAR and a versionless symlink to it for backward compatibility
+# Only the -hadoop2 JAR is used in CDH, so we remove the -hadoop1 JAR and redirect the symlink
+AVRO_MAPRED=avro-mapred-${FULL_VERSION}
+rm ${PREFIX}/${LIB_DIR}/${AVRO_MAPRED}.jar ${PREFIX}/${LIB_DIR}/${AVRO_MAPRED}-hadoop1.jar
+ln -s ${AVRO_MAPRED}-hadoop2.jar ${PREFIX}/${LIB_DIR}/${AVRO_MAPRED}.jar
 
 # Install versionless symlinks
 versions='s#-[0-9.]\+-cdh[0-9\-\.]*\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
