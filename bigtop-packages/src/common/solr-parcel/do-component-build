@@ -18,7 +18,7 @@ set -ex
 
 [ -f solr-parcel.props ] && . solr-parcel.props
 
-PKG_ARCHIVE=${PKG_ARCHIVE:-"http://repos.jenkins.cloudera.com/solr-beta-nightly/"}
+PKG_ARCHIVE=${PKG_ARCHIVE:-"http://repos.jenkins.cloudera.com/search1.1-nightly/"}
 PKG_SOLR_VERSION=${PKG_SOLR_VERSION:-"1"}
 
 # If PKG_FORMAT not specified assume tarballs
