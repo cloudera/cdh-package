@@ -498,7 +498,8 @@ done
 # Replace every Avro jar with a symlink to the versionless symlinks in our Avro distribution
 # This regex matches upstream versions, plus CDH versions, betas and snapshots if they are present
 versions='s#-[0-9].[0-9].[0-9]\(-cdh[0-9\-\.]*\)\?\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
-for dir in hadoop-0.20-mapreduce/lib hadoop-mapreduce/lib hadoop-yarn/lib hadoop/client hadoop/client-0.20 hadoop/lib; do
+for partial_dir in hadoop-0.20-mapreduce/lib hadoop-mapreduce/lib hadoop-yarn/lib hadoop/client hadoop/client-0.20 hadoop/lib; do
+    dir=${PREFIX}/usr/lib/$partial_dir
     for old_jar in `ls $dir/avro-*.jar` ; do
         # Our Avro distribution does not include Cassandra or test JARs and we should remove them from the rest of CDH
         if [[ "$old_jar" =~ "-cassandra" || "$old_jar" =~ "-tests" ]] ; then continue; fi
