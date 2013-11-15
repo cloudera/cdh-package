@@ -160,11 +160,13 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
 ########################################
 %build
 
-%if 0%{?rhel:%{rhel}} == 5
-# RHEL 5 slaves have both Python 2.4 and Python 2.6, and CDH 4 needs to use Python 2.4
-export SYS_PYTHON=`which python2.4`
-export SKIP_PYTHONDEV_CHECK=true
-%endif
+if [ -f /etc/redhat-release ] ; then
+    if grep 5\\. /etc/redhat-release ; then
+        # RHEL 5 slaves have both Python 2.4 and Python 2.6, and CDH 4 needs to use Python 2.4
+        export SYS_PYTHON=`which python2.4`
+        export SKIP_PYTHONDEV_CHECK=true
+    fi
+fi
 
 bash -x %{SOURCE3}  
 
@@ -172,6 +174,15 @@ bash -x %{SOURCE3}
 # Install
 ########################################
 %install
+
+if [ -f /etc/redhat-release ] ; then
+    if grep 5\\. /etc/redhat-release ; then
+        # RHEL 5 slaves have both Python 2.4 and Python 2.6, and CDH 4 needs to use Python 2.4
+        export SYS_PYTHON=`which python2.4`
+        export SKIP_PYTHONDEV_CHECK=true
+    fi
+fi
+
 bash -x %{SOURCE4} --prefix=$RPM_BUILD_ROOT --build-dir=${PWD}
 
 %if  %{?suse_version:1}0
