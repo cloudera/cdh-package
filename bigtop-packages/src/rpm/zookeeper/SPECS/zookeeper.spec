@@ -74,8 +74,7 @@ Source3: zookeeper-server.sh
 Source4: zookeeper-server.sh.suse
 Source5: zookeeper.1
 Source6: zoo.cfg
-BuildArch: noarch
-BuildRequires: ant, autoconf, automake
+BuildRequires: ant, autoconf, automake, cppunit-devel
 Requires(pre): coreutils, shadow-utils, /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): %{alternatives_dep}
 Requires(preun): %{alternatives_dep}
@@ -99,7 +98,6 @@ Requires: %{name} = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
 Requires(post): %{chkconfig_dep}
 Requires(preun): %{service_dep}, %{chkconfig_dep}
-BuildArch: noarch
 
 %if  %{?suse_version:1}0
 # Required for init scripts
@@ -122,6 +120,13 @@ Requires: redhat-lsb
 %description server
 This package starts the zookeeper server on startup
 
+%package native
+Summary: C bindings for ZooKeeper clients
+Group: Development/Libraries
+
+%description native
+Provides native libraries and development headers for C / C++ ZooKeeper clients. Consists of both single-threaded and multi-threaded implementations.
+
 %prep
 %setup -n %{name}-%{zookeeper_patched_version}
 
@@ -131,10 +136,12 @@ env FULL_VERSION=%{zookeeper_patched_version} bash %{SOURCE1}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 cp $RPM_SOURCE_DIR/zookeeper.1 $RPM_SOURCE_DIR/zoo.cfg .
-sh %{SOURCE2} \
+env FULL_VERSION=%{zookeeper_patched_version} bash %{SOURCE2} \
           --build-dir=build/%{name}-%{zookeeper_patched_version} \
           --doc-dir=%{doc_zookeeper} \
-          --prefix=$RPM_BUILD_ROOT
+          --prefix=$RPM_BUILD_ROOT \
+          --system-include-dir=%{_includedir} \
+          --system-lib-dir=%{_libdir}
 
 
 %if  %{?suse_version:1}0
@@ -196,3 +203,11 @@ fi
 %{bin_zookeeper}/zookeeper-server-cleanup
 %doc %{doc_zookeeper}
 %{man_dir}/man1/zookeeper.1.*
+
+%files native
+%defattr(-,root,root)
+%{bin_zookeeper}/cli_*
+%{bin_zookeeper}/load_gen
+%{_includedir}/zookeeper
+%{_libdir}/*
+

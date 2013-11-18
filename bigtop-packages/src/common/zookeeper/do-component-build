@@ -18,7 +18,7 @@ set -ex
 
 IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
 
-ant -propertyfile cloudera/build.properties package tar  -Dversion=${FULL_VERSION} -Drepo.maven.org=${IVY_MIRROR_PROP} -Divy.home=${HOME}/.ivy2  "$@"
+ant -propertyfile cloudera/build.properties package package-native tar -Dversion=${FULL_VERSION} -Drepo.maven.org=${IVY_MIRROR_PROP} -Divy.home=${HOME}/.ivy2  "$@"
 
 # Change to cloudera/maven directory, and install
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository
