@@ -31,3 +31,8 @@ Architecture: all
 Depends: zookeeper (= ${source:Version})
 Description: The Hadoop Zookeeper server
  This package starts the zookeeper server on startup
+
+Package: zookeeper-native
+Architecture: any
+Description: C bindings for ZooKeeper clients
+ Provides native libraries and development headers for C / C++ ZooKeeper clients. Consists of both single-threaded and multi-threaded implementations.
