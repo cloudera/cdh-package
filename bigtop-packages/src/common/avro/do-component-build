@@ -21,7 +21,7 @@ if [ -z "$GIT_REPO" ]; then
     (cd lang/java;
         mvn package -DskipTests -Dhadoop.version=2 $@;
         rm -rf mapred/target/classes/;
-        mvn -P dist package -DskipTests -Davro.version=$VERSION javadoc:aggregate $@)
+        mvn -P dist package -DskipTests -Davro.version=$VERSION javadoc:aggregate $DO_MAVEN_DEPLOY $@)
 
     (cd lang/java/trevni/doc; mvn site $@)
     mvn -N -P copy-artifacts antrun:run $@
