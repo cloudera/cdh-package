@@ -35,8 +35,14 @@ override_dh_auto_build:
 
 override_dh_auto_install:
 	cp debian/zookeeper.1 debian/zoo.cfg .
-	bash -x debian/install_zookeeper.sh \
+	env FULL_VERSION=${ZOOKEEPER_PATCHED_VERSION} bash -x debian/install_zookeeper.sh \
 	  --build-dir=build/zookeeper-${ZOOKEEPER_PATCHED_VERSION} \
 	  --doc-dir=usr/share/doc/zookeeper \
 	  --prefix=debian/$(zookeeper_pkg_name)
+	# Move native files to a dedicated package
+	mkdir -p debian/zookeeper-native/usr/bin
+	mkdir -p debian/zookeeper-native/usr/lib
+	mv debian/zookeeper/usr/bin/cli_* debian/zookeeper/usr/bin/load_gen debian/zookeeper-native/usr/bin/
+	mv debian/zookeeper/usr/lib/libzookeeper* debian/zookeeper-native/usr/lib/
+	mv debian/zookeeper/usr/include debian/zookeeper-native/usr/include
 	dh_install -i
