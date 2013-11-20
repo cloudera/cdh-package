@@ -117,20 +117,27 @@ cp -fa cloudera/solrconfig.xml $PREFIX/$LIB_DIR/coreconfig-template
 install -d -m 0755 $PREFIX/$LIB_DIR/contrib
 cp -ra ${BUILD_DIR}/contrib/velocity $PREFIX/$LIB_DIR/contrib
 
-install -d -m 0755 $PREFIX/$LIB_DIR/server/webapps/solr
-(cd $PREFIX/$LIB_DIR/server/webapps/solr ; jar xf ../../../*.war)
-ln -s /var/lib/solr $PREFIX/$LIB_DIR/server/work
-cp ${BUILD_DIR}/example/lib/ext/*.jar $PREFIX/$LIB_DIR/server/webapps/solr/WEB-INF/lib/
+# Copy in the configuration files
+install -d -m 0755 $PREFIX/$DEFAULT_DIR
+cp $DISTRO_DIR/solr.default $PREFIX/$DEFAULT_DIR/solr
 
-install -d -m 0755 $PREFIX/$LIB_DIR/server/webapps/ROOT
-cat > $PREFIX/$LIB_DIR/server/webapps/ROOT/index.html <<__EOT__
+install -d -m 0755 $PREFIX/${CONF_DIR}.dist
+cp -ra ${BUILD_DIR}/example/solr/* $PREFIX/${CONF_DIR}.dist
+
+install -d -m 0755 $PREFIX/$LIB_DIR/webapps/solr
+(cd $PREFIX/$LIB_DIR/webapps/solr ; jar xf ../../*.war)
+
+cp ${BUILD_DIR}/example/lib/ext/*.jar $PREFIX/$LIB_DIR/webapps/solr/WEB-INF/lib/
+
+install -d -m 0755 $PREFIX/$LIB_DIR/webapps/ROOT
+cat > $PREFIX/$LIB_DIR/webapps/ROOT/index.html <<__EOT__
 <html><head><meta http-equiv="refresh" content="0;url=./solr"></head><body><a href="/solr">Solr Console</a></body></html>
 __EOT__
 
-install -d -m 0755 $PREFIX/$LIB_DIR/server/conf
-cp $DISTRO_DIR/web.xml $PREFIX/$LIB_DIR/server/conf
-cp $DISTRO_DIR/server.xml $PREFIX/$LIB_DIR/server/conf
-cp $DISTRO_DIR/logging.properties $PREFIX/$LIB_DIR/server/conf
+install -d -m 0755 $PREFIX/etc/solr/tomcat-deployment.dist/conf
+cp $DISTRO_DIR/web.xml $PREFIX/etc/solr/tomcat-deployment.dist/conf
+cp $DISTRO_DIR/server.xml $PREFIX/etc/solr/tomcat-deployment.dist/conf
+cp $DISTRO_DIR/logging.properties $PREFIX/etc/solr/tomcat-deployment.dist/conf
 
 cp -ra ${BUILD_DIR}/dist/*.*ar $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist/solrj-lib $PREFIX/$LIB_DIR/lib
@@ -144,13 +151,6 @@ install -d -m 0755 $PREFIX/$DOC_DIR
 cp -a  ${BUILD_DIR}/*.txt $PREFIX/$DOC_DIR
 cp -ra ${BUILD_DIR}/docs/* $PREFIX/$DOC_DIR
 cp -ra ${BUILD_DIR}/example/ $PREFIX/$DOC_DIR/
-
-# Copy in the configuration files
-install -d -m 0755 $PREFIX/$DEFAULT_DIR
-cp $DISTRO_DIR/solr.default $PREFIX/$DEFAULT_DIR/solr
-
-install -d -m 0755 $PREFIX/${CONF_DIR}.dist
-cp ${BUILD_DIR}/example/resources/log4j.properties $PREFIX/${CONF_DIR}.dist
 
 # Copy in the wrapper
 cat > $PREFIX/$LIB_DIR/bin/solrd <<'EOF'
@@ -227,7 +227,7 @@ SOLR_HOME=${SOLR_HOME:-/var/lib/solr}
 SOLR_LOG4J_CONFIG=${SOLR_LOG4J_CONFIG:-/etc/solr/conf/log4j.properties}
 
 export CATALINA_HOME=${CATALINA_HOME:-$BASEDIR/../bigtop-tomcat}
-export CATALINA_BASE=${CATALINA_BASE:-$BASEDIR/server}
+export CATALINA_BASE=/var/lib/solr/tomcat-deployment
 
 export CATALINA_TMPDIR=${SOLR_DATA:-/var/lib/solr/}
 export CATALINA_PID=${SOLR_RUN:-/var/run/solr}/solr.pid

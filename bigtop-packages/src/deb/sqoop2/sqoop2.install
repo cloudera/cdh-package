@@ -1,9 +1,8 @@
 /usr/bin/sqoop2-server
 /etc/sqoop2/conf.dist
+/etc/sqoop2/tomcat-deployment.dist
 /etc/default/sqoop2-server
 /usr/lib/sqoop2/bin/setenv.sh
 /usr/lib/sqoop2/bin/sqoop-sys.sh
-/usr/lib/sqoop2/sqoop-server-0.20
-/usr/lib/sqoop2/sqoop-server
 /usr/lib/sqoop2/webapps
 /var/lib/sqoop2

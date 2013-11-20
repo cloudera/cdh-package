@@ -17,6 +17,7 @@
 %define man_dir /usr/share/man
 %define conf_oozie %{_sysconfdir}/%{name}/conf
 %define conf_oozie_dist %{conf_oozie}.dist
+%define tomcat_deployment_oozie %{_sysconfdir}/%{name}/tomcat-deployment
 %define data_oozie /var/lib/oozie
 
 %if  %{!?suse_version:1}0
@@ -144,27 +145,33 @@ Requires: bigtop-utils >= 0.6
 %__ln_s -f %{data_oozie}/ext-2.2 $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/ext-2.2
 %__rm  -rf              $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/docs
 %__ln_s -f %{doc_oozie} $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/docs
-%__ln_s -f %{data_oozie}/ext-2.2 $RPM_BUILD_ROOT/%{lib_oozie}/webapps-ssl/oozie/ext-2.2
-%__rm  -rf              $RPM_BUILD_ROOT/%{lib_oozie}/webapps-ssl/oozie/docs
-%__ln_s -f %{doc_oozie} $RPM_BUILD_ROOT/%{lib_oozie}/webapps-ssl/oozie/docs
-
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
 %__install -d  -m 0755  %{buildroot}/%{_localstatedir}/log/oozie
 %__install -d  -m 0755  %{buildroot}/%{_localstatedir}/run/oozie
 
+%__ln_s -f %{lib_oozie}/webapps $RPM_BUILD_ROOT/%{tomcat_deployment_oozie}.http/webapps
+%__ln_s -f %{lib_oozie}/webapps $RPM_BUILD_ROOT/%{tomcat_deployment_oozie}.https/webapps
+%__ln_s -f %{data_oozie}/tomcat-deployment/WEB-INF $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/WEB-INF
+
 %pre
 getent group oozie >/dev/null || /usr/sbin/groupadd -r oozie >/dev/null
 getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --shell /bin/false -M -r -g oozie --home %{data_oozie} oozie >/dev/null
 
 %post 
+%{alternatives_cmd} --install %{tomcat_deployment_oozie} %{name}-tomcat-conf %{tomcat_deployment_oozie}.http 30
+%{alternatives_cmd} --install %{tomcat_deployment_oozie} %{name}-tomcat-conf %{tomcat_deployment_oozie}.https 20
+
 /sbin/chkconfig --add oozie 
 
 %preun
 if [ "$1" = 0 ]; then
+  rm /etc/oozie/tomcat-deployment
   /sbin/service oozie stop > /dev/null
   /sbin/chkconfig --del oozie
+  %{alternatives_cmd} --remove %{name}-tomcat-conf %{tomcat_deployment_oozie}.http || :
+  %{alternatives_cmd} --remove %{name}-tomcat-conf %{tomcat_deployment_oozie}.https || :
 fi
 
 %postun
@@ -188,20 +195,16 @@ fi
 %{lib_oozie}/bin/oozied.sh
 %{lib_oozie}/bin/ooziedb.sh
 %{lib_oozie}/webapps
-%{lib_oozie}/webapps-ssl
 %{lib_oozie}/libtools
 %{lib_oozie}/libserver
 %{lib_oozie}/oozie-sharelib.tar.gz
 %{lib_oozie}/oozie-sharelib-yarn.tar.gz
 %{lib_oozie}/oozie-sharelib-mr1.tar.gz
-%{lib_oozie}/oozie-server
-%{lib_oozie}/oozie-server-0.20
-%{lib_oozie}/oozie-server-ssl
-%{lib_oozie}/oozie-server-0.20-ssl
 %{lib_oozie}/libext
 %{lib_oozie}/cloudera/
 %{initd_dir}/oozie
 %defattr(-, oozie, oozie)
+%dir %{_sysconfdir}/%{name}
 %dir %{_localstatedir}/log/oozie
 %dir %{_localstatedir}/run/oozie
 %attr(0755,oozie,oozie) %{data_oozie}
@@ -209,6 +212,7 @@ fi
 %files client
 %defattr(-,root,root)
 %config(noreplace) %{conf_oozie_dist}
+%config(noreplace) %{tomcat_deployment_oozie}.*
 %{usr_bin}/oozie
 %dir %{lib_oozie}/bin
 %{lib_oozie}/bin/oozie

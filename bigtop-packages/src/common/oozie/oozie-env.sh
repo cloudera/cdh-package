@@ -24,7 +24,7 @@ export OOZIE_DATA=/var/lib/oozie
 export OOZIE_CATALINA_HOME=/usr/lib/bigtop-tomcat
 export CATALINA_TMPDIR=/var/lib/oozie
 export CATALINA_PID=/var/run/oozie/oozie.pid
-export CATALINA_BASE=/usr/lib/oozie/oozie-server
+export CATALINA_BASE=/var/lib/oozie/tomcat-deployment
 
 # Settings for the Embedded Tomcat that runs Oozie
 # Java System properties for Oozie should be specified in this variable

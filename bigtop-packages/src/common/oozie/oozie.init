@@ -33,6 +33,8 @@
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
+# TODO: Make sure we require a bigtop-utils that has this
+. /usr/lib/bigtop-utils/bigtop-detect-classpath
 
 is_oozie_alive() {
   if [ ! -f "$OOZIE_PID" ]; then
@@ -47,7 +49,22 @@ is_oozie_alive() {
   fi
 }
 
+tomcat_deployment() {
+  DEPLOYMENT_SOURCE=`readlink -e /etc/oozie/tomcat-deployment`
+  DEPLOYMENT_TARGET=/var/lib/oozie/tomcat-deployment
+
+  rm -rf ${DEPLOYMENT_TARGET}
+  cp -r ${DEPLOYMENT_SOURCE} ${DEPLOYMENT_TARGET}
+
+  if [ -n "${BIGTOP_CLASSPATH}" ] ; then
+    sed -i -e "s#^\(common.loader=.*\)\$#\1,${BIGTOP_CLASSPATH/:/,}#" ${DEPLOYMENT_TARGET}/conf/catalina.properties
+  fi
+
+  chown -R oozie:oozie ${DEPLOYMENT_TARGET}
+}
+
 start_oozie() {
+  tomcat_deployment
   install -d -o oozie -g oozie /var/run/oozie
   install -d -o oozie -g oozie /var/log/oozie
   install -d -o oozie -g oozie /var/tmp/oozie

@@ -13,11 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Set CATALINA_BASE to:
-#   /usr/lib/sqoop2/sqoop-server for YARN clusters
-#   /usr/lib/sqoop2/sqoop-server-0.20 for MR1 clusters
-CATALINA_BASE=/usr/lib/sqoop2/sqoop-server
-
+CATALINA_BASE=/var/lib/sqoop2/tomcat-deployment
 SQOOP_USER=sqoop2
 SQOOP_CONFIG=/etc/sqoop2/conf
 SQOOP_LOG=/var/log/sqoop2
@@ -27,4 +23,5 @@ CATALINA_BIN=/usr/lib/bigtop-tomcat/bin
 CATALINA_TMPDIR=/var/tmp/sqoop2
 CATALINA_OPTS=-Xmx1024m
 CATALINA_OUT=/var/log/sqoop2/sqoop-tomcat.log
+#AUX_CLASSPATH=
 

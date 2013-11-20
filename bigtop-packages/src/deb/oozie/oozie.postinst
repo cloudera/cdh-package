@@ -39,7 +39,11 @@ case "$1" in
         chown -R oozie:oozie /var/lib/oozie /var/log/oozie
         update-rc.d oozie defaults >/dev/null || exit 1
 
-        update-alternatives  --install /etc/oozie/conf oozie-conf /etc/oozie/conf.dist 30
+        update-alternatives --install /etc/oozie/conf oozie-conf /etc/oozie/conf.dist 30
+
+        conf_tomcat=/etc/oozie/tomcat-deployment
+        update-alternatives --install ${conf_tomcat} oozie-tomcat-conf ${conf_tomcat}.http 30
+        update-alternatives --install ${conf_tomcat} oozie-tomcat-conf ${conf_tomcat}.https 20
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
