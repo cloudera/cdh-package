@@ -45,7 +45,7 @@ Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0 
-Source0: %{name}-%{spark_base_version}.tar.gz
+Source0: %{name}-%{spark_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{name}.sh
 Source3: spark-master.svc
@@ -76,7 +76,7 @@ language-integrated syntax that makes it easy to write parallel jobs.
 Spark runs on top of the Apache Mesos cluster manager.
     
 %prep
-%setup -n %{name}-%{spark_base_version}
+%setup -n %{name}-%{spark_patched_version}
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build

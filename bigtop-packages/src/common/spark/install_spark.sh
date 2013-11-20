@@ -97,14 +97,6 @@ for var in PREFIX BUILD_DIR SOURCE_DIR; do
   fi
 done
 
-if [ -z "${SCALA_HOME}" ]; then
-    echo Missing env. var SCALA_HOME
-    usage
-fi
-if [ -f "$SOURCE_DIR/bigtop.bom" ]; then
-  . $SOURCE_DIR/bigtop.bom
-fi
-
 MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 DOC_DIR=${DOC_DIR:-/usr/share/doc/spark}
 LIB_DIR=${LIB_DIR:-/usr/lib/spark}
