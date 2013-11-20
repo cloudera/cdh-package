@@ -154,7 +154,7 @@ install -d -m 0755 ${SERVER_LIB_DIR}
 install -d -m 0755 ${SERVER_LIB_DIR}/bin
 install -d -m 0755 ${DATA_DIR}
 install -d -m 0755 ${DATA_DIR}/work
-for file in ooziedb.sh oozied.sh oozie-sys.sh ; do
+for file in oozie-setup.sh ooziedb.sh oozied.sh oozie-sys.sh ; do
   cp ${BUILD_DIR}/bin/$file ${SERVER_LIB_DIR}/bin
 done
 

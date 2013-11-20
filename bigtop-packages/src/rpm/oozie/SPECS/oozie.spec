@@ -182,6 +182,7 @@ fi
 
 %files 
 %defattr(-,root,root)
+%{lib_oozie}/bin/oozie-setup.sh
 %{lib_oozie}/bin/oozie-sys.sh
 %{lib_oozie}/bin/oozie-env.sh
 %{lib_oozie}/bin/oozied.sh
