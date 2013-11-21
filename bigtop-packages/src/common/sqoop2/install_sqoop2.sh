@@ -160,6 +160,10 @@ sed -i -e "s|<Host |<Host workDir=\"/var/tmp/sqoop\" |" ${PREFIX}/${TOMCAT_DEPLO
 sed -i -e "s|\${catalina\.base}/logs|/var/log/sqoop|"   ${PREFIX}/${TOMCAT_DEPLOYMENT_DIR}.dist/conf/logging.properties
 cp -f ${EXTRA_DIR}/catalina.properties ${PREFIX}/${TOMCAT_DEPLOYMENT_DIR}.dist/conf/catalina.properties
 
+# Create MR1 configuration
+cp -r ${PREFIX}/${TOMCAT_DEPLOYMENT_DIR}.dist ${PREFIX}/${TOMCAT_DEPLOYMENT_DIR}.mr1
+cp -f ${EXTRA_DIR}/catalina.properties.mr1 ${PREFIX}/${TOMCAT_DEPLOYMENT_DIR}.mr1/conf/catalina.properties
+
 # Create wrapper scripts for the client and server
 client_wrapper=$PREFIX/usr/bin/sqoop2
 server_wrapper=$PREFIX/usr/bin/sqoop2-server

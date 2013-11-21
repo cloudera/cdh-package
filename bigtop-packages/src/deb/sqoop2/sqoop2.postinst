@@ -18,4 +18,5 @@ set -e
 
 update-alternatives --install /etc/sqoop2/conf sqoop2-conf /etc/sqoop2/conf.dist 30
 update-alternatives --install /etc/sqoop2/tomcat-deployment sqoop2-tomcat-deployment /etc/sqoop2/tomcat-deployment.dist 30
+update-alternatives --install /etc/sqoop2/tomcat-deployment sqoop2-tomcat-deployment /etc/sqoop2/tomcat-deployment.mr1 20
 

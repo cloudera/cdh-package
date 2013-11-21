@@ -18,6 +18,7 @@
 %define conf_sqoop_dist %{conf_sqoop}.dist
 %define tomcat_deployment_sqoop %{_sysconfdir}/sqoop2/tomcat-deployment
 %define tomcat_deployment_sqoop_dist %{tomcat_deployment_sqoop}.dist
+%define tomcat_deployment_sqoop_mr1 %{tomcat_deployment_sqoop}.mr1
 %define run_sqoop /var/run/sqoop2
 
 %if  %{?suse_version:1}0
@@ -152,6 +153,7 @@ getent passwd sqoop2 >/dev/null || useradd -c "Sqoop 2 User" -s /sbin/nologin -g
 %post
 %{alternatives_cmd} --install %{conf_sqoop} sqoop2-conf %{conf_sqoop_dist} 30
 %{alternatives_cmd} --install %{tomcat_deployment_sqoop} sqoop-tomcat-deployment %{tomcat_deployment_sqoop_dist} 30
+%{alternatives_cmd} --install %{tomcat_deployment_sqoop} sqoop-tomcat-deployment %{tomcat_deployment_sqoop_mr1} 20
 
 %post server
 chkconfig --add sqoop2-server
@@ -160,6 +162,7 @@ chkconfig --add sqoop2-server
 if [ "$1" = "0" ] ; then
   %{alternatives_cmd} --remove sqoop2-conf %{conf_sqoop_dist} || :
   %{alternatives_cmd} --remove sqoop2-tomcat-deployment %{tomcat_deployment_sqoop_dist} || :
+  %{alternatives_cmd} --remove sqoop2-tomcat-deployment %{tomcat_deployment_sqoop_mr1} || :
 fi
 
 %preun server
@@ -178,6 +181,7 @@ fi
 /usr/bin/sqoop2-server
 %config(noreplace) /etc/sqoop2/conf.dist
 %config(noreplace) /etc/sqoop2/tomcat-deployment.dist
+%config(noreplace) /etc/sqoop2/tomcat-deployment.mr1
 %config(noreplace) /etc/default/sqoop2-server
 %{lib_sqoop}/webapps
 %{lib_sqoop}/bin/setenv.sh

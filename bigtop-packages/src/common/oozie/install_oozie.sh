@@ -197,8 +197,14 @@ cp -r ${HTTP_DIRECTORY} ${HTTPS_DIRECTORY}
 cp ${HTTPS_DIRECTORY}/conf/ssl/ssl-server.xml ${HTTPS_DIRECTORY}/conf/server.xml
 cp ${BUILD_DIR}/oozie-server/conf/ssl/ssl-web.xml ${HTTPS_DIRECTORY}/WEB-INF/web.xml
 
-ln -s /usr/lib/oozie/webapps ${ETC_DIR}/tomcat-deployment.http/
-ln -s /usr/lib/oozie/webapps ${ETC_DIR}/tomcat-deployment.https/
+HTTP_MR1_DIRECTORY=${ETC_DIR}/tomcat-deployment.http.mr1
+cp -r ${HTTP_DIRECTORY} ${HTTP_MR1_DIRECTORY}
+cp -f ${EXTRA_DIR}/catalina.properties.mr1 ${HTTP_MR1_DIRECTORY}/conf/catalina.properties
+
+HTTPS_MR1_DIRECTORY=${ETC_DIR}/tomcat-deployment.https.mr1
+cp -r ${HTTPS_DIRECTORY} ${HTTPS_MR1_DIRECTORY}
+cp -f ${EXTRA_DIR}/catalina.properties.mr1 ${HTTP_MR1_DIRECTORY}/conf/catalina.properties
+
 ln -s /var/lib/oozie/tomcat-deployment/WEB-INF ${SERVER_LIB_DIR}/webapps/oozie/
 
 # Create all the jars needed for tools execution
