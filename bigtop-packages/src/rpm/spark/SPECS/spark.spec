@@ -52,6 +52,7 @@ Source3: spark-master.svc
 Source4: spark-worker.svc
 Source5: compute-classpath.sh
 Source6: run
+Source7: init.d.tmpl
 Requires: bigtop-utils
 Requires(preun): /sbin/service
 
