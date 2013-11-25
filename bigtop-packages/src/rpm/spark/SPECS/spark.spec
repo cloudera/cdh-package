@@ -50,6 +50,8 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: spark-master.svc
 Source4: spark-worker.svc
+Source5: compute-classpath.sh
+Source6: run
 Requires: bigtop-utils
 Requires(preun): /sbin/service
 
