@@ -32,9 +32,14 @@ if [ -z "$GIT_REPO" ]; then
               -Drepo.maven.org=$IVY_MIRROR_PROP \
               -Dreactor.repo=file://${HOME}/.m2/repository \
               -DskipTests -DrecompileMode=all"
+  
+  HEAP_SIZE=-Xmx2g
+  # For 32bit builds it is safer (albeit slower) to use ~1G of heap
+  uname -p | grep -q 64 || HEAP_SIZE=-Xmx1g
+
   ## this might be an issue at times
   #        http://maven.40175.n5.nabble.com/Not-finding-artifact-in-local-repo-td3727753.html
-  export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -XX:PermSize=1024m -XX:MaxPermSize=1024m"
+  export MAVEN_OPTS="$HEAP_SIZE -XX:ReservedCodeCacheSize=512m -XX:PermSize=1024m -XX:MaxPermSize=1024m"
 
   mvn -Pbigtop-dist $BUILD_OPTS $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
 
