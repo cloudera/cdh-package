@@ -15,7 +15,6 @@
 
 %define crunch_name crunch
 %define lib_crunch /usr/lib/crunch
-%define crunch_folder apache-%{crunch_name}-%{crunch_base_version}-src
 
 %if  %{?suse_version:1}0
 %define doc_crunch %{_docdir}/crunch-doc
@@ -30,30 +29,33 @@ Name: crunch
 Version: %{crunch_version}
 Release: %{crunch_release}
 Summary: Simple and Efficient MapReduce Pipelines.
-URL: http://incubator.apache.org/crunch/
+URL: http://crunch.apache.org/
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{crunch_name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0 
-Source0: %{crunch_folder}.tar.gz
+Source0: %{crunch_name}-%{crunch_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{crunch_name}.sh
+Requires: hadoop-client, bigtop-utils >= 0.6
 
 
 %description 
-Apache Crunch (incubating) is a Java library for writing, testing, and running
+Apache Crunch is a Java library for writing, testing, and running
 MapReduce pipelines, based on Google's FlumeJava. Its goal is to make 
 pipelines that are composed of many user-defined functions simple to write, 
 easy to test, and efficient to run.
 
 %package doc
-Summary: Apache Crunch (incubating) documentation
+Summary: Apache Crunch documentation
 Group: Documentation
+BuildArch: noarch
+
 %description doc
-Apache Crunch (incubating) documentation
+Apache Crunch documentation
 
 %prep
-%setup -n %{crunch_folder}
+%setup -n %{crunch_name}-%{crunch_patched_version}
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build

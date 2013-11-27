@@ -16,15 +16,24 @@
 
 set -ex
 
-. `dirname $0`/bigtop.bom
-
-mvn -DskipTests -Dcrunch.platform=2           \
+if [ -z "$GIT_REPO" ]; then
+    if [ -z "${DO_MAVEN_DEPLOY}" ]; then
+        MAVEN_INST_DEPLOY=install
+    else
+        MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
+    fi
+    # TODO: !!!!!!Make use of DO_MAVEN_DEPLOY!!!!!   
+    mvn -DskipTests -Dcrunch.platform=2           \
     -Dslf4j.version=1.6.1                     \
-    -Dhadoop.version=$HADOOP_VERSION          \
-    -Dhbase.version=$HBASE_VERSION            \
     -Papache-release clean site:site package "$@"
 
-rm -rf build
-mkdir build
-tar --strip-component=1 -C build -xzvf crunch-dist/target/apache-crunch-*-bin.tar.gz
-cp -r target/site build
+    rm -rf build
+    mkdir build
+    tar --strip-component=1 -C build -xzvf crunch-dist/target/apache-crunch-*-bin.tar.gz
+    cp -r target/site build
+else
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=crunch-${FULL_VERSION}/ --format=tar HEAD |gzip > build/crunch-${FULL_VERSION}.tar.gz
+fi
