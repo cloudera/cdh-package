@@ -22,10 +22,10 @@ if [ -z "$GIT_REPO" ]; then
     else
         MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
     fi
-    # TODO: !!!!!!Make use of DO_MAVEN_DEPLOY!!!!!   
+
     mvn -DskipTests -Dcrunch.platform=2           \
     -Dslf4j.version=1.6.1                     \
-    -Papache-release clean site:site package "$@"
+    -Papache-release clean site:site $MAVEN_INST_DEPLOY "$@"
 
     rm -rf build
     mkdir build
