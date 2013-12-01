@@ -28,9 +28,11 @@ if [ -z "$GIT_REPO" ]; then
     -Papache-release clean site:site $MAVEN_INST_DEPLOY "$@"
 
     rm -rf build
-    mkdir build
-    tar --strip-component=1 -C build -xzvf crunch-dist/target/apache-crunch-*-bin.tar.gz
-    cp -r target/site build
+    mkdir -p build/crunch-${FULL_VERSION}
+    tar --strip-component=1 -C build/crunch-${FULL_VERSION} -xzvf crunch-dist/target/apache-crunch-*-bin.tar.gz
+    cp -r target/site build/crunch-${FULL_VERSION}
+    
+    (cd build && tar -czf crunch-${FULL_VERSION}.tar.gz crunch-${FULL_VERSION})
 else
     git add .
     git commit -a -m "Temporary commit for tarball"

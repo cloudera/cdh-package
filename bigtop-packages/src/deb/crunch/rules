@@ -33,9 +33,10 @@ override_dh_auto_build:
 	# or to unbind rat:check goal
 	# So I am redirecting its attention with a decoy
 	mkdir -p debian/tmp/bigtop-empty
-	bash debian/do-component-build -Drat.basedir=$${PWD}/debian/tmp/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository
+	env FULL_VERSION=${CRUNCH_PATCHED_VERSION} \
+		bash debian/do-component-build -Drat.basedir=$${PWD}/debian/tmp/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository
 
 override_dh_auto_install:
 	bash -x debian/install_crunch.sh \
-	  --build-dir=$${PWD}/build     \
+	  --build-dir=$${PWD}/build/crunch-${CRUNCH_PATCHED_VERSION}     \
 	  --prefix=debian/tmp

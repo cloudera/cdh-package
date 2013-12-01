@@ -58,12 +58,12 @@ Apache Crunch documentation
 %setup -n %{crunch_name}-%{crunch_patched_version}
 
 %build
-bash $RPM_SOURCE_DIR/do-component-build
+env FULL_VERSION=%{crunch_patched_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh $RPM_SOURCE_DIR/install_crunch.sh \
-          --build-dir=${PWD}/build   \
+sh %{SOURCE2} \
+          --build-dir=${PWD}/build/crunch-%{crunch_patched_version}   \
           --doc-dir=%{doc_crunch}    \
           --prefix=$RPM_BUILD_ROOT
 
