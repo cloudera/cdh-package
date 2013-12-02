@@ -35,6 +35,7 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
+        update-alternatives --remove impala-conf /etc/impala/conf.dist || :
         update-alternatives --remove impala /usr/lib/impala/sbin-retail || :
         update-alternatives --remove impala /usr/lib/impala/sbin-debug || :
     ;;
