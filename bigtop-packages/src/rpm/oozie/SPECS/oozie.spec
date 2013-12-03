@@ -17,7 +17,7 @@
 %define man_dir /usr/share/man
 %define conf_oozie %{_sysconfdir}/%{name}/conf
 %define conf_oozie_dist %{conf_oozie}.dist
-%define tomcat_deployment_oozie %{_sysconfdir}/%{name}/tomcat-deployment
+%define tomcat_conf_oozie %{_sysconfdir}/%{name}/tomcat-conf
 %define data_oozie /var/lib/oozie
 
 %if  %{!?suse_version:1}0
@@ -158,10 +158,10 @@ getent group oozie >/dev/null || /usr/sbin/groupadd -r oozie >/dev/null
 getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --shell /bin/false -M -r -g oozie --home %{data_oozie} oozie >/dev/null
 
 %post 
-%{alternatives_cmd} --install %{tomcat_deployment_oozie} %{name}-tomcat-conf %{tomcat_deployment_oozie}.http 30
-%{alternatives_cmd} --install %{tomcat_deployment_oozie} %{name}-tomcat-conf %{tomcat_deployment_oozie}.https 20
-%{alternatives_cmd} --install %{tomcat_deployment_oozie} %{name}-tomcat-conf %{tomcat_deployment_oozie}.http.mr1 15
-%{alternatives_cmd} --install %{tomcat_deployment_oozie} %{name}-tomcat-conf %{tomcat_deployment_oozie}.https.mr1 10
+%{alternatives_cmd} --install %{tomcat_conf_oozie} %{name}-tomcat-deployment %{tomcat_conf_oozie}.http 30
+%{alternatives_cmd} --install %{tomcat_conf_oozie} %{name}-tomcat-deployment %{tomcat_conf_oozie}.https 20
+%{alternatives_cmd} --install %{tomcat_conf_oozie} %{name}-tomcat-deployment %{tomcat_conf_oozie}.http.mr1 15
+%{alternatives_cmd} --install %{tomcat_conf_oozie} %{name}-tomcat-deployment %{tomcat_conf_oozie}.https.mr1 10
 
 /sbin/chkconfig --add oozie 
 
@@ -170,10 +170,10 @@ if [ "$1" = 0 ]; then
   rm /etc/oozie/tomcat-deployment
   /sbin/service oozie stop > /dev/null
   /sbin/chkconfig --del oozie
-  %{alternatives_cmd} --remove %{name}-tomcat-conf %{tomcat_deployment_oozie}.http || :
-  %{alternatives_cmd} --remove %{name}-tomcat-conf %{tomcat_deployment_oozie}.https || :
-  %{alternatives_cmd} --remove %{name}-tomcat-conf %{tomcat_deployment_oozie}.http.mr1 || :
-  %{alternatives_cmd} --remove %{name}-tomcat-conf %{tomcat_deployment_oozie}.https.mr1 || :
+  %{alternatives_cmd} --remove %{name}-tomcat-deployment %{tomcat_conf_oozie}.http || :
+  %{alternatives_cmd} --remove %{name}-tomcat-deployment %{tomcat_conf_oozie}.https || :
+  %{alternatives_cmd} --remove %{name}-tomcat-deployment %{tomcat_conf_oozie}.http.mr1 || :
+  %{alternatives_cmd} --remove %{name}-tomcat-deployment %{tomcat_conf_oozie}.https.mr1 || :
 fi
 
 %postun
@@ -214,7 +214,7 @@ fi
 %files client
 %defattr(-,root,root)
 %config(noreplace) %{conf_oozie_dist}
-%config(noreplace) %{tomcat_deployment_oozie}.*
+%config(noreplace) %{tomcat_conf_oozie}.*
 %{usr_bin}/oozie
 %dir %{lib_oozie}/bin
 %{lib_oozie}/bin/oozie

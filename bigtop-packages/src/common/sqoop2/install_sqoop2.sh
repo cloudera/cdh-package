@@ -120,7 +120,7 @@ MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 CONF_DIR=${CONF_DIR:-${ETC_DIR}/conf.dist}
 INITD_DIR=${INITD_DIR:-/etc/init.d}
 DIST_DIR=${DIST_DIR:-.}
-TOMCAT_DEPLOYMENT_DIR=${ETC_DIR}/tomcat-deployment
+TOMCAT_CONF_DIR=${ETC_DIR}/tomcat-conf
 
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
 install -d -m 0755 ${PREFIX}/${LIB_DIR}/client-lib
@@ -151,18 +151,18 @@ cp -r ${DIST_DIR}/server/webapps $SQOOP_WEBAPPS
 unzip -d $SQOOP_WEBAPPS/sqoop $SQOOP_WEBAPPS/sqoop.war
 
 # Create MR2 configuration
-install -d -m 0755 ${PREFIX}/${TOMCAT_DEPLOYMENT_DIR}.dist/conf
+install -d -m 0755 ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf
 for conf in web.xml tomcat-users.xml server.xml logging.properties context.xml catalina.policy
 do
-    install -m 0644 ${DIST_DIR}/server/conf/$conf ${PREFIX}/${TOMCAT_DEPLOYMENT_DIR}.dist/conf/
+    install -m 0644 ${DIST_DIR}/server/conf/$conf ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/
 done
-sed -i -e "s|<Host |<Host workDir=\"/var/tmp/sqoop\" |" ${PREFIX}/${TOMCAT_DEPLOYMENT_DIR}.dist/conf/server.xml
-sed -i -e "s|\${catalina\.base}/logs|/var/log/sqoop|"   ${PREFIX}/${TOMCAT_DEPLOYMENT_DIR}.dist/conf/logging.properties
-cp -f ${EXTRA_DIR}/catalina.properties ${PREFIX}/${TOMCAT_DEPLOYMENT_DIR}.dist/conf/catalina.properties
+sed -i -e "s|<Host |<Host workDir=\"/var/tmp/sqoop\" |" ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/server.xml
+sed -i -e "s|\${catalina\.base}/logs|/var/log/sqoop|"   ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/logging.properties
+cp -f ${EXTRA_DIR}/catalina.properties ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/catalina.properties
 
 # Create MR1 configuration
-cp -r ${PREFIX}/${TOMCAT_DEPLOYMENT_DIR}.dist ${PREFIX}/${TOMCAT_DEPLOYMENT_DIR}.mr1
-cp -f ${EXTRA_DIR}/catalina.properties.mr1 ${PREFIX}/${TOMCAT_DEPLOYMENT_DIR}.mr1/conf/catalina.properties
+cp -r ${PREFIX}/${TOMCAT_CONF_DIR}.dist ${PREFIX}/${TOMCAT_CONF_DIR}.mr1
+cp -f ${EXTRA_DIR}/catalina.properties.mr1 ${PREFIX}/${TOMCAT_CONF_DIR}.mr1/conf/catalina.properties
 
 # Create wrapper scripts for the client and server
 client_wrapper=$PREFIX/usr/bin/sqoop2

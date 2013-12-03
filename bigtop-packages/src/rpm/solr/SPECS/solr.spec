@@ -17,7 +17,7 @@
 %define lib_solr /usr/lib/%{solr_name}
 %define etc_solr /etc/%{solr_name}
 %define config_solr %{etc_solr}/conf
-%define tomcat_deployment_solr %{etc_solr}/tomcat-deployment
+%define tomcat_conf_solr %{etc_solr}/tomcat-conf
 %define log_solr /var/log/%{solr_name}
 %define bin_solr /usr/bin
 %define man_dir /usr/share/man
@@ -129,7 +129,7 @@ getent passwd solr > /dev/null || useradd -c "Solr" -s /sbin/nologin -g solr -r 
 
 %post
 %{alternatives_cmd} --install %{config_solr} %{solr_name}-conf %{config_solr}.dist 30
-%{alternatives_cmd} --install %{tomcat_deployment_solr} %{solr_name}-tomcat-deployment %{tomcat_deployment_solr}.dist 30
+%{alternatives_cmd} --install %{tomcat_conf_solr} %{solr_name}-tomcat-conf %{tomcat_conf_solr}.dist 30
 # [ -e /var/lib/solr/solr.xml ] || /usr/bin/solrctl nodeconfig >/dev/null 2>&1 || :
 touch /var/lib/solr/solr.cloud.ini || :
 chown solr:solr /var/lib/solr/* || :
@@ -142,7 +142,7 @@ __EOT__
 %preun
 if [ "$1" = 0 ]; then
         %{alternatives_cmd} --remove %{solr_name}-conf %{config_solr}.dist || :
-        %{alternatives_cmd} --remove %{solr_name}-tomcat-deployment %{tomcat_deployment_solr}.dist || :
+        %{alternatives_cmd} --remove %{solr_name}-tomcat-conf %{tomcat_conf_solr}.dist || :
 fi
 
 %post server
@@ -165,7 +165,7 @@ fi
 %files 
 %defattr(-,root,root,755)
 %config(noreplace) %{config_solr}.dist
-%config(noreplace) %{tomcat_deployment_solr}.dist
+%config(noreplace) %{tomcat_conf_solr}.dist
 %config(noreplace) /etc/default/solr 
 %{lib_solr}
 %{bin_solr}/solrctl

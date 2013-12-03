@@ -134,10 +134,10 @@ cat > $PREFIX/$LIB_DIR/webapps/ROOT/index.html <<__EOT__
 <html><head><meta http-equiv="refresh" content="0;url=./solr"></head><body><a href="/solr">Solr Console</a></body></html>
 __EOT__
 
-install -d -m 0755 $PREFIX/etc/solr/tomcat-deployment.dist/conf
-cp $DISTRO_DIR/web.xml $PREFIX/etc/solr/tomcat-deployment.dist/conf
-cp $DISTRO_DIR/server.xml $PREFIX/etc/solr/tomcat-deployment.dist/conf
-cp $DISTRO_DIR/logging.properties $PREFIX/etc/solr/tomcat-deployment.dist/conf
+install -d -m 0755 $PREFIX/etc/solr/tomcat-conf.dist/conf
+cp $DISTRO_DIR/web.xml $PREFIX/etc/solr/tomcat-conf.dist/conf
+cp $DISTRO_DIR/server.xml $PREFIX/etc/solr/tomcat-conf.dist/conf
+cp $DISTRO_DIR/logging.properties $PREFIX/etc/solr/tomcat-conf.dist/conf
 
 cp -ra ${BUILD_DIR}/dist/*.*ar $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist/solrj-lib $PREFIX/$LIB_DIR/lib
