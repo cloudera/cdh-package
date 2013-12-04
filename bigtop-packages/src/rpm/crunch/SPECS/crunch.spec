@@ -37,7 +37,7 @@ License: ASL 2.0
 Source0: %{crunch_name}-%{crunch_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{crunch_name}.sh
-Requires: hadoop-client, bigtop-utils >= 0.6
+Requires: hadoop-client, bigtop-utils >= 0.7
 
 
 %description 

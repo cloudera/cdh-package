@@ -74,7 +74,7 @@ Source5: impala.conf
 Source6: impalad.svc
 Source7: statestored.svc
 Source8: catalogd.svc
-Requires: bigtop-utils >= 0.6, /usr/sbin/useradd, /usr/sbin/usermod, openssl
+Requires: bigtop-utils >= 0.7, /usr/sbin/useradd, /usr/sbin/usermod, openssl
 Requires: hadoop, hadoop-hdfs, hadoop-yarn, hadoop-mapreduce, hbase, hive, zookeeper, hadoop-libhdfs
 Requires: avro-libs
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0

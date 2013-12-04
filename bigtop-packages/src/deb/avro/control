@@ -34,7 +34,7 @@ Description: Data serialization system
 
 Package: avro-tools
 Architecture: all
-Depends: ${misc:Depends}, avro-libs, bigtop-utils
+Depends: ${misc:Depends}, avro-libs, bigtop-utils (>= 0.7)
 Description: Command-line utilities to work with Avro files
 
 Package: avro-doc

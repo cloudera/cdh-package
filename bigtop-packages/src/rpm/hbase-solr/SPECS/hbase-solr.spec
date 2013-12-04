@@ -55,7 +55,7 @@ Source1: do-component-build
 Source2: install_hbase_solr.sh
 Source3: init.d.tmpl
 Source4: hbase-solr-indexer.svc
-Requires: bigtop-utils >= 0.6, hbase, solr
+Requires: bigtop-utils >= 0.7, hbase, solr
 Requires: avro-libs
 
 # CentOS 5 does not have any dist macro

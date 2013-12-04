@@ -68,7 +68,7 @@ Source4: flume-ng-agent.default
 Requires: /usr/sbin/useradd
 Requires: coreutils
 Requires: hadoop-hdfs
-Requires: bigtop-utils >= 0.6
+Requires: bigtop-utils >= 0.7
 Requires: avro-libs
 
 %if  0%{?mgaversion}

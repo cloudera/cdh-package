@@ -21,7 +21,7 @@ Homepage: http://sqoop.apache.org
 
 Package:  sqoop2
 Architecture: all
-Depends: bigtop-utils (>= 0.6), hadoop-client, bigtop-tomcat, sqoop2-client (= ${source:Version})
+Depends: bigtop-utils (>= 0.7), hadoop-client, bigtop-tomcat, sqoop2-client (= ${source:Version})
 Description: Tool for easy imports and exports of data sets between databases and the Hadoop ecosystem
  Sqoop is a tool that provides the ability to import and export data sets between
  the Hadoop Distributed File System (HDFS) and relational databases. In Sqoop 2, the tool
@@ -30,7 +30,7 @@ Description: Tool for easy imports and exports of data sets between databases an
 
 Package: sqoop2-client
 Architecture: all
-Depends: bigtop-utils (>= 0.6)
+Depends: bigtop-utils (>= 0.7)
 Description: Lightweight client for Sqoop 2.
 
 Package: sqoop2-server

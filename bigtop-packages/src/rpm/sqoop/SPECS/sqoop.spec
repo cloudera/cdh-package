@@ -62,7 +62,7 @@ Source3: sqoop-metastore.sh
 Source4: sqoop-metastore.sh.suse
 Buildarch: noarch
 BuildRequires: asciidoc, xmlto
-Requires: hadoop-client, bigtop-utils >= 0.6
+Requires: hadoop-client, bigtop-utils >= 0.7
 Requires: avro-libs
 
 %description 

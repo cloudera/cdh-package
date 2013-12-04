@@ -94,7 +94,7 @@ Source5: hbase.default
 Source6: hbase.nofiles.conf
 Source7: regionserver-init.d.tpl
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
-Requires: hadoop-hdfs, zookeeper >= 3.3.1, bigtop-utils >= 0.6
+Requires: hadoop-hdfs, zookeeper >= 3.3.1, bigtop-utils >= 0.7
 Requires: avro-libs
 Conflicts: hadoop-hbase
 

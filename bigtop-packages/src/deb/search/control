@@ -23,13 +23,13 @@ Homepage: http://flume.apache.org
 
 Package: search
 Architecture: all
-Depends: bigtop-utils (>= 0.6), avro-libs
+Depends: bigtop-utils (>= 0.7), avro-libs
 Description: Cloudera Search Project
  Cloudera Search Project
 
 Package: solr-mapreduce
 Architecture: all
-Depends: hadoop-client, bigtop-utils (>= 0.6)
+Depends: hadoop-client, bigtop-utils (>= 0.7)
 Description: Solr mapreduce indexer
  Solr mapreduce indexer
 

@@ -42,7 +42,7 @@ Source2: install_avro.sh
 %package -n avro-tools
 Summary: Command-line utilities to work with Avro files
 Group: Development/Tools
-Requires: %{name} = %{version}-%{release}, bigtop-utils
+Requires: %{name} = %{version}-%{release}, bigtop-utils >= 0.7
 
 %description -n avro-tools
  Command-line utilities to work with Avro files

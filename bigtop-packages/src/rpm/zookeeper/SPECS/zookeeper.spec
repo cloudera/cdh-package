@@ -78,7 +78,7 @@ BuildRequires: ant, autoconf, automake, cppunit-devel
 Requires(pre): coreutils, shadow-utils, /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): %{alternatives_dep}
 Requires(preun): %{alternatives_dep}
-Requires: bigtop-utils >= 0.6
+Requires: bigtop-utils >= 0.7
 Conflicts: hadoop-zookeeper
 
 %description 

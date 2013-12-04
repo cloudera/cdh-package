@@ -179,7 +179,7 @@ Source31: hadoop-hdfs-portmap.svc
 Source32: hadoop-hdfs-nfs3.svc
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
-Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.6, zookeeper >= 3.4.0
+Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, zookeeper >= 3.4.0
 Requires: psmisc, %{netcat_package}
 Requires: avro-libs, parquet
 Conflicts: hadoop-0.20

@@ -65,7 +65,7 @@ Source2: install_%{name}.sh
 Source3: init.d
 Source4: init.d.suse
 Requires: coreutils, /usr/sbin/useradd, zookeeper >= 3.3.1, hadoop-client
-Requires: bigtop-utils >= 0.6
+Requires: bigtop-utils >= 0.7
 BuildRequires: ant xml-commons xml-commons-apis
 
 %if  0%{?mgaversion}
