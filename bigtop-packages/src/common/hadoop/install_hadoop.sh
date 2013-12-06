@@ -485,6 +485,22 @@ for file in `cat ${BUILD_DIR}/hadoop-mr1-client.list` ; do
   exit 1
 done
 
+# slf4j-log4j will be especially prone to versioning mismatches
+base_name=slf4j-log4j12
+versioned_name=$base_name-[0-9].[0-9].[0-9].jar
+for symlink in `find ${CLIENT_DIR} ${CLIENT_MR1_DIR} -name $base_name*.jar`; do
+    if [[ $symlink =~ $versioned_name ]]; then
+        rm $symlink
+        continue
+    fi
+    target=`readlink $symlink`
+    if [[ $target =~ $versioned_name ]]; then
+        rm $symlink
+        ln -s ${target/$versioned_name/$base_name.jar} $symlink
+        continue
+    fi
+done
+
 # Cloudera specific
 for map in hadoop_${HADOOP_DIR} hadoop-hdfs_${HDFS_DIR} hadoop-yarn_${YARN_DIR} \
            hadoop-mapreduce_${MAPREDUCE_DIR} hadoop-0.20-mapreduce_${MAPREDUCE_MR1_DIR} \
