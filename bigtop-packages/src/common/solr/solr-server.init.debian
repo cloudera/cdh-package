@@ -71,7 +71,6 @@ tomcat_deployment() {
   rm -rf ${DEPLOYMENT_TARGET}
   cp -r ${DEPLOYMENT_SOURCE} ${DEPLOYMENT_TARGET}
   ln -s ${SOLR_HOME}/webapps ${DEPLOYMENT_TARGET}/
-  ln -s /var/lib/solr ${DEPLOYMENT_TARGET}/work
   chown -R ${SOLR_USER}:${SOLR_USER} ${DEPLOYMENT_TARGET}
 }
 
