@@ -136,10 +136,13 @@ for i in sqoop sqoop-codegen sqoop-export sqoop-import-all-tables sqoop-version 
 	wrapper=$PREFIX/usr/bin/$i
 	mkdir -p `dirname $wrapper`
 	cat > $wrapper <<EOF
-#!/bin/sh
+#!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
+
+SQOOP_JARS=\`ls /var/lib/sqoop/*.jar\`
+export HADOOP_CLASSPATH=\$(JARS=(\${SQOOP_JARS}); IFS=:; echo "\${HADOOP_CLASSPATH}:\${JARS[*]}")
 
 export SQOOP_HOME=$LIB_DIR
 exec $BIN_DIR/$i "\$@"
