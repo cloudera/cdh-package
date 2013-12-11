@@ -79,7 +79,7 @@ RELATIVE_PATH='../parquet' # LIB_DIR relative to HADOOP_HOME
 # First we'll move everything into lib
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$HADOOP_HOME
-for jar in `find $BUILD_DIR -name *.jar | grep -v '\-tests.jar'`; do
+for jar in `find $BUILD_DIR -name *.jar | grep -v '\-tests.jar' | grep -v '\/original-parquet'`; do
     cp $jar $PREFIX/$LIB_DIR/
     symlink=$PREFIX/$HADOOP_HOME/`basename $jar`
     if [ ! -e $symlink ] ; then
