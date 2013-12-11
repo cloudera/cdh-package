@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/usr/bin/make -f
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,29 +14,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# -*- makefile -*-
 
-set -ex
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
 
-if [ -z "$GIT_REPO" ]; then
-    CDK=build/cdk-${FULL_VERSION}
-    if [ -z "${DO_MAVEN_DEPLOY}" ]; then
-        MAVEN_INST_DEPLOY=install
-    else
-        MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
-    fi
-    
-    rm -rf build
-    mkdir -p $CDK/dist/lib
-    cp -r * $CDK || :
-    
-    mvn clean -DskipTests $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
-    
-    cp `find . -name \*.jar` $CDK/dist/lib || :
-    mv `find $CDK -name cdk*.jar` $CDK/dist || :
-    (cd build ; tar czf cdk-${FULL_VERSION}.tar.gz cdk-${FULL_VERSION})
-else
-    git add .
-    git commit -a -m "Temporary commit for tarball"
-    mkdir -p build
-    git archive --prefix=cdk-${FULL_VERSION}/ --format=tar HEAD |gzip > build/cdk-${FULL_VERSION}.tar.gz
-fi
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	# we'll just use the build from the tarball.
+	env FULL_VERSION=${KITE_PATCHED_VERSION} bash debian/do-component-build -Divy.home=${HOME}/.ivy2
+
+override_dh_auto_install:
+	bash -x debian/install_kite.sh \
+	  --build-dir=build/kite-${KITE_PATCHED_VERSION}/dist \
+	  --prefix=debian/tmp

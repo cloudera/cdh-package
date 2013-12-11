@@ -13,48 +13,48 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-%define cdk_name cdk 
-%define lib_cdk /usr/lib/cdk
+%define kite_name kite 
+%define lib_kite /usr/lib/kite
 
 %if  %{?suse_version:1}0
-%define doc_cdk %{_docdir}/cdk-doc
+%define doc_kite %{_docdir}/kite-doc
 %else
-%define doc_cdk %{_docdir}/cdk-doc-%{cdk_version}
+%define doc_kite %{_docdir}/kite-doc-%{kite_version}
 %endif
 
 # disable repacking jars
 %define __os_install_post %{nil}
 
-Name: cdk
-Version: %{cdk_version}
-Release: %{cdk_release}
-Summary: Cloudera Development Kit.
-URL: https://github.com/cloudera/cdk
+Name: kite
+Version: %{kite_version}
+Release: %{kite_release}
+Summary: Kite Software Development Kit.
+URL: http://kitesdk.org
 Group: Development/Libraries
 BuildArch: noarch
-Buildroot: %(mktemp -ud %{_tmppath}/%{cdk_name}-%{version}-%{release}-XXXXXX)
+Buildroot: %(mktemp -ud %{_tmppath}/%{kite_name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0 
-Source0: %{cdk_name}-%{cdk_patched_version}.tar.gz
+Source0: %{kite_name}-%{kite_patched_version}.tar.gz
 Source1: do-component-build 
-Source2: install_%{cdk_name}.sh
+Source2: install_%{kite_name}.sh
 Requires: hadoop-client, bigtop-utils >= 0.7
 Requires: avro-libs
 
 %description 
-The Cloudera Development Kit, or CDK for short, is a set of libraries, 
-tools, examples, and documentation focused on making it easier to build 
-systems on top of the Hadoop ecosystem.
+The Kite Software Development Kit, is a set of libraries, tools, examples, and
+documentation focused on making it easier to build systems on top of the
+Hadoop ecosystem.
 
 %prep
-%setup -n %{cdk_name}-%{cdk_patched_version}
+%setup -n %{kite_name}-%{kite_patched_version}
 
 %build
-env FULL_VERSION=%{cdk_patched_version} bash $RPM_SOURCE_DIR/do-component-build
+env FULL_VERSION=%{kite_patched_version} bash $RPM_SOURCE_DIR/do-component-build
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh $RPM_SOURCE_DIR/install_cdk.sh \
-          --build-dir=build/cdk-%{cdk_patched_version}/dist \
+sh $RPM_SOURCE_DIR/install_kite.sh \
+          --build-dir=build/kite-%{kite_patched_version}/dist \
           --prefix=$RPM_BUILD_ROOT
 
 #######################
@@ -62,7 +62,6 @@ sh $RPM_SOURCE_DIR/install_cdk.sh \
 #######################
 %files 
 %defattr(-,root,root,755)
-%{lib_cdk}
-%{lib_cdk}/cloudera/cdh_version.properties
-
+%{lib_kite}
+%{lib_kite}/cloudera/cdh_version.properties
 

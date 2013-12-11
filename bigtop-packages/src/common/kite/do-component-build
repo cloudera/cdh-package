@@ -1,3 +1,4 @@
+#!/bin/sh
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,18 +14,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Source: cdk
-Section: misc
-Priority: extra
-Maintainer: Bigtop <dev@bigtop.apache.org>
-Build-Depends: debhelper (>= 7.0.50~)
-Standards-Version: 3.8.0
-Homepage: https://github.com/cloudera/cdk
+set -ex
 
-Package: cdk
-Depends: avro-libs
-Architecture: all
-Description: Cloudera Development Kit.
- The Cloudera Development Kit, or CDK for short, is a set of libraries, 
- tools, examples, and documentation focused on making it easier to build 
- systems on top of the Hadoop ecosystem.
+if [ -z "$GIT_REPO" ]; then
+    KITE=build/kite-${FULL_VERSION}
+    if [ -z "${DO_MAVEN_DEPLOY}" ]; then
+        MAVEN_INST_DEPLOY=install
+    else
+        MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
+    fi
+    
+    rm -rf build
+    mkdir -p $KITE/dist/lib
+    cp -r * $KITE || :
+    
+    mvn clean -DskipTests $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
+    
+    cp `find . -name \*.jar` $KITE/dist/lib || :
+    mv `find $KITE -name kite*.jar` $KITE/dist || :
+    (cd build ; tar czf kite-${FULL_VERSION}.tar.gz kite-${FULL_VERSION})
+else
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=kite-${FULL_VERSION}/ --format=tar HEAD |gzip > build/kite-${FULL_VERSION}.tar.gz
+fi

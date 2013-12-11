@@ -25,7 +25,7 @@ usage: $0 <options>
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --lib-dir=DIR               path to install home [/usr/lib/cdk]
+     --lib-dir=DIR               path to install home [/usr/lib/kite]
      --build-dir=DIR             path to dist dir
      ... [ see source for more similar options ]
   "
@@ -73,7 +73,7 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
-LIB_DIR=${LIB_DIR:-/usr/lib/cdk}
+LIB_DIR=${LIB_DIR:-/usr/lib/kite}
 
 # First we'll move everything into lib
 install -d -m 0755 $PREFIX/$LIB_DIR

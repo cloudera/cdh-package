@@ -1,6 +1,6 @@
 Format: http://dep.debian.net/deps/dep5
-Source: https://github.com/cloudera/cdk
-Upstream-Name: CDK
+Source: https://github.com/cloudera/kite
+Upstream-Name: Kite
 
 Files: *
 Copyright: 2013, Cloudera, Inc
