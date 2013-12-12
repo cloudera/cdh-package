@@ -104,7 +104,7 @@ cp -p ${JARS} ${PREFIX}/${LIB_DIR}/
 # Apache Avro includes a -hadoop1 JAR and a versionless symlink to it for backward compatibility
 # Only the -hadoop2 JAR is used in CDH, so we remove the -hadoop1 JAR and redirect the symlink
 AVRO_MAPRED=avro-mapred-${FULL_VERSION}
-rm ${PREFIX}/${LIB_DIR}/${AVRO_MAPRED}.jar ${PREFIX}/${LIB_DIR}/${AVRO_MAPRED}-hadoop1.jar
+rm -f ${PREFIX}/${LIB_DIR}/${AVRO_MAPRED}.jar ${PREFIX}/${LIB_DIR}/${AVRO_MAPRED}-hadoop1.jar
 ln -s ${AVRO_MAPRED}-hadoop2.jar ${PREFIX}/${LIB_DIR}/${AVRO_MAPRED}.jar
 
 # Install versionless symlinks
