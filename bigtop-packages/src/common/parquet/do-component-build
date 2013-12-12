@@ -17,8 +17,13 @@
 set -ex
 
 if [ -z "$GIT_REPO" ]; then
+    if [ -z "${DO_MAVEN_DEPLOY}" ]; then
+        MAVEN_INST_DEPLOY=install
+    else
+        MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
+    fi
 
-    MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn install $DO_MAVEN_DEPLOY -DskipTests
+    MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn $MAVEN_INST_DEPLOY -DskipTests
     
     rm -rf build parquet-${FULL_VERSION}
     ALL_FILES=`echo *`
