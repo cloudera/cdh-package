@@ -17,11 +17,19 @@
 set -ex
 
 if [ -z "$GIT_REPO" ]; then
+    if [ -z "${DO_MAVEN_DEPLOY}" ]; then
+        MAVEN_INST_DEPLOY=install
+    else
+        MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
+    fi
+    
+    mvn -N $MAVEN_INST_DEPLOY
+
     # Build Java libraries
     (cd lang/java;
         mvn package -DskipTests -Dhadoop.version=2 $@;
         rm -rf mapred/target/classes/;
-        mvn -Dhadoop.version=2 -P dist package -DskipTests -DskipITs -Davro.version=$VERSION javadoc:aggregate $DO_MAVEN_DEPLOY $@)
+        mvn -Dhadoop.version=2 -P dist package -DskipTests -DskipITs -Davro.version=$VERSION javadoc:aggregate $MAVEN_INST_DEPLOY $@)
 
     (cd lang/java/trevni/doc; mvn site $@)
     mvn -N -P copy-artifacts antrun:run $@
