@@ -188,7 +188,7 @@ fi
 %{lib_sqoop}/bin/sqoop-sys.sh
 %defattr(0755,sqoop2,sqoop)
 /var/lib/sqoop2
-
+/usr/lib/bigtop-tomcat/lib/sqoop-tomcat*.jar
 
 %files client
 %defattr(0755,root,root)
