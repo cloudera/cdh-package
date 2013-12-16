@@ -172,6 +172,7 @@ THRIFT_DEPS=`cd ${LIB_DIR}/lib/ ; ls libthrift* | sed -e 's#^#${IMPALA_HOME}/lib
 # now, create a default file
 install -d -m 0755 ${ETC_DIR}/default
 cat > ${ETC_DIR}/default/impala <<__EOT__
+IMPALA_CATALOG_SERVICE_HOST=127.0.0.1
 IMPALA_STATE_STORE_HOST=127.0.0.1
 IMPALA_STATE_STORE_PORT=24000
 IMPALA_BACKEND_PORT=22000
@@ -181,6 +182,7 @@ IMPALA_CATALOG_ARGS=" -log_dir=\${IMPALA_LOG_DIR} "
 IMPALA_STATE_STORE_ARGS=" -log_dir=\${IMPALA_LOG_DIR} -state_store_port=\${IMPALA_STATE_STORE_PORT}"
 IMPALA_SERVER_ARGS=" \\
     -log_dir=\${IMPALA_LOG_DIR} \\
+    -catalog_service_host=\${IMPALA_CATALOG_SERVICE_HOST} \\
     -state_store_port=\${IMPALA_STATE_STORE_PORT} \\
     -use_statestore \\
     -state_store_host=\${IMPALA_STATE_STORE_HOST} \\
