@@ -30,10 +30,6 @@ PRIORITY=92
 generate_functions() {
 cat <<'__EOT__'
 
-if [ -f /etc/default/impala ] ; then
-  . /etc/default/impala
-fi
-
 export ENABLE_CORE_DUMPS
 export IMPALA_HOME
 export IMPALA_BIN
