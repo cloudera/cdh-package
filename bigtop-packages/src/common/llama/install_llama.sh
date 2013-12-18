@@ -28,6 +28,7 @@ usage: $0 <options>
      --lib-dir=DIR               path to install llama jar files
      --conf-dir=DIR              path to install default configuration files
      --extra-dir=DIR             path to additional source files
+     --doc-dir=DIR               path to install docs into [/usr/share/doc/llama]
      ... [ see source for more similar options ]
   "
   exit 1
@@ -40,6 +41,7 @@ OPTS=$(getopt \
   -l 'lib-dir:' \
   -l 'conf-dir:' \
   -l 'extra-dir:' \
+  -l 'doc-dir:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -64,7 +66,9 @@ while true ; do
         --extra-dir)
         EXTRA_DIR=$2 ; shift 2
         ;;
-
+        --doc-dir)
+        DOC_DIR=$2 ; shift 2
+        ;;
         --)
         shift ; break
         ;;
@@ -83,6 +87,7 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
+DOC_DIR=${DOC_DIR:-/usr/share/doc/llama}
 LIB_DIR=${LIB_DIR:-/usr/lib/llama}
 CONF_DIR=${CONF_DIR:-/etc/llama/conf.dist}
 EXTRA_DIR=${EXTRA_DIR:-./}
@@ -122,6 +127,9 @@ export HADOOP_HOME=/usr/lib/hadoop
 exec ${LIB_DIR}/bin/${wrapper} "\$@"
 EOF
 done
+
+install -d -m 0755 ${PREFIX}/${DOC_DIR}
+cp -r ${BUILD_DIR}/target/site/* ${PREFIX}/${DOC_DIR}/
 
 install -d -m 0755 ${PREFIX}/var/run/llama
 install -d -m 0755 ${PREFIX}/var/log/llama

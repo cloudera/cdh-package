@@ -76,6 +76,14 @@ Requires: llama
 %description master
  This package provides an init script and chkconfig configuration for managing the Llama Application Master service
 
+# Documentation
+%package doc
+Summary: Documentation for Llama
+Group: Documentation
+
+%description doc
+This package provides documentation for Llama
+
 %pre
 getent group llama >/dev/null || groupadd -r llama
 getent passwd llama > /dev/null || useradd -c "Llama" -s /bin/bash -g llama -d %{run_llama} llama 2> /dev/null || :
@@ -118,3 +126,7 @@ fi
 %files master
 %defattr(-,root,root,755)
 /etc/init.d/llama
+
+%files doc
+%attr(0755,root,root) /usr/share/doc/llama
+

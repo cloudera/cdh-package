@@ -26,7 +26,7 @@ if [ -z "$GIT_REPO" ]; then
     export THRIFT_HOME=/opt/toolchain/thrift-0.9.0
     export PATH=${THRIFT_HOME}/bin:${PATH}
     
-    mvn $MAVEN_INST_DEPLOY -Pdist -DskipTests
+    mvn $MAVEN_INST_DEPLOY site -Pdist -DskipTests
     
     rm -rf build llama-${FULL_VERSION}
     ALL_FILES=`echo *`

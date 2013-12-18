@@ -34,3 +34,8 @@ Depends: llama
 Description: Scripts for running the Llama Application Master
  This package provides an init script and chkconfig configuration for managing the Llama Application Master service
 
+Package: llama-doc
+Architecture: all
+Description: Documentation for Llama
+ This package provides documentation for Llama
+
