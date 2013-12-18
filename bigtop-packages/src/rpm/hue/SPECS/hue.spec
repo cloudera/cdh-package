@@ -37,6 +37,8 @@ Requires: %{name}-hbase = %{version}-%{release}
 Requires: %{name}-sqoop = %{version}-%{release}
 Requires: %{name}-search = %{version}-%{release}
 Requires: %{name}-zookeeper = %{version}-%{release}
+Requires: %{name}-rdbms = %{version}-%{release}
+Requires: %{name}-spark = %{version}-%{release}
 
 ################ RPM CUSTOMIZATION ##############################
 # Disable automatic Provides generation - otherwise we will claim to provide all of the
@@ -96,6 +98,8 @@ AutoReqProv: no
 %define sqoop_app_dir %{hue_dir}/apps/sqoop
 %define search_app_dir %{hue_dir}/apps/search
 %define zookeeper_app_dir %{hue_dir}/apps/zookeeper
+%define rdbms_app_dir %{hue_dir}/apps/rdbms
+%define spark_app_dir %{hue_dir}/apps/spark
 
 # Path to the HADOOP_HOME to build against - these
 # are not substituted into the build products anywhere!
@@ -299,6 +303,8 @@ fi
 %exclude %{sqoop_app_dir}
 %exclude %{search_app_dir}
 %exclude %{zookeeper_app_dir}
+%exclude %{rdbms_app_dir}
+%exclude %{spark_app_dir}
 
 ############################################################
 # No-arch packages - plugins and conf
@@ -489,3 +495,35 @@ A web interface for ZooKeeper.
 %files -n %{name}-zookeeper
 %defattr(-, %{username}, %{username})
 %{zookeeper_app_dir}
+
+#### HUE-RDBMS PLUGIN ######
+%package -n %{name}-rdbms
+Summary: A UI for relational databases on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+
+%description -n %{name}-rdbms
+A web interface for relational databases
+
+%app_post_macro rdbms
+%app_preun_macro rdbms
+
+%files -n %{name}-rdbms
+%defattr(-, %{username}, %{username})
+%{rdbms_app_dir}
+
+#### HUE-SPARK PLUGIN ######
+%package -n %{name}-spark
+Summary: A UI for Spark on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+
+%description -n %{name}-spark
+A web interface for Spark.
+
+%app_post_macro spark
+%app_preun_macro spark
+
+%files -n %{name}-spark
+%defattr(-, %{username}, %{username})
+%{spark_app_dir}
