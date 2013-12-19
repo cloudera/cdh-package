@@ -159,6 +159,8 @@ done
 sed -i -e "s|<Host |<Host workDir=\"/var/tmp/sqoop\" |" ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/server.xml
 sed -i -e "s|\${catalina\.base}/logs|/var/log/sqoop|"   ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/logging.properties
 cp -f ${EXTRA_DIR}/catalina.properties ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/catalina.properties
+install -d -m 0755 ${PREFIX}/${TOMCAT_CONF_DIR}.dist/WEB-INF
+mv $SQOOP_WEBAPPS/sqoop/WEB-INF/*.xml ${PREFIX}/${TOMCAT_CONF_DIR}.dist/WEB-INF
 
 # Create MR1 configuration
 cp -r ${PREFIX}/${TOMCAT_CONF_DIR}.dist ${PREFIX}/${TOMCAT_CONF_DIR}.mr1

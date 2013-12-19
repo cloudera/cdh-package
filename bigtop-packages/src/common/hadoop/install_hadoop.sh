@@ -395,6 +395,8 @@ install -d -m 0755 $HTTPFS_ETC_DIR/conf.empty
 install -d -m 0755 $HTTPFS_ETC_DIR/tomcat-conf.dist
 cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/conf $HTTPFS_ETC_DIR/tomcat-conf.dist/
 chmod 644 $HTTPFS_ETC_DIR/tomcat-conf.dist/conf/*
+install -d -m 0755 $HTTPFS_ETC_DIR/tomcat-conf.dist/WEB-INF
+mv ${HTTPFS_DIR}/webapps/webhdfs/WEB-INF/*.xml $HTTPFS_ETC_DIR/tomcat-conf.dist/WEB-INF/
 mv $HADOOP_ETC_DIR/conf.empty/httpfs* $HTTPFS_ETC_DIR/conf.empty
 sed -i -e '/<\/configuration>/i\
   <!-- HUE proxy user setting -->\

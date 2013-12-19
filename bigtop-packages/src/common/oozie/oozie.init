@@ -54,8 +54,10 @@ tomcat_deployment() {
   DEPLOYMENT_TARGET=/var/lib/oozie/tomcat-deployment
 
   rm -rf ${DEPLOYMENT_TARGET}
-  cp -r ${DEPLOYMENT_SOURCE} ${DEPLOYMENT_TARGET}
-  ln -s /usr/lib/oozie/tomcat-webapps ${DEPLOYMENT_TARGET}/webapps
+  mkdir ${DEPLOYMENT_TARGET}
+  cp -r ${DEPLOYMENT_SOURCE}/conf ${DEPLOYMENT_TARGET}
+  cp -r /usr/lib/oozie/webapps ${DEPLOYMENT_TARGET}/webapps
+  cp -r ${DEPLOYMENT_SOURCE}/WEB-INF/* ${DEPLOYMENT_TARGET}/webapps/oozie/WEB-INF/
 
   if [ -n "${BIGTOP_CLASSPATH}" ] ; then
     sed -i -e "s#^\(common.loader=.*\)\$#\1,${BIGTOP_CLASSPATH/:/,}#" ${DEPLOYMENT_TARGET}/conf/catalina.properties

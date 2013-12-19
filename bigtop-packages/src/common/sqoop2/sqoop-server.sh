@@ -20,9 +20,11 @@ tomcat_deployment() {
   DEPLOYMENT_TARGET=/var/lib/sqoop2/tomcat-deployment
 
   rm -rf ${DEPLOYMENT_TARGET}
-  cp -r ${DEPLOYMENT_SOURCE} ${DEPLOYMENT_TARGET}
-  ln -s ${SQOOP_HOME}/webapps ${DEPLOYMENT_TARGET}/
-  ln -s ${SQOOP_HOME}/bin ${DEPLOYMENT_TARGET}/
+  mkdir ${DEPLOYMENT_TARGET}
+  cp -r ${DEPLOYMENT_SOURCE}/conf ${DEPLOYMENT_TARGET}
+  cp -r /usr/lib/sqoop2/webapps ${DEPLOYMENT_TARGET}/webapps
+  cp -r ${DEPLOYMENT_SOURCE}/WEB-INF/* ${DEPLOYMENT_TARGET}/webapps/sqoop/WEB-INF/
+  cp -r ${SQOOP_HOME}/bin ${DEPLOYMENT_TARGET}/
 
   if [ -n "${BIGTOP_CLASSPATH}" ] ; then
     sed -i -e "s#^\(common.loader=.*\)\$#\1,${BIGTOP_CLASSPATH/:/,}#" ${DEPLOYMENT_TARGET}/conf/catalina.properties

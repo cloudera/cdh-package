@@ -33,8 +33,11 @@ tomcat_deployment() {
   DEPLOYMENT_TARGET=/var/lib/hadoop-httpfs/tomcat-deployment
 
   rm -rf ${DEPLOYMENT_TARGET}
-  cp -r ${DEPLOYMENT_SOURCE} ${DEPLOYMENT_TARGET}
-  ln -s /usr/lib/hadoop-httpfs/webapps ${DEPLOYMENT_TARGET}/
+  mkdir ${DEPLOYMENT_TARGET}
+  cp -r ${DEPLOYMENT_SOURCE}/conf ${DEPLOYMENT_TARGET}/
+  cp -r /usr/lib/hadoop-httpfs/webapps ${DEPLOYMENT_TARGET}/
+  cp -r ${DEPLOYMENT_SOURCE}/WEB-INF/* ${DEPLOYMENT_TARGET}/webapps/webhdfs/WEB-INF/
+
   chown -R ${SVC_USER}:${SVC_USER} ${DEPLOYMENT_TARGET}
   chmod -R 755 ${DEPLOYMENT_TARGET}
 }
