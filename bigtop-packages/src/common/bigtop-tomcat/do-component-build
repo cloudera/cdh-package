@@ -17,6 +17,14 @@
 set -ex
 
 if [ -z "$GIT_REPO" ]; then
+    # In Bigtop, CATALINA_BASE always differs from CATALINA_HOME,
+    # but if you don't set BASE it assumes it's the same as HOME.
+    SET_CATALINA_HOME='  -Dcatalina.home="$CATALINA_HOME" \\'
+    SET_CATALINA_BASE='  -Dcatalina.base="$CATALINA_BASE" \\'
+    for tool_wrapper in `find ./ -name tool-wrapper.sh`; do
+        sed -i -e "s#${SET_CATALINA_HOME}#${SET_CATALINA_HOME}\n${SET_CATALINA_BASE}#" ${tool_wrapper}
+    done
+
     rm -rf build .build
     mkdir -p .build/bigtop-tomcat-${FULL_VERSION}
     cp -r * .build/bigtop-tomcat-${FULL_VERSION}
