@@ -169,9 +169,11 @@ cp -f ${EXTRA_DIR}/catalina.properties.mr1 ${PREFIX}/${TOMCAT_CONF_DIR}.mr1/conf
 # Create wrapper scripts for the client and server
 client_wrapper=$PREFIX/usr/bin/sqoop2
 server_wrapper=$PREFIX/usr/bin/sqoop2-server
+tool_wrapper=$PREFIX/usr/bin/sqoop2-tool
 mkdir -p $PREFIX/usr/bin
 install -m 0755 $EXTRA_DIR/sqoop.sh $client_wrapper
 install -m 0755 $EXTRA_DIR/sqoop-server.sh $server_wrapper
+install -m 0755 $EXTRA_DIR/sqoop-tool.sh $tool_wrapper
 
 CATALINA_HOME=/usr/lib/bigtop-tomcat
 install -d ${PREFIX}/${CATALINA_HOME}/lib

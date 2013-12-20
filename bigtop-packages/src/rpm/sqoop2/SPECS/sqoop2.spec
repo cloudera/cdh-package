@@ -70,7 +70,7 @@ Source10: sqoop-server.svc
 Source11: sqoop-server.sh
 Buildarch: noarch
 BuildRequires: asciidoc
-Requires: hadoop-client, bigtop-utils >= 0.7, bigtop-tomcat, %{name}-client = %{version}-%{release}
+Requires: hadoop-client, bigtop-utils >= 0.7, bigtop-tomcat > 0.6.0+cdh5.0.0+266, %{name}-client = %{version}-%{release}
 
 %description
 Sqoop is a tool that provides the ability to import and export data sets between
@@ -179,6 +179,7 @@ fi
 %files
 %defattr(0755,root,root)
 /usr/bin/sqoop2-server
+/usr/bin/sqoop2-tool
 %config(noreplace) /etc/sqoop2/conf.dist
 %config(noreplace) /etc/sqoop2/tomcat-conf.dist
 %config(noreplace) /etc/sqoop2/tomcat-conf.mr1

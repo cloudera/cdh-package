@@ -1,4 +1,5 @@
 /usr/bin/sqoop2-server
+/usr/bin/sqoop2-tool
 /etc/sqoop2
 /etc/default/sqoop2-server
 /usr/lib/sqoop2/bin/setenv.sh
