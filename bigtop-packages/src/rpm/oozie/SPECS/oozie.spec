@@ -191,6 +191,7 @@ fi
 
 %files 
 %defattr(-,root,root)
+%config(noreplace) %{conf_oozie_dist}
 %config(noreplace) %{tomcat_conf_oozie}.*
 %{usr_bin}/oozie-setup
 %{lib_oozie}/bin/oozie-setup.sh
@@ -215,7 +216,6 @@ fi
 
 %files client
 %defattr(-,root,root)
-%config(noreplace) %{conf_oozie_dist}
 %{usr_bin}/oozie
 %dir %{lib_oozie}/bin
 %{lib_oozie}/bin/oozie
