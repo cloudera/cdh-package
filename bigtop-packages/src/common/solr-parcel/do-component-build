@@ -276,6 +276,7 @@ if [ -z \$HBASE_CLASSPATH ]; then
 else
   export HBASE_CLASSPATH=\$HBASE_CLASSPATH:\$HBASE_SOLR_JARS
 fi
+export SEARCH_HOME=\$PARCELS_ROOT/\$SOLR_DIRNAME/lib/search
 __EOT__
 ) > build/meta/solr_env.sh
 
