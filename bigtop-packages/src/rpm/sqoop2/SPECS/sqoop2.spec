@@ -68,6 +68,7 @@ Source8: sqoop2.default
 Source9: init.d.tmpl
 Source10: sqoop-server.svc
 Source11: sqoop-server.sh
+Source12: sqoop-tool.sh
 Buildarch: noarch
 BuildRequires: asciidoc
 Requires: hadoop-client, bigtop-utils >= 0.7, bigtop-tomcat > 0.6.0+cdh5.0.0+266, %{name}-client = %{version}-%{release}
