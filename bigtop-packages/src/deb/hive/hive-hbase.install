@@ -4,3 +4,4 @@
 /usr/lib/hive/lib/hbase-hadoop-compat.jar
 /usr/lib/hive/lib/hbase-hadoop2-compat.jar
 /usr/lib/hive/lib/hbase-protocol.jar
+/usr/lib/hive/lib/htrace-core.jar

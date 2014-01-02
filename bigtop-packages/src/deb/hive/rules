@@ -47,10 +47,12 @@ override_dh_auto_install: metastore server server2 hcatalog-server webhcat-serve
 	# We need to get rid of jars that happen to be shipped in other CDH packages
 	rm -f debian/tmp/usr/lib/hive/lib/hbase-common*.jar debian/tmp/usr/lib/hive/lib/hbase-client*.jar \
 	  debian/tmp/usr/lib/hive/lib/hbase-server*.jar debian/tmp/usr/lib/hive/lib/hbase-hadoop-compat*.jar \
-	  debian/tmp/usr/lib/hive/lib/hbase-hadoop2-compat*.jar debian/tmp/usr/lib/hive/lib/hbase-protocol*.jar debian/tmp/usr/lib/hive/lib/zookeeper*.jar
+	  debian/tmp/usr/lib/hive/lib/hbase-hadoop2-compat*.jar debian/tmp/usr/lib/hive/lib/hbase-protocol*.jar \
+	  debian/tmp/usr/lib/hive/lib/zookeeper*.jar debian/tmp/usr/lib/hive/lib/htrace-core*.jar
 
 	ln -s /usr/lib/hbase/hbase-common.jar /usr/lib/hbase/hbase-client.jar /usr/lib/hbase/hbase-server.jar \
-	  /usr/lib/hbase/hbase-hadoop-compat.jar /usr/lib/hbase/hbase-hadoop2-compat.jar /usr/lib/hbase/hbase-protocol.jar debian/tmp/usr/lib/hive/lib
+	  /usr/lib/hbase/hbase-hadoop-compat.jar /usr/lib/hbase/hbase-hadoop2-compat.jar \
+	  /usr/lib/hbase/hbase-protocol.jar /usr/lib/hbase/lib/htrace-core.jar debian/tmp/usr/lib/hive/lib
 
 	ln -s  /usr/lib/zookeeper/zookeeper.jar debian/tmp/usr/lib/hive/lib
 
