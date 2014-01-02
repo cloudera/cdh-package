@@ -184,3 +184,6 @@ for dir in $PREFIX/$LIB_DIR/lib ; do
     done
 done
 
+# Create a versionless symlink for htrace-core.jar
+old_jar=`ls $PREFIX/$LIB_DIR/lib/htrace-core*.jar`
+ln -s `basename $old_jar` $PREFIX/$LIB_DIR/lib/htrace-core.jar
