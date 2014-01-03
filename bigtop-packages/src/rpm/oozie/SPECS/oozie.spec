@@ -162,6 +162,7 @@ getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --she
 %{alternatives_cmd} --install %{tomcat_conf_oozie} %{name}-tomcat-deployment %{tomcat_conf_oozie}.https 20
 %{alternatives_cmd} --install %{tomcat_conf_oozie} %{name}-tomcat-deployment %{tomcat_conf_oozie}.http.mr1 15
 %{alternatives_cmd} --install %{tomcat_conf_oozie} %{name}-tomcat-deployment %{tomcat_conf_oozie}.https.mr1 10
+%{alternatives_cmd} --install %{conf_oozie} %{name}-conf %{conf_oozie_dist} 30
 
 /sbin/chkconfig --add oozie 
 
@@ -174,19 +175,12 @@ if [ "$1" = 0 ]; then
   %{alternatives_cmd} --remove %{name}-tomcat-deployment %{tomcat_conf_oozie}.https || :
   %{alternatives_cmd} --remove %{name}-tomcat-deployment %{tomcat_conf_oozie}.http.mr1 || :
   %{alternatives_cmd} --remove %{name}-tomcat-deployment %{tomcat_conf_oozie}.https.mr1 || :
+  %{alternatives_cmd} --remove %{name}-conf %{conf_oozie_dist} || :
 fi
 
 %postun
 if [ $1 -ge 1 ]; then
   /sbin/service oozie condrestart > /dev/null
-fi
-
-%post client
-%{alternatives_cmd} --install %{conf_oozie} %{name}-conf %{conf_oozie_dist} 30
-
-%preun client
-if [ "$1" = 0 ]; then
-  %{alternatives_cmd} --remove %{name}-conf %{conf_oozie_dist} || :
 fi
 
 %files 
