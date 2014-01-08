@@ -45,7 +45,7 @@ if [ -z "$GIT_REPO" ]; then
 
   rm -rf build
   mkdir build
-  cp assembly/target/spark-assembly_2.9.3-${FULL_VERSION}-dist.tar.gz build/spark-${FULL_VERSION}.tar.gz
+  cp assembly/target/spark-assembly_*-${FULL_VERSION}-dist.tar.gz build/spark-${FULL_VERSION}.tar.gz
 else
     git add .
     git commit -a -m "Temporary commit for tarball"
