@@ -53,6 +53,8 @@ MISCJAVA_HOME_CANDIDATES='\
     /usr/lib/jvm/java-openjdk \
     /usr/lib/jvm/jre-openjdk'
 
+# Note that the JDK versions recommended for production use in CDH
+# may not reflect the current recommendations for Apache Bigtop
 case $BIGTOP_JAVA_MAJOR in
   6) JAVA_HOME_CANDIDATES="$JAVA6_HOME_CANDIDATES"
      ;;
