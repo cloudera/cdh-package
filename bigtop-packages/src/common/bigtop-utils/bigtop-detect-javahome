@@ -58,8 +58,8 @@ case $BIGTOP_JAVA_MAJOR in
      ;;
   7) JAVA_HOME_CANDIDATES="$JAVA7_HOME_CANDIDATES $OPENJAVA7_HOME_CANDIDATES"
      ;;
-  *) JAVA_HOME_CANDIDATES="$JAVA6_HOME_CANDIDATES     \
-                           $JAVA7_HOME_CANDIDATES     \
+  *) JAVA_HOME_CANDIDATES="$JAVA7_HOME_CANDIDATES     \
+                           $JAVA6_HOME_CANDIDATES     \
                            $MISCJAVA_HOME_CANDIDATES  \
                            $OPENJAVA7_HOME_CANDIDATES \
                            $OPENJAVA6_HOME_CANDIDATES"
