@@ -155,6 +155,7 @@ for file in $DEPENDENCY_DIR/hive*cdh*.jar; do symlink_lib $file hive/lib; done
 for file in $DEPENDENCY_DIR/zookeeper*cdh*.jar; do symlink_lib $file zookeeper; done
 for file in $DEPENDENCY_DIR/libhdfs*.so*; do symlink_lib $file ../${NATIVE_LIB_DIR}; done
 for file in $DEPENDENCY_DIR/libhadoop*.so*; do symlink_lib $file hadoop/lib/native; done
+for file in $DEPENDENCY_DIR/parquet*.jar; do symlink_lib $file parquet; done
 
 # install Impala shell
 install -d -m 0755 ${LIB_DIR}-shell

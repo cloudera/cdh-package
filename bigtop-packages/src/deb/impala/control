@@ -23,7 +23,7 @@ Homepage: http://cloudera.com/impala
 
 Package: impala
 Architecture: all
-Depends: ${misc:Depends}, adduser, bigtop-utils (>= 0.7), libssl0.9.8 | libssl1.0.0, hadoop, hadoop-hdfs, hadoop-yarn, hadoop-mapreduce, hbase, hive, zookeeper, libhdfs0, avro-libs
+Depends: ${misc:Depends}, adduser, bigtop-utils (>= 0.7), libssl0.9.8 | libssl1.0.0, hadoop, hadoop-hdfs, hadoop-yarn, hadoop-mapreduce, hbase, hive, zookeeper, libhdfs0, avro-libs, parquet
 Description: Application for executing real-time queries on top of Hadoop
 
 Package: impala-udf-dev
