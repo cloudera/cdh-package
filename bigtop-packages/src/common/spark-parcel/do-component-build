@@ -1,0 +1,401 @@
+#!/bin/bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -ex
+
+[ -f spark-parcel.props ] && . spark-parcel.props
+
+PKG_ARCHIVE=${PKG_ARCHIVE:-"http://repos.jenkins.cloudera.com/spark-nightly/"}
+PKG_SPARK_VERSION=${PKG_SPARK_VERSION:-"0"}
+
+# If PKG_FORMAT not specified assume tarballs
+if [ -z "$PKG_FORMAT" ] ; then
+  rm -rf build
+  mkdir build
+  cat > build/spark-parcel.props <<__EOT__
+PKG_ARCHIVE="$PKG_ARCHIVE"
+PKG_SPARK_VERSION="$PKG_SPARK_VERSION"
+__EOT__
+  tar -C build -czf build/spark-parcel-${FULL_VERSION}.tar.gz spark-parcel.props
+  exit 0
+fi
+
+REDHAT_RELEASES="rhel|redhat|centos|red.hat"
+SUSE_RELEASES="suse|sles"
+UBUNTU_RELEASES="lucid|precise"
+ARC="`uname -m`"
+
+if [ "$ARC" = "x86_64" ] ; then
+  DEB_ARC="amd64"
+else
+  DEB_ARC="i386"
+fi
+
+# The following block is quite messy, since it has
+# to account for different URL schemas for different
+# types of repos
+if egrep -i $UBUNTU_RELEASES /etc/*release ;then
+  for release in `echo $UBUNTU_RELEASES | tr '|' ' '` ; do
+    if fgrep -q $release /etc/*release ; then
+      PKGS="`curl ${PKG_ARCHIVE}/ubuntu/${release}/${DEB_ARC}/spark/dists/${release}-spark${PKG_SPARK_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
+             sed -ne '/^Filename:/s#^Filename: #'"${PKG_ARCHIVE}/ubuntu/${release}/${DEB_ARC}/spark/"'#p'`"
+    fi
+  done
+elif [ -f /etc/debian_version ] ;then
+  release=squeeze
+  PKGS="`curl ${PKG_ARCHIVE}/debian/${release}/${DEB_ARC}/spark/dists/${release}-spark${PKG_SPARK_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
+         sed -ne '/^Filename:/s#^Filename: #'"${PKG_ARCHIVE}/debian/${release}/${DEB_ARC}/spark/"'#p'`"
+elif egrep -i $REDHAT_RELEASES /etc/*release ;then
+  if fgrep "6." /etc/*release ;then
+    PKGS="${PKG_ARCHIVE}/redhat/6/${ARC}/spark/${PKG_SPARK_VERSION}/RPMS"
+  else
+    PKGS="${PKG_ARCHIVE}/redhat/5/${ARC}/spark/${PKG_SPARK_VERSION}/RPMS"
+  fi
+elif egrep -i $SUSE_RELEASES /etc/*release ;then
+  PKGS="${PKG_ARCHIVE}/sles/11/${ARC}/spark/${PKG_SPARK_VERSION}/RPMS/"
+else
+  echo "Looks like we don't support the following OS:"
+  cat /etc/*release
+  exit 1
+fi
+
+# Download the packages
+rm -rf dl
+mkdir dl
+(cd dl ; wget -N -r -l2 --no-parent $PKGS)
+
+# Make sure we filter out the most recent versions of the packages
+#RPMS=`find dl -name \*.rpm -printf '%p\t'  -exec rpm -q --qf '%{NAME}\n' -p {} \; 2>/dev/null`
+#DEBS=`find dl -name \*.deb -printf '%p\t'  -exec bash -c 'dpkg -I {} | grep Package: | cut -f3 -d\  ' \; 2>/dev/null` 
+
+# Unpack the bits
+rm -rf build
+mkdir -p build/seen
+
+# Create metadata directory
+mkdir -p build/meta
+
+# We don't want to recurse into ourselves 
+rm -rf `find dl -type f -name spark-parcel\*`
+
+(
+echo "{"
+JSON_IS_STUPID=""
+for pkg in $(ls -t `find dl -type f`) ; do
+  case $pkg in
+     *.deb) PKG_NAME=`dpkg -I $pkg | grep Package: | awk '{ print $2 }'`
+            if [ ! -f build/seen/$PKG_NAME ] ; then
+              PKG_VERSION=`dpkg -I $pkg | grep Version: | awk '{ print $2 }'`
+              dpkg -x $pkg ./build
+              echo $PKG_VERSION > build/seen/${PKG_NAME}
+              echo "  ${JSON_IS_STUPID} \"$PKG_NAME\" : {"
+              echo "    \"name\": \"$PKG_NAME\","
+              echo "    \"version\": \"$PKG_VERSION\","
+              echo "    \"files\" : {"
+              dpkg-deb -c $pkg | awk '{ print "\"" $6 "\" : {}" }' | sed -e 's/$/,/'
+              echo "    }"
+              echo "  }"
+              JSON_IS_STUPID=","
+            fi
+            ;;
+     *.rpm) PKG_NAME=`rpm -q --qf '%{NAME}' -p $pkg`
+            if [ ! -f build/seen/$PKG_NAME ] ; then
+              PKG_VERSION=`rpm -q --qf '%{VERSION}' -p $pkg`
+              rpm2cpio $pkg | (cd build ; cpio -i --make-directories)
+              echo $PKG_VERSION > build/seen/$PKG_NAME
+              echo "  ${JSON_IS_STUPID} \"$PKG_NAME\" : {"
+              echo "    \"name\": \"$PKG_NAME\","
+              echo "    \"version\": \"$PKG_VERSION\","
+              echo "    \"files\" : {"
+              rpm -qpl $pkg | awk '{ print "\"" $1 "\" : {}" }' | sed -e 's/$/,/'
+              echo "    }"
+              echo "  }"
+              JSON_IS_STUPID=","
+            fi
+            ;;
+  esac
+  rm $pkg
+done
+echo "}"
+) > build/meta/filelist.json
+# Rewrite paths to be relative to parcel root (RPMs)
+perl -pi -e 's#^"/etc/#      "etc/#' build/meta/filelist.json
+perl -pi -e 's#^"/usr/#      "#' build/meta/filelist.json
+perl -0pi -e 's#"/var/.*\n##g' build/meta/filelist.json
+# Rewrite paths to be relative to parcel root (debs)
+perl -0pi -e 's#"\./" : {},\n##g' build/meta/filelist.json
+perl -0pi -e 's#"\./usr/" : {},\n##g' build/meta/filelist.json
+perl -pi -e 's#^"\./etc/#      "etc/#' build/meta/filelist.json
+perl -pi -e 's#^"\./usr/#      "#' build/meta/filelist.json
+perl -0pi -e 's#"\./var/.*\n##g' build/meta/filelist.json
+# Handle empty rpms
+perl -pi -e 's/\(contains no files\)//' build/meta/filelist.json
+# Remove trailing commas
+perl -0pi -e's/,\n\    }/\n\    }/g' build/meta/filelist.json
+
+# Fix the symlinks
+for link in `find build/usr/lib/ build/usr/share -type l` ; do
+  target=`readlink $link`
+
+  case $link in
+    build/usr/lib/*)
+                TOPDIR=`echo $link | sed -e 's#^build/usr/lib/##' -e 's#[^/]\+#..#g'`
+                ;;
+    build/usr/share/*)
+                TOPDIR=`echo $link | sed -e 's#^build/usr/share/##' -e 's#[^/]\+#..#g'`
+  esac
+
+  case $target in
+    /usr/lib/*)
+                rm -f $link
+                ln -s $TOPDIR/lib/`echo $target |sed -e 's#/usr/lib/##'` $link
+                ;;
+    /usr/share/*)
+                rm -f $link
+                ln -s $TOPDIR/share/`echo $target |sed -e 's#/usr/share##'` $link
+  esac
+done
+
+#TODO: Do any spark specific post-install stuff here
+
+if [ -d build/usr/lib/bigtop-utils ] ; then
+  BIGTOP_UTILS_HOME=lib/bigtop-utils
+else
+  BIGTOP_UTILS_HOME=libexec/bigtop-utils
+fi
+
+DISTRO_LESS_FULL_VERSION=`echo $SPARK_PARCEL_CUSTOM_VERSION | sed -e 's#\.[^\.]*$##'`
+DASH_SEPARATED_CUSTOM_VERSION=`echo $SPARK_PARCEL_CUSTOM_VERSION | sed -e 's/\.\([^\.]*\)$/-\1/'`
+
+# Create a bunch of metadata
+(cat <<__EOT__
+{
+  "name":               "SPARK",
+  "version":            "$DISTRO_LESS_FULL_VERSION",
+  "extraVersionInfo": {
+    "fullVersion":        "$DASH_SEPARATED_CUSTOM_VERSION",
+    "baseVersion":        "$SPARK_PARCEL_BASE_VERSION",
+    "patchCount":         "$SPARK_CUSTOMER_PATCH"
+  },
+  "minPrevVersion":     "$SPARK_MIN_PREV_VERSION",
+  "maxPrevVersion":     "$SPARK_MAX_PREV_VERSION",
+
+  "setActiveSymlink":   true,
+
+  "scripts": {
+    "defines": "spark_env.sh",
+    "alternatives": "spark_alternatives.sh"
+  },
+
+  "packages": [
+__EOT__
+
+JSON_IS_STUPID=""
+for pkg in build/seen/* ; do
+  cat <<__EOT__
+    ${JSON_IS_STUPID}{ "name":    "`basename $pkg`",
+      "version": "`cat $pkg`"
+    }
+__EOT__
+  JSON_IS_STUPID=","
+done
+
+cat <<__EOT__
+  ],
+
+  "components": [
+__EOT__
+
+JSON_IS_STUPID=""
+for comp in build/usr/lib/*/cloudera/cdh_version.properties ; do
+  cat <<__EOT__
+    ${JSON_IS_STUPID}{ "name":     "`sed -ne 's/^cloudera.pkg.name=//p' $comp`",
+      "version":  "`sed -ne 's/^version=//p' $comp`",
+      "pkg_version":  "`sed -ne 's/^cloudera.pkg.version=//p' $comp`" 
+    }
+__EOT__
+  JSON_IS_STUPID=","
+done
+
+cat <<__EOT__
+  ],
+
+  "provides": [
+    "spark"
+  ],
+
+  "users": {
+     "spark": {
+       "longname"    : "Spark",
+       "home"        : "/var/lib/spark",
+       "shell"       : "/sbin/nologin",
+       "extra_groups": [ ]
+     }
+  },
+
+  "groups": [ ]
+}
+__EOT__
+) > build/meta/parcel.json
+
+# Now take care of permissions
+cat > build/meta/permissions.json <<__EOT__
+{
+}
+__EOT__
+
+# spark_env.sh
+(echo "#!/bin/bash"
+#cat build/etc/default/* | grep -v '^[ 	]*#' |\
+#                          grep -v '^[ 	]*$' |\
+#                          grep -v '_HOME='   |\
+#                          grep -v '/etc'     | sort -u
+#echo
+cat <<__EOT__
+SPARK_DIRNAME=\${PARCEL_DIRNAME:-"SPARK-$DISTRO_LESS_FULL_VERSION"}
+export CDH_SPARK_HOME=\$PARCELS_ROOT/\$SPARK_DIRNAME/lib/spark
+__EOT__
+) > build/meta/spark_env.sh
+
+# spark_alternatives.sh
+BINARIES="spark-executor spark-shell"
+
+CONFDIRS="spark"
+# Some services are 'special' and use conf.empty instead of conf.dist
+EMPTY_CONFDIRS=""
+
+cat > build/meta/spark_alternatives.sh <<__EOT__
+#!/bin/bash
+PRIORITY=10
+SPARK_DIRNAME=\${PARCEL_DIRNAME:-"SPARK-$DISTRO_LESS_FULL_VERSION"}
+
+__EOT__
+
+if egrep -i $SUSE_RELEASES /etc/*release; then
+cat >> build/meta/spark_alternatives.sh <<__EOT__
+function safe_deregister_bin {
+  BINARY=\$1
+  # If the binary doesn't exist, simply deregister it, since we need to keep alternatives DB in sync
+  if [ ! -e /usr/bin/\$BINARY ]; then
+    update-alternatives --remove \$BINARY \$PARCELS_ROOT/\$SPARK_DIRNAME/bin/\$BINARY
+  # If the binary is a symlink pointing to alternatives, then we will just let alternatives manage the removal
+  elif [ -L /usr/bin/\$BINARY ] && [ "\$(readlink /usr/bin/\$BINARY)" = "/etc/alternatives/\$BINARY" ]; then
+    update-alternatives --remove \$BINARY \$PARCELS_ROOT/\$SPARK_DIRNAME/bin/\$BINARY
+    # Otherwise, we have to defensively remove it
+  else
+    # Make a copy of the binary if it's not managed by alternatives
+    cp /usr/bin/\$BINARY /usr/bin/\${BINARY}~
+    # Then deregister the alternative, which on SLES may remove the physical file
+    update-alternatives --remove \$BINARY \$PARCELS_ROOT/\$SPARK_DIRNAME/bin/\$BINARY
+    # If the file was in fact removed during the de-registration process, restore it
+    if [ ! -e /usr/bin/\$BINARY ]; then
+      mv /usr/bin/\${BINARY}~ /usr/bin/\$BINARY
+    fi
+    # In all cases, forcefully remove the backup
+    rm -f /usr/bin/\${BINARY}~
+  fi
+}
+
+__EOT__
+fi
+cat >> build/meta/spark_alternatives.sh <<__EOT__
+
+if [[ "\$1" == "activate" ]]; then
+__EOT__
+
+for BINARY in $BINARIES; do
+  echo \
+    "  update-alternatives --install /usr/bin/$BINARY $BINARY \$PARCELS_ROOT/\$SPARK_DIRNAME/bin/$BINARY \$PRIORITY" \
+    >> build/meta/spark_alternatives.sh
+done
+
+for CONFDIR in $CONFDIRS; do
+  echo "  mkdir -p /etc/$CONFDIR" >> build/meta/spark_alternatives.sh
+  echo \
+    "  update-alternatives --install /etc/$CONFDIR/conf $CONFDIR-conf \$PARCELS_ROOT/\$SPARK_DIRNAME/etc/$CONFDIR/conf.dist \$PRIORITY" \
+    >> build/meta/spark_alternatives.sh
+done
+
+for CONFDIR in $EMPTY_CONFDIRS; do
+  echo "  mkdir -p /etc/$CONFDIR" >> build/meta/spark_alternatives.sh
+  echo \
+    "  update-alternatives --install /etc/$CONFDIR/conf $CONFDIR-conf \$PARCELS_ROOT/\$SPARK_DIRNAME/etc/$CONFDIR/conf.empty \$PRIORITY" \
+    >> build/meta/spark_alternatives.sh
+done
+
+cat >> build/meta/spark_alternatives.sh <<__EOT__
+
+elif [[ "\$1" == "deactivate" ]]; then
+
+__EOT__
+
+for BINARY in $BINARIES; do
+  if egrep -i $SUSE_RELEASES /etc/*release; then
+    echo \
+      "  safe_deregister_bin \"$BINARY\"" >> build/meta/spark_alternatives.sh
+  else
+    echo \
+      "  update-alternatives --remove $BINARY \$PARCELS_ROOT/\$SPARK_DIRNAME/bin/$BINARY" \
+      >> build/meta/spark_alternatives.sh
+  fi
+done
+
+for CONFDIR in $CONFDIRS; do
+  echo \
+    "  update-alternatives --remove $CONFDIR-conf \$PARCELS_ROOT/\$SPARK_DIRNAME/etc/$CONFDIR/conf.dist" \
+    >> build/meta/spark_alternatives.sh
+  echo "  rmdir --ignore-fail-on-non-empty /etc/$CONFDIR" >> build/meta/spark_alternatives.sh
+done
+
+for CONFDIR in $EMPTY_CONFDIRS; do
+  echo \
+    "  update-alternatives --remove $CONFDIR-conf \$PARCELS_ROOT/\$SPARK_DIRNAME/etc/$CONFDIR/conf.empty" \
+    >> build/meta/spark_alternatives.sh
+  echo "  rmdir --ignore-fail-on-non-empty /etc/$CONFDIR" >> build/meta/spark_alternatives.sh
+done
+
+cat >> build/meta/spark_alternatives.sh <<__EOT__
+
+fi
+
+__EOT__
+chmod +x build/meta/spark_alternatives.sh
+
+# Magically manipulate the bin scripts to point to ../lib instead of /usr/lib
+# Ideally we would want alternatives configuration for bin scripts as well
+for file in `find build/usr/bin -type f`; do
+  # Insert a command that sets the LIB_DIR we want to use
+  sed -i '1a \
+  # Reference: http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in\
+  SOURCE="${BASH_SOURCE[0]}"\
+  BIN_DIR="$( dirname "$SOURCE" )"\
+  while [ -h "$SOURCE" ]\
+  do\
+    SOURCE="$(readlink "$SOURCE")"\
+    [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"\
+    BIN_DIR="$( cd -P "$( dirname "$SOURCE"  )" && pwd )"\
+  done\
+  BIN_DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"\
+  LIB_DIR=$BIN_DIR/../lib' $file
+  # Replace /usr/libexec with the libexec dir from within the parcel
+  # Replace /usr/lib with the LIB_DIR variable we set in the above line
+  # Replace all instances of /etc/default to relatively point to <parcel root>/etc/default
+  # Replace default shell in shell scripts to be explicitly bash (since default shell in debian/ubuntu shell is dash)
+  sed -i -e 's:/usr/libexec/:\$BIN_DIR/../libexec/:' \
+  -e 's:/usr/lib/:\$LIB_DIR/:' \
+  -e 's:/etc/default:$BIN_DIR/../etc/default:' \
+  -e 's:#!/bin/sh:#!/bin/bash:' $file
+done
