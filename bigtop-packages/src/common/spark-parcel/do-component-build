@@ -270,13 +270,62 @@ export CDH_SPARK_HOME=\$PARCELS_ROOT/\$SPARK_DIRNAME/lib/spark
 __EOT__
 ) > build/meta/spark_env.sh
 
-# spark_alternatives.sh
+# Alternatives
 BINARIES="spark-executor spark-shell"
 
 CONFDIRS="spark"
 # Some services are 'special' and use conf.empty instead of conf.dist
 EMPTY_CONFDIRS=""
 
+# alternatives.json
+# Create a bunch of metadata
+(cat <<__EOT__
+{
+__EOT__
+
+JSON_IS_STUPID=""
+for name in $BINARIES; do
+  cat <<__EOT__
+    ${JSON_IS_STUPID}"$name": {
+      "destination": "/usr/bin/$name",
+      "source": "bin/$name",
+      "priority": 10,
+      "isDirectory": false
+    }
+__EOT__
+  JSON_IS_STUPID=","
+done
+
+for name in $CONFDIRS; do
+  cat <<__EOT__
+    ${JSON_IS_STUPID}"${name}-conf": {
+      "destination": "/etc/$name/conf",
+      "source": "etc/$name/conf.dist",
+      "priority": 10,
+      "isDirectory": true
+    }
+__EOT__
+  JSON_IS_STUPID=","
+done
+
+for name in $EMPTY_CONFDIRS; do
+  cat <<__EOT__
+    ${JSON_IS_STUPID}"${name}-conf": {
+      "destination": "/etc/$name/conf",
+      "source": "etc/$name/conf.empty",
+      "priority": 10,
+      "isDirectory": true
+    }
+__EOT__
+  JSON_IS_STUPID=","
+done
+
+cat <<__EOT__
+}
+__EOT__
+) > build/meta/alternatives.json
+
+# spark_alternatives.sh
 cat > build/meta/spark_alternatives.sh <<__EOT__
 #!/bin/bash
 PRIORITY=10
