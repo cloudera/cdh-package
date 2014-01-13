@@ -96,3 +96,8 @@ cp -r $BUILD_DIR/site/* $PREFIX/$DOC_DIR
 # Finally move some file from lib to docs
 mv $PREFIX/$LIB_DIR/crunch-examples-*.jar $PREFIX/$DOC_DIR
 mv $PREFIX/$LIB_DIR/crunch-test-*.jar $PREFIX/$DOC_DIR
+
+# Cloudera specific
+install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
+
