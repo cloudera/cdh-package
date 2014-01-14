@@ -130,6 +130,7 @@ install -d -m 0755 $PREFIX/$LIB_DIR/webapps/solr
 
 cp ${BUILD_DIR}/example/lib/ext/*.jar $PREFIX/$LIB_DIR/webapps/solr/WEB-INF/lib/
 cp ${BUILD_DIR}/contrib/sentry-handlers/lib/*.jar $PREFIX/$LIB_DIR/webapps/solr/WEB-INF/lib/
+cp ${BUILD_DIR}/dist/solr-sentry-handlers-*.jar $PREFIX/$LIB_DIR/webapps/solr/WEB-INF/lib/
 
 install -d -m 0755 $PREFIX/$LIB_DIR/webapps/ROOT
 cat > $PREFIX/$LIB_DIR/webapps/ROOT/index.html <<__EOT__
