@@ -122,6 +122,9 @@ done
 install -d -m 0755 $PREFIX/$LIB_DIR/examples/lib
 cp ${BUILD_DIR}/examples/target/spark-examples*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/examples/lib
 
+cp -a ${BUILD_DIR}/bin/*.sh $PREFIX/$SPARK_BIN_DIR
+chmod 755 $PREFIX/$SPARK_BIN_DIR/*
+
 # FIXME: executor scripts need to reside in bin
 cp -a $BUILD_DIR/spark-class $PREFIX/$LIB_DIR
 cp -a $BUILD_DIR/spark-executor $PREFIX/$LIB_DIR
