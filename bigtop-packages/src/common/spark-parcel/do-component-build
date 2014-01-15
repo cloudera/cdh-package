@@ -273,7 +273,7 @@ __EOT__
 ) > build/meta/spark_env.sh
 
 # Alternatives
-BINARIES="spark-executor spark-shell"
+BINARIES="spark-executor spark-shell pyspark"
 
 CONFDIRS="spark"
 # Some services are 'special' and use conf.empty instead of conf.dist
