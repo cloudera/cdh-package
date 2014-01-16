@@ -349,6 +349,7 @@ fi
 %exclude %{usr_lib_hive}/lib/slf4j-*.jar
 %exclude %{usr_lib_hive}/lib/log4j-*.jar
 %exclude %{usr_lib_hive}/lib/commons-logging-*.jar
+%exclude %{usr_lib_hive}/lib/htrace-core.jar
 
 %files hbase
 %defattr(-,root,root,755)
@@ -358,6 +359,7 @@ fi
 %{usr_lib_hive}/lib/hbase-hadoop-compat.jar
 %{usr_lib_hive}/lib/hbase-hadoop2-compat.jar
 %{usr_lib_hive}/lib/hbase-protocol.jar
+%{usr_lib_hive}/lib/htrace-core.jar
 
 %files jdbc
 %defattr(-,root,root,755)
