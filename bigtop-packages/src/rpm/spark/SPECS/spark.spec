@@ -122,11 +122,6 @@ env FULL_VERSION=%{spark_patched_version} bash $RPM_SOURCE_DIR/do-component-buil
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{bin_spark}/
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/lib/%{spark_name}/
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/log/%{spark_name}/
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{spark_name}/
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{spark_name}/work/
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
 sh $RPM_SOURCE_DIR/install_spark.sh \

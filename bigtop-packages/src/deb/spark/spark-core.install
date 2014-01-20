@@ -2,7 +2,9 @@
 /usr/bin/spark-executor
 /usr/bin/spark-shell
 /usr/lib/spark/bagel
-/usr/lib/spark/bin
+/usr/lib/spark/bin/compute-classpath.sh
+/usr/lib/spark/bin/spark-class
+/usr/lib/spark/bin/spark-shell
 /usr/lib/spark/sbin
 /usr/lib/spark/core
 /usr/lib/spark/examples
@@ -13,7 +15,8 @@
 /usr/lib/spark/ui-resources
 /usr/lib/spark/conf
 /usr/lib/spark/RELEASE
-/usr/lib/spark/spark-class
-/usr/lib/spark/spark-executor
-/usr/lib/spark/spark-shell
+/var/lib/spark/
+/var/log/spark/
+/var/run/spark/
+/var/run/spark/work/
 
