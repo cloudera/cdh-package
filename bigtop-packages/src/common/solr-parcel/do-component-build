@@ -185,6 +185,8 @@ DASH_SEPARATED_CUSTOM_VERSION=`echo $SOLR_PARCEL_CUSTOM_VERSION | sed -e 's/\.\(
   "minPrevVersion":     "$SOLR_MIN_PREV_VERSION",
   "maxPrevVersion":     "$SOLR_MAX_PREV_VERSION",
 
+  "depends":            "CDH (>= 4.3), CDH (<< 5.0)",
+
   "setActiveSymlink":   true,
 
   "scripts": {
