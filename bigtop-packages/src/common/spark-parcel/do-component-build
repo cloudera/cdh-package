@@ -193,6 +193,8 @@ DASH_SEPARATED_CUSTOM_VERSION=`echo $SPARK_PARCEL_CUSTOM_VERSION | sed -e 's/\.\
   "minPrevVersion":     "$SPARK_MIN_PREV_VERSION",
   "maxPrevVersion":     "$SPARK_MAX_PREV_VERSION",
 
+  "depends":            "CDH (>= 4.4), CDH (< 5.0)",
+
   "setActiveSymlink":   true,
 
   "scripts": {
