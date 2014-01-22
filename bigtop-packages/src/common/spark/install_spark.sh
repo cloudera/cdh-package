@@ -180,6 +180,14 @@ done
 
 cat >> $PREFIX/$CONF_DIR/spark-env.sh <<EOF
 
+###
+### === IMPORTANT ===
+### Change the following to specify a real cluster's Master host
+###
+export STANDALONE_SPARK_MASTER_HOST=\`hostname\`
+
+export SPARK_MASTER_IP=$STANDALONE_SPARK_MASTER_HOST
+
 ### Let's run everything with JVM runtime, instead of Scala
 export SPARK_LAUNCH_WITH_SCALA=0
 export SPARK_LIBRARY_PATH=\${SPARK_HOME}/lib
@@ -193,9 +201,6 @@ export SPARK_LOG_DIR=/var/log/spark
 ### you want to run with scala version, that is included with the package
 #export SCALA_HOME=\${SCALA_HOME:-$LIB_DIR/scala}
 #export PATH=\$PATH:\$SCALA_HOME/bin
-
-### change the following to specify a real cluster's Master host
-export STANDALONE_SPARK_MASTER_HOST=\`hostname\`
 
 EOF
 
