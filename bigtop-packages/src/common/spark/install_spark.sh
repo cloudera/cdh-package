@@ -186,6 +186,8 @@ export SPARK_LIBRARY_PATH=\${SPARK_HOME}/lib
 export SCALA_LIBRARY_PATH=\${SPARK_HOME}/lib
 export SPARK_MASTER_WEBUI_PORT=18080
 export SPARK_MASTER_PORT=7077
+export SPARK_WORKER_DIR=/var/run/spark/work
+export SPARK_LOG_DIR=/var/log/spark
 
 ### Comment above 2 lines and uncomment the following if
 ### you want to run with scala version, that is included with the package
