@@ -19,4 +19,4 @@
 /var/log/spark/
 /var/run/spark/
 /var/run/spark/work/
-
+/usr/lib/spark/cloudera

@@ -215,3 +215,6 @@ exec $INSTALLED_LIB_DIR/bin/pyspark "\$@"
 EOF
 chmod 755 $PREFIX/$BIN_DIR/pyspark
 
+# Cloudera specific
+install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
