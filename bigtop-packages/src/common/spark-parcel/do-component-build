@@ -425,6 +425,13 @@ fi
 __EOT__
 chmod +x build/meta/spark_alternatives.sh
 
+# And, Spark scripts need to source out HADOOP_HOME in parcels
+SPARK_SCRIPTS="build/usr/bin/pyspark build/usr/bin/spark-*"
+for file in $SPARK_SCRIPTS; do
+  sed -i '1a \
+  export HADOOP_HOME=$LIB_DIR/../../CDH/lib/hadoop' $file
+done
+
 # Magically manipulate the bin scripts to point to ../lib instead of /usr/lib
 # Ideally we would want alternatives configuration for bin scripts as well
 for file in `find build/usr/bin -type f`; do
