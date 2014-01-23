@@ -450,7 +450,8 @@ install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-0.20-mapreduce
 # Remove all source and create version-less symlinks to offer integration point with other projects
 # FIXME MR1: we should probably unify the versions to begin with
 MR1_VERSION=`grep '^version' ${SOURCE_DIR}/hadoop-mapreduce1-project/build.properties | cut -f2 -d=`
-for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} ${MAPREDUCE_MR1_DIR} ; do
+for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} \
+  ${MAPREDUCE_MR1_DIR} ${MAPREDUCE_MR1_DIR}/contrib/*; do
   (cd $DIR &&
    rm -fv *-sources.jar
    rm -fv lib/hadoop-*.jar
