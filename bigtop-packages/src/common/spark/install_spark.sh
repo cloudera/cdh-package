@@ -186,7 +186,7 @@ cat >> $PREFIX/$CONF_DIR/spark-env.sh <<EOF
 ###
 export STANDALONE_SPARK_MASTER_HOST=\`hostname\`
 
-export SPARK_MASTER_IP=$STANDALONE_SPARK_MASTER_HOST
+export SPARK_MASTER_IP=\$STANDALONE_SPARK_MASTER_HOST
 
 ### Let's run everything with JVM runtime, instead of Scala
 export SPARK_LAUNCH_WITH_SCALA=0
@@ -196,6 +196,10 @@ export SPARK_MASTER_WEBUI_PORT=18080
 export SPARK_MASTER_PORT=7077
 export SPARK_WORKER_DIR=/var/run/spark/work
 export SPARK_LOG_DIR=/var/log/spark
+
+if [ -n "\$HADOOP_HOME" ]; then
+  export SPARK_LIBRARY_PATH=\$SPARK_LIBRARY_PATH:\${HADOOP_HOME}/lib/native
+fi
 
 ### Comment above 2 lines and uncomment the following if
 ### you want to run with scala version, that is included with the package
