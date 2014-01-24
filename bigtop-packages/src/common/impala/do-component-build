@@ -22,7 +22,7 @@ export PATH=$LLVM_HOME/bin:$PATH
 export IMPALA_HOME=`pwd`
 export PIC_LIB_PATH=/opt/toolchain/impala_3rdparty-0.5
 
-if [ -z "$TARBALL_ONLY" ]; then
+if [ -z "$GIT_REPO" ]; then
     . $IMPALA_HOME/bin/impala-config.sh
 
     rm -f CMakeCache.txt
@@ -30,10 +30,7 @@ if [ -z "$TARBALL_ONLY" ]; then
     rm -rf fe/target/dependency
     mvn -f fe/pom.xml dependency:copy-dependencies
     ./bin/make_release.sh -nopgo
-fi
-
-
-if [ -n "$TARBALL_ONLY" ]; then
+else
     rm -rf build impala-${FULL_VERSION}
     ALL_FILES=`echo *`
     mkdir build impala-${FULL_VERSION}
