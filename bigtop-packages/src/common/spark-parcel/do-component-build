@@ -183,6 +183,7 @@ DASH_SEPARATED_CUSTOM_VERSION=`echo $SPARK_PARCEL_CUSTOM_VERSION | sed -e 's/\.\
 # Create a bunch of metadata
 (cat <<__EOT__
 {
+  "schema_version":     1,
   "name":               "SPARK",
   "version":            "$DISTRO_LESS_FULL_VERSION",
   "extraVersionInfo": {
