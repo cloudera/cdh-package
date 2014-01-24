@@ -182,20 +182,26 @@ cat >> $PREFIX/$CONF_DIR/spark-env.sh <<EOF
 
 ###
 ### === IMPORTANT ===
-### Change the following to specify a real cluster's Master host
+### * Change the following to specify a real cluster's Master host
+### * Set the proper DEFAULT_HADOOP_HOME, e.g.
+###     /opt/cloudera/parcels/CDH/lib/hadoop or
+###     /usr/lib/hadoop
 ###
 export STANDALONE_SPARK_MASTER_HOST=\`hostname\`
+#DEFAULT_HADOOP_HOME=
 
-export SPARK_MASTER_IP=\$STANDALONE_SPARK_MASTER_HOST
 
 ### Let's run everything with JVM runtime, instead of Scala
 export SPARK_LAUNCH_WITH_SCALA=0
 export SPARK_LIBRARY_PATH=\${SPARK_HOME}/lib
 export SCALA_LIBRARY_PATH=\${SPARK_HOME}/lib
+export SPARK_MASTER_IP=\$STANDALONE_SPARK_MASTER_HOST
 export SPARK_MASTER_WEBUI_PORT=18080
 export SPARK_MASTER_PORT=7077
 export SPARK_WORKER_DIR=/var/run/spark/work
 export SPARK_LOG_DIR=/var/log/spark
+
+export HADOOP_HOME=\${HADOOP_HOME:-\$DEFAULT_HADOOP_HOME}
 
 if [ -n "\$HADOOP_HOME" ]; then
   export SPARK_LIBRARY_PATH=\$SPARK_LIBRARY_PATH:\${HADOOP_HOME}/lib/native
