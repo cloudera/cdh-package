@@ -107,7 +107,7 @@ fi
 #######################
 %files
 %defattr(-,root,root,755)
-%attr(755, root, root) /usr/bin/llama
+%attr(755, root, root) /usr/bin/*
 %config(noreplace) %{etc_llama}/conf.dist
 %config(noreplace) /etc/default/llama
 %{lib_llama}

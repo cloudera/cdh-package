@@ -103,7 +103,8 @@ install -d -m 0755 ${PREFIX}/etc/default
 cp ${EXTRA_DIR}/llama.default ${PREFIX}/etc/default/llama
 
 install -d -m 0755 ${PREFIX}/usr/bin
-cat > ${PREFIX}/usr/bin/llama <<EOF
+for wrapper in llama llamaadmin; do
+cat > ${PREFIX}/usr/bin/${wrapper} <<EOF
 #!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
@@ -118,8 +119,9 @@ export HADOOP_CLASSPATH=/etc/hadoop/conf:\${HADOOP_CLASSPATH}
 export HADOOP_LIBEXEC_DIR=/usr/lib/hadoop/libexec
 export HADOOP_HOME=/usr/lib/hadoop
 
-exec ${LIB_DIR}/bin/llama "\$@"
+exec ${LIB_DIR}/bin/${wrapper} "\$@"
 EOF
+done
 
 install -d -m 0755 ${PREFIX}/var/run/llama
 install -d -m 0755 ${PREFIX}/var/log/llama
