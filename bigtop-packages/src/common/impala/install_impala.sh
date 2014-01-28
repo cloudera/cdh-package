@@ -155,7 +155,6 @@ for file in $DEPENDENCY_DIR/hive*cdh*.jar; do symlink_lib $file hive/lib; done
 for file in $DEPENDENCY_DIR/zookeeper*cdh*.jar; do symlink_lib $file zookeeper; done
 for file in $DEPENDENCY_DIR/libhdfs*.so*; do symlink_lib $file ../${NATIVE_LIB_DIR}; done
 for file in $DEPENDENCY_DIR/libhadoop*.so*; do symlink_lib $file hadoop/lib/native; done
-for file in $DEPENDENCY_DIR/parquet*.jar; do symlink_lib $file parquet; done
 
 # install Impala shell
 install -d -m 0755 ${LIB_DIR}-shell
@@ -290,16 +289,14 @@ cp be/build/debug/udf/libImpalaUdf.a ${PREFIX}/${SYSTEM_LIB_DIR}/libImpalaUdf-de
 install -d -m 0755 $LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $LIB_DIR/cloudera/
 
-# Replace every Avro jar with a symlink to the versionless symlinks in our Avro distribution
+# Replace every Avro or Parquet jar with a symlink to the versionless symlinks in our distribution
 # This regex matches upstream versions, plus CDH versions, betas and snapshots if they are present
 versions='s#-[0-9].[0-9].[0-9]\(-cdh[0-9\-\.]*\)\?\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
-timestamps='s#-[0-9]\{8\}\.[0-9]\{6\}-[0-9]\{2\}##'
-for dir in ${LIB_DIR}/lib ; do
-    for old_jar in `ls $dir/avro-*.jar` ; do
-        # Our Avro distribution does not include Cassandra or test JARs and we should remove them from the rest of CDH
-        if [[ "$old_jar" =~ "-cassandra" || "$old_jar" =~ "-tests" ]] ; then continue; fi
-        new_jar=`echo \`basename $old_jar\` | sed -e $versions | sed -e $timestamps`
-        rm $old_jar && ln -fs /usr/lib/avro/$new_jar $dir/
+timestamps='s#-[0-9]\{8\}\.[0-9]\{6\}-[0-9]\{1,2\}##'
+for dir in ${LIB_DIR}/lib; do
+    for old_jar in `find $dir -maxdepth 1 -name avro*.jar -o -name parquet*.jar | grep -v 'cassandra'`; do
+        base_jar=`basename $old_jar`; new_jar=`echo $base_jar | sed -e $versions | sed -e $timestamps`
+        rm $old_jar && ln -fs /usr/lib/${base_jar/-*/}/$new_jar $dir/
     done
 done
 

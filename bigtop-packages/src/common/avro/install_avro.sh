@@ -100,6 +100,7 @@ mkdir -p ${PREFIX}/${LIB_DIR}
 JARS=`ls dist/java/*.jar | grep ${FULL_VERSION}`
 cp -p ${JARS} ${PREFIX}/${LIB_DIR}/
 (cd ${PREFIX}/${LIB_DIR}; rm -f *-tests.jar *-javadoc.jar *-sources.jar)
+cp lang/java/ipc/target/avro-ipc-${FULL_VERSION}-tests.jar ${PREFIX}/${LIB_DIR}/
 
 # Apache Avro includes a -hadoop1 JAR and a versionless symlink to it for backward compatibility
 # Only the -hadoop2 JAR is used in CDH, so we remove the -hadoop1 JAR and redirect the symlink

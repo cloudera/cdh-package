@@ -38,7 +38,7 @@ Source0: %{kite_name}-%{kite_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{kite_name}.sh
 Requires: hadoop-client, bigtop-utils >= 0.7
-Requires: avro-libs
+Requires: avro-libs, parquet
 
 %description 
 The Kite Software Development Kit, is a set of libraries, tools, examples, and
@@ -53,7 +53,7 @@ env FULL_VERSION=%{kite_patched_version} bash $RPM_SOURCE_DIR/do-component-build
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh $RPM_SOURCE_DIR/install_kite.sh \
+bash $RPM_SOURCE_DIR/install_kite.sh \
           --build-dir=build/kite-%{kite_patched_version}/dist \
           --prefix=$RPM_BUILD_ROOT
 

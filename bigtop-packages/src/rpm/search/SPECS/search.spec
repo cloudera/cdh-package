@@ -58,7 +58,7 @@ Source0: search-%{search_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_solr_sink.sh
 Requires: bigtop-utils >= 0.7
-Requires: avro-libs
+Requires: avro-libs, parquet
 
 %description
 Cloudera Search Project
