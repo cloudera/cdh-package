@@ -63,9 +63,8 @@ Source2: install_%{spark_name}.sh
 Source3: spark-master.svc
 Source4: spark-worker.svc
 Source5: compute-classpath.sh
-Source6: run
-Source7: init.d.tmpl
-Requires: bigtop-utils
+Source6: init.d.tmpl
+Requires: bigtop-utils >= 0.7
 Requires(preun): /sbin/service
 
 %global initd_dir %{_sysconfdir}/init.d
@@ -124,7 +123,7 @@ bash $RPM_SOURCE_DIR/do-component-build
 %__rm -rf $RPM_BUILD_ROOT
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
-sh $RPM_SOURCE_DIR/install_spark.sh \
+bash $RPM_SOURCE_DIR/install_spark.sh \
           --build-dir=`pwd`         \
           --source-dir=$RPM_SOURCE_DIR \
           --prefix=$RPM_BUILD_ROOT  \
