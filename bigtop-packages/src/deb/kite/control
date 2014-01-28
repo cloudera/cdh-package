@@ -22,7 +22,7 @@ Standards-Version: 3.8.0
 Homepage: http://kitesdk.org
 
 Package: kite
-Depends: avro-libs
+Depends: avro-libs, parquet
 Architecture: all
 Description: Kite Software Development Kit.
  The Kite Software Development Kit, is a set of libraries, tools, examples, and

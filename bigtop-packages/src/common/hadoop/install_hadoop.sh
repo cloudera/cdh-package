@@ -515,17 +515,15 @@ for map in hadoop_${HADOOP_DIR} hadoop-hdfs_${HDFS_DIR} hadoop-yarn_${YARN_DIR} 
   echo "cloudera.pkg.name=${map%%_*}" >> $dir/cdh_version.properties
 done
 
-# Replace every Avro jar with a symlink to the versionless symlinks in our Avro distribution
+# Replace every Avro or Parquet jar with a symlink to the versionless symlinks in our distribution
 # This regex matches upstream versions, plus CDH versions, betas and snapshots if they are present
 versions='s#-[0-9].[0-9].[0-9]\(-cdh[0-9\-\.]*\)\?\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
-timestamps='s#-[0-9]\{8\}\.[0-9]\{6\}-[0-9]\{2\}##'
+timestamps='s#-[0-9]\{8\}\.[0-9]\{6\}-[0-9]\{1,2\}##'
 for partial_dir in hadoop-0.20-mapreduce/lib hadoop-mapreduce/lib hadoop-yarn/lib hadoop/client hadoop/client-0.20 hadoop/lib; do
     dir=${PREFIX}/usr/lib/$partial_dir
-    for old_jar in `ls $dir/avro-*.jar` ; do
-        # Our Avro distribution does not include Cassandra or test JARs and we should remove them from the rest of CDH
-        if [[ "$old_jar" =~ "-cassandra" || "$old_jar" =~ "-tests" ]] ; then continue; fi
-        new_jar=`echo \`basename $old_jar\` | sed -e $versions | sed -e $timestamps`
-        rm $old_jar && ln -fs /usr/lib/avro/$new_jar $dir/
+    for old_jar in `find $dir -maxdepth 1 -name avro*.jar -o -name parquet*.jar | grep -v 'cassandra'`; do
+        base_jar=`basename $old_jar`; new_jar=`echo $base_jar | sed -e $versions | sed -e $timestamps`
+        rm $old_jar && ln -fs /usr/lib/${base_jar/-*/}/$new_jar $dir/
     done
 done
 
