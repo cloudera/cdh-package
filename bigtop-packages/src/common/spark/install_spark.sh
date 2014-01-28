@@ -167,11 +167,7 @@ for wrap in sbin/spark-executor bin/spark-shell ; do
 #!/bin/bash 
 
 # Autodetect JAVA_HOME if not defined
-if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-  . /usr/libexec/bigtop-detect-javahome
-elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-  . /usr/lib/bigtop-utils/bigtop-detect-javahome
-fi
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
 
 exec $INSTALLED_LIB_DIR/$wrap "\$@"
 EOF
