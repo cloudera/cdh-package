@@ -449,6 +449,11 @@ for file in `find build/usr/bin -type f`; do
   done\
   BIN_DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"\
   LIB_DIR=$BIN_DIR/../lib' $file
+
+  # Update any line that refers to bigtop-utils to actually pick it up
+  # from the CDH parcel instead of looking in the unbundled parcel 
+  sed -i -e '/\/usr\/lib\/bigtop-utils/s:/usr/lib/:\$LIB_DIR/../../CDH/lib/:' $file
+
   # Replace /usr/libexec with the libexec dir from within the parcel
   # Replace /usr/lib with the LIB_DIR variable we set in the above line
   # Replace all instances of /etc/default to relatively point to <parcel root>/etc/default
