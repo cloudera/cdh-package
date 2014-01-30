@@ -528,3 +528,6 @@ for partial_dir in hadoop-0.20-mapreduce/lib hadoop-mapreduce/lib hadoop-yarn/li
     done
 done
 
+# FIXME: CDH-17129 removes OpenStack support until it can be tested properly
+rm ${MAPREDUCE_DIR}/hadoop-openstack*.jar
+
