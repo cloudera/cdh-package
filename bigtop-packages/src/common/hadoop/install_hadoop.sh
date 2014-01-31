@@ -519,7 +519,7 @@ done
 # This regex matches upstream versions, plus CDH versions, betas and snapshots if they are present
 versions='s#-[0-9].[0-9].[0-9]\(-cdh[0-9\-\.]*\)\?\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
 timestamps='s#-[0-9]\{8\}\.[0-9]\{6\}-[0-9]\{1,2\}##'
-for partial_dir in hadoop-0.20-mapreduce/lib hadoop-mapreduce/lib hadoop-yarn/lib hadoop/client hadoop/client-0.20 hadoop/lib; do
+for partial_dir in hadoop-0.20-mapreduce/lib hadoop-mapreduce hadoop-mapreduce/lib hadoop-yarn/lib hadoop/client hadoop/client-0.20 hadoop/lib; do
     dir=${PREFIX}/usr/lib/$partial_dir
     for old_jar in `find $dir -maxdepth 1 -name avro*.jar -o -name parquet*.jar | grep -v 'cassandra'`; do
         base_jar=`basename $old_jar`; new_jar=`echo $base_jar | sed -e $versions | sed -e $timestamps`
