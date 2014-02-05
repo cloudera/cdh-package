@@ -20,9 +20,11 @@
 %define hadoop_home /usr/lib/hadoop
 
 %if  %{?suse_version:1}0
+%define initd_dir %{_sysconfdir}/rc.d
 %define alternatives_cmd update-alternatives
 %define alternatives_dep update-alternatives
 %else
+%define initd_dir %{_sysconfdir}/rc.d/init.d
 %define alternatives_cmd alternatives
 %define alternatives_dep chkconfig 
 %endif
@@ -65,7 +67,7 @@ bash $RPM_SOURCE_DIR/install_llama.sh \
           --build-dir=./ \
           --prefix=$RPM_BUILD_ROOT \
           --extra-dir=$RPM_SOURCE_DIR
-bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/llama.svc rpm $RPM_BUILD_ROOT/etc/init.d/llama
+bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/llama.svc rpm $RPM_BUILD_ROOT/%{initd_dir}/llama
 
 %package master
 Summary: Scripts for running the Llama Application Master
@@ -124,8 +126,7 @@ fi
 %{run_llama}
 
 %files master
-%defattr(-,root,root,755)
-/etc/init.d/llama
+%attr(755, root, root) %{initd_dir}/llama
 
 %files doc
 %attr(0755,root,root) /usr/share/doc/llama
