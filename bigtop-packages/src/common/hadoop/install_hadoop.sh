@@ -523,7 +523,7 @@ for partial_dir in hadoop-0.20-mapreduce/lib hadoop-mapreduce hadoop-mapreduce/l
     dir=${PREFIX}/usr/lib/$partial_dir
     for old_jar in `find $dir -maxdepth 1 -name avro*.jar -o -name parquet*.jar | grep -v 'cassandra'`; do
         base_jar=`basename $old_jar`; new_jar=`echo $base_jar | sed -e $versions | sed -e $timestamps`
-        rm $old_jar && ln -fs /usr/lib/${base_jar/-*/}/$new_jar $dir/
+        rm $old_jar && ln -fs /usr/lib/${base_jar/[-.]*/}/$new_jar $dir/
     done
 done
 
