@@ -179,7 +179,7 @@ timestamps='s#-[0-9]\{8\}\.[0-9]\{6\}-[0-9]\{1,2\}##'
 for dir in $PREFIX/$FLUME_DIR/lib; do
     for old_jar in `find $dir -maxdepth 1 -name avro*.jar -o -name parquet*.jar | grep -v 'cassandra'`; do
         base_jar=`basename $old_jar`; new_jar=`echo $base_jar | sed -e $versions | sed -e $timestamps`
-        rm $old_jar && ln -fs /usr/lib/${base_jar/-*/}/$new_jar $dir/
+        rm $old_jar && ln -fs /usr/lib/${base_jar/[-.]*/}/$new_jar $dir/
     done
 done
 
