@@ -65,6 +65,7 @@ Source4: spark-worker.svc
 Source5: compute-classpath.sh
 Source6: init.d.tmpl
 Requires: bigtop-utils >= 0.7
+Requires: avro-libs
 Requires(preun): /sbin/service
 
 %global initd_dir %{_sysconfdir}/init.d
