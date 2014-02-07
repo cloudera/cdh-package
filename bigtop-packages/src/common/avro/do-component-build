@@ -24,16 +24,16 @@ if [ -z "$GIT_REPO" ]; then
     fi
     
     export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -XX:PermSize=1024m -XX:MaxPermSize=1024m"
-    mvn -N $MAVEN_INST_DEPLOY
+    mvn -N $MAVEN_INST_DEPLOY -Davro.version=$FULL_VERSION
 
     # Build Java libraries
     (cd lang/java;
-        mvn package -DskipTests -Dhadoop.version=2 $@;
+        mvn package -DskipTests -Dhadoop.version=2 -Davro.version=$FULL_VERSION $@;
         rm -rf mapred/target/classes/;
-        mvn -Dhadoop.version=2 -P dist package -DskipTests -DskipITs -Davro.version=$VERSION javadoc:aggregate $MAVEN_INST_DEPLOY $@)
+        mvn -Dhadoop.version=2 -P dist package -DskipTests -DskipITs -Davro.version=$FULL_VERSION javadoc:aggregate $MAVEN_INST_DEPLOY $@)
 
     (cd lang/java/trevni/doc; mvn site $@)
-    mvn -N -P copy-artifacts antrun:run $@
+    mvn -N -P copy-artifacts antrun:run -Davro.version=$FULL_VERSION $@
     (cd doc; ant -Dforrest.home=${FORREST_HOME};)
 
     # Some Avro docs get placed in folders with special characters in the name
