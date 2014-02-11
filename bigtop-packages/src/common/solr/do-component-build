@@ -38,19 +38,21 @@ if [ -z "$GIT_REPO" ]; then
         ant $BUILD_OPTS generate-maven-artifacts "$@"
     fi
 
+    if [ -z "${MAVEN_ONLY}" ]; then
 # Build Solr package (and if we didn't do generate-maven-artifacts, it'll build everything else it needs
-    (cd solr ; ant $BUILD_OPTS create-package "$@")
-
+        (cd solr ; ant $BUILD_OPTS create-package "$@")
+        
 # Putting the build artifact in place
-    rm -rf build
-    mkdir build
-    pushd build
-    tar -xzf ../solr/build/solr-*-src.tgz
-    tar -C solr-* --strip-components=1 -xzf ../solr/package/solr-*.tgz
-    cp -r ../cloudera* solr-${FULL_VERSION}
-    cp -r ../cdh.build.properties solr-${FULL_VERSION}
-    tar -czf solr-${FULL_VERSION}.tar.gz solr-${FULL_VERSION}
-    popd
+        rm -rf build
+        mkdir build
+        pushd build
+        tar -xzf ../solr/build/solr-*-src.tgz
+        tar -C solr-* --strip-components=1 -xzf ../solr/package/solr-*.tgz
+        cp -r ../cloudera* solr-${FULL_VERSION}
+        cp -r ../cdh.build.properties solr-${FULL_VERSION}
+        tar -czf solr-${FULL_VERSION}.tar.gz solr-${FULL_VERSION}
+        popd
+    fi
 
 # Change to cloudera/maven directory, and install
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository

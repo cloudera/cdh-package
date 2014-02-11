@@ -20,20 +20,25 @@ if [ -z "$GIT_REPO" ]; then
     else
         MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
     fi
+    build_args="clean -DskipTests $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository"
 
-    build_args="clean $MAVEN_INST_DEPLOY javadoc:aggregate site assembly:single -DskipTests -Dmaven.repo.local=${HOME}/.m2/repository"
-
+    if [ -z "${MAVEN_ONLY}" ]; then
+        build_args="${build_args} source:jar site javadoc:aggregate assembly:single"
+    fi
+    
     set -ex
     
     mvn $build_args "$@"
-    
-    mkdir -p build
-    for x in hbase-assembly/target/*.tar.gz ; do
-        tar -C build -xzf $x
-    done
-    
-    cp -r target/site/apidocs build/hbase-${FULL_VERSION}/docs
-    (cd build && tar --exclude='*/native/lib*' --exclude='*/lib/native/*' -czf hbase-${FULL_VERSION}.tar.gz hbase-${FULL_VERSION})
+
+    if [ -z "${MAVEN_ONLY}" ]; then
+        mkdir -p build
+        for x in hbase-assembly/target/*.tar.gz ; do
+            tar -C build -xzf $x
+        done
+        
+        cp -r target/site/apidocs build/hbase-${FULL_VERSION}/docs
+        (cd build && tar --exclude='*/native/lib*' --exclude='*/lib/native/*' -czf hbase-${FULL_VERSION}.tar.gz hbase-${FULL_VERSION})
+    fi
 else
     git add .
     git commit -a -m "Temporary commit for tarball"

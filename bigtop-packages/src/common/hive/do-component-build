@@ -38,12 +38,15 @@ if [ -z "$GIT_REPO" ]; then
         MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
     fi
     mvn clean $MAVEN_INST_DEPLOY -DskipTests -Psources -Pjavadoc -Phadoop-2
-    (cd packaging; mvn package -Pdist)
-    mkdir -p build/hive-${FULL_VERSION}
-    tar --strip-components 1 -C build/hive-${FULL_VERSION} -xf packaging/target/apache-hive*bin.tar.gz
-    mkdir -p build/hive-${FULL_VERSION}/docs
-    cp -r docs/* build/hive-${FULL_VERSION}/docs
-    (cd build && tar --exclude='*/native/lib*' --exclude='*/lib/native/*' -czf hive-${FULL_VERSION}.tar.gz hive-${FULL_VERSION})
+
+    if [ -z "${MAVEN_ONLY}" ]; then
+        (cd packaging; mvn package -Pdist)
+        mkdir -p build/hive-${FULL_VERSION}
+        tar --strip-components 1 -C build/hive-${FULL_VERSION} -xf packaging/target/apache-hive*bin.tar.gz
+        mkdir -p build/hive-${FULL_VERSION}/docs
+        cp -r docs/* build/hive-${FULL_VERSION}/docs
+        (cd build && tar --exclude='*/native/lib*' --exclude='*/lib/native/*' -czf hive-${FULL_VERSION}.tar.gz hive-${FULL_VERSION})
+    fi
 else
     git add .
     git commit -a -m "Temporary commit for tarball"

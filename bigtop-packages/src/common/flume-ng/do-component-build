@@ -23,16 +23,22 @@ if [ -z "$GIT_REPO" ]; then
         MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
     fi
 
+    if [ -n "${MAVEN_ONLY}" ]; then
+        MAVEN_DEPL=${MAVEN_INST_DEPLOY}
+    fi
+
     MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
-        mvn clean install -DskipTests -Dhadoop.profile=cdh5 "$@" 
+        mvn clean install -DskipTests -Dhadoop.profile=cdh5 ${MAVEN_DEPL} "$@" 
     
-    MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
-        mvn clean source:jar javadoc:javadoc -DskipTests -Dhadoop.profile=cdh5 -Psite ${MAVEN_INST_DEPLOY} "$@" 
-    
-    mkdir build
-    tar -C build -xzvf flume-ng-dist/target/apache-flume-${FULL_VERSION}-bin.tar.gz
-    tar -C build/apache-flume-${FULL_VERSION}-bin --strip-components=1 -xzvf flume-ng-dist/target/apache-flume-${FULL_VERSION}-bin.tar.gz
-    tar -C build -czvf build/flume-ng-${FULL_VERSION}.tar.gz apache-flume-${FULL_VERSION}-bin
+    if [ -z "${MAVEN_ONLY}" ]; then
+        MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
+            mvn clean source:jar javadoc:javadoc -DskipTests -Dhadoop.profile=cdh5 -Psite ${MAVEN_INST_DEPLOY} "$@" 
+        
+        mkdir build
+        tar -C build -xzvf flume-ng-dist/target/apache-flume-${FULL_VERSION}-bin.tar.gz
+        tar -C build/apache-flume-${FULL_VERSION}-bin --strip-components=1 -xzvf flume-ng-dist/target/apache-flume-${FULL_VERSION}-bin.tar.gz
+        tar -C build -czvf build/flume-ng-${FULL_VERSION}.tar.gz apache-flume-${FULL_VERSION}-bin
+    fi
 else
     git add .
     git commit -a -m "Temporary commit for tarball"

@@ -23,16 +23,22 @@ if [ -z "$GIT_REPO" ]; then
         MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
     fi
 
+    if [ -z "${MAVEN_ONLY}" ]; then
+        SITE_GOAL="site:site"
+    fi
+    
     mvn -DskipTests -Dcrunch.platform=2           \
     -Dslf4j.version=1.6.1                     \
-    -Papache-release clean site:site $MAVEN_INST_DEPLOY "$@"
+    -Papache-release clean ${SITE_GOAL} $MAVEN_INST_DEPLOY "$@"
 
-    rm -rf build
-    mkdir -p build/crunch-${FULL_VERSION}
-    tar --strip-component=1 -C build/crunch-${FULL_VERSION} -xzvf crunch-dist/target/apache-crunch-*-bin.tar.gz
-    cp -r target/site build/crunch-${FULL_VERSION}
-    
-    (cd build && tar -czf crunch-${FULL_VERSION}.tar.gz crunch-${FULL_VERSION})
+    if [ -z "${MAVEN_ONLY}" ]; then
+        rm -rf build
+        mkdir -p build/crunch-${FULL_VERSION}
+        tar --strip-component=1 -C build/crunch-${FULL_VERSION} -xzvf crunch-dist/target/apache-crunch-*-bin.tar.gz
+        cp -r target/site build/crunch-${FULL_VERSION}
+        
+        (cd build && tar -czf crunch-${FULL_VERSION}.tar.gz crunch-${FULL_VERSION})
+    fi
 else
     git add .
     git commit -a -m "Temporary commit for tarball"

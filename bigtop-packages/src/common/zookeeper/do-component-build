@@ -18,8 +18,14 @@ set -ex
 
 if [ -z "$GIT_REPO" ]; then
     IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
+
+    if [ -z "${MAVEN_ONLY}" ]; then
+        TAR_TARGET="package package-native tar"
+    else
+        TAR_TARGET="jar bin-jar test-jar"
+    fi
     
-    ant -propertyfile cloudera/build.properties package package-native tar  -Dversion=${FULL_VERSION} -Drepo.maven.org=${IVY_MIRROR_PROP} -Divy.home=${HOME}/.ivy2  "$@"
+    ant -propertyfile cloudera/build.properties ${TAR_TARGET} -Dversion=${FULL_VERSION} -Drepo.maven.org=${IVY_MIRROR_PROP} -Divy.home=${HOME}/.ivy2  "$@"
     
     if [ -n "$DO_MAVEN_DEPLOY" ]; then
 # Change to cloudera/maven directory, and install
