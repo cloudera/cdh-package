@@ -75,7 +75,7 @@ chmod 555 $PWD/build/usr/share/hue/apps/shell/src/shell/build/setuid
 
 DEST=$RPM_BUILD_ROOT/%{parcel_default_root}
 mkdir -p $DEST
-mv $PWD/build/usr/lib* $PWD/build/usr/share $PWD/build/usr/bin $PWD/build/meta $PWD/build/etc $DEST
+mv $PWD/build/usr/lib* $PWD/build/usr/share $PWD/build/usr/bin $PWD/build/meta $PWD/build/etc $PWD/build/usr/include $DEST
 
 %clean
 rm -rf $RPM_BUILD_ROOT
