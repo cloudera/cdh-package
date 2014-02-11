@@ -145,8 +145,10 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-SQOOP_JARS=\`ls /var/lib/sqoop/*.jar\`
-export HADOOP_CLASSPATH=\$(JARS=(\${SQOOP_JARS}); IFS=:; echo "\${HADOOP_CLASSPATH}:\${JARS[*]}")
+SQOOP_JARS=\`ls /var/lib/sqoop/*.jar 2>/dev/null\`
+if [ -n "\${SQOOP_JARS}" ]; then
+    export HADOOP_CLASSPATH=\$(JARS=(\${SQOOP_JARS}); IFS=:; echo "\${HADOOP_CLASSPATH}:\${JARS[*]}")
+fi
 
 export SQOOP_HOME=$LIB_DIR
 exec $BIN_DIR/$i "\$@"
@@ -159,6 +161,8 @@ install -d -m 0755 $PREFIX/$CONF_DIR
 
 unlink $PREFIX/$LIB_DIR/conf || /bin/true
 ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
+
+install -d -m 0755 ${PREFIX}/var/lib/sqoop
 
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera

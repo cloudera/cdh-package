@@ -24,6 +24,8 @@ case "$1" in
         # Install config alternatives
         update-alternatives  --install /etc/sqoop/conf sqoop-conf /etc/sqoop/conf.dist 30
 
+        chown sqoop:sqoop /var/lib/sqoop
+        chmod 755 /var/lib/sqoop
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

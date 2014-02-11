@@ -125,7 +125,6 @@ init_file=$RPM_BUILD_ROOT/%{initd_dir}/sqoop-metastore
 %__cp $orig_init_file $init_file
 chmod 0755 $init_file
 
-%__install -d  -m 0755 $RPM_BUILD_ROOT/var/lib/sqoop
 %__install -d  -m 0755 $RPM_BUILD_ROOT/var/log/sqoop
 
 %pre
@@ -157,7 +156,6 @@ fi
 
 %files metastore
 %attr(0755,root,root) %{initd_dir}/sqoop-metastore
-%attr(0755,sqoop,sqoop) /var/lib/sqoop
 %attr(0755,sqoop,sqoop) /var/log/sqoop
 
 # Files for main package
@@ -179,6 +177,7 @@ fi
 %{_bindir}/sqoop-metastore
 %{_bindir}/sqoop-version
 %{_bindir}/sqoop-merge
+%attr(0755,sqoop,sqoop) /var/lib/sqoop
 
 %defattr(0644,root,root,0755)
 %{lib_sqoop}/lib/
