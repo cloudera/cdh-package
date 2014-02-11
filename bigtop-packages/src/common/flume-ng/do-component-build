@@ -16,13 +16,19 @@
 
 set -ex
 
-MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
-    mvn clean install -DskipTests -Dhadoop.profile=2 "$@" 
+if [ "${MAVEN_ONLY}" == "true" ]; then
+    MAVEN_DEPL=deploy
+fi
 
 MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
-    mvn clean source:jar javadoc:javadoc install -DskipTests -Dhadoop.profile=2 -Psite ${DO_MAVEN_DEPLOY} "$@" 
+    mvn clean install -DskipTests -Dhadoop.profile=2 ${MAVEN_DEPL} "$@" 
 
-mkdir build
-tar -C build -xzvf flume-ng-dist/target/apache-flume-${FULL_VERSION}-bin.tar.gz
-tar -C build/apache-flume-${FULL_VERSION}-bin --strip-components=1 -xzvf flume-ng-dist/target/apache-flume-${FULL_VERSION}-src.tar.gz
-tar -C build -czvf build/flume-ng-${FULL_VERSION}.tar.gz apache-flume-${FULL_VERSION}-bin
+if [ -z "${MAVEN_ONLY}" ]; then
+    MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
+        mvn clean source:jar javadoc:javadoc install -DskipTests -Dhadoop.profile=2 -Psite ${DO_MAVEN_DEPLOY} "$@" 
+
+    mkdir build
+    tar -C build -xzvf flume-ng-dist/target/apache-flume-${FULL_VERSION}-bin.tar.gz
+    tar -C build/apache-flume-${FULL_VERSION}-bin --strip-components=1 -xzvf flume-ng-dist/target/apache-flume-${FULL_VERSION}-src.tar.gz
+    tar -C build -czvf build/flume-ng-${FULL_VERSION}.tar.gz apache-flume-${FULL_VERSION}-bin
+fi
