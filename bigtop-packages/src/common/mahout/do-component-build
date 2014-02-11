@@ -16,7 +16,11 @@
 
 set -ex
 
-mvn clean install source:jar javadoc:jar -Dmahout.skip.distribution=false \
+if [ -z "${MAVEN_ONLY}" ]; then
+    OTHER_GOALS="source:jar javadoc:jar"
+fi
+
+mvn clean install ${OTHER_GOALS} -Dmahout.skip.distribution=false \
     -Dhadoop.profile=23 -DskipTests \
     $DO_MAVEN_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
 
