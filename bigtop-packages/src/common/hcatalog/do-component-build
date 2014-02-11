@@ -20,18 +20,23 @@ BUILD_OPTS="-Dversion=${FULL_VERSION} -Dforrest.home=$FORREST_HOME \
             -Dreactor.repo=file://${HOME}/.m2/repository           \
             -Dmvn.hadoop.profile=hadoop23"
 
+if [ -n "${MAVEN_ONLY}" ]; then
+    WITH_SRC_REL="src-release"
+fi
 
-ant $BUILD_OPTS src-release package "$@"
+ant $BUILD_OPTS ${WITH_SRC_REL} package "$@"
 
 # If DO_MAVEN_DEPLOY == deploy, run the generate-maven-artifacts target
 if [ "${DO_MAVEN_DEPLOY}" == "deploy" ]; then
     ant $BUILD_OPTS mvn-deploy "$@"
 fi
 
+if [ -z "${MAVEN_ONLY}" ]; then
 # Add sources to the binary installation
-cd build
-tar xzf hcatalog-src-${FULL_VERSION}.tar.gz
-mv hcatalog-${FULL_VERSION} hcatalog-src-${FULL_VERSION}/dist
-mv hcatalog-src-${FULL_VERSION} hcatalog-${FULL_VERSION}
-rm hcatalog-${FULL_VERSION}.tar.gz
-tar czf hcatalog-${FULL_VERSION}.tar.gz hcatalog-${FULL_VERSION}
+    cd build
+    tar xzf hcatalog-src-${FULL_VERSION}.tar.gz
+    mv hcatalog-${FULL_VERSION} hcatalog-src-${FULL_VERSION}/dist
+    mv hcatalog-src-${FULL_VERSION} hcatalog-${FULL_VERSION}
+    rm hcatalog-${FULL_VERSION}.tar.gz
+    tar czf hcatalog-${FULL_VERSION}.tar.gz hcatalog-${FULL_VERSION}
+fi

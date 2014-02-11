@@ -44,8 +44,12 @@ for jar_file in avro-* jackson-core-asl-* jackson-mapper-asl-* json-simple-* sna
 	cp $IVY_LIB/$jar_file.jar contrib/piggybank/java/lib/
 done
 
+if [ -z "${MAVEN_ONLY}" ]; then
+    TAR_TARGET="tar"
+fi
+
 # Build pig tar and pigunit..
-ant $BUILD_OPTS tar pigunit-jar smoketests-jar "$@"
+ant $BUILD_OPTS ${TAR_TARGET} pigunit-jar smoketests-jar "$@"
 
 # Clean up after piggybank.
 rm -rf contrib/piggybank/java/build

@@ -24,11 +24,17 @@ if [ -f cloudera/build.properties ]; then
     cp -r cloudera/* src/cloudera
 fi
 
+if [ -z "${MAVEN_ONLY}" ]; then
+    BUILD_TARGET="tar"
+else
+    BUILD_TARGET="package"
+fi
+
 cd src
 
 ant -Dhadoop.security.version.prefix=0.23 \
     -Dreactor.repo=file://${HOME}/.m2/repository -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP \
-    -propertyfile cdh.build.properties -Dinclude.postgres=true tar "$@"
+    -propertyfile cdh.build.properties -Dinclude.postgres=true ${BUILD_TARGET} "$@"
 
 # Change to cloudera/maven directory, and install
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository

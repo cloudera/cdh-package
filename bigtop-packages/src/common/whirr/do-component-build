@@ -17,8 +17,11 @@
 set -ex
 
 mvn -DskipTests clean install $DO_MAVEN_DEPLOY "$@"
-mvn -DskipTests -Pjavadoc site source:jar package assembly:assembly "$@" 
 
-mkdir build
-cp target/*.tar.gz build
-tar -C build --strip-components=1 -xzf target/*.tar.gz
+if [ -z "${MAVEN_ONLY}" ]; then
+    mvn -DskipTests -Pjavadoc site source:jar package assembly:assembly "$@" 
+
+    mkdir build
+    cp target/*.tar.gz build
+    tar -C build --strip-components=1 -xzf target/*.tar.gz
+fi

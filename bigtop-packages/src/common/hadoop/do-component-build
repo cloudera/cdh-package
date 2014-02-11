@@ -42,18 +42,21 @@ JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
     install \
     "$@" \
     $DO_MAVEN_DEPLOY
-JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn site site:stage ${MAVEN_SKIP_TESTS} $@
+
+if [ -z "${MAVEN_ONLY}" ]; then
+    JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn site site:stage ${MAVEN_SKIP_TESTS} $@
 
 # Copy generated docs
-mkdir -p build/hadoop-${FULL_VERSION}/share/doc/
-cp -r target/staging/hadoop-project/* build/hadoop-${FULL_VERSION}/share/doc/
-
+    mkdir -p build/hadoop-${FULL_VERSION}/share/doc/
+    cp -r target/staging/hadoop-project/* build/hadoop-${FULL_VERSION}/share/doc/
+    
 # Rebuild and now mvn deploy the tarball - note the '-pl hadoop-dist' - if we chdir into hadoop-dist and build, it fails.
-JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -pl hadoop-dist -Pdist -Psrc -Dtar ${MAVEN_SKIP_TESTS} -Dmaven.javadoc.skip=true -Dmaven.deploy.skip=false install "$@" $DO_MAVEN_DEPLOY
+    JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -pl hadoop-dist -Pdist -Psrc -Dtar ${MAVEN_SKIP_TESTS} -Dmaven.javadoc.skip=true -Dmaven.deploy.skip=false install "$@" $DO_MAVEN_DEPLOY
 
-(cd build/hadoop-${FULL_VERSION} ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${FULL_VERSION}.tar.gz)
+    (cd build/hadoop-${FULL_VERSION} ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${FULL_VERSION}.tar.gz)
 # (cd build/hadoop-${FULL_VERSION}/src ; tar --strip-components=1 -xzvf  ../../../hadoop-dist/target/hadoop-${FULL_VERSION}-src.tar.gz)
-(cd build/hadoop-${FULL_VERSION} ; cp -r ../../../cloudera . || cp -r ../../cloudera .)
+    (cd build/hadoop-${FULL_VERSION} ; cp -r ../../../cloudera . || cp -r ../../cloudera .)
+fi
 
 # Build MR1
 IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
@@ -94,45 +97,47 @@ fi
 (cd hadoop-mapreduce1-project/cloudera/maven-packaging/hadoop-client ; mvn assembly:single)
 (cd hadoop-mapreduce1-project/cloudera/maven-packaging/hadoop-client/target/hadoop-client*/client ; ls) > hadoop-mapreduce1-project/build/hadoop-mr1/hadoop-client.list
 
+if [ -z "${MAVEN_ONLY}" ]; then
 # Move MR1 bits into the final destination
-mkdir -p build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
-mv build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce2
-ln -s mapreduce2 build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/*.jar build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/lib build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/contrib build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/webapps build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/docs build/hadoop-${FULL_VERSION}/share/doc/hadoop-mapreduce1
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/*.txt build/hadoop-${FULL_VERSION}/share/doc/hadoop-mapreduce1
-
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/conf build/hadoop-${FULL_VERSION}/etc/hadoop-mapreduce1
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/example-confs/conf.pseudo build/hadoop-${FULL_VERSION}/etc/hadoop-mapreduce1-pseudo
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/example-confs/conf.secure build/hadoop-${FULL_VERSION}/etc/hadoop-mapreduce1-secure
-
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/bin build/hadoop-${FULL_VERSION}/bin-mapreduce1
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/sbin/* build/hadoop-${FULL_VERSION}/sbin
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/c++/* build/hadoop-${FULL_VERSION}/examples
-mv -f hadoop-mapreduce1-project/build/hadoop-mr1/hadoop-client.list build/hadoop-${FULL_VERSION}/cloudera/hadoop-mapreduce1-client.list
-
-mv -f hadoop-mapreduce1-project/build/c++-examples build/hadoop-${FULL_VERSION}/examples-mapreduce1
-cp -r hadoop-mapreduce1-project/build/c++/* build/hadoop-${FULL_VERSION}/examples-mapreduce1
-
+    mkdir -p build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
+    mv build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce2
+    ln -s mapreduce2 build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/*.jar build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/lib build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/contrib build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/webapps build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/docs build/hadoop-${FULL_VERSION}/share/doc/hadoop-mapreduce1
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/*.txt build/hadoop-${FULL_VERSION}/share/doc/hadoop-mapreduce1
+    
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/conf build/hadoop-${FULL_VERSION}/etc/hadoop-mapreduce1
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/example-confs/conf.pseudo build/hadoop-${FULL_VERSION}/etc/hadoop-mapreduce1-pseudo
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/example-confs/conf.secure build/hadoop-${FULL_VERSION}/etc/hadoop-mapreduce1-secure
+    
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/bin build/hadoop-${FULL_VERSION}/bin-mapreduce1
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/sbin/* build/hadoop-${FULL_VERSION}/sbin
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/c++/* build/hadoop-${FULL_VERSION}/examples
+    mv -f hadoop-mapreduce1-project/build/hadoop-mr1/hadoop-client.list build/hadoop-${FULL_VERSION}/cloudera/hadoop-mapreduce1-client.list
+    
+    mv -f hadoop-mapreduce1-project/build/c++-examples build/hadoop-${FULL_VERSION}/examples-mapreduce1
+    cp -r hadoop-mapreduce1-project/build/c++/* build/hadoop-${FULL_VERSION}/examples-mapreduce1
+    
 # Creating a convenience symlink for MR1, this has no effect on any packaging work
 # or using MR1 or MR2 from tarballs. It's just one less step you have do *if*
 # you were using MR1 from tarballs.
-(cd build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1 && ln -s ../../../bin-mapreduce1/ bin)
+    (cd build/hadoop-${FULL_VERSION}/share/hadoop/mapreduce1 && ln -s ../../../bin-mapreduce1/ bin)
 
-BIN_EXCLUDE="--exclude=*/lib/native/lib*            \
+    BIN_EXCLUDE="--exclude=*/lib/native/lib*            \
              --exclude=*/examples/bin/*             \
              --exclude=*/bin/container-executor     \
              --exclude=*/bin/test-container-executor"
-(cd build && tar $BIN_EXCLUDE -czf hadoop-${FULL_VERSION}.tar.gz hadoop-${FULL_VERSION})
-
+    (cd build && tar $BIN_EXCLUDE -czf hadoop-${FULL_VERSION}.tar.gz hadoop-${FULL_VERSION})
+    
 # Copy fuse output to the build directory
-cp hadoop-hdfs-project/hadoop-hdfs/target/native/main/native/fuse-dfs/fuse_dfs build/hadoop-${FULL_VERSION}/bin/
-
+    cp hadoop-hdfs-project/hadoop-hdfs/target/native/main/native/fuse-dfs/fuse_dfs build/hadoop-${FULL_VERSION}/bin/
+    
 # Create a manifest for hadoop client package
-(cd hadoop-client/target/hadoop-client-*/share/hadoop/client/lib ; ls) > build/hadoop-${FULL_VERSION}/hadoop-client.list
+    (cd hadoop-client/target/hadoop-client-*/share/hadoop/client/lib ; ls) > build/hadoop-${FULL_VERSION}/hadoop-client.list
+fi
 
 # Create a manifest for hadoop MR1 client package
 mkdir hadoop-mr1-client
