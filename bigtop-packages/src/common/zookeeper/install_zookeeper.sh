@@ -190,11 +190,22 @@ install -d -m 1766 $PREFIX/var/log/zookeeper/txlog
 # ZooKeeper native libraries
 install -d ${PREFIX}/$SYSTEM_INCLUDE_DIR
 install -d ${PREFIX}/$SYSTEM_LIB_DIR
+install -d ${PREFIX}/${LIB_DIR}-native
 (cd ${BUILD_DIR}/.. && tar xzf zookeeper-${FULL_VERSION}-lib.tar.gz)
 cp -R ${BUILD_DIR}/../usr/include/* ${PREFIX}/${SYSTEM_INCLUDE_DIR}/
 cp -R ${BUILD_DIR}/../usr/lib*/* ${PREFIX}/${SYSTEM_LIB_DIR}/
-cp -R ${BUILD_DIR}/../usr/bin/* ${PREFIX}/${BIN_DIR}/
-chmod 755 ${PREFIX}/${BIN_DIR}/{cli_mt,cli_st,load_gen}
+cp -R ${BUILD_DIR}/../usr/bin/* ${PREFIX}/${LIB_DIR}-native/
+for binary in ${PREFIX}/${LIB_DIR}-native/*; do
+  cat > ${PREFIX}/${BIN_DIR}/`basename ${binary}` <<EOF
+#!/bin/bash
+
+PREFIX=\$(dirname \$(readlink -f \$0))
+export LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}:\${PREFIX}/../lib:\${PREFIX}/../lib64
+/usr/lib/zookeeper-native/`basename ${binary}` \$@
+
+EOF
+done
+chmod 755 ${PREFIX}/${BIN_DIR}/* ${PREFIX}/${LIB_DIR}-native/*
 
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
