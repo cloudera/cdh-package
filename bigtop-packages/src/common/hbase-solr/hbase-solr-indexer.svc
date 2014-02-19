@@ -68,7 +68,9 @@ stop() {
           kill -0 $PID &>/dev/null || break
           sleep 1
         done
-        kill -KILL $PID &>/dev/null
+        if [ ! kill -0 $PID &>/dev/null ]; then
+          kill -KILL $PID &>/dev/null
+        fi
       fi
     fi
 
