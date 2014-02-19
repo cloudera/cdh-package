@@ -206,8 +206,9 @@ fi
 
 %files native
 %defattr(-,root,root)
+%{lib_zookeeper}-native
 %{bin_zookeeper}/cli_*
-%{bin_zookeeper}/load_gen
+%{bin_zookeeper}/load_gen*
 %{_includedir}/zookeeper
 %{_libdir}/*
 
