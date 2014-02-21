@@ -417,8 +417,8 @@ __EOT__
 ) > build/meta/cdh_env.sh
 
 # cdh_alternatives.sh
-BINARIES="beeline flume-ng hadoop hadoop-0.20 hadoop-fuse-dfs hbase hdfs hive \
-          hiveserver2 mahout mapred oozie pig sqoop sqoop-codegen sqoop-create-hive-table \
+BINARIES="beeline cli_mt cli_st flume-ng hadoop hadoop-0.20 hadoop-fuse-dfs hbase hdfs hive \
+          hiveserver2 loadgen mahout mapred oozie pig sqoop sqoop-codegen sqoop-create-hive-table \
           sqoop-eval sqoop-export sqoop-help sqoop-import sqoop-import-all-tables \
           sqoop-job sqoop-list-databases sqoop-list-tables sqoop-merge sqoop-metastore \
           sqoop-version whirr yarn zookeeper-client zookeeper-server-cleanup \
@@ -563,7 +563,14 @@ done
 
 # Magically manipulate the bin scripts to point to ../lib instead of /usr/lib
 # Ideally we would want alternatives configuration for bin scripts as well
+ELF_MAGIC_BYTES='464c457f' # "\x7fELF" in hex, little-endian
 for file in build/usr/bin/*; do
+
+  # Do not edit native / compiled binaries
+  if [ `cat $file | hexdump -n 4 -e '"%x"'` == "${ELF_MAGIC_BYTES}" ]; then
+    continue;
+  fi
+
   # Insert a command that sets the LIB_DIR we want to use
   sed -i '1a \
   # Reference: http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in\
