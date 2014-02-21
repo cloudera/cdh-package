@@ -34,7 +34,7 @@ start() {
   [ -d $CONF_DIR ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
   log_success_msg "Starting ${DESC}: "
 
-  su -s /bin/bash $SVC_USER  -c "/bin/bash -c 'echo \$\$ >${PIDFILE} && $EXEC_PATH --config '$CONF_DIR' server $DAEMON_FLAGS >> $OUTFILE 2>&1 </dev/null' &"
+  su -s /bin/bash $SVC_USER  -c "/bin/bash -c 'echo \$\$ >${PIDFILE} && exec $EXEC_PATH --config '$CONF_DIR' server $DAEMON_FLAGS >> $OUTFILE 2>&1 </dev/null' &"
 
   # Some processes are slow to start
   sleep $SLEEP_TIME
