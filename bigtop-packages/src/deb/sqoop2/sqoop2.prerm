@@ -24,8 +24,7 @@ set -e
 case "$1" in
     remove|upgrade|deconfigure)
       update-alternatives --remove sqoop2-conf /etc/sqoop2/conf.dist || :
-      update-alternatives --remove sqoop2-tomcat-conf /etc/sqoop2/tomcat-conf.dist || :
-      update-alternatives --remove sqoop2-tomcat-conf /etc/sqoop2/tomcat-conf.mr1 || :
+      update-alternatives --remove-all sqoop2-tomcat-conf || :
     ;;
 
     failed-upgrade)

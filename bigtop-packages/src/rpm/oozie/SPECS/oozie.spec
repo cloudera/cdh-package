@@ -151,8 +151,6 @@ Requires: bigtop-utils >= 0.7
 %__install -d  -m 0755  %{buildroot}/%{_localstatedir}/log/oozie
 %__install -d  -m 0755  %{buildroot}/%{_localstatedir}/run/oozie
 
-%__ln_s -f %{data_oozie}/tomcat-deployment/WEB-INF $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/WEB-INF
-
 %pre
 getent group oozie >/dev/null || /usr/sbin/groupadd -r oozie >/dev/null
 getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --shell /bin/false -M -r -g oozie --home %{data_oozie} oozie >/dev/null
@@ -200,6 +198,7 @@ fi
 %{lib_oozie}/oozie-sharelib-yarn.tar.gz
 %{lib_oozie}/oozie-sharelib-mr1.tar.gz
 %{lib_oozie}/libext
+%{lib_oozie}/tomcat-deployment.sh
 %{lib_oozie}/cloudera/
 %{initd_dir}/oozie
 %defattr(-, oozie, oozie)

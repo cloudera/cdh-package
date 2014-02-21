@@ -15,22 +15,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Autodetect JAVA_HOME if not defined
+# This script must be sourced so that it can set CATALINA_BASE for the parent process
 
-. /usr/lib/bigtop-utils/bigtop-detect-javahome
+TOMCAT_CONF=${TOMCAT_CONF:-`readlink -e /etc/hadoop-httpfs/tomcat-conf`}
+TOMCAT_DEPLOYMENT=${TOMCAT_DEPLOYMENT:-/var/lib/hadoop-httpfs/tomcat-deployment}
+HTTPFS_HOME=${HTTPFS_HOME:-/usr/lib/hadoop-httpfs}
 
-export TOMCAT_DEPLOYMENT=/var/lib/sqoop2/tool-tomcat-deployment
-. /usr/lib/sqoop2/tomcat-deployment.sh
+rm -rf ${TOMCAT_DEPLOYMENT}
+mkdir ${TOMCAT_DEPLOYMENT}
+cp -r ${TOMCAT_CONF}/conf ${TOMCAT_DEPLOYMENT}/
+cp -r ${HTTPFS_HOME}/webapps ${TOMCAT_DEPLOYMENT}/
+cp -r ${TOMCAT_CONF}/WEB-INF/* ${TOMCAT_DEPLOYMENT}/webapps/webhdfs/WEB-INF/
 
-LIB_DIR=/usr/lib/sqoop2
-BIN_DIR=${LIB_DIR}/bin
+if [ -n "${BIGTOP_CLASSPATH}" ] ; then
+  sed -i -e "s#^\(common.loader=.*\)\$#\1,${BIGTOP_CLASSPATH/:/,}#" ${TOMCAT_DEPLOYMENT}/conf/catalina.properties
+fi
 
-export CLASSPATH=$CLASSPATH:$(echo "$LIB_DIR"/client-lib/*.jar | tr ' ' ':')
-export CATALINA_HOME=/usr/lib/bigtop-tomcat
-export CATALINA_BIN=${CATALINA_HOME}/bin
-export CATALINA_BASE=/var/lib/sqoop2/tool-tomcat-deployment
-export JAVA_OPTS="$JAVA_OPTS -Dsqoop.config.dir=/etc/sqoop2/conf"
+chown -R httpfs:httpfs ${TOMCAT_DEPLOYMENT}
+chmod -R 755 ${TOMCAT_DEPLOYMENT}
 
-COMMAND="cd ~/ && ${BIN_DIR}/sqoop.sh tool $@"
-su -s /bin/bash -c "${COMMAND}" sqoop2
+export CATALINA_BASE=${TOMCAT_DEPLOYMENT}
+
 

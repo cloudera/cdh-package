@@ -216,6 +216,8 @@ unzip -d ${OOZIE_WEBAPP} ${BUILD_DIR}/oozie.war
 mv -f ${OOZIE_WEBAPP}/WEB-INF/lib ${SERVER_LIB_DIR}/libserver
 touch ${SERVER_LIB_DIR}/webapps/oozie.war
 
+install -m 0755 ${EXTRA_DIR}/tomcat-deployment.sh ${SERVER_LIB_DIR}/tomcat-deployment.sh
+
 HTTP_DIRECTORY=${ETC_DIR}/tomcat-conf.http
 install -d -m 0755 ${HTTP_DIRECTORY}
 cp -R ${BUILD_DIR}/oozie-server/conf ${HTTP_DIRECTORY}/conf

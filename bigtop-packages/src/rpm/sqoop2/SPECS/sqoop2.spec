@@ -188,6 +188,7 @@ fi
 %{lib_sqoop}/webapps
 %{lib_sqoop}/bin/setenv.sh
 %{lib_sqoop}/bin/sqoop-sys.sh
+%{lib_sqoop}/tomcat-deployment.sh
 %defattr(0755,sqoop2,sqoop)
 /var/lib/sqoop2
 /usr/lib/bigtop-tomcat/lib/sqoop-tomcat*.jar

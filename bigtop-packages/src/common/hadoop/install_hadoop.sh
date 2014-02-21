@@ -393,6 +393,8 @@ cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/webapps ${HTTPFS_DIR}/webapps
 install -d -m 0755 ${PREFIX}/var/lib/hadoop-httpfs
 install -d -m 0755 $HTTPFS_ETC_DIR/conf.empty
 
+install -m 0755 ${DISTRO_DIR}/httpfs-tomcat-deployment.sh ${HTTPFS_DIR}/tomcat-deployment.sh
+
 HTTP_DIRECTORY=$HTTPFS_ETC_DIR/tomcat-conf.dist
 HTTPS_DIRECTORY=$HTTPFS_ETC_DIR/tomcat-conf.https
 

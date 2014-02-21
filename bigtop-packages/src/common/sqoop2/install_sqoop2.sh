@@ -150,6 +150,8 @@ SQOOP_WEBAPPS=${PREFIX}/${LIB_DIR}/webapps
 cp -r ${DIST_DIR}/server/webapps $SQOOP_WEBAPPS
 unzip -d $SQOOP_WEBAPPS/sqoop $SQOOP_WEBAPPS/sqoop.war
 
+install -m 0755 ${EXTRA_DIR}/tomcat-deployment.sh ${PREFIX}/${LIB_DIR}/tomcat-deployment.sh
+
 # Create MR2 configuration
 install -d -m 0755 ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf
 for conf in web.xml tomcat-users.xml server.xml logging.properties context.xml catalina.policy
