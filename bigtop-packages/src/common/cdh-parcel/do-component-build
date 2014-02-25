@@ -414,7 +414,6 @@ export CDH_SQOOP2_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/sqoop2
 export TOMCAT_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/bigtop-tomcat
 export JSVC_HOME=\$PARCELS_ROOT/\$CDH_DIRNAME/$BIGTOP_UTILS_HOME
 export CDH_HADOOP_BIN=\$CDH_HADOOP_HOME/bin/hadoop
-export HIVE_DEFAULT_XML=\$PARCELS_ROOT/\$CDH_DIRNAME/lib/hive/conf/hive-default.xml
 __EOT__
 ) > build/meta/cdh_env.sh
 
