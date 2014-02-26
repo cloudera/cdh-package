@@ -58,6 +58,7 @@ Source4: web.xml
 Source5: logging.properties
 Source6: solr.default
 Source7: solr-server.init
+Source8: tomcat-deployment.sh
 Requires: bigtop-utils >= 0.7, bigtop-tomcat
 
 # CentOS 5 does not have any dist macro
