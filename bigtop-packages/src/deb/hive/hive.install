@@ -18,7 +18,6 @@
 /usr/lib/hive/lib/bonecp-*.jar
 /usr/lib/hive/lib/commons-cli-*.jar
 /usr/lib/hive/lib/commons-codec-*.jar
-/usr/lib/hive/lib/commons-collections-*.jar
 /usr/lib/hive/lib/commons-compress-*.jar
 /usr/lib/hive/lib/commons-httpclient-*.jar
 /usr/lib/hive/lib/commons-io-*.jar
