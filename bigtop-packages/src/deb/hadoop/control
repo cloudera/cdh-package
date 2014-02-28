@@ -180,7 +180,7 @@ Description: Data Node for Hadoop
 
 Package: hadoop-hdfs-nfs3
 Architecture: all
-Depends: hadoop-hdfs (= ${source:Version})
+Depends: hadoop-hdfs (= ${source:Version}), rpcbind
 Description: Hadoop HDFS NFS v3 gateway service
 
 Package: libhdfs0

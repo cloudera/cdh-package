@@ -367,7 +367,7 @@ blocks of data over the network to Hadoop Distributed Filesystem
 %package hdfs-nfs3
 Summary: Hadoop HDFS NFS v3 gateway service
 Group: System/Daemons
-Requires: %{name}-hdfs = %{version}-%{release}
+Requires: %{name}-hdfs = %{version}-%{release}, rpcbind
 Requires(pre): %{name} = %{version}-%{release}
 Requires(pre): %{name}-hdfs = %{version}-%{release}
 
