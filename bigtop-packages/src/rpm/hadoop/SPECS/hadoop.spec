@@ -61,7 +61,7 @@
 %define httpfs_services httpfs
 %define mapreduce_services mapreduce-historyserver
 %define mapreduce_mr1_services 0.20-mapreduce-jobtracker 0.20-mapreduce-tasktracker 0.20-mapreduce-zkfc 0.20-mapreduce-jobtrackerha
-%define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode hdfs-portmap hdfs-nfs3
+%define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode hdfs-nfs3
 %define yarn_services yarn-resourcemanager yarn-nodemanager yarn-proxyserver
 %define hadoop_services %{hdfs_services} %{mapreduce_services} %{yarn_services} %{httpfs_services} %{mapreduce_mr1_services}
 # Hadoop outputs built binaries into %{hadoop_build}
@@ -175,9 +175,8 @@ Source27: hadoop-0.20-mapreduce-zkfc.svc
 Source28: hadoop-0.20-mapreduce-jobtrackerha.svc
 Source29: %{name}-bigtop-packaging.tar.gz
 Source30: 0.20.default
-Source31: hadoop-hdfs-portmap.svc
-Source32: hadoop-hdfs-nfs3.svc
-Source33: httpfs-tomcat-deployment.sh
+Source31: hadoop-hdfs-nfs3.svc
+Source32: httpfs-tomcat-deployment.sh
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, zookeeper >= 3.4.0
@@ -364,16 +363,6 @@ Requires(pre): %{name}-hdfs = %{version}-%{release}
 The Data Nodes in the Hadoop Cluster are responsible for serving up
 blocks of data over the network to Hadoop Distributed Filesystem
 (HDFS) clients.
-
-%package hdfs-portmap
-Summary: Hadoop HDFS Portmap service
-Group: System/Daemons
-Requires: %{name}-hdfs = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
-Requires(pre): %{name}-hdfs = %{version}-%{release}
-
-%description hdfs-portmap
-Hadoop HDFS Portmap service
 
 %package hdfs-nfs3
 Summary: Hadoop HDFS NFS v3 gateway service
@@ -838,7 +827,6 @@ fi
 %service_macro hdfs-zkfc
 %service_macro hdfs-journalnode
 %service_macro hdfs-datanode
-%service_macro hdfs-portmap
 %service_macro hdfs-nfs3
 %service_macro yarn-resourcemanager
 %service_macro yarn-nodemanager

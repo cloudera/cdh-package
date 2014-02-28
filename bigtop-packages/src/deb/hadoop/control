@@ -178,11 +178,6 @@ Description: Data Node for Hadoop
  blocks of data over the network to Hadoop Distributed Filesystem
  (HDFS) clients.
 
-Package: hadoop-hdfs-portmap
-Architecture: all
-Depends: hadoop-hdfs (= ${source:Version})
-Description: Hadoop HDFS Portmap service
-
 Package: hadoop-hdfs-nfs3
 Architecture: all
 Depends: hadoop-hdfs (= ${source:Version})
