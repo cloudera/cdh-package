@@ -148,6 +148,7 @@ cat > $wrapper <<EOF
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
 export HADOOP_CONF=\${HADOOP_CONF:-/etc/hadoop/conf}
+export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
 export ZOOKEEPER_HOME=\${ZOOKEEPER_HOME:-/usr/lib/zookeeper}
 export HBASE_CLASSPATH=\$HADOOP_CONF:\$HADOOP_HOME/*:\$HADOOP_HOME/lib/*:\$ZOOKEEPER_HOME/*:\$ZOOKEEPER_HOME/lib/*:\$HBASE_CLASSPATH
 
