@@ -64,7 +64,7 @@ Source3: spark-master.svc
 Source4: spark-worker.svc
 Source5: compute-classpath.sh
 Source6: init.d.tmpl
-Requires: bigtop-utils >= 0.7
+Requires: bigtop-utils >= 0.6
 Requires(preun): /sbin/service
 
 %global initd_dir %{_sysconfdir}/init.d
