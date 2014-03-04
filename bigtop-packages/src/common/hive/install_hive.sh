@@ -196,6 +196,7 @@ for conf in `cd ${HCATALOG_DIR}/etc ; ls -d *` ; do
   ln -s /etc/hive-$conf/conf ${HCATALOG_DIR}/etc/$conf
   touch ${PREFIX}/etc/default/hive-$conf-server
 done
+rm ${PREFIX}/etc/default/hive-hcatalog-server
 
 wrapper=$BIN_DIR/hcat
 cat >>$wrapper <<EOF

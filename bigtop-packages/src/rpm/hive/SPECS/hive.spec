@@ -25,7 +25,7 @@
 %define usr_bin /usr/bin
 %define hive_config_virtual hive_active_configuration
 %define man_dir %{_mandir}
-%define hive_services hive-server hive-metastore hive-server2 hive-hcatalog-server hive-webhcat-server
+%define hive_services hive-server hive-metastore hive-server2 hive-webhcat-server
 # After we run "ant package" we'll find the distribution here
 %define hive_dist src/build/hive-%{hive_patched_version}
 
@@ -79,10 +79,8 @@ Source10: hive-metastore.svc
 Source11: hive-server2.default
 Source12: hive-server2.svc
 Source13: hive-hcatalog.1
-Source14: hive-hcatalog-server.svc
-Source15: hive-webhcat-server.svc
-Source16: hive-hcatalog-server.default
-Source17: hive-webhcat-server.default
+Source14: hive-webhcat-server.svc
+Source15: hive-webhcat-server.default
 Requires: hadoop-client, bigtop-utils >= 0.7, zookeeper, %{name}-jdbc = %{version}-%{release}
 Requires: avro-libs, parquet
 Conflicts: hadoop-hive
@@ -251,7 +249,6 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 %__install -m 0644 $RPM_SOURCE_DIR/hive-metastore.default $RPM_BUILD_ROOT/etc/default/%{name}-metastore
 %__install -m 0644 $RPM_SOURCE_DIR/hive-server.default $RPM_BUILD_ROOT/etc/default/%{name}-server
 %__install -m 0644 $RPM_SOURCE_DIR/hive-server2.default $RPM_BUILD_ROOT/etc/default/%{name}-server2
-%__install -m 0644 $RPM_SOURCE_DIR/hive-hcatalog-server.default $RPM_BUILD_ROOT/etc/default/%{name}-hcatalog-server
 %__install -m 0644 $RPM_SOURCE_DIR/hive-webhcat-server.default $RPM_BUILD_ROOT/etc/default/%{name}-webhcat-server
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/log/%{name}
@@ -416,5 +413,4 @@ fi
 %service_macro server
 %service_macro server2
 %service_macro metastore
-%service_macro hcatalog-server
 %service_macro webhcat-server

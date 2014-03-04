@@ -33,10 +33,10 @@ override_dh_auto_build:
 	env FULL_VERSION=${HIVE_PATCHED_VERSION} bash debian/do-component-build
 	touch $@
 
-server server2 metastore hcatalog-server webhcat-server:
+server server2 metastore webhcat-server:
 	bash debian/init.d.tmpl debian/hive-$@.svc deb debian/${hive_pkg_name}-$@.init
 
-override_dh_auto_install: metastore server server2 hcatalog-server webhcat-server
+override_dh_auto_install: metastore server server2 webhcat-server
 	cp debian/hive-site.xml .
 	cp debian/hive.1 .
 	cp debian/hive-hcatalog.1 .
