@@ -405,6 +405,7 @@ It allows users to construct and run Pig jobs.
 %app_preun_macro pig
 
 %files -n %{name}-pig
+%defattr(-, %{username}, %{username})
 %{pig_app_dir}
 
 #### HUE-IMPALA PLUGIN ######

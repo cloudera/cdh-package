@@ -76,6 +76,7 @@ sh %{SOURCE2} \
           --doc-dir=%{doc_dir} \
           --prefix=$RPM_BUILD_ROOT
 %files
+%defattr(-,root,root,755)
 %{lib_dir}
 %{doc_dir}
 

@@ -74,7 +74,9 @@ env FULL_VERSION=%{avro_patched_version} bash $RPM_SOURCE_DIR/install_avro.sh \
 /usr/lib/avro
 
 %files -n avro-tools
+%defattr(755,root,root)
 /usr/bin/avro-tools
 
 %files -n avro-doc
+%defattr(-,root,root,755)
 /usr/share/doc/avro-doc-*
