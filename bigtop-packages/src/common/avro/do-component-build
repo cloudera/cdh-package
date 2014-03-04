@@ -26,11 +26,17 @@ if [ -z "$GIT_REPO" ]; then
     export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -XX:PermSize=1024m -XX:MaxPermSize=1024m"
     mvn -N $MAVEN_INST_DEPLOY
 
+    # This is here to make sure that we ignore any errors due to the circular dependency with Hadoop when
+    # we are doing a maven-only build for version updating.
+    if [ -n "${MAVEN_ONLY}" ]; then
+        NEVER_FAIL=-fn
+    fi
+
     # Build Java libraries
     (cd lang/java;
-        mvn package -DskipTests -Dhadoop.version=2 $@;
+        mvn package -DskipTests -Dhadoop.version=2 $NEVER_FAIL $@;
         rm -rf mapred/target/classes/;
-        mvn -Dhadoop.version=2 -P dist package -DskipTests -DskipITs -Davro.version=$VERSION javadoc:aggregate $MAVEN_INST_DEPLOY $@)
+        mvn -Dhadoop.version=2 -P dist package -DskipTests -DskipITs -Davro.version=$VERSION javadoc:aggregate $NEVER_FAIL $MAVEN_INST_DEPLOY $@)
 
     if [ -z "${MAVEN_ONLY}" ]; then
         (cd lang/java/trevni/doc; mvn site $@)
