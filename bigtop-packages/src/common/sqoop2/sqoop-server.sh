@@ -24,7 +24,7 @@ LIB_DIR=${LIB_DIR:-/usr/lib}
 SQOOP_HOME=${LIB_DIR}/sqoop2
 TOMCAT_HOME=${LIB_DIR}/bigtop-tomcat
 
-. /usr/lib/sqoop/tomcat-deployment.sh
+. /usr/lib/sqoop2/tomcat-deployment.sh
 
 export CATALINA_BIN=${CATALINA_BIN:-${TOMCAT_HOME}/bin}
 export CATALINA_BASE=${CATALINA_BASE:-${DEPLOYMENT_TARGET}}
