@@ -54,6 +54,7 @@ override_dh_auto_clean:
 override_dh_auto_configure:
 	echo "Skipping dh_auto_configure..."
 
+.PHONY: override_dh_strip
 override_dh_strip:
 	dh_strip --dbg-package=impala-dbg
 
