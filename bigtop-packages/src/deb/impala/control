@@ -22,39 +22,39 @@ Standards-Version: 3.8.0
 Homepage: http://cloudera.com/impala
 
 Package: impala
-Architecture: all
+Architecture: any
 Depends: ${misc:Depends}, adduser, bigtop-utils (>= 0.7), libssl0.9.8 | libssl1.0.0, hadoop, hadoop-hdfs, hadoop-yarn, hadoop-mapreduce, hbase, hive, zookeeper, libhdfs0, avro-libs, parquet
 Description: Application for executing real-time queries on top of Hadoop
 
 Package: impala-udf-dev
-Architecture: all
+Architecture: any
 Depends: ${misc:Depends}
 Description: Impala UDF development package
  Development headers and libraries for writing user-defined-functions for Impala queries
 
 Package: impala-shell
-Architecture: all
+Architecture: any
 Depends: ${misc:Depends}, python, python-setuptools
 Build-Depends: g++, libsasl2-dev, python-dev, python-setuptools
 Description: Impala shell
 
 Package: impala-server
-Architecture: all
+Architecture: any
 Depends: ${misc:Depends}, impala (= ${source:Version})
 Description: Impala server
 
 Package: impala-state-store
-Architecture: all
+Architecture: any
 Depends: ${misc:Depends}, impala (= ${source:Version})
 Description: Impala State Store server
 
 Package: impala-catalog
-Architecture: all
+Architecture: any
 Depends: ${misc:Depends}, impala (= ${source:Version})
 Description: Impala Catalog server
 
 Package: impala-dbg
-Architecture: all
+Architecture: any
 Section: debug
 Depends: ${misc:Depends}, impala (= ${binary:Version}),
 Description: Debugging symbols for Impala
