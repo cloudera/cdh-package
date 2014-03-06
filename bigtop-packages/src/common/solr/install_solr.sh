@@ -210,7 +210,9 @@ function tomcat_watchdog() {
 }
 
 # Autodetect JAVA_HOME if not defined
-. /usr/lib/bigtop-utils/bigtop-detect-javahome
+if [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
 
 # resolve links - $0 may be a softlink
 PRG="${BASH_SOURCE[0]}"
