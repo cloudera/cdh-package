@@ -49,3 +49,5 @@ sh %{SOURCE2} \
 %defattr(-,root,root,755)
 /usr/lib/hive/sentry
 /usr/lib/hive/lib
+/usr/bin/sentry
+/usr/lib/sentry
