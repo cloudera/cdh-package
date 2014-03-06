@@ -93,6 +93,8 @@ for var in PREFIX BUILD_DIR ; do
 done
 
 LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/hive}
+SENTRY_DIR=${SENTRY_DIR:-$PREFIX/usr/lib/sentry}
+BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 install -d -m 0755 $LIB_DIR/lib
 
 TARBALL=`ls ${BUILD_DIR}/build/sentry-*.tar.gz`
@@ -100,9 +102,30 @@ DIRECTORY=`basename ${TARBALL/.tar.gz/}`
 (cd ${LIB_DIR}/lib && tar --strip-components=2 -xvzf ${TARBALL} ${DIRECTORY}/lib)
 rm ${LIB_DIR}/lib/sentry-tests*.jar ${LIB_DIR}/lib/sentry-dist*.jar
 
+install -d -m 0755 ${SENTRY_DIR}/bin
+mv ${BUILD_DIR}/bin/* ${SENTRY_DIR}/bin
+
 install -d -m 0755 ${LIB_DIR}/sentry
 mv ${BUILD_DIR}/LICENSE.txt ${LIB_DIR}/sentry
 mv ${BUILD_DIR}/NOTICE.txt ${LIB_DIR}/sentry
+
+install -d -m 0755 ${BIN_DIR}
+wrapper=$BIN_DIR/sentry
+cat >>$wrapper <<EOF
+#!/bin/bash
+
+# Autodetect JAVA_HOME if not defined
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
+
+export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
+export HIVE_HOME=\${HIVE_HOME:-/usr/lib/hive}
+# Currently we deliver Sentry jars under HIVE_HOME/lib
+# that's why we need to set SENTRY_HOME to HIVE_HOME
+export SENTRY_HOME=\${SENTRY_HOME:-\$HIVE_HOME}
+exec /usr/lib/sentry/bin/sentry "\$@"
+EOF
+
+chmod 755 $wrapper
 
 # Cloudera specific
 install -d -m 0755 $LIB_DIR/sentry/cloudera
