@@ -125,7 +125,7 @@ install -d -m 0755 $PREFIX/var/run/spark/work/
 
 tar --wildcards -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz 'lib/*'
 
-for comp in core repl bagel mllib streaming; do
+for comp in core repl bagel mllib streaming assembly; do
   install -d -m 0755 $PREFIX/$LIB_DIR/$comp/lib
   tar --wildcards -C $PREFIX/$LIB_DIR/$comp/lib -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz spark-$comp\*
 done
