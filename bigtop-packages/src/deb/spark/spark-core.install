@@ -1,6 +1,7 @@
 /etc/spark
 /usr/bin/spark-executor
 /usr/bin/spark-shell
+/usr/lib/spark/assembly
 /usr/lib/spark/bagel
 /usr/lib/spark/bin/compute-classpath.sh
 /usr/lib/spark/bin/spark-class
