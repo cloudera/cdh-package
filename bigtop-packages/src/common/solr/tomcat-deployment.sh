@@ -19,7 +19,7 @@
 
 TOMCAT_CONF=${TOMCAT_CONF:-`readlink -e /etc/solr/tomcat-conf`}
 TOMCAT_DEPLOYMENT=${TOMCAT_DEPLOYMENT:-/var/lib/solr/tomcat-deployment}
-SOLR_HOME=${SQOOP_HOME:-/usr/lib/solr}
+SOLR_HOME=${SOLR_HOME:-/usr/lib/solr}
 
 rm -rf ${TOMCAT_DEPLOYMENT}
 mkdir ${TOMCAT_DEPLOYMENT}
