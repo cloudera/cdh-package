@@ -150,6 +150,7 @@ function symlink_lib() {
     ln -s ../../$dir/`basename $versionless` $DEPENDENCY_DIR/
 }
 for file in $DEPENDENCY_DIR/hadoop*cdh*.jar; do symlink_lib $file hadoop/client; done
+for file in $DEPENDENCY_DIR/hadoop-yarn-server*cdh*.jar; do symlink_lib $file hadoop-yarn; done
 for file in $DEPENDENCY_DIR/hbase*cdh*.jar; do symlink_lib $file hbase; done
 for file in $DEPENDENCY_DIR/hive*cdh*.jar; do symlink_lib $file hive/lib; done
 for file in $DEPENDENCY_DIR/zookeeper*cdh*.jar; do symlink_lib $file zookeeper; done
