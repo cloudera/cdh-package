@@ -16,11 +16,17 @@
 
 set -ex
 
+if [ -z "${DO_MAVEN_DEPLOY}" ]; then
+    MAVEN_INST_DEPLOY=install
+else
+    MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
+fi
+
 export THRIFT_HOME=/opt/toolchain/thrift-0.7.0
 export PATH=${THRIFT_HOME}/bin:${PATH}
 
 make
-mvn package $DO_MAVEN_DEPLOY -DskipTests
+mvn clean source:jar-no-fork javadoc:jar $MAVEN_INST_DEPLOY -DskipTests
 
 rm -rf build parquet-format-${FULL_VERSION}
 ALL_FILES=`echo *`
