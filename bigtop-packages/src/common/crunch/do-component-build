@@ -29,7 +29,7 @@ if [ -z "$GIT_REPO" ]; then
     
     mvn -DskipTests -Dcrunch.platform=2           \
     -Dslf4j.version=1.6.1                     \
-    -Papache-release clean ${SITE_GOAL} $MAVEN_INST_DEPLOY "$@"
+    -Papache-release clean ${SITE_GOAL} source:jar-no-fork javadoc:jar $MAVEN_INST_DEPLOY "$@"
 
     if [ -z "${MAVEN_ONLY}" ]; then
         rm -rf build

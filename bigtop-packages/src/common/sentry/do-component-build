@@ -22,7 +22,14 @@ if [ -z "$GIT_REPO" ]; then
     else
         MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
     fi
-    mvn clean -DskipTests $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository $@
+
+    # This is here to make sure that we ignore any errors due to the circular dependency with Solr when
+    # we are doing a maven-only build for version updating.
+    if [ -n "${MAVEN_ONLY}" ]; then
+        NEVER_FAIL=-fn
+    fi
+    
+    mvn clean -DskipTests source:jar-no-fork javadoc:jar $MAVEN_INST_DEPLOY $NEVER_FAIL -Dmaven.repo.local=${HOME}/.m2/repository $@
     
     rm -rf build
     mkdir build
