@@ -29,7 +29,7 @@ if [ -z "$GIT_REPO" ]; then
         NEVER_FAIL=-fn
     fi
     
-    mvn clean -DskipTests $MAVEN_INST_DEPLOY $NEVER_FAIL -Dmaven.repo.local=${HOME}/.m2/repository $@
+    mvn clean -DskipTests source:jar-no-fork javadoc:jar $MAVEN_INST_DEPLOY $NEVER_FAIL -Dmaven.repo.local=${HOME}/.m2/repository $@
     
     rm -rf build
     mkdir build
