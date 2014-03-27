@@ -156,6 +156,8 @@ function symlink_lib() {
     versionless=${base/-[0-9].*/.jar}
     ln -s ../../$dir/`basename $versionless` $DEPENDENCY_DIR/
 }
+# Remove MR1 Hive shim
+rm -f $DEPENDENCY_DIR/hive-shims-0.23*.jar $DEPENDENCY_DIR/hadoop-core*.jar;
 for file in $DEPENDENCY_DIR/hadoop-yarn-server*cdh*.jar; do symlink_lib $file hadoop-yarn; done
 for file in $DEPENDENCY_DIR/hadoop*cdh*.jar; do symlink_lib $file hadoop/client; done
 for file in $DEPENDENCY_DIR/hbase*cdh*.jar; do symlink_lib $file hbase; done
