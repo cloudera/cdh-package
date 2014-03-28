@@ -241,7 +241,7 @@ echo "cloudera.pkg.name=hive-hcatalog" >> $HCATALOG_DIR/cloudera/cdh_version.pro
 
 # Replace every Avro or Parquet jar with a symlink to the versionless symlinks in our distribution
 # This regex matches upstream versions, plus CDH versions, betas and snapshots if they are present
-versions='s#-[0-9].[0-9].[0-9]\(-cdh[0-9\-\.]*\)\?\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
+versions='s#-[0-9].[0-9].[0-9]\(-cdh[0-9\-\.]*[0-9]\)\?\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
 timestamps='s#-[0-9]\{8\}\.[0-9]\{6\}-[0-9]\{1,2\}##'
 for dir in ${HIVE_DIR}/lib ${HCATALOG_DIR}/share/webhcat/svr/lib ; do
     for old_jar in `find $dir -maxdepth 1 -name avro*.jar -o -name parquet*.jar | grep -v 'cassandra'`; do
