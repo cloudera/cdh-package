@@ -259,7 +259,7 @@ cp ${BUILD_DIR}/cloudera/cdh_version.properties ${SERVER_LIB_DIR}/cloudera/
 # Replace every Avro or Parquet jar with a symlink to the versionless symlinks in our distribution
 # This regex matches upstream versions, plus CDH versions, betas and snapshots if they are present
 versions='s#-[0-9].[0-9].[0-9]\(-cdh[0-9\-\.]*[0-9]\)\?\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
-timestamps='s#-[0-9]\{8\}\.[0-9]\{6\}-[0-9]\{1,2\}##'
+timestamps='s#-[0-9]\{8\}\.[0-9]\{6\}-[0-9]\+##'
 for dir in ${SERVER_LIB_DIR}/libtools ${SERVER_LIB_DIR}/libserver ; do
     for old_jar in `find $dir -maxdepth 1 -name avro*.jar -o -name parquet*.jar | grep -v 'cassandra'`; do
         base_jar=`basename $old_jar`; new_jar=`echo $base_jar | sed -e $versions | sed -e $timestamps`
