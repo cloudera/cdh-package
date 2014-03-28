@@ -109,7 +109,7 @@ rm -f ${PREFIX}/${LIB_DIR}/${AVRO_MAPRED}.jar ${PREFIX}/${LIB_DIR}/${AVRO_MAPRED
 ln -s ${AVRO_MAPRED}-hadoop2.jar ${PREFIX}/${LIB_DIR}/${AVRO_MAPRED}.jar
 
 # Install versionless symlinks
-versions='s#-[0-9.]\+-cdh[0-9\-\.]*\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
+versions='s#-[0-9.]\+-cdh[0-9\-\.]*[0-9]\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
 for jar in `ls ${PREFIX}/${LIB_DIR}/*.jar`; do
     base=`basename $jar`
     (cd ${PREFIX}/${LIB_DIR} && ln -s $base `echo $base | sed -e $versions`)
