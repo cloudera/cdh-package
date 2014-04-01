@@ -43,7 +43,8 @@ override_dh_auto_install: metastore server server2 webhcat-server
 	bash debian/install_hive.sh \
 	  --prefix=debian/tmp \
 	  --build-dir=src/build/hive-${HIVE_PATCHED_VERSION} \
-	  --doc-dir=debian/tmp/usr/share/doc/${hive_pkg_name}
+	  --doc-dir=debian/tmp/usr/share/doc/${hive_pkg_name} \
+	  --extra-dir=debian/
 	# We need to get rid of jars that happen to be shipped in other CDH packages
 	rm -f debian/tmp/usr/lib/hive/lib/hbase-common*.jar debian/tmp/usr/lib/hive/lib/hbase-client*.jar \
 	  debian/tmp/usr/lib/hive/lib/hbase-server*.jar debian/tmp/usr/lib/hive/lib/hbase-hadoop-compat*.jar \

@@ -43,7 +43,8 @@ override_dh_auto_install:
 	  --build-dir=${PWD} \
 	  --doc-dir=/usr/share/doc/flume-ng-doc \
 	  --doc-dir-prefix=debian/flume-ng-doc \
-	  --prefix=debian/flume-ng
+	  --prefix=debian/flume-ng \
+	  --extra-dir=debian/
 	install -d -m 0755 debian/flume-ng-agent/etc/default
 	cp debian/flume-ng-agent.default debian/flume-ng-agent/etc/default/flume-ng-agent
 	cp -f debian/flume-ng-agent.init.debian debian/flume-ng-agent.init

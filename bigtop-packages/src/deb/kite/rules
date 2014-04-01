@@ -33,4 +33,5 @@ override_dh_auto_build:
 override_dh_auto_install:
 	bash -x debian/install_kite.sh \
 	  --build-dir=build/kite-${KITE_PATCHED_VERSION}/dist \
-	  --prefix=debian/tmp
+	  --prefix=debian/tmp \
+	  --extra-dir=debian/

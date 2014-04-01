@@ -81,6 +81,7 @@ Source12: hive-server2.svc
 Source13: hive-hcatalog.1
 Source14: hive-webhcat-server.svc
 Source15: hive-webhcat-server.default
+Source16: packaging_functions.sh
 Requires: hadoop-client, bigtop-utils >= 0.7, zookeeper, %{name}-jdbc = %{version}-%{release}
 Requires: avro-libs, parquet
 Conflicts: hadoop-hive
@@ -242,7 +243,8 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 /bin/bash %{SOURCE2} \
   --prefix=$RPM_BUILD_ROOT \
   --build-dir=%{hive_dist} \
-  --doc-dir=$RPM_BUILD_ROOT/%{doc_hive}
+  --doc-dir=$RPM_BUILD_ROOT/%{doc_hive} \
+  --extra-dir=$RPM_SOURCE_DIR
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/

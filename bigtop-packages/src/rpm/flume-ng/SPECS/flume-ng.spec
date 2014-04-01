@@ -65,6 +65,7 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: %{name}-agent.init
 Source4: flume-ng-agent.default
+Source5: packaging_functions.sh
 Requires: /usr/sbin/useradd
 Requires: coreutils
 Requires: hadoop-hdfs
@@ -131,7 +132,8 @@ env FULL_VERSION=%{flume_ng_patched_version} bash %{SOURCE1}
 bash %{SOURCE2} \
           --build-dir=$PWD \
           --prefix=$RPM_BUILD_ROOT \
-	  --doc-dir=%{doc_flume}
+          --doc-dir=%{doc_flume} \
+          --extra-dir=$RPM_SOURCE_DIR
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
 

@@ -35,7 +35,8 @@ override_dh_auto_install:
 	bash -x debian/install_hbase_solr.sh \
 	  --build-dir=$${PWD} \
 	  --doc-dir=/usr/share/doc/hbase-solr-doc \
-	  --prefix=debian/tmp
+	  --prefix=debian/tmp \
+	  --extra-dir=debian/
 	install -d -m 0755 debian/tmp/etc/init.d
 	bash debian/init.d.tmpl debian/hbase-solr-indexer.svc deb debian/tmp/etc/init.d/hbase-solr-indexer
 	chmod 755 debian/tmp/etc/init.d/hbase-solr-indexer

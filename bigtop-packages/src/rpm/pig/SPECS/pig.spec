@@ -81,6 +81,7 @@ Source2: install_pig.sh
 Source3: log4j.properties
 Source4: pig.1
 Source5: pig.properties
+Source6: packaging_functions.sh
 Requires: hadoop-client, bigtop-utils >= 0.7
 Requires: avro-libs, parquet
 Conflicts: hadoop-pig
@@ -124,10 +125,11 @@ env FULL_VERSION=%{pig_patched_version} bash %{SOURCE1}
 cp $RPM_SOURCE_DIR/log4j.properties .
 cp $RPM_SOURCE_DIR/pig.1 .
 cp $RPM_SOURCE_DIR/pig.properties .
-sh -x %{SOURCE2} \
+bash -x %{SOURCE2} \
           --build-dir=build \
           --doc-dir=%{doc_pig} \
-          --prefix=$RPM_BUILD_ROOT
+          --prefix=$RPM_BUILD_ROOT \
+          --extra-dir=$RPM_SOURCE_DIR
 
 %pre
 # workaround for https://issues.cloudera.org/browse/DISTRO-223

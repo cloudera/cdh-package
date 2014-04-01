@@ -60,6 +60,7 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: sqoop-metastore.sh
 Source4: sqoop-metastore.sh.suse
+Source5: packaging_functions.sh
 Buildarch: noarch
 BuildRequires: asciidoc, xmlto
 Requires: hadoop-client, bigtop-utils >= 0.7
@@ -105,11 +106,12 @@ env FULL_VERSION=%{sqoop_patched_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh %{SOURCE2} \
+bash %{SOURCE2} \
           --build-dir=build/sqoop-%{sqoop_patched_version} \
           --conf-dir=%{conf_sqoop_dist} \
           --doc-dir=%{doc_sqoop} \
-          --prefix=$RPM_BUILD_ROOT
+          --prefix=$RPM_BUILD_ROOT \
+          --extra-dir=$RPM_SOURCE_DIR
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/

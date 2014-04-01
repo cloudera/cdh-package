@@ -22,6 +22,7 @@ usage: $0 <options>
   Required not-so-options:
      --build-dir=DIR             path to hive/build/dist
      --prefix=PREFIX             path to install into
+     --extra-dir=DIR             path to Bigtop distribution files
   "
   exit 1
 }
@@ -38,6 +39,7 @@ OPTS=$(getopt \
   -l 'native-lib-dir:' \
   -l 'system-include-dir:' \
   -l 'system-lib-dir:' \
+  -l 'extra-dir:' \
   -- "$@")
 
 if [ $? != 0 ] ; then
@@ -74,6 +76,9 @@ while true ; do
         --system-lib-dir)
         SYSTEM_LIB_DIR=$2 ; shift 2
         ;;
+        --extra-dir)
+        EXTRA_DIR=$2 ; shift 2
+        ;;
         --)
         shift ; break
         ;;
@@ -91,6 +96,8 @@ for var in PREFIX BUILD_DIR; do
     usage
   fi
 done
+
+. ${EXTRA_DIR}/packaging_functions.sh
 
 ETC_DIR=${ETC_DIR:-$PREFIX/etc}
 LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/impala}
@@ -290,14 +297,5 @@ cp be/build/debug/udf/libImpalaUdf.a ${PREFIX}/${SYSTEM_LIB_DIR}/libImpalaUdf-de
 install -d -m 0755 $LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $LIB_DIR/cloudera/
 
-# Replace every Avro or Parquet jar with a symlink to the versionless symlinks in our distribution
-# This regex matches upstream versions, plus CDH versions, betas and snapshots if they are present
-versions='s#-[0-9].[0-9].[0-9]\(-cdh[0-9\-\.]*[0-9]\)\?\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
-timestamps='s#-[0-9]\{8\}\.[0-9]\{6\}-[0-9]\{1,2\}##'
-for dir in ${LIB_DIR}/lib; do
-    for old_jar in `find $dir -maxdepth 1 -name avro*.jar -o -name parquet*.jar | grep -v 'cassandra'`; do
-        base_jar=`basename $old_jar`; new_jar=`echo $base_jar | sed -e $versions | sed -e $timestamps`
-        rm $old_jar && ln -fs /usr/lib/${base_jar/[-.]*/}/$new_jar $dir/
-    done
-done
+versionless_symlinks ${LIB_DIR}/lib
 

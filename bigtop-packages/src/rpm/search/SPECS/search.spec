@@ -57,6 +57,7 @@ License: APL2
 Source0: search-%{search_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_solr_sink.sh
+Source3: packaging_functions.sh
 Requires: bigtop-utils >= 0.7
 Requires: avro-libs, parquet
 
@@ -71,10 +72,11 @@ env FULL_VERSION=%{search_patched_version} bash -x %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh %{SOURCE2} \
+bash %{SOURCE2} \
           --build-dir=$PWD \
           --doc-dir=%{doc_dir} \
-          --prefix=$RPM_BUILD_ROOT
+          --prefix=$RPM_BUILD_ROOT \
+          --extra-dir=$RPM_SOURCE_DIR
 %files
 %defattr(-,root,root,755)
 %{lib_dir}

@@ -93,6 +93,7 @@ Source4: init.d.tmpl
 Source5: hbase.default
 Source6: hbase.nofiles.conf
 Source7: regionserver-init.d.tpl
+Source8: packaging_functions.sh
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
 Requires: hadoop-hdfs, zookeeper >= 3.3.1, bigtop-utils >= 0.7
 Requires: avro-libs
@@ -242,10 +243,11 @@ env FULL_VERSION=%{hbase_patched_version} bash %{SOURCE1}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
-	--build-dir=build/hbase-%{hbase_patched_version} \
+        --build-dir=build/hbase-%{hbase_patched_version} \
         --doc-dir=%{doc_hbase} \
         --conf-dir=%{etc_hbase_conf_dist} \
-	--prefix=$RPM_BUILD_ROOT
+        --prefix=$RPM_BUILD_ROOT \
+        --extra-dir=$RPM_SOURCE_DIR
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 

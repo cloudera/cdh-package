@@ -65,6 +65,7 @@ Source7: context.xml
 Source8: hive.xml
 Source9: catalina.properties.mr1
 Source10: tomcat-deployment.sh
+Source11: packaging_functions.sh
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service

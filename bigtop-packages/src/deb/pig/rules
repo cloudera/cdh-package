@@ -38,5 +38,6 @@ override_dh_auto_install:
 	  --build-dir=build \
 	  --prefix=debian/${pig_pkg_name} \
           --doc-dir=debian/${pig_pkg_name}/usr/share/doc/${pig_pkg_name} \
-          --examples-dir=debian/${pig_pkg_name}/usr/share/doc/${pig_pkg_name}/examples
+          --examples-dir=debian/${pig_pkg_name}/usr/share/doc/${pig_pkg_name}/examples \
+	  --extra-dir=debian/
 

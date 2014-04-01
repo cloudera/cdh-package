@@ -64,6 +64,7 @@ Source3: spark-master.svc
 Source4: spark-worker.svc
 Source5: compute-classpath.sh
 Source6: init.d.tmpl
+Source7: packaging_functions.sh
 Requires: bigtop-utils >= 0.7, hadoop-client
 Requires: avro-libs
 Requires(preun): /sbin/service

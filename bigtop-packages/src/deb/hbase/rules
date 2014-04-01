@@ -40,7 +40,8 @@ override_dh_auto_install:
 		--build-dir=build/${hbase_pkg_name}-${HBASE_PATCHED_VERSION} \
 		--conf-dir=/etc/hbase/conf.dist \
 		--doc-dir=usr/share/doc/${hbase_pkg_name}-doc \
-		--prefix=debian/tmp
+		--prefix=debian/tmp \
+		--extra-dir=debian/
 	mkdir -p debian/tmp/etc/security/limits.d
 	cp debian/hbase.nofiles.conf debian/tmp/etc/security/limits.d/${hbase_pkg_name}.conf
 	# Symlink in the dependency jars from their packages. Both of these packages

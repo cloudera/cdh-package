@@ -177,6 +177,7 @@ Source29: %{name}-bigtop-packaging.tar.gz
 Source30: 0.20.default
 Source31: hadoop-hdfs-nfs3.svc
 Source32: httpfs-tomcat-deployment.sh
+Source33: packaging_functions.sh
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, zookeeper >= 3.4.0

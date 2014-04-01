@@ -74,6 +74,7 @@ Source5: impala.conf
 Source6: impalad.svc
 Source7: statestored.svc
 Source8: catalogd.svc
+Source9: packaging_functions.sh
 Requires: bigtop-utils >= 0.7, /usr/sbin/useradd, /usr/sbin/usermod, openssl
 Requires: hadoop, hadoop-hdfs, hadoop-yarn, hadoop-mapreduce, hbase, hive, zookeeper, hadoop-libhdfs
 Requires: avro-libs, parquet
@@ -154,12 +155,13 @@ env FULL_VERSION=%{impala_patched_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh %{SOURCE2} \
+bash %{SOURCE2} \
           --build-dir=$RPM_SOURCE_DIR \
           --prefix=$RPM_BUILD_ROOT \
           --native-lib-dir=lib64 \
           --system-include-dir=%{_includedir} \
-          --system-lib-dir=%{_libdir}
+          --system-lib-dir=%{_libdir} \
+          --extra-dir=$RPM_SOURCE_DIR
 
 # Install init scripts
 init_source=$RPM_SOURCE_DIR

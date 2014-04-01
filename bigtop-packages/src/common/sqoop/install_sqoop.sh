@@ -23,6 +23,7 @@ usage: $0 <options>
   Required not-so-options:
      --build-dir=DIR             path to sqoopdist.dir
      --prefix=PREFIX             path to install into
+     --extra-dir=DIR             path to Bigtop distribution files
 
   Optional options:
      --doc-dir=DIR               path to install docs into [/usr/share/doc/sqoop]
@@ -46,6 +47,7 @@ OPTS=$(getopt \
   -l 'installed-lib-dir:' \
   -l 'bin-dir:' \
   -l 'examples-dir:' \
+  -l 'extra-dir:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -97,6 +99,8 @@ for var in PREFIX BUILD_DIR ; do
     usage
   fi
 done
+
+. ${EXTRA_DIR}/packaging_functions.sh
 
 DOC_DIR=${DOC_DIR:-/usr/share/doc/sqoop}
 LIB_DIR=${LIB_DIR:-/usr/lib/sqoop}
@@ -164,14 +168,5 @@ install -d -m 0755 ${PREFIX}/var/lib/sqoop
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 
-# Replace every Avro or Parquet jar with a symlink to the versionless symlinks in our distribution
-# This regex matches upstream versions, plus CDH versions, betas and snapshots if they are present
-versions='s#-[0-9].[0-9].[0-9]\(-cdh[0-9\-\.]*[0-9]\)\?\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
-timestamps='s#-[0-9]\{8\}\.[0-9]\{6\}-[0-9]\{1,2\}##'
-for dir in ${PREFIX}/${LIB_DIR}/lib; do
-    for old_jar in `find $dir -maxdepth 1 -name avro*.jar -o -name parquet*.jar | grep -v 'cassandra'`; do
-        base_jar=`basename $old_jar`; new_jar=`echo $base_jar | sed -e $versions | sed -e $timestamps`
-        rm $old_jar && ln -fs /usr/lib/${base_jar/[-.]*/}/$new_jar $dir/
-    done
-done
+versionless_symlinks ${PREFIX}/${LIB_DIR}/lib
 

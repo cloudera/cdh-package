@@ -37,6 +37,7 @@ License: ASL 2.0
 Source0: %{kite_name}-%{kite_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{kite_name}.sh
+Source3: packaging_functions.sh
 Requires: hadoop-client, bigtop-utils >= 0.7
 Requires: avro-libs, parquet
 
@@ -55,7 +56,8 @@ env FULL_VERSION=%{kite_patched_version} bash $RPM_SOURCE_DIR/do-component-build
 %__rm -rf $RPM_BUILD_ROOT
 bash $RPM_SOURCE_DIR/install_kite.sh \
           --build-dir=build/kite-%{kite_patched_version}/dist \
-          --prefix=$RPM_BUILD_ROOT
+          --prefix=$RPM_BUILD_ROOT \
+          --extra-dir=$RPM_SOURCE_DIR
 
 #######################
 #### FILES SECTION ####

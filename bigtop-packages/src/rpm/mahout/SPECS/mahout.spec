@@ -44,6 +44,7 @@ License: ASL 2.0
 Source0: mahout-%{mahout_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{name}.sh
+Source3: packaging_functions.sh
 Requires: hadoop-client, bigtop-utils >= 0.7
 Requires: avro-libs
 
@@ -80,10 +81,11 @@ env FULL_VERSION=%{mahout_patched_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh $RPM_SOURCE_DIR/install_mahout.sh \
+bash $RPM_SOURCE_DIR/install_mahout.sh \
           --build-dir=build/mahout-%{mahout_patched_version} \
           --prefix=$RPM_BUILD_ROOT \
-          --doc-dir=%{doc_mahout} 
+          --doc-dir=%{doc_mahout} \
+          --extra-dir=$RPM_SOURCE_DIR
 %__rm -rf $RPM_BUILD_ROOT/usr/lib/mahout/lib/slf4j-log4j12-*.jar $RPM_BUILD_ROOT/usr/lib/mahout/lib/hadoop
 %__ln_s -f /usr/lib/hadoop/client $RPM_BUILD_ROOT/usr/lib/mahout/lib/hadoop
 

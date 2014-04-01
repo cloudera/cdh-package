@@ -37,6 +37,7 @@ License: ASL 2.0
 Source0: %{crunch_name}-%{crunch_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{crunch_name}.sh
+Source3: packaging_functions.sh
 Requires: hadoop-client, bigtop-utils >= 0.7
 Requires: parquet
 
@@ -63,10 +64,11 @@ env FULL_VERSION=%{crunch_patched_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh %{SOURCE2} \
+bash %{SOURCE2} \
           --build-dir=${PWD}/build/crunch-%{crunch_patched_version}   \
           --doc-dir=%{doc_crunch}    \
-          --prefix=$RPM_BUILD_ROOT
+          --prefix=$RPM_BUILD_ROOT \
+          --extra-dir=$RPM_SOURCE_DIR
 
 #######################
 #### FILES SECTION ####

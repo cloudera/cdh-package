@@ -55,6 +55,7 @@ Source1: do-component-build
 Source2: install_hbase_solr.sh
 Source3: init.d.tmpl
 Source4: hbase-solr-indexer.svc
+Source5: packaging_functions.sh
 Requires: bigtop-utils >= 0.7, hbase, solr
 Requires: avro-libs
 
@@ -105,7 +106,8 @@ env FULL_VERSION=%{hbase_solr_patched_version} bash %{SOURCE1}
 bash $RPM_SOURCE_DIR/install_hbase_solr.sh \
           --build-dir=${PWD} \
           --prefix=$RPM_BUILD_ROOT \
-          --doc-dir=%{doc_solr} 
+          --doc-dir=%{doc_solr} \
+          --extra-dir=$RPM_SOURCE_DIR
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{svc_solr}
