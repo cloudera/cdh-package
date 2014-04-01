@@ -26,7 +26,7 @@ if [ -z "$GIT_REPO" ]; then
     . $IMPALA_HOME/bin/impala-config.sh
 
     rm -f CMakeCache.txt
-    ./buildall.sh -noclean -skiptests
+    ./buildall.sh -noclean -skiptests -notests
     rm -rf fe/target/dependency
     mvn -f fe/pom.xml dependency:copy-dependencies
     ./bin/make_release.sh -nopgo
