@@ -174,6 +174,7 @@ chmod 755 $wrapper
 
 install -d -m 0755 $PREFIX/usr/bin
 
+cp ${BUILD_DIR}/LICENSE.txt ${BUILD_DIR}/NOTICE.txt ${PREFIX}/${LIB_DIR}/
 
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera

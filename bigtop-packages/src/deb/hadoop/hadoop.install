@@ -10,6 +10,8 @@
 # /etc/hadoop/conf.empty/hadoop-env.sh
 /etc/hadoop/conf.empty/hadoop-policy.xml
 /etc/default/hadoop
+/usr/lib/hadoop/LICENSE.txt
+/usr/lib/hadoop/NOTICE.txt
 /usr/lib/hadoop/cloudera
 /usr/lib/hadoop/etc
 /usr/lib/hadoop/libexec/hadoop-config.sh

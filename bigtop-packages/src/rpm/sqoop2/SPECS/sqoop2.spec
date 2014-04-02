@@ -202,6 +202,8 @@ fi
 %{lib_sqoop}/bin/sqoop.sh
 %{lib_sqoop}/client-lib
 %{lib_sqoop}/cloudera
+%{lib_sqoop}/LICENSE.txt
+%{lib_sqoop}/NOTICE.txt
 
 %files server
 %attr(0755,root,root) %{initd_dir}/sqoop2-server

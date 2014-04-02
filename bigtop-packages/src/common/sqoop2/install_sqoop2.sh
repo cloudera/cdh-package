@@ -181,6 +181,8 @@ CATALINA_HOME=/usr/lib/bigtop-tomcat
 install -d ${PREFIX}/${CATALINA_HOME}/lib
 install -m 0644 ${DIST_DIR}/server/lib/sqoop-tomcat*.jar ${PREFIX}/${CATALINA_HOME}/lib/
 
+cp ${DIST_DIR}/{LICENSE,NOTICE}.txt ${PREFIX}/${LIB_DIR}/
+
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/

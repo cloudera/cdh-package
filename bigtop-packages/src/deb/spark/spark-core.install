@@ -15,6 +15,8 @@
 /usr/lib/spark/streaming
 /usr/lib/spark/ui-resources
 /usr/lib/spark/conf
+/usr/lib/spark/LICENSE
+/usr/lib/spark/NOTICE
 /usr/lib/spark/RELEASE
 /var/lib/spark/
 /var/log/spark/

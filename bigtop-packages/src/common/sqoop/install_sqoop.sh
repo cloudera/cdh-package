@@ -167,6 +167,8 @@ ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
 
 install -d -m 0755 ${PREFIX}/var/lib/sqoop
 
+cp ${BUILD_DIR}/{LICENSE,NOTICE}.txt ${PREFIX}/${LIB_DIR}/
+
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/

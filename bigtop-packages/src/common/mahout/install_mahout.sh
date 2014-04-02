@@ -145,6 +145,8 @@ exec $INSTALLED_LIB_DIR/bin/mahout "\$@"
 EOF
 chmod 755 $PREFIX/$BIN_DIR/mahout
 
+cp ${BUILD_DIR}/{LICENSE,NOTICE}.txt ${PREFIX}/${LIB_DIR}/
+
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/

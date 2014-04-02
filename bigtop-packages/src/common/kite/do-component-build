@@ -32,6 +32,7 @@ if [ -z "$GIT_REPO" ]; then
     
     cp `find . -name \*.jar` $KITE/dist/lib || :
     mv `find $KITE -name kite*.jar` $KITE/dist || :
+    mv `find $KITE -name LICENSE* -o -name NOTICE*` $KITE/dist || :
     (cd build ; tar czf kite-${FULL_VERSION}.tar.gz kite-${FULL_VERSION})
 else
     git add .

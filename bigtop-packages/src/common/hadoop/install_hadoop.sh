@@ -519,6 +519,11 @@ for symlink in `find ${CLIENT_DIR} ${CLIENT_MR1_DIR} -name $base_name*.jar`; do
     fi
 done
 
+cp hadoop-mapreduce-project/{LICENSE,NOTICE}.txt ${PREFIX}/usr/lib/hadoop-mapreduce/
+cp hadoop-common-project/hadoop-common/{LICENSE,NOTICE}.txt ${PREFIX}/usr/lib/hadoop/
+cp hadoop-yarn-project/{LICENSE,NOTICE}.txt ${PREFIX}/usr/lib/hadoop-yarn/
+cp hadoop-hdfs-project/hadoop-hdfs/{LICENSE,NOTICE}.txt ${PREFIX}/usr/lib/hadoop-hdfs/
+
 # Cloudera specific
 for map in hadoop_${HADOOP_DIR} hadoop-hdfs_${HDFS_DIR} hadoop-yarn_${YARN_DIR} \
            hadoop-mapreduce_${MAPREDUCE_DIR} hadoop-0.20-mapreduce_${MAPREDUCE_MR1_DIR} \

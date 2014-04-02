@@ -779,6 +779,9 @@ fi
 %{lib_hadoop}/sbin
 %{lib_hadoop}/bin
 %{lib_hadoop}/etc
+%{lib_hadoop}/LICENSE.txt
+%{lib_hadoop}/NOTICE.txt
+%{lib_hadoop}/etc
 %{lib_hadoop}/cloudera
 %{lib_hadoop}/libexec/hadoop-config.sh
 %{lib_hadoop}/libexec/hadoop-layout.sh

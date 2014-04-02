@@ -132,6 +132,8 @@ done
 # leave a doc symlink in place for compat. reasons
 ln -s /${DOC_DIR/#$PREFIX/} $LIB_DIR/docs
 
+cp ${BUILD_DIR}/{LICENSE,NOTICE}.txt ${LIB_DIR}/
+
 # Cloudera specific
 install -d -m 0755 $LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $LIB_DIR/cloudera/

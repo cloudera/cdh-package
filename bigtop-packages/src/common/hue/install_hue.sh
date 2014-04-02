@@ -185,6 +185,10 @@ rm -fv `find $PREFIX -iname "build_log.txt"`
 install -d ${PREFIX}/${DOC_DIR}
 cp -r ${BUILD_DIR}/docs/* ${PREFIX}/${DOC_DIR}/
 
+cp ${BUILD_DIR}/NOTICE.txt ${PREFIX}/${LIB_DIR}/
+
+cp ${BUILD_DIR}/ext/thirdparty/README.md ${PREFIX}/${LIB_DIR}/ext/thirdparty/README.md
+
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp $BUILD_DIR/cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera

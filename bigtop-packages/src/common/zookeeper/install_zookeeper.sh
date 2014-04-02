@@ -207,6 +207,10 @@ EOF
 done
 chmod 755 ${PREFIX}/${BIN_DIR}/* ${PREFIX}/${LIB_DIR}-native/*
 
+cp ${BUILD_DIR}/{LICENSE,NOTICE}.txt ${PREFIX}/${LIB_DIR}/
+cp ${BUILD_DIR}/src/c/{LICENSE,NOTICE.txt} ${PREFIX}/${LIB_DIR}-native/
+cp ${BUILD_DIR}/src/c/src/hashtable/LICENSE.txt ${PREFIX}/${LIB_DIR}-native/hashtable-LICENSE.txt
+
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/

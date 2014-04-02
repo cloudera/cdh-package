@@ -3,6 +3,7 @@
 /usr/lib/hue/desktop
 /usr/lib/hue/ext
 /usr/lib/hue/LICENSE.txt
+/usr/lib/hue/NOTICE.txt
 /usr/lib/hue/Makefile
 /usr/lib/hue/Makefile.buildvars
 /usr/lib/hue/Makefile.sdk

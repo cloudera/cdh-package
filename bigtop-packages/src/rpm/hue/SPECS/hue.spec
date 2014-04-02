@@ -266,6 +266,7 @@ fi
 %{hue_dir}/desktop
 %{hue_dir}/ext
 %{hue_dir}/LICENSE.txt
+%{hue_dir}/NOTICE.txt
 %{hue_dir}/Makefile
 %{hue_dir}/Makefile.buildvars
 %{hue_dir}/Makefile.sdk

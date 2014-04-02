@@ -119,5 +119,7 @@ mv -f ${PREFIX}/${LIB_DIR}/search-mr*.jar ${PREFIX}/${SOLR_MR_DIR}
 install -d -m 0755 ${PREFIX}/${DOC_DIR}
 cp -r ${BUILD_DIR}/samples ${PREFIX}/${DOC_DIR}/examples
 
+cp ${BUILD_DIR}/{LICENSE,NOTICE}.txt ${PREFIX}/${LIB_DIR}/
+
 versionless_symlinks ${PREFIX}/${LIB_DIR}/lib
 

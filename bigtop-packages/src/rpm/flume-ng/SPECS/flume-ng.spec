@@ -184,6 +184,8 @@ fi
 
 %dir %{etc_flume}.empty
 %dir %{lib_flume}
+%dir %{lib_flume}/NOTICE
+%dir %{lib_flume}/LICENSE
 %dir %{lib_flume}/bin
 %dir %{lib_flume}/lib
 %dir %{lib_flume}/tools

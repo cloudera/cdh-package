@@ -131,3 +131,5 @@ cat > ${PREFIX}/usr/bin/avro-tools <<EOF
 EOF
 chmod 0755 ${PREFIX}/usr/bin/avro-tools
 
+cp LICENSE.txt NOTICE.txt ${PREFIX}/${LIB_DIR}/
+

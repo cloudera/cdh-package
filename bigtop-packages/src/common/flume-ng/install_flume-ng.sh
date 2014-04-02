@@ -175,6 +175,8 @@ done
 mv $PREFIX/$FLUME_DIR/docs/*  ${DOC_DIR_PREFIX}/${DOC_DIR}/
 rm -rf $PREFIX/$FLUME_DIR/docs
 
+cp {LICENSE,NOTICE} ${PREFIX}/${FLUME_DIR}/
+
 # Cloudera specific
 install -d -m 0755 $PREFIX/$FLUME_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$FLUME_DIR/cloudera/
