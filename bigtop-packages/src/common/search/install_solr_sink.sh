@@ -70,6 +70,9 @@ while true ; do
         --installed-lib-dir)
         INSTALLED_LIB_DIR=$2 ; shift 2
         ;;
+        --extra-dir)
+        EXTRA_DIR=$2 ; shift 2
+        ;;
         --)
         shift ; break
         ;;
