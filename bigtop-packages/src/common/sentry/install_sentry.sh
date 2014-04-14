@@ -98,9 +98,8 @@ BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 install -d -m 0755 $LIB_DIR/lib
 
 TARBALL=`ls ${BUILD_DIR}/build/sentry-*.tar.gz`
-DIRECTORY=`basename ${TARBALL/.tar.gz/}`
+DIRECTORY=apache-`basename ${TARBALL/.tar.gz/}`-bin
 (cd ${LIB_DIR}/lib && tar --strip-components=2 -xvzf ${TARBALL} ${DIRECTORY}/lib)
-rm ${LIB_DIR}/lib/sentry-tests*.jar ${LIB_DIR}/lib/sentry-dist*.jar
 
 install -d -m 0755 ${SENTRY_DIR}/bin
 mv ${BUILD_DIR}/bin/* ${SENTRY_DIR}/bin

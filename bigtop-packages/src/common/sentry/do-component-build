@@ -33,7 +33,7 @@ if [ -z "$GIT_REPO" ]; then
     
     rm -rf build
     mkdir build
-    cp sentry-dist/target/sentry-*-dist.tar.gz build/sentry-${FULL_VERSION}.tar.gz
+    cp sentry-dist/target/apache-sentry-*-bin.tar.gz build/sentry-${FULL_VERSION}.tar.gz
 else
     git add .
     git commit -a -m "Temporary commit for tarball"
