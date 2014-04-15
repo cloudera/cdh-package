@@ -101,6 +101,11 @@ TARBALL=`ls ${BUILD_DIR}/build/sentry-*.tar.gz`
 DIRECTORY=apache-`basename ${TARBALL/.tar.gz/}`-bin
 (cd ${LIB_DIR}/lib && tar --strip-components=2 -xvzf ${TARBALL} ${DIRECTORY}/lib)
 
+# Sentry dist tarball is bundling a bunch of hadoop/hive jars that it shouldn't. Here, we have a whitelist, we get
+# rid of everything that we don't care about from the lib directory of the sentry dist tarball
+# TODO: Get rid of this once CDH-18672 gets committed
+(cd ${LIB_DIR}/lib; ls * | grep -v 'sentry.*\.jar\|commons-beanutils-1\.7\.0\.jar\|commons-lang-2\.6\.jar\|shiro-core.*\.jar' | xargs rm -f)
+
 install -d -m 0755 ${SENTRY_DIR}/bin
 mv ${BUILD_DIR}/bin/* ${SENTRY_DIR}/bin
 
