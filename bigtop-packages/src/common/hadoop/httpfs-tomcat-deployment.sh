@@ -21,11 +21,28 @@ TOMCAT_CONF=${TOMCAT_CONF:-`readlink -e /etc/hadoop-httpfs/tomcat-conf`}
 TOMCAT_DEPLOYMENT=${TOMCAT_DEPLOYMENT:-/var/lib/hadoop-httpfs/tomcat-deployment}
 HTTPFS_HOME=${HTTPFS_HOME:-/usr/lib/hadoop-httpfs}
 
+function copy_and_resolve() {
+    source_dir=${1}
+    target_dir=${2}
+
+    # Some directories contain both configuration and binaries, so we have to copy the contents individually
+    mkdir -p ${target_dir}
+    cp -r ${source_dir}/* ${target_dir}
+
+    for source_symlink in `find ${source_dir} -type l`; do
+        # This is relative to the source specifically, so that relative symlinks are consistent
+        symlink_location=${source_symlink/${source_dir}/}
+        symlink_target=`readlink -e ${source_symlink}`
+        rm -f ${target_dir}${symlink_location}
+        cp -r ${symlink_target} ${target_dir}${symlink_location}
+    done
+}
+
 rm -rf ${TOMCAT_DEPLOYMENT}
 mkdir ${TOMCAT_DEPLOYMENT}
-cp -r ${TOMCAT_CONF}/conf ${TOMCAT_DEPLOYMENT}/
-cp -r ${HTTPFS_HOME}/webapps ${TOMCAT_DEPLOYMENT}/
-cp -r ${TOMCAT_CONF}/WEB-INF/* ${TOMCAT_DEPLOYMENT}/webapps/webhdfs/WEB-INF/
+copy_and_resolve ${TOMCAT_CONF}/conf    ${TOMCAT_DEPLOYMENT}/conf
+copy_and_resolve ${HTTPFS_HOME}/webapps ${TOMCAT_DEPLOYMENT}/webapps
+copy_and_resolve ${TOMCAT_CONF}/WEB-INF ${TOMCAT_DEPLOYMENT}/webapps/webhdfs/WEB-INF
 
 if [ -n "${BIGTOP_CLASSPATH}" ] ; then
   sed -i -e "s#^\(common.loader=.*\)\$#\1,${BIGTOP_CLASSPATH/:/,}#" ${TOMCAT_DEPLOYMENT}/conf/catalina.properties
