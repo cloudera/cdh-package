@@ -77,8 +77,10 @@ LIB_DIR=${LIB_DIR:-/usr/lib/pig}
 
 # First we'll move everything into lib
 install -d -m 0755 $PREFIX/$LIB_DIR
-cp $BUILD_DIR/datafu-*.jar $PREFIX/$LIB_DIR
-cp ${BUILD_DIR}/LICENSE ${BUILD_DIR}/NOTICE $PREFIX/$LIB_DIR/
+cp $BUILD_DIR/dist/datafu-*.jar $PREFIX/$LIB_DIR
+
+install -d -m 0755 $PREFIX/$LIB_DIR/datafu
+cp ${BUILD_DIR}/LICENSE ${BUILD_DIR}/NOTICE $PREFIX/$LIB_DIR/datafu/
 
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/datafu/cloudera

@@ -61,7 +61,7 @@ env FULL_VERSION=%{datafu_patched_version} bash $RPM_SOURCE_DIR/do-component-bui
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh $RPM_SOURCE_DIR/install_datafu.sh \
-          --build-dir=dist \
+          --build-dir=. \
           --prefix=$RPM_BUILD_ROOT
 
 #######################
@@ -69,7 +69,7 @@ sh $RPM_SOURCE_DIR/install_datafu.sh \
 #######################
 %files 
 %defattr(-,root,root,755)
-%{lib_datafu}
-%{lib_datafu}/datafu/cloudera/cdh_version.properties
+%{lib_datafu}/*
+%{lib_datafu}/datafu
 
 
