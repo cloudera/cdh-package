@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -26,13 +26,13 @@ if [ -z "$GIT_REPO" ]; then
     
     rm -rf build
     mkdir -p $KITE/dist/lib
-    cp -r * $KITE || :
     
     mvn clean -DskipTests $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
     
-    cp `find . -name \*.jar` $KITE/dist/lib || :
-    mv `find $KITE -name kite*.jar` $KITE/dist || :
-    mv `find $KITE -name LICENSE* -o -name NOTICE*` $KITE/dist || :
+    cp `find ./ -name \*.jar | grep -v '\./lib'` $KITE/dist/lib || :
+    mv `find ./ -name kite*.jar` $KITE/dist || :
+    mv `find ./ -name LICENSE* -o -name NOTICE*` $KITE/dist || :
+
     (cd build ; tar czf kite-${FULL_VERSION}.tar.gz kite-${FULL_VERSION})
 else
     git add .
