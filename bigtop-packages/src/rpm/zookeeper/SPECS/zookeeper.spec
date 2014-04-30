@@ -74,6 +74,7 @@ Source3: zookeeper-server.sh
 Source4: zookeeper-server.sh.suse
 Source5: zookeeper.1
 Source6: zoo.cfg
+Source7: zookeeper.default
 BuildRequires: ant, autoconf, automake, cppunit-devel
 Requires(pre): coreutils, shadow-utils, /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): %{alternatives_dep}
@@ -135,7 +136,7 @@ env FULL_VERSION=%{zookeeper_patched_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-cp $RPM_SOURCE_DIR/zookeeper.1 $RPM_SOURCE_DIR/zoo.cfg .
+cp $RPM_SOURCE_DIR/zookeeper.1 $RPM_SOURCE_DIR/zoo.cfg $RPM_SOURCE_DIR/zookeeper.default .
 env FULL_VERSION=%{zookeeper_patched_version} bash %{SOURCE2} \
           --build-dir=build/%{name}-%{zookeeper_patched_version} \
           --doc-dir=%{doc_zookeeper} \
@@ -196,6 +197,7 @@ fi
 %files
 %defattr(-,root,root)
 %config(noreplace) %{etc_zookeeper}/conf.dist
+%config(noreplace) /etc/default/zookeeper
 %{lib_zookeeper}
 %{bin_zookeeper}/zookeeper-server
 %{bin_zookeeper}/zookeeper-server-initialize
