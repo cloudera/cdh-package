@@ -184,17 +184,21 @@ getent passwd impala >/dev/null || /usr/sbin/useradd --comment "Impala" --shell 
 %{alternatives_cmd} --install /usr/lib/impala/sbin %{name} /usr/lib/impala/sbin-debug   10
 
 %preun
-%{alternatives_cmd} --remove impala-conf /etc/impala/conf.dist || :
-%{alternatives_cmd} --remove %{name} /usr/lib/impala/sbin-retail || :
-%{alternatives_cmd} --remove %{name} /usr/lib/impala/sbin-debug || :
+if [ "$1" = 0 ]; then
+    %{alternatives_cmd} --remove impala-conf /etc/impala/conf.dist || :
+    %{alternatives_cmd} --remove %{name} /usr/lib/impala/sbin-retail || :
+    %{alternatives_cmd} --remove %{name} /usr/lib/impala/sbin-debug || :
+fi
 
 %post udf-devel
 %{alternatives_cmd} --install %{_libdir}/libImpalaUdf.a libImpalaUdf %{_libdir}/libImpalaUdf-retail.a  20
 %{alternatives_cmd} --install %{_libdir}/libImpalaUdf.a libImpalaUdf %{_libdir}/libImpalaUdf-debug.a 10
 
 %preun udf-devel
-%{alternatives_cmd} --remove libImpalaUdf %{_libdir}/libImpalaUdf-retail.a || :
-%{alternatives_cmd} --remove libImpalaUdf %{_libdir}/libImpalaUdf-debug.a || :
+if [ "$1" = 0 ]; then
+    %{alternatives_cmd} --remove libImpalaUdf %{_libdir}/libImpalaUdf-retail.a || :
+    %{alternatives_cmd} --remove libImpalaUdf %{_libdir}/libImpalaUdf-debug.a || :
+fi
 
 %files udf-devel
 %defattr(-,root,root)
