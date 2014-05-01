@@ -19,7 +19,7 @@ set -ex
 [ -f cdh-parcel.props ] && . cdh-parcel.props
 
 # These two variables can be and usually are overriden from the Jenkins job
-PKG_ARCHIVE=${PKG_ARCHIVE:-"http://repos.jenkins.cloudera.com/cdh4-nightly/"}
+PKG_ARCHIVE=${PKG_ARCHIVE:-"http://repos.jenkins.cloudera.com/cdh4.7.0-nightly/"}
 PKG_CDH_VERSION=${PKG_CDH_VERSION:-"4"}
 
 # If PKG_FORMAT not specified assume tarballs
