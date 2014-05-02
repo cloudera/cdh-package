@@ -28,7 +28,7 @@ if [ -z "$GIT_REPO" ]; then
 
     # Build Java libraries
     (cd lang/java;
-        mvn package -DskipTests -Dhadoop.version=2 $@;
+        mvn install -DskipTests -Dhadoop.version=2 $@;
         rm -rf mapred/target/classes/;
         mvn -Dhadoop.version=2 -P dist package -DskipTests -DskipITs -Davro.version=$VERSION javadoc:aggregate $MAVEN_INST_DEPLOY $@)
 
