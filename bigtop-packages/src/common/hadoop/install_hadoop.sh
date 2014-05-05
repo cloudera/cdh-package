@@ -188,6 +188,9 @@ for component in $HADOOP_DIR/bin/hadoop $HDFS_DIR/bin/hdfs $YARN_DIR/bin/yarn $M
   cat > $wrapper <<EOF
 #!/bin/bash
 
+BIGTOP_DEFAULTS_DIR=\${BIGTOP_DEFAULTS_DIR-/etc/default}
+[ -n "\${BIGTOP_DEFAULTS_DIR}" -a -r \${BIGTOP_DEFAULTS_DIR}/hadoop ] && . \${BIGTOP_DEFAULTS_DIR}/hadoop
+
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
@@ -197,6 +200,9 @@ exec ${component#${PREFIX}} "\$@"
 EOF
   chmod 755 $wrapper
 done
+
+# Setting HADOOP_MAPRED_HOME to MR1 doesn't make sense in a YARN context
+sed -i -e "$ i export HADOOP_MAPRED_HOME=${MAPREDUCE_DIR/${PREFIX}/}\n" ${BIN_DIR}/yarn
 
 #libexec
 install -d -m 0755 ${SYSTEM_LIBEXEC_DIR}

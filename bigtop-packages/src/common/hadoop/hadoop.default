@@ -20,5 +20,8 @@ export HADOOP_CONF_DIR=/etc/hadoop/conf
 
 export HADOOP_COMMON_HOME=/usr/lib/hadoop
 export HADOOP_HDFS_HOME=/usr/lib/hadoop-hdfs
-export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce
 export HADOOP_YARN_HOME=/usr/lib/hadoop-yarn
+
+# Set HADOOP_MAPRED_HOME to /usr/lib/hadoop-0.20-mapreduce to use MR1
+export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce
+
