@@ -1,0 +1,22 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	env FULL_VERSION=${HADOOP_LZO_PATCHED_VERSION} bash debian/do-component-build -Divy.home=${HOME}/.ivy2
+	mkdir -p debian/tmp
+	tar cf - --exclude=debian/\* . | (cd debian/tmp && tar xf -)
+
+override_dh_auto_install:
+	bash -x debian/install_hadoop-lzo.sh \
+	  --build-dir=. \
+	  --prefix=debian/tmp
+	install debian/gpl-3.0.txt debian/tmp/usr/lib/hadoop/lib/COPYING.hadoop-lzo

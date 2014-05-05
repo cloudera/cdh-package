@@ -1,0 +1,30 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	echo "Skipping dh_auto_configure..."
+
+override_dh_auto_test:
+	echo "Skipping dh_auto_test..."
+
+override_dh_auto_clean:
+	echo "Skipping dh_auto_clean..."
+
+override_dh_auto_build:
+	env FULL_VERSION=${IMPALA_LZO_PATCHED_VERSION} NATIVE_BUILD=true bash debian/do-component-build
+	mkdir -p debian/tmp
+	tar cf - --exclude=debian/\* . | (cd debian/tmp && tar xf -)
+
+override_dh_auto_install:
+	env FULL_VERSION=${IMPALA_LZO_PATCHED_VERSION} NATIVE_BUILD=true bash debian/install_impala-lzo.sh --build-dir=. --prefix=debian/impala-lzo
+	install debian/gpl-2.0.txt debian/impala-lzo/usr/lib/impala/lib/COPYING.impala-lzo
+	dh_install -i

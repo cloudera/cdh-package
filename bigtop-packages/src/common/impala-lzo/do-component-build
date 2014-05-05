@@ -1,0 +1,64 @@
+#!/bin/bash
+
+set -ex
+
+export IMPALA_LZO_IMPALA_REF=origin/cdh5-1.3
+export IMPALA_LZO_HADOOP_LZO_REF=origin/gplextras5-0.4.15
+
+if [ -z "$GIT_REPO" ]; then
+    . /mnt/toolchain/toolchain.sh
+
+    export LLVM_HOME=$TOOLCHAIN_HOME/llvm-3.3
+    export PATH=$LLVM_HOME/bin:$PATH
+
+    export IMPALA_LZO=`pwd`
+    if [ -z "${WORKSPACE}" ]; then
+        WORKSPACE=~/impala-lzo-repos
+        DELETE_WORKSPACE=true
+    fi
+    export IMPALA_HOME=$WORKSPACE/Impala
+    export HADOOP_LZO=$WORKSPACE/hadoop-lzo
+
+    if [ -n "$NATIVE_BUILD" ]; then
+        mkdir -p $WORKSPACE
+
+        [ -e "$IMPALA_HOME" ] && rm -rf $IMPALA_HOME
+        (cd $WORKSPACE && git clone git://github.sf.cloudera.com/CDH/Impala.git)
+        (cd $IMPALA_HOME && git checkout ${IMPALA_LZO_IMPALA_REF})
+
+        [ -e "$HADOOP_LZO" ] && rm -rf $HADOOP_LZO
+        (cd $WORKSPACE && git clone git://github.sf.cloudera.com/CDH/hadoop-lzo.git)
+        (cd $HADOOP_LZO && git checkout ${IMPALA_LZO_HADOOP_LZO_REF})
+
+        (cd $HADOOP_LZO && ant package)
+
+        # FIXME: IMP-854
+        if cat /etc/issue | grep '\(Ubuntu\|Debian\)'; then
+            SNAPPY_PREAMBLE='build_preamble $IMPALA_HOME/thirdparty/snappy-${IMPALA_SNAPPY_VERSION} Snappy'
+            REG_EXP="s#${SNAPPY_PREAMBLE}#${SNAPPY_PREAMBLE}\n./autogen.sh#"
+            (cd $IMPALA_HOME && sed -i -e "$REG_EXP" bin/build_thirdparty.sh)
+        fi
+
+        (cd $IMPALA_HOME && \
+            . bin/impala-config.sh && \
+            ./buildall.sh -noclean -skiptests)
+
+        if [ -n "${DELETE_WORKSPACE}" ]; then
+            rm -r ${WORKSPACE}
+        fi
+    fi
+
+    rm -rf impala-lzo-${FULL_VERSION}
+    ALL_FILES=`echo *`
+    mkdir -p impala-lzo-${FULL_VERSION}
+    cp -r $ALL_FILES impala-lzo-${FULL_VERSION}/
+    mkdir -p build
+    tar czf build/impala-lzo-${FULL_VERSION}.tar.gz impala-lzo-${FULL_VERSION}
+else
+    git init
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=impala-lzo-${FULL_VERSION}/ --format=tar HEAD |gzip > build/impala-lzo-${FULL_VERSION}.tar.gz
+fi
+

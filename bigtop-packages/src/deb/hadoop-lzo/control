@@ -1,0 +1,22 @@
+Source: hadoop-lzo
+Section: devel
+Priority: extra
+Maintainer: Cloudera Inc. <https://issues.cloudera.org>
+Build-Depends: debhelper (>= 5), liblzo2-dev, ant
+Standards-Version: 3.8.0
+Homepage: https://github.com/cloudera/hadoop-lzo
+
+Package: hadoop-lzo
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: GPL compression libraries for Hadoop in CDH 4
+ Hadoop can use some compression libraries like LZO that are released
+ under a GPL license. GPL is not compatible with the Apache license.
+ This package installs those libraries into hadoop so they are usable.
+
+Package: hadoop-lzo-mr1
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, hadoop-lzo (= ${source:Version})
+Description: Hadoop LZO libraries for clusters using the hadoop-0.20-mapreduce
+ packages
+

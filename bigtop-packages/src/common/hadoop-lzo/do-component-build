@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ -z "$GIT_REPO" ]; then
+    ant -DskipTests=on -DskipExamples=on -DskipFetch=on -DskipEmbeddable=on \
+        -Dversion=${FULL_VERSION} jar compile-native package
+
+    (cd build && tar czf hadoop-lzo-${FULL_VERSION}.tar.gz hadoop-lzo-${FULL_VERSION})
+else
+    git init
+    git add .
+    git commit -a -m "Temporary commit for tarball"
+    mkdir -p build
+    git archive --prefix=hadoop-lzo-${FULL_VERSION}/ --format=tar HEAD |gzip > build/hadoop-lzo-${FULL_VERSION}.tar.gz
+fi
+

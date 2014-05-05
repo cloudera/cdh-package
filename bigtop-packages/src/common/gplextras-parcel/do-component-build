@@ -1,0 +1,238 @@
+#!/bin/bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -ex
+
+[ -f gplextras-parcel.props ] && . gplextras-parcel.props
+
+PKG_ARCHIVE=${PKG_ARCHIVE:-"http://repos.jenkins.cloudera.com/gplextras5-nightly"}
+GPLEXTRAS_VERSION=${GPLEXTRAS_VERSION:-"5.0.0"}
+
+# If PKG_FORMAT not specified assume tarballs
+if [ -z "$PKG_FORMAT" ] ; then
+  rm -rf build
+  mkdir build
+  cat > build/gplextras-parcel.props <<__EOT__
+PKG_ARCHIVE="$PKG_ARCHIVE"
+GPLEXTRAS_VERSION="$GPLEXTRAS_VERSION"
+__EOT__
+  tar -C build -czf build/gplextras-parcel-${FULL_VERSION}.tar.gz gplextras-parcel.props
+  exit 0
+fi
+
+REDHAT_RELEASES="rhel|redhat|centos|red.hat"
+SUSE_RELEASES="suse|sles"
+UBUNTU_RELEASES="lucid|precise"
+ARC="`uname -m`"
+
+if [ "$ARC" = "x86_64" ] ; then
+  DEB_ARC="amd64"
+else
+  DEB_ARC="i386"
+fi
+
+if egrep -i $REDHAT_RELEASES /etc/*release; then
+  if fgrep "6." /etc/*release; then
+    PKGS="${PKG_ARCHIVE}/redhat/6/${ARC}/gplextras/${GPLEXTRAS_VERSION}/RPMS"
+  elif fgrep "5." /etc/*release; then
+    PKGS="${PKG_ARCHIVE}/redhat/5/${ARC}/gplextras/${GPLEXTRAS_VERSION}/RPMS"
+  fi
+elif egrep -i $UBUNTU_RELEASES /etc/*release ;then
+  for release in `echo $UBUNTU_RELEASES | tr '|' ' '` ; do
+    if fgrep -q $release /etc/*release ; then
+      PKGS="`curl ${PKG_ARCHIVE}/ubuntu/${release}/${DEB_ARC}/gplextras/dists/${release}-gplextras${GPLEXTRAS_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
+             sed -ne '/^Filename:/s#^Filename: #'"${PKG_ARCHIVE}/ubuntu/${release}/${DEB_ARC}/gplextras/"'#p'`"
+    fi
+  done
+elif [ -f /etc/debian_version ] ;then
+  release=wheezy
+  PKGS="`curl ${PKG_ARCHIVE}/debian/${release}/${DEB_ARC}/gplextras/dists/${release}-gplextras${GPLEXTRAS_VERSION}/contrib/binary-${DEB_ARC}/Packages 2>/dev/null | \
+         sed -ne '/^Filename:/s#^Filename: #'"${PKG_ARCHIVE}/debian/${release}/${DEB_ARC}/gplextras/"'#p'`"
+elif egrep -i $SUSE_RELEASES /etc/*release; then
+  PKGS="${PKG_ARCHIVE}/sles/11/${ARC}/gplextras/${GPLEXTRAS_VERSION}/RPMS"
+fi
+
+if [-z $PKGS]; then
+  echo "Looks like we don't support the following OS:"
+  cat /etc/*release
+  exit 1
+fi
+
+# Download the packages
+rm -rf dl
+mkdir dl
+(cd dl ; wget -N -r -l2 --no-parent $PKGS)
+
+# Make sure we filter out the most recent versions of the packages
+#RPMS=`find dl -name \*.rpm -printf '%p\t'  -exec rpm -q --qf '%{NAME}\n' -p {} \; 2>/dev/null`
+
+# Unpack the bits
+rm -rf build
+mkdir -p build/seen
+
+# We don't want to recurse into ourselves 
+rm -rf `find dl -type f -name gplextras-parcel\*`
+
+for pkg in $(ls -t `find dl -type f`) ; do
+  case $pkg in
+     *.deb) PKG_NAME=`dpkg -I $pkg | grep Package: | cut -f3 -d\  `
+            if [ ! -f build/seen/$PKG_NAME ] ; then
+              PKG_VERSION=`dpkg -I $pkg | grep Version: | cut -f2 -d:`
+              dpkg -x $pkg ./build
+              echo $PKG_VERSION > build/seen/${PKG_NAME}
+            fi
+            ;;
+     *.rpm) PKG_NAME=`rpm -q --qf '%{NAME}' -p $pkg`
+            if [ ! -f build/seen/$PKG_NAME ] ; then
+              PKG_VERSION=`rpm -q --qf '%{VERSION}' -p $pkg`
+              rpm2cpio $pkg | (cd build ; cpio -i --make-directories)
+              echo $PKG_VERSION > build/seen/$PKG_NAME
+            fi
+            ;;
+  esac
+  rm $pkg
+done
+
+# Fix the symlinks
+for link in `find build/usr/lib/ -type l` ; do
+  target=`readlink $link`
+  TOPDIR=`echo $link | sed -e 's#^build/usr/lib/##' -e 's#[^/]\+#..#g'`
+  case $target in
+    /usr/lib/*)
+                rm -f $link
+                ln -s $TOPDIR/lib/`echo $target |sed -e 's#/usr/lib/##'` $link
+                ;;
+    /usr/share/*)
+                rm -f $link
+                ln -s $TOPDIR/share/`echo $target |sed -e 's#/usr/share/##'` $link
+  esac
+done
+
+DISTRO_LESS_FULL_VERSION=`echo $GPLEXTRAS_PARCEL_CUSTOM_VERSION | sed -e 's#\.[^\.]*$##'`
+DASH_SEPARATED_CUSTOM_VERSION=`echo $GPLEXTRAS_PARCEL_CUSTOM_VERSION | sed -e 's/\.\([^\.]*\)$/-\1/'`
+
+# Create a bunch of metadata
+mkdir -p build/meta
+(cat <<__EOT__
+{
+  "schema_version":     1,
+  "name":               "GPLEXTRAS",
+  "version":            "$DISTRO_LESS_FULL_VERSION",
+  "extraVersionInfo": {
+    "fullVersion":        "$DASH_SEPARATED_CUSTOM_VERSION",
+    "baseVersion":        "$GPLEXTRAS_PARCEL_BASE_VERSION",
+    "patchCount":         "$GPLEXTRAS_CUSTOMER_PATCH"
+  },
+
+  "conflicts":          "CDH (<< ${GPLEXTRAS_VERSION}), CDH (>> ${GPLEXTRAS_VERSION}.)",
+
+  "setActiveSymlink":   true,
+
+  "scripts": {
+    "defines": "gplextras_env.sh"
+  },
+
+  "packages": [
+__EOT__
+
+JSON_IS_STUPID=""
+for pkg in build/seen/* ; do
+  cat <<__EOT__
+    ${JSON_IS_STUPID}{ "name":    "`basename $pkg`",
+      "version": "`cat $pkg`"
+    }
+__EOT__
+  JSON_IS_STUPID=","
+done
+
+cat <<__EOT__
+  ],
+
+  "components": [
+__EOT__
+
+JSON_IS_STUPID=""
+for pkg in build/seen/* ; do
+  cat <<__EOT__
+    ${JSON_IS_STUPID}{ "name":    "`basename $pkg`",
+      "version": "`cat $pkg`",
+      "pkg_version": "`cat $pkg`"
+    }
+__EOT__
+  JSON_IS_STUPID=","
+done
+
+cat <<__EOT__
+  ],
+
+  "provides": [
+    "cdh-plugin",
+    "impala-plugin",
+    "solr-plugin",
+    "hadoop_lzo"
+  ],
+
+  "users": { },
+
+  "groups": [ ]
+}
+__EOT__
+) > build/meta/parcel.json
+
+# gplextras_env.sh
+(echo "#!/bin/bash"
+cat <<__EOT__
+GPLEXTRAS_DIRNAME=\${PARCEL_DIRNAME:-"GPLEXTRAS-$DISTRO_LESS_FULL_VERSION"}
+
+if [ -n "\${HADOOP_CLASSPATH}" ]; then
+  export HADOOP_CLASSPATH="\${HADOOP_CLASSPATH}:\$PARCELS_ROOT/\$GPLEXTRAS_DIRNAME/lib/hadoop/lib/*"
+else
+  export HADOOP_CLASSPATH="\$PARCELS_ROOT/\$GPLEXTRAS_DIRNAME/lib/hadoop/lib/*"
+fi
+
+if [ -n "\${MR2_CLASSPATH}" ]; then
+  export MR2_CLASSPATH="\${MR2_CLASSPATH}:\$PARCELS_ROOT/\$GPLEXTRAS_DIRNAME/lib/hadoop/lib/*"
+else
+  export MR2_CLASSPATH="\$PARCELS_ROOT/\$GPLEXTRAS_DIRNAME/lib/hadoop/lib/*"
+fi
+
+if [ -n "\${HBASE_CLASSPATH}" ]; then
+  export HBASE_CLASSPATH="\${HBASE_CLASSPATH}:\$PARCELS_ROOT/\$GPLEXTRAS_DIRNAME/lib/hadoop/lib/*"
+else
+  export HBASE_CLASSPATH="\$PARCELS_ROOT/\$GPLEXTRAS_DIRNAME/lib/hadoop/lib/*"
+fi
+
+if [ -n "\${FLUME_CLASSPATH}" ]; then
+  export FLUME_CLASSPATH="\${FLUME_CLASSPATH}:\$PARCELS_ROOT/\$GPLEXTRAS_DIRNAME/lib/hadoop/lib/*"
+else
+  export FLUME_CLASSPATH="\$PARCELS_ROOT/\$GPLEXTRAS_DIRNAME/lib/hadoop/lib/*"
+fi
+
+if [ -n "\${JAVA_LIBRARY_PATH}" ]; then
+  export JAVA_LIBRARY_PATH="\${JAVA_LIBRARY_PATH}:\$PARCELS_ROOT/\$GPLEXTRAS_DIRNAME/lib/hadoop/lib/native"
+else
+  export JAVA_LIBRARY_PATH="\$PARCELS_ROOT/\$GPLEXTRAS_DIRNAME/lib/hadoop/lib/native"
+fi
+
+if [ -n "\${LD_LIBRARY_PATH}" ]; then
+  export LD_LIBRARY_PATH="\${LD_LIBRARY_PATH}:\$PARCELS_ROOT/\$GPLEXTRAS_DIRNAME/lib/impala/lib"
+else
+  export LD_LIBRARY_PATH="\$PARCELS_ROOT/\$GPLEXTRAS_DIRNAME/lib/impala/lib"
+fi
+
+__EOT__
+) > build/meta/gplextras_env.sh
+

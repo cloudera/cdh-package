@@ -1,0 +1,23 @@
+Format: http://dep.debian.net/deps/dep5
+Source: http://github.com/cloudera/Impala-lzo
+Upstream-Name: Impala LZO
+
+Files: lzo-header.h
+Copyright: 1996-2010, Markus Franz Xaver Johannes Oberhumer
+License: GPL-2
+
+Files: *
+Copyright: 2012, Cloudera, Inc.
+License: GPL-2
+
+Files: debian/*
+Copyright: 2012, Cloudera, Inc.
+License: Apache-2.0
+
+License: GPL-2
+ On Debian systems, the complete text of the GPL 2.0 license
+ can be found in "/usr/share/common-licenses/GPL-2".
+
+License: Apache-2.0
+ On Debian systems, the complete text of the Apache 2.0 license
+ can be found in "/usr/share/common-licenses/Apache-2.0".
