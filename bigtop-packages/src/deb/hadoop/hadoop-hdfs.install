@@ -1,5 +1,6 @@
 /etc/security/limits.d/hdfs.conf
 /etc/hadoop/conf.empty/hdfs-site.xml
+/etc/hadoop/conf.impala
 /usr/lib/hadoop-hdfs
 /usr/lib/hadoop/libexec/hdfs-config.sh
 /usr/lib/hadoop/libexec/init-hdfs.sh

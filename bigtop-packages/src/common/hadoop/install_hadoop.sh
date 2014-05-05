@@ -454,6 +454,29 @@ ln -s ${HADOOP_ETC_DIR##${PREFIX}}/conf ${HADOOP_DIR}/etc/hadoop
 install -d -m 0755 ${YARN_DIR}/etc
 ln -s ${HADOOP_ETC_DIR##${PREFIX}}/conf ${YARN_DIR}/etc/hadoop
 
+cp -r ${DISTRO_DIR}/conf.empty ${HADOOP_ETC_DIR}/conf.impala
+rm -f ${HADOOP_ETC_DIR}/conf.impala/{mapred,capacity,container,yarn,fair-scheduler}*
+IMPALA_CONFIG="\
+  <property>\\n\
+    <name>dfs.client.read.shortcircuit</name>\\n\
+    <value>true</value>\\n\
+  </property>\\n\
+  <property>\\n\
+    <name>dfs.client.file-block-storage-locations.timeout.millis</name>\\n\
+    <value>10000</value>\\n\
+  </property>\\n\
+  <property>\\n\
+    <name>dfs.domain.socket.path</name>\\n\
+    <value>/var/run/hadoop-hdfs/dn._PORT</value>\\n\
+  </property>\\n\
+  <property>\\n\
+    <name>dfs.datanode.hdfs-blocks-metadata.enabled</name>\\n\
+    <value>true</value>\\n\
+  </property>\\n"
+for conf_dir in ${HADOOP_ETC_DIR}/conf.impala ${HADOOP_ETC_DIR}/conf.pseudo; do
+    sed -i -e "s#</configuration>#\n${IMPALA_CONFIG}\n</configuration>#" ${conf_dir}/hdfs-site.xml
+done
+
 # Create log, var and lib
 install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-hdfs
 install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-yarn
