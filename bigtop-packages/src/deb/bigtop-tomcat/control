@@ -15,7 +15,7 @@
 Source: bigtop-tomcat
 Section: misc
 Priority: extra
-Maintainer: Bigtop <dev@bigtop.apache.org>
+Maintainer: Cloudera Inc. <https://issues.cloudera.org>
 Build-Depends: debhelper (>= 7.0.50~)
 Standards-Version: 3.8.0
 Homepage: http://tomcat.apache.org/

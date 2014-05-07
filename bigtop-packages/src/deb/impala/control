@@ -16,7 +16,7 @@
 Source: impala
 Section: misc
 Priority: extra
-Maintainer: Sean Mackrory <sean@cloudera.com>
+Maintainer: Cloudera Inc. <https://issues.cloudera.org>
 Build-Depends: debhelper (>= 7.0.0~)
 Standards-Version: 3.8.0
 Homepage: http://cloudera.com/impala

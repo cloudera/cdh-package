@@ -16,7 +16,7 @@
 Source: hadoop
 Section: misc
 Priority: extra
-Maintainer: Bigtop <dev@bigtop.apache.org>
+Maintainer: Cloudera Inc. <https://issues.cloudera.org>
 Build-Depends: debhelper (>= 7.0.50~), liblzo2-dev, libzip-dev, sharutils, g++ (>= 4), libfuse-dev, libssl-dev, cmake, pkg-config, python, automake, autoconf (>= 2.61), make, libsnappy1-dev | libsnappy-dev
 Standards-Version: 3.8.0
 Homepage: http://hadoop.apache.org/core/
