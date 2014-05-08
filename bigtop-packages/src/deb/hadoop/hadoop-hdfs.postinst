@@ -27,6 +27,7 @@ case "$1" in
 	chown hdfs:hadoop /var/lib/hadoop-hdfs/ /var/lib/hadoop-hdfs/cache /var/run/hadoop-hdfs
 	chmod 0755 /var/lib/hadoop-hdfs /var/run/hadoop-hdfs
 	chmod 1777 /var/lib/hadoop-hdfs/cache
+	update-alternatives --install /etc/hadoop/conf hadoop-conf /etc/hadoop/conf.impala 5
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

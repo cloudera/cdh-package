@@ -673,6 +673,14 @@ if [ "$1" = 0 ]; then
   %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.empty || :
 fi
 
+%post hdfs
+%{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.impala 5
+
+%preun hdfs
+if [ "$1" = 0 ]; then
+  %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.impala || :
+fi
+
 %preun httpfs
 if [ $1 = 0 ]; then
   service %{name}-httpfs stop > /dev/null 2>&1
@@ -705,6 +713,7 @@ fi
 %files hdfs
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty/hdfs-site.xml
+%config(noreplace) %{etc_hadoop}/conf.impala
 %config(noreplace) /etc/security/limits.d/hdfs.conf
 %{lib_hdfs}
 %{lib_hadoop}/libexec/hdfs-config.sh
