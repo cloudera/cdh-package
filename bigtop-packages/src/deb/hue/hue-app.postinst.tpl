@@ -38,7 +38,7 @@ export DESKTOP_LOG_DIR=/var/log/hue
 case "$1" in
     configure)
         (cd $ROOT; $ROOT/build/env/bin/python $ROOT/tools/app_reg/app_reg.py --remove $APP) ||:
-        (cd $ROOT; $ROOT/build/env/bin/python $ROOT/tools/app_reg/app_reg.py --install $APP_DIR --relative-paths)
+        (cd $ROOT; $ROOT/build/env/bin/python $ROOT/tools/app_reg/app_reg.py --install $APP_DIR --relative-paths >> $DESKTOP_LOG_DIR/hue_install.log 2>&1)
         chown -R hue:hue /var/log/hue /var/lib/hue
     ;;
 

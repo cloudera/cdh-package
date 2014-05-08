@@ -116,7 +116,7 @@ export DESKTOP_LOG_DIR=/var/log/hue \
 if [ "$1" != 1 ] ; then \
   echo %{hue_dir}/apps/%1 >> %{hue_dir}/.re_register \
 fi \
-%{hue_dir}/build/env/bin/python %{hue_dir}/tools/app_reg/app_reg.py --install %{apps_dir}/%1 --relative-paths \
+%{hue_dir}/build/env/bin/python %{hue_dir}/tools/app_reg/app_reg.py --install %{apps_dir}/%1 --relative-paths >> $DESKTOP_LOG_DIR/hue_install.log 2>&1 \
 chown -R hue:hue /var/log/hue /var/lib/hue
 
 # Preun macro for apps
