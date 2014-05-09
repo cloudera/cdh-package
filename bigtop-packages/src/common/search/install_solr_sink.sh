@@ -115,9 +115,13 @@ cp -r ${BUILD_DIR}/search-dist/target/dist/* ${PREFIX}/${LIB_DIR}
 install -d -m 0755 ${PREFIX}/${SOLR_MR_DIR}
 mv -f ${PREFIX}/${LIB_DIR}/search-mr*.jar ${PREFIX}/${SOLR_MR_DIR}
 
-# Sample (twitter) configs
 install -d -m 0755 ${PREFIX}/${DOC_DIR}
+
+# Sample (twitter) configs
 cp -r ${BUILD_DIR}/samples ${PREFIX}/${DOC_DIR}/examples
+
+# Quickstart script/files
+cp -r ${BUILD_DIR}/quickstart ${PREFIX}/${DOC_DIR}/.
 
 cp ${BUILD_DIR}/{LICENSE,NOTICE}.txt ${PREFIX}/${LIB_DIR}/
 
