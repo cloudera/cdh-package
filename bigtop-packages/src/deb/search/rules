@@ -43,4 +43,4 @@ override_dh_auto_install:
 	  --extra-dir=debian/
 
 override_dh_compress:
-	dh_compress -Xusr/share/doc/search/examples
+	echo "Skipping override_dh_compress..."
