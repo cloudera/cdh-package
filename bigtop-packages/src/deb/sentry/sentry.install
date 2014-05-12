@@ -1,4 +1,3 @@
-/usr/lib/hive/lib/*.jar
 /usr/lib/hive/sentry
 /usr/bin/sentry
 /usr/lib/sentry

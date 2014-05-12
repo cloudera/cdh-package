@@ -19,8 +19,8 @@
 Name: sentry
 Version: %{sentry_version}
 Release: %{sentry_release}
-Summary: Authorization component
-URL: https://github.com/cloudera/access
+Summary: A system for enforcing fine grained role based authorization to data and metadata stored on a Hadoop cluster.
+URL: https://sentry.incubator.apache.org
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{datafu_name}-%{version}-%{release}-XXXXXX)
@@ -28,10 +28,10 @@ License: ASL 2.0
 Source0: sentry-%{sentry_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_sentry.sh
-Requires: hadoop-hdfs, hive
+Requires: hadoop-hdfs
 
 %description
-Cloudera authorization component and the corresponding Hive plugin
+A system for enforcing fine grained role based authorization to data and metadata stored on a Hadoop cluster.
 
 %prep
 %setup -n sentry-%{sentry_patched_version}
@@ -48,6 +48,5 @@ sh %{SOURCE2} \
 %files
 %defattr(-,root,root,755)
 /usr/lib/hive/sentry
-/usr/lib/hive/lib
 /usr/bin/sentry
 /usr/lib/sentry

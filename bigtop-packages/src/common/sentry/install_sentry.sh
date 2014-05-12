@@ -21,12 +21,12 @@ usage() {
   echo "
 usage: $0 <options>
   Required not-so-options:
-     --build-dir=DIR             path to hive dist.dir
+     --build-dir=DIR             path to sentry dist.dir
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --doc-dir=DIR               path to install docs into [/usr/share/doc/hive]
-     --lib-dir=DIR               path to install hive home [/usr/lib/hive]
+     --doc-dir=DIR               path to install docs into [/usr/share/doc/sentry]
+     --lib-dir=DIR               path to install hive home [/usr/lib/sentry]
      --installed-lib-dir=DIR     path where lib-dir will end up on target system
      --bin-dir=DIR               path to install bins [/usr/bin]
      --examples-dir=DIR          path to install examples [doc-dir/examples]
@@ -92,8 +92,7 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
-LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/hive}
-SENTRY_DIR=${SENTRY_DIR:-$PREFIX/usr/lib/sentry}
+LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/sentry}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 install -d -m 0755 $LIB_DIR/lib
 
@@ -106,8 +105,8 @@ DIRECTORY=apache-`basename ${TARBALL/.tar.gz/}`-bin
 # TODO: Get rid of this once CDH-18672 gets committed
 (cd ${LIB_DIR}/lib; ls * | grep -v 'sentry.*\.jar\|commons-beanutils-1\.7\.0\.jar\|commons-lang-2\.6\.jar\|shiro-core.*\.jar' | xargs rm -f)
 
-install -d -m 0755 ${SENTRY_DIR}/bin
-mv ${BUILD_DIR}/bin/* ${SENTRY_DIR}/bin
+install -d -m 0755 ${LIB_DIR}/bin
+mv ${BUILD_DIR}/bin/* ${LIB_DIR}/bin
 
 install -d -m 0755 ${LIB_DIR}/sentry
 mv ${BUILD_DIR}/LICENSE.txt ${LIB_DIR}/sentry
@@ -122,15 +121,16 @@ cat >>$wrapper <<EOF
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
 export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
-export HIVE_HOME=\${HIVE_HOME:-/usr/lib/hive}
-# Currently we deliver Sentry jars under HIVE_HOME/lib
-# that's why we need to set SENTRY_HOME to HIVE_HOME
-export SENTRY_HOME=\${SENTRY_HOME:-\$HIVE_HOME}
+export SENTRY_HOME=\${SENTRY_HOME:-/usr/lib/sentry}
 exec /usr/lib/sentry/bin/sentry "\$@"
 EOF
 
 chmod 755 $wrapper
 
 # Cloudera specific
-install -d -m 0755 $LIB_DIR/sentry/cloudera
-cp cloudera/cdh_version.properties $LIB_DIR/sentry/cloudera/
+install -d -m 0755 $LIB_DIR/cloudera
+cp cloudera/cdh_version.properties $LIB_DIR/cloudera/
+
+# Backwards compatibility
+install -d -m 0755 ${PREFIX}/usr/lib/hive/sentry/cloudera
+ln -s ../../../sentry/cloudera/cdh_version.properties ${PREFIX}/usr/lib/hive/sentry/cloudera/
