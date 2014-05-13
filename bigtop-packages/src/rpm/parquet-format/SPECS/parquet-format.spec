@@ -27,7 +27,7 @@ URL: http://parquet.io
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/parquet-format-%{version}-%{release}-XXXXXX)
-License: ASL 2.0 
+License: ASL 2.0
 Source0: parquet-format-%{parquet_format_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_parquet-format.sh

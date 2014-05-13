@@ -28,7 +28,7 @@ URL: http://tomcat.apache.org/
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-License: ASL 2.0 
+License: ASL 2.0
 Source0: bigtop-tomcat-%{bigtop_tomcat_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_tomcat.sh

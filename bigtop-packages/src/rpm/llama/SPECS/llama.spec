@@ -40,7 +40,7 @@ URL: http://cloudera.com/llama
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/llama-%{version}-%{release}-XXXXXX)
-License: ASL 2.0 
+License: ASL 2.0
 Source0: llama-%{llama_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_llama.sh

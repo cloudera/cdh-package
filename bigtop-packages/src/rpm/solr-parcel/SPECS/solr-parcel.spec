@@ -22,7 +22,7 @@ Release: %{solr_parcel_release}
 Summary: All the server side Solr java bits in one relocatable package
 
 Group:		Applications/Engineering
-License:	APL2
+License:	ASL 2.0
 URL:		http://cloudera.com
 Source0:        solr-parcel-%{solr_parcel_patched_version}.tar.gz
 Source1:	do-component-build

@@ -33,7 +33,7 @@ URL: http://kitesdk.org
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{kite_name}-%{version}-%{release}-XXXXXX)
-License: ASL 2.0 
+License: ASL 2.0
 Source0: %{kite_name}-%{kite_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{kite_name}.sh
