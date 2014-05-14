@@ -15,6 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+export JAVA_LIBRARY_PATH="$JAVA_LIBRARY_PATH:/usr/lib/hadoop/lib/native"
+
 export OOZIE_CONFIG=/etc/oozie/conf
 export OOZIE_DATA=/var/lib/oozie
 export OOZIE_LOG=/var/log/oozie
