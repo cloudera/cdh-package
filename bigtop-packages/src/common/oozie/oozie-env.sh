@@ -17,8 +17,9 @@
 # limitations under the License.
 #
 
-# Set Oozie specific environment variables here.
+export JAVA_LIBRARY_PATH="$JAVA_LIBRARY_PATH:/usr/lib/hadoop/lib/native"
 
+# Set Oozie specific environment variables here.
 
 export OOZIE_DATA=/var/lib/oozie
 export OOZIE_CATALINA_HOME=/usr/lib/bigtop-tomcat
