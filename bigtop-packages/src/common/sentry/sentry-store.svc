@@ -1,0 +1,67 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+DAEMON="sentry-store"
+DESC="Sentry DB Store Service"
+EXEC_PATH="/usr/bin/sentry"
+SVC_USER="sentry"
+WORKING_DIR="/var/lib/sentry"
+CONF_DIR="/etc/sentry/conf"
+DAEMON_FLAGS="--command service --conffile ${CONF_DIR}/sentry-store-site.xml"
+PIDFILE="/var/run/sentry/${DAEMON}.pid"
+
+generate_start() {
+
+cat <<'__EOT__'
+start() {
+    [ -x $EXEC_PATH ] || exit $ERROR_PROGRAM_NOT_INSTALLED
+    log_success_msg "Starting $DESC (${DAEMON}): "
+
+    checkstatusofproc
+    status=$?
+    if [ "$status" -eq "$STATUS_RUNNING" ]; then
+        log_success_msg "${DESC} is running"
+        exit 0
+    fi
+
+    mkdir -p `dirname ${PIDFILE}`
+    chown ${SVC_USER}:sentry `dirname ${PIDFILE}`
+
+    su -s /bin/bash $SVC_USER  -c "/bin/bash -c 'echo \$\$ >${PIDFILE} && cd ${WORKING_DIR} && exec ${EXEC_PATH} ${DAEMON_FLAGS} >> /var/log/sentry/${DAEMON}.out 2>&1 </dev/null' &"
+
+    checkstatusofproc
+    RETVAL=$?
+    [ $RETVAL -eq $STATUS_RUNNING ] && touch $LOCKFILE
+    return $RETVAL
+}
+__EOT__
+
+}
+
+generate_stop() {
+
+cat <<'__EOT__'
+stop() {
+    log_success_msg "Stopping $DESC (${DAEMON}): "
+    killproc -p $PIDFILE java
+    RETVAL=$?
+
+    [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE
+    return $RETVAL
+}
+__EOT__
+
+}
+

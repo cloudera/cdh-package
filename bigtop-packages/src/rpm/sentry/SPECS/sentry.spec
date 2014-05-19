@@ -16,6 +16,17 @@
 # disable repacking jars
 %define __os_install_post %{nil}
 
+%define var_lib_sentry /var/lib/sentry
+%define var_run_sentry /var/run/sentry
+
+%if  %{?suse_version:1}0
+%global initd_dir %{_sysconfdir}/rc.d
+%define alternatives_cmd update-alternatives
+%else
+%global initd_dir %{_sysconfdir}/rc.d/init.d
+%define alternatives_cmd alternatives
+%endif
+
 Name: sentry
 Version: %{sentry_version}
 Release: %{sentry_release}
@@ -28,10 +39,21 @@ License: ASL 2.0
 Source0: sentry-%{sentry_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_sentry.sh
+Source3: init.d.tmpl
+Source4: sentry-store-site.xml
+Source5: sentry-store.svc
 Requires: hadoop-hdfs
 
 %description
 A system for enforcing fine grained role based authorization to data and metadata stored on a Hadoop cluster.
+
+%package -n sentry-store
+Summary: Sentry Server
+Group: Development/Libraries
+Requires: sentry = %{version}-%{release}
+
+%description -n sentry-store
+Server for Sentry
 
 %prep
 %setup -n sentry-%{sentry_patched_version}
@@ -41,12 +63,53 @@ env FULL_VERSION=%{sentry_patched_version} bash $RPM_SOURCE_DIR/do-component-bui
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh %{SOURCE2} \
+env FULL_VERSION=%{sentry_patched_version} bash $RPM_SOURCE_DIR/install_sentry.sh \
           --build-dir=$PWD \
-          --prefix=$RPM_BUILD_ROOT
+          --prefix=$RPM_BUILD_ROOT \
+          --extras-dir=$RPM_SOURCE_DIR
+
+for service in sentry-store; do
+    # Install init script
+    init_file=$RPM_BUILD_ROOT/%{initd_dir}/${service}
+    bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/${service}.svc rpm $init_file
+done
+
+%pre
+getent group sentry >/dev/null || groupadd -r sentry
+getent passwd sentry >/dev/null || useradd -c "Sentry" -s /sbin/nologin -g sentry -r -d %{var_lib_sentry} sentry 2> /dev/null || :
+
+%post
+%{alternatives_cmd} --install /etc/sentry/conf senty-conf /etc/sentry/conf.dist 30
+
+%preun
+if [ "$1" = 0 ]; then
+        %{alternatives_cmd} --remove sentry-conf /etc/sentry/conf.dist || :
+fi
+
+%define service_macro() \
+%files -n %1 \
+%attr(0755,root,root)/%{initd_dir}/%1 \
+%post -n %1 \
+chkconfig --add %1 \
+\
+%preun -n %1 \
+if [ $1 = 0 ] ; then \
+        service %1 stop > /dev/null 2>&1 \
+        chkconfig --del %1 \
+fi \
+%postun -n %1 \
+if [ $1 -ge 1 ]; then \
+        service %1 condrestart >/dev/null 2>&1 \
+fi
+%service_macro sentry-store
 
 %files
 %defattr(-,root,root,755)
 /usr/lib/hive/sentry
 /usr/bin/sentry
 /usr/lib/sentry
+/etc/sentry/conf.dist
+%defattr(-,sentry,sentry,755)
+/var/lib/sentry
+/var/log/sentry
+

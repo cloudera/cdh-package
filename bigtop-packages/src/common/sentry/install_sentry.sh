@@ -39,11 +39,10 @@ OPTS=$(getopt \
   -n $0 \
   -o '' \
   -l 'prefix:' \
-  -l 'doc-dir:' \
   -l 'lib-dir:' \
-  -l 'installed-lib-dir:' \
   -l 'bin-dir:' \
-  -l 'examples-dir:' \
+  -l 'conf-dir:' \
+  -l 'extras-dir:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -59,20 +58,17 @@ while true ; do
         --build-dir)
         BUILD_DIR=$2 ; shift 2
         ;;
-        --doc-dir)
-        DOC_DIR=$2 ; shift 2
-        ;;
         --lib-dir)
         LIB_DIR=$2 ; shift 2
-        ;;
-        --installed-lib-dir)
-        INSTALLED_LIB_DIR=$2 ; shift 2
         ;;
         --bin-dir)
         BIN_DIR=$2 ; shift 2
         ;;
-        --examples-dir)
-        EXAMPLES_DIR=$2 ; shift 2
+        --conf-dir)
+        CONF_DIR=$2 ; shift 2
+        ;;
+        --extras-dir)
+        EXTRAS_DIR=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -92,20 +88,20 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
+CONF_DIR=${CONF_DIR:-${PREFIX}/etc/sentry/conf.dist}
 LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/sentry}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
-install -d -m 0755 $LIB_DIR/lib
 
-TARBALL=`ls ${BUILD_DIR}/build/sentry-*.tar.gz`
-DIRECTORY=apache-`basename ${TARBALL/.tar.gz/}`-bin
-(cd ${LIB_DIR}/lib && tar --strip-components=2 -xvzf ${TARBALL} ${DIRECTORY}/lib)
+TARBALL=sentry-dist/target/apache-sentry-${FULL_VERSION}-bin.tar.gz
+DIRECTORY=${TARBALL/.tar.gz/}
+(cd `dirname ${TARBALL}` && tar xzf `basename ${TARBALL}`)
 
-install -d -m 0755 ${LIB_DIR}/bin
-mv ${BUILD_DIR}/bin/* ${LIB_DIR}/bin
+install -d -m 0755 ${LIB_DIR}
+mv ${DIRECTORY}/{bin,lib,scripts} ${LIB_DIR}/
+chmod 0755 ${LIB_DIR}/*
 
-install -d -m 0755 ${LIB_DIR}/sentry
-mv ${BUILD_DIR}/LICENSE.txt ${LIB_DIR}/sentry
-mv ${BUILD_DIR}/NOTICE.txt ${LIB_DIR}/sentry
+mv ${BUILD_DIR}/LICENSE.txt ${LIB_DIR}/
+mv ${BUILD_DIR}/NOTICE.txt ${LIB_DIR}/
 
 install -d -m 0755 ${BIN_DIR}
 wrapper=$BIN_DIR/sentry
@@ -122,10 +118,16 @@ EOF
 
 chmod 755 $wrapper
 
+install -d -m 0755 ${CONF_DIR}
+cp ${EXTRAS_DIR}/sentry-store-site.xml ${CONF_DIR}/
+
+install -d -m 0755 ${PREFIX}/var/lib/sentry
+install -d -m 0755 ${PREFIX}/var/log/sentry
+
 # Cloudera specific
 install -d -m 0755 $LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $LIB_DIR/cloudera/
 
-# Backwards compatibility
+# Backwards compatibility with CM 5.0.x
 install -d -m 0755 ${PREFIX}/usr/lib/hive/sentry/cloudera
 ln -s ../../../sentry/cloudera/cdh_version.properties ${PREFIX}/usr/lib/hive/sentry/cloudera/

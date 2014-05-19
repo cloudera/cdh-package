@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property>
+        <name>sentry.service.security.mode</name>
+        <value>none</value>
+    </property>
+    <property>
+        <name>sentry.service.admin.group</name>
+        <value>admin1</value>
+    </property>
+    <property>
+        <name>sentry.service.allow.connect</name>
+        <value>impala,hive,solr</value>
+    </property>
+    <property>
+        <name>sentry.store.jdbc.url</name>
+        <value>jdbc:derby:;databaseName=sentry_store_db;create=true</value>
+    </property>
+</configuration>
+

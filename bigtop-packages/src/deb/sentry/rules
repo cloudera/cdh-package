@@ -26,6 +26,12 @@ export DH_OPTIONS
 %:
 	dh $@
 
+svcs=sentry-store
+
+$(svcs): debian/init.d.tmpl
+	bash $< debian/$@.svc deb debian/$@.init
+	touch $@
+
 override_dh_auto_build:
 	# Work-around to stop the RAT plugin from
 	# failing on the debian/ subdirectory
@@ -34,7 +40,9 @@ override_dh_auto_build:
 	env FULL_VERSION=$(SENTRY_PATCHED_VERSION) \
 	  bash debian/do-component-build -Drat.basedir=`pwd`/bigtop-empty
 
-override_dh_auto_install:
-	bash -x debian/install_sentry.sh \
+override_dh_auto_install: $(svcs)
+	env FULL_VERSION=$(SENTRY_PATCHED_VERSION) \
+	  bash -x debian/install_sentry.sh \
 	  --build-dir=${PWD} \
-	  --prefix=debian/tmp
+	  --prefix=debian/tmp \
+	  --extras-dir=debian
