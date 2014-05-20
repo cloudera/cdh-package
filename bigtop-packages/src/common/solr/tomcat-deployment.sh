@@ -33,8 +33,10 @@ function copy_and_resolve() {
         # This is relative to the source specifically, so that relative symlinks are consistent
         symlink_location=${source_symlink/${source_dir}/}
         symlink_target=`readlink -e ${source_symlink}`
-        rm -f ${target_dir}${symlink_location}
-        cp -r ${symlink_target} ${target_dir}${symlink_location}
+        if [ -n "${symlink_target}" ]; then
+            rm -f ${target_dir}${symlink_location}
+            cp -r ${symlink_target} ${target_dir}${symlink_location}
+        fi
     done
 }
 
