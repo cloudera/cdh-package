@@ -306,5 +306,5 @@ done
 install -d -m 0755 $LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $LIB_DIR/cloudera/
 
-versionless_symlinks ${LIB_DIR}/lib
+external_versionless_symlinks 'impala' ${LIB_DIR}/lib
 

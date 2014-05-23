@@ -97,6 +97,8 @@ for var in PREFIX BUILD_DIR DISTRO_DIR ; do
   fi
 done
 
+. ${DISTRO_DIR}/packaging_functions.sh
+
 MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 DOC_DIR=${DOC_DIR:-/usr/share/doc/solr}
 LIB_DIR=${LIB_DIR:-/usr/lib/solr}
@@ -360,3 +362,6 @@ install -d -m 0755 $VAR_DIR/lib/solr
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
+
+external_versionless_symlinks 'solr' ${PREFIX}/${LIB_DIR}/lib ${PREFIX}/${LIB_DIR}/lib/solrj-lib ${PREFIX}/${LIB_DIR}/webapps/solr/WEB-INF/lib
+

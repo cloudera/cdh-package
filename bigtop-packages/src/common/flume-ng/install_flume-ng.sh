@@ -181,5 +181,5 @@ cp {LICENSE,NOTICE} ${PREFIX}/${FLUME_DIR}/
 install -d -m 0755 $PREFIX/$FLUME_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$FLUME_DIR/cloudera/
 
-versionless_symlinks $PREFIX/$FLUME_DIR/lib
+external_versionless_symlinks 'flume' $PREFIX/$FLUME_DIR/lib
 

@@ -90,5 +90,5 @@ cp -r $BUILD_DIR/* $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 
-versionless_symlinks $PREFIX/${LIB_DIR}/lib
+external_versionless_symlinks 'kite' $PREFIX/${LIB_DIR}/lib
 

@@ -260,10 +260,10 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 %__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-common*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-client*.jar \
 $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-server*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-hadoop-compat*.jar \
 $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-hadoop2-compat*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-protocol*.jar \
-$RPM_BUILD_ROOT/%{usr_lib_hive}/lib/zookeeper-*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/htrace-core*.jar
+$RPM_BUILD_ROOT/%{usr_lib_hive}/lib/htrace-core*.jar
 %__ln_s  /usr/lib/hbase/hbase-common.jar /usr/lib/hbase/hbase-client.jar /usr/lib/hbase/hbase-server.jar \
 /usr/lib/hbase/hbase-hadoop-compat.jar /usr/lib/hbase/hbase-hadoop2-compat.jar /usr/lib/hbase/hbase-protocol.jar \
-/usr/lib/zookeeper/zookeeper.jar  /usr/lib/hbase/lib/htrace-core.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
+/usr/lib/hbase/lib/htrace-core.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
 
 # Workaround for BIGTOP-583
 %__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/slf4j-log4j12-*.jar

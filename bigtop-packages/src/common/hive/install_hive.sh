@@ -247,5 +247,10 @@ install -d -m 0755 $HCATALOG_DIR/cloudera
 grep -v 'cloudera.pkg.name=' src/cloudera/cdh_version.properties > $HCATALOG_DIR/cloudera/cdh_version.properties
 echo "cloudera.pkg.name=hive-hcatalog" >> $HCATALOG_DIR/cloudera/cdh_version.properties
 
-versionless_symlinks ${HIVE_DIR}/lib ${HCATALOG_DIR}/share/webhcat/svr/lib
+internal_versionless_symlinks \
+    ${HIVE_DIR}/lib/hive-shims*.jar \
+    ${HCATALOG_DIR}/share/webhcat/java-client/*.jar \
+    ${HCATALOG_DIR}/share/hcatalog/*.jar \
+
+external_versionless_symlinks 'hive' ${HIVE_DIR}/lib ${HCATALOG_DIR}/share/webhcat/svr/lib
 

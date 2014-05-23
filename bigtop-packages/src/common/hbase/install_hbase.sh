@@ -180,7 +180,7 @@ cp ${BUILD_DIR}/LICENSE.txt ${BUILD_DIR}/NOTICE.txt ${PREFIX}/${LIB_DIR}/
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 
-versionless_symlinks ${PREFIX}/${LIB_DIR}/lib
+external_versionless_symlinks 'hbase' ${PREFIX}/${LIB_DIR}/lib
 
 # Create a versionless symlink for htrace-core.jar
 old_jar=`ls $PREFIX/$LIB_DIR/lib/htrace-core*.jar`

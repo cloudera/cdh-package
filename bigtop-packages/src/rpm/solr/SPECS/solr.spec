@@ -59,7 +59,9 @@ Source5: logging.properties
 Source6: solr.default
 Source7: solr-server.init
 Source8: tomcat-deployment.sh
+Source9: packaging_functions.sh
 Requires: bigtop-utils >= 0.7, bigtop-tomcat
+Requires: hadoop, hadoop-hdfs, sentry, zookeeper
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora

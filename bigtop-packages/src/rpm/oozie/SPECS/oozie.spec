@@ -70,7 +70,7 @@ Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
 Requires: oozie-client = %{version}, hadoop-client, bigtop-tomcat
-Requires: avro-libs, parquet
+Requires: avro-libs, parquet, zookeeper, hadoop, hadoop-hdfs, hadoop-mapreduce, hadoop-yarn, hive, hive-hcatalog, hive-webhcat
 BuildArch: noarch
 
 %description 
@@ -120,8 +120,7 @@ URL: http://incubator.apache.org/oozie/
 Group: Development/Libraries
 License: ASL 2.0
 BuildArch: noarch
-Requires: bigtop-utils >= 0.7
-
+Requires: bigtop-utils >= 0.7, hadoop
 
 %description client
  Oozie client is a command line client utility that allows remote

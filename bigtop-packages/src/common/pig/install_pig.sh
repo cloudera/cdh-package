@@ -185,5 +185,5 @@ install -d -m 1777 $PREFIX/var/log/pig
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 
-versionless_symlinks ${PREFIX}/${LIB_DIR}/lib
+external_versionless_symlinks 'pig' ${PREFIX}/${LIB_DIR}/lib
 

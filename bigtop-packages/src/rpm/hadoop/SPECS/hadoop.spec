@@ -379,6 +379,7 @@ Hadoop HDFS NFS v3 gateway service
 Summary: HTTPFS for Hadoop
 Group: System/Daemons
 Requires: %{name}-hdfs = %{version}-%{release}, bigtop-tomcat
+Requires: avro-libs, zookeeper
 Requires(pre): %{name} = %{version}-%{release}
 Requires(pre): %{name}-hdfs = %{version}-%{release}
 
