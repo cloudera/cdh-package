@@ -112,4 +112,5 @@ fi
 %defattr(-,sentry,sentry,755)
 /var/lib/sentry
 /var/log/sentry
+/var/run/sentry
 

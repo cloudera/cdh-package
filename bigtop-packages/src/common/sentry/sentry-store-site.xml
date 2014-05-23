@@ -16,5 +16,9 @@
         <name>sentry.store.jdbc.url</name>
         <value>jdbc:derby:;databaseName=sentry_store_db;create=true</value>
     </property>
-</configuration>
+    <property>
+        <name>sentry.store.jdbc.driver</name>
+        <value>org.apache.derby.jdbc.EmbeddedDriver</value>
+    </property>
+<configuration>
 

@@ -123,6 +123,7 @@ cp ${EXTRAS_DIR}/sentry-store-site.xml ${CONF_DIR}/
 
 install -d -m 0755 ${PREFIX}/var/lib/sentry
 install -d -m 0755 ${PREFIX}/var/log/sentry
+install -d -m 0755 ${PREFIX}/var/run/sentry
 
 # Cloudera specific
 install -d -m 0755 $LIB_DIR/cloudera
