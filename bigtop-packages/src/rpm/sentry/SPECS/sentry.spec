@@ -42,6 +42,7 @@ Source2: install_sentry.sh
 Source3: init.d.tmpl
 Source4: sentry-store-site.xml
 Source5: sentry-store.svc
+Source6: packaging_functions.sh
 Requires: hadoop-hdfs
 
 %description

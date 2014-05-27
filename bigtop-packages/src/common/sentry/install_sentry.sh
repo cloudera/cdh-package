@@ -88,6 +88,8 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
+. ${EXTRAS_DIR}/packaging_functions.sh
+
 CONF_DIR=${CONF_DIR:-${PREFIX}/etc/sentry/conf.dist}
 LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/sentry}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
@@ -128,6 +130,8 @@ install -d -m 0755 ${PREFIX}/var/run/sentry
 # Cloudera specific
 install -d -m 0755 $LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $LIB_DIR/cloudera/
+
+internal_versionless_symlinks ${LIB_DIR}/lib/sentry*.jar
 
 # Backwards compatibility with CM 5.0.x
 install -d -m 0755 ${PREFIX}/usr/lib/hive/sentry/cloudera

@@ -158,13 +158,10 @@ function symlink_lib() {
 }
 # Remove MR1 Hive shim
 rm -f $DEPENDENCY_DIR/hive-shims-0.23*.jar $DEPENDENCY_DIR/hadoop-core*.jar;
-for file in $DEPENDENCY_DIR/hadoop-yarn-server*cdh*.jar; do symlink_lib $file hadoop-yarn; done
-for file in $DEPENDENCY_DIR/hadoop*cdh*.jar; do symlink_lib $file hadoop/client; done
-for file in $DEPENDENCY_DIR/hbase*cdh*.jar; do symlink_lib $file hbase; done
-for file in $DEPENDENCY_DIR/hive*cdh*.jar; do symlink_lib $file hive/lib; done
-for file in $DEPENDENCY_DIR/zookeeper*cdh*.jar; do symlink_lib $file zookeeper; done
 for file in $DEPENDENCY_DIR/libhdfs*.so*; do symlink_lib $file ../${NATIVE_LIB_DIR}; done
 for file in $DEPENDENCY_DIR/libhadoop*.so*; do symlink_lib $file hadoop/lib/native; done
+
+external_versionless_symlinks 'impala' ${LIB_DIR}/lib
 
 # install Impala shell
 install -d -m 0755 ${LIB_DIR}-shell
@@ -172,7 +169,6 @@ tar --strip-components 2 -C ${LIB_DIR}-shell -xzf shell/build/impala*.tar.gz
 install -d -m 0755 ${BIN_DIR}
 mv ${LIB_DIR}-shell/impala-shell ${BIN_DIR}
 sed -i -e '/^SCRIPT_DIR=/s#^.*$#SCRIPT_DIR=/usr/lib/impala-shell#' ${BIN_DIR}/impala-shell
-
 
 IMPALA_DEPS=`cd ${LIB_DIR}/lib/ ; ls * | sed -e 's#^#${IMPALA_HOME}/lib/#' | tr '\012' ':'`
 
@@ -305,6 +301,4 @@ done
 # Cloudera specific
 install -d -m 0755 $LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $LIB_DIR/cloudera/
-
-external_versionless_symlinks 'impala' ${LIB_DIR}/lib
 

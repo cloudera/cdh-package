@@ -9,13 +9,17 @@ get_directory_for_jar() {
         hadoop-hdfs*) lib_dir='hadoop-hdfs';;
         hadoop-mapreduce*) lib_dir='hadoop-mapreduce';;
         hadoop*) lib_dir='hadoop';; # FIXME: hadoop-client isn't in any Hadoop package!
+        hbase*) lib_dir='hbase';;
         hive-hcatalog*) lib_dir='hive-hcatalog/share/hcatalog';;
         hive-webhcat-java-client*) lib_dir='hive-hcatalog/share/webhcat/java-client';;
         hive*) lib_dir='hive/lib';;
+        sentry*) lib_dir='sentry/lib';;
     esac
     echo "/usr/lib/${lib_dir}"
 }
 
+# Strips all versioning info from a JAR file name (e.g. avro-1.7.5-cdh5.0.0-SNAPSHOT-hadoop2.jar -> avro-hadoop2.jar)
+# strip_versions <file name>
 function strip_versions() {
     # This regex matches upstream versions, plus CDH versions, betas and snapshots if they are present
     versions='s#-[0-9]\+.[0-9]\+.[0-9]\+\(-cdh[0-9\-\.]\+\)\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?\([-\.0-9]\+[0-9]\)\?##'
@@ -23,6 +27,8 @@ function strip_versions() {
     echo ${1} | sed -e $versions | sed -e $timestamps
 }
 
+# Creates versionless symlinks to JARs in the same directory (e.g. /usr/lib/zookeeper/zookeeper.jar -> /usr/lib/zookeeper/zookeeper-3.4.5-cdh5.0.0-SNAPSHOT.jar)
+# internal_versionless_symlinks <JAR files to link>
 function internal_versionless_symlinks() {
     for file in ${@}; do
         (
@@ -33,10 +39,13 @@ function internal_versionless_symlinks() {
     done
 }
 
+# Creates symlinks between one component and another, dependent component (e.g. /usr/lib/hadoop/avro.jar -> /usr/lib/avro/avro.jar)
+# Assumes that internal versionless symlinks already exist in the dependency
+# external_versionless_symlinks <current component> <directories to scan for JARs>
 function external_versionless_symlinks() {
     predicate=''
     skip=${1}; shift 1;
-    for prefix in avro parquet zookeeper hive hadoop; do
+    for prefix in avro parquet zookeeper hive hadoop hbase sentry; do
         if [ "${prefix}" == "${skip}" ]; then
             continue;
         fi

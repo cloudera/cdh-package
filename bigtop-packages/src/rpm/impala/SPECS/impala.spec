@@ -77,7 +77,7 @@ Source8: catalogd.svc
 Source9: packaging_functions.sh
 Requires: bigtop-utils >= 0.7, /usr/sbin/useradd, /usr/sbin/usermod, openssl
 Requires: hadoop, hadoop-hdfs, hadoop-yarn, hadoop-mapreduce, hbase, hive, zookeeper, hadoop-libhdfs
-Requires: avro-libs, parquet
+Requires: avro-libs, parquet, sentry
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 Requires: redhat-lsb
 %else
