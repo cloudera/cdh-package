@@ -114,7 +114,10 @@ install -d -m 0755 $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist/*.*ar $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist/solrj-lib $PREFIX/$LIB_DIR/lib
 cp -ra ${BUILD_DIR}/example/solr/collection1/conf $PREFIX/$LIB_DIR/coreconfig-template
-cp -fa cloudera/solrconfig* $PREFIX/$LIB_DIR/coreconfig-template
+cp -fa cloudera/solrconfig.xml cloudera/solrconfig.xml.secure $PREFIX/$LIB_DIR/coreconfig-template
+mkdir $PREFIX/$LIB_DIR/coreconfig-schemaless-template
+cp -fa cloudera/solrconfig.xml.schemaless cloudera/solrconfig.xml.schemaless.secure cloudera/schema.xml.schemaless  $PREFIX/$LIB_DIR/coreconfig-schemaless-template
+
 cp -ra cloudera/clusterconfig $PREFIX/$LIB_DIR/clusterconfig
 
 install -d -m 0755 $PREFIX/$LIB_DIR/contrib
