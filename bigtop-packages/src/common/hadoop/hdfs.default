@@ -19,6 +19,13 @@ export HADOOP_SECONDARYNAMENODE_USER=hdfs
 export HADOOP_DATANODE_USER=hdfs
 export HADOOP_IDENT_STRING=hdfs
 
+# We always want to start NFS as root and by setting a default value like the one below we
+# ensure this happens. Once port registration completes, privileges are dropped back from root
+# to HADOOP_PRIVILEGED_NFS_USER.
+export HADOOP_PRIVILEGED_NFS_USER=hdfs
+export HADOOP_PRIVILEGED_NFS_PID_DIR=/var/run/hadoop-hdfs
+export HADOOP_PRIVILEGED_NFS_LOG_DIR=/var/log/hadoop-hdfs
+
 # export HADOOP_SECURE_DN_USER=hdfs
 # export HADOOP_SECURE_DN_PID_DIR=/var/run/hadoop-hdfs
 # export HADOOP_SECURE_DN_LOG_DIR=/var/log/hadoop-hdfs

@@ -21,3 +21,32 @@ WORKING_DIR="/var/lib/hadoop-hdfs"
 DAEMON_FLAGS="$HADOOP_NAME"
 CONF_DIR="/etc/hadoop/conf"
 PIDFILE="/var/run/hadoop-hdfs/hadoop-$SVC_USER-$HADOOP_NAME.pid"
+
+generate_start() {
+
+cat <<'__EOT__'
+start() {
+  [ -x $EXEC_PATH ] || exit $ERROR_PROGRAM_NOT_INSTALLED
+  [ -d $CONF_DIR ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
+  log_success_msg "Starting ${DESC}: "
+
+  if [ -n "$HADOOP_PRIVILEGED_NFS_USER" ]; then
+    TARGET_USER=root
+  else
+    TARGET_USER=hdfs
+  fi
+
+  export HADOOP_IDENT_STRING=$TARGET_USER
+  su -s /bin/bash $TARGET_USER -c "$EXEC_PATH --config '$CONF_DIR' start $DAEMON_FLAGS"
+
+  # Some processes are slow to start
+  sleep $SLEEP_TIME
+  checkstatusofproc
+  RETVAL=$?
+
+  [ $RETVAL -eq $RETVAL_SUCCESS ] && touch $LOCKFILE
+  return $RETVAL
+
+}
+__EOT__
+}
