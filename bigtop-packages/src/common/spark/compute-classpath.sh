@@ -60,7 +60,7 @@ if [ "x" != "x$YARN_CONF_DIR" ]; then
   CLASSPATH="$CLASSPATH:$YARN_CONF_DIR"
 fi
 # Let's make sure that all needed hadoop libs are added properly
-CLASSPATH="$CLASSPATH:$HADOOP_HOME/*:$HADOOP_HDFS_HOME/*:$HADOOP_YARN_HOME/*:$HADOOP_MAPRED_HOME/*"
+CLASSPATH="$CLASSPATH:$(hadoop classpath)"
 # Add Scala standard library
 if [ -z "$SCALA_LIBRARY_PATH" ]; then
   if [ -z "$SCALA_HOME" ]; then
