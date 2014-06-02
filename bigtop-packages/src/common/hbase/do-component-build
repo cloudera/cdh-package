@@ -36,7 +36,9 @@ if [ -z "$GIT_REPO" ]; then
             tar -C build -xzf $x
         done
         
+        cp hbase-hadoop*-compat/target/hbase-hadoop*-compat-*-tests.jar build/hbase-${FULL_VERSION}/lib/
         cp -r target/site/apidocs build/hbase-${FULL_VERSION}/docs
+
         (cd build && tar --exclude='*/native/lib*' --exclude='*/lib/native/*' -czf hbase-${FULL_VERSION}.tar.gz hbase-${FULL_VERSION})
     fi
 else

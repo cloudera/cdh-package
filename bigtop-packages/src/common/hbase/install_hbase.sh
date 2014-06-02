@@ -144,11 +144,6 @@ cp $BUILD_DIR/hbase-thrift/src/main/resources/org/apache/hadoop/hbase/thrift2/hb
 
 ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
 
-# Make a symlink of hbase*.jar to hbase*-version.jar
-for lib in client common examples hadoop2-compat hadoop-compat it prefix-tree protocol server; do
-    ln -s `cd $PREFIX/$LIB_DIR ; ls hbase-$lib*jar | grep -v tests` $PREFIX/$LIB_DIR/hbase-$lib.jar
-done
-
 wrapper=$PREFIX/usr/bin/hbase
 mkdir -p `dirname $wrapper`
 cat > $wrapper <<'EOF'
@@ -180,6 +175,7 @@ cp ${BUILD_DIR}/LICENSE.txt ${BUILD_DIR}/NOTICE.txt ${PREFIX}/${LIB_DIR}/
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 
+internal_versionless_symlinks ${PREFIX}/${LIB_DIR}/hbase*.jar
 external_versionless_symlinks 'hbase' ${PREFIX}/${LIB_DIR}/lib
 
 # Create a versionless symlink for htrace-core.jar
