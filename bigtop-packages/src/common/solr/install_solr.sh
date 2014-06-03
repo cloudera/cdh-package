@@ -366,5 +366,7 @@ install -d -m 0755 $VAR_DIR/lib/solr
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 
-external_versionless_symlinks 'solr' ${PREFIX}/${LIB_DIR}/lib ${PREFIX}/${LIB_DIR}/lib/solrj-lib ${PREFIX}/${LIB_DIR}/webapps/solr/WEB-INF/lib
+internal_versionless_symlinks ${PREFIX}/${LIB_DIR}/webapps/solr/WEB-INF/lib/lucene*.jar ${PREFIX}/${LIB_DIR}/webapps/solr/WEB-INF/lib/solr*.jar
+
+external_versionless_symlinks 'solr lucene' ${PREFIX}/${LIB_DIR}/lib ${PREFIX}/${LIB_DIR}/lib/solrj-lib ${PREFIX}/${LIB_DIR}/webapps/solr/WEB-INF/lib
 
