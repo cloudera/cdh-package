@@ -48,3 +48,9 @@ Architecture: all
 Depends: spark-core (= ${source:Version}), python
 Description: Python client for Spark
  Includes PySpark, an interactive Python shell for Spark, and related libraries
+
+Package: spark-history-server
+Architecture: all
+Depends: spark-core (= ${source:Version})
+Description: History server for Spark
+ History server for Spark

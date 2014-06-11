@@ -90,3 +90,7 @@ su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown -R oozie /user/oozie'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir -p /var/lib/hadoop-hdfs/cache/mapred/mapred/staging'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod 1777 /var/lib/hadoop-hdfs/cache/mapred/mapred/staging'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown -R mapred /var/lib/hadoop-hdfs/cache/mapred'
+
+# Spark History Server
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir -p /user/spark/applicationHistory'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown spark /user/spark/applicationHistory'
