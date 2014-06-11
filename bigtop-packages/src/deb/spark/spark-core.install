@@ -8,6 +8,7 @@
 /usr/lib/spark/bin/spark-class
 /usr/lib/spark/bin/spark-shell
 /usr/lib/spark/bin/spark-submit
+/usr/lib/spark/bin/load-spark-env.sh
 /usr/lib/spark/sbin
 /usr/lib/spark/core
 /usr/lib/spark/examples
