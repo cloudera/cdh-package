@@ -239,7 +239,7 @@ cp -f ${EXTRA_DIR}/catalina.properties.mr1 ${HTTP_MR1_DIRECTORY}/conf/catalina.p
 
 HTTPS_MR1_DIRECTORY=${ETC_DIR}/tomcat-conf.https.mr1
 cp -r ${HTTPS_DIRECTORY} ${HTTPS_MR1_DIRECTORY}
-cp -f ${EXTRA_DIR}/catalina.properties.mr1 ${HTTP_MR1_DIRECTORY}/conf/catalina.properties
+cp -f ${EXTRA_DIR}/catalina.properties.mr1 ${HTTPS_MR1_DIRECTORY}/conf/catalina.properties
 
 # Create all the jars needed for tools execution
 install -d -m 0755 ${SERVER_LIB_DIR}/libtools
