@@ -23,7 +23,7 @@
 %define config_spark %{etc_spark}/conf
 %define bin /usr/bin
 %define man_dir /usr/share/man
-%define spark_services master worker
+%define spark_services master worker history-server
 
 %if  %{?suse_version:1}0
 %define doc_spark %{_docdir}/spark
@@ -65,6 +65,7 @@ Source4: spark-worker.svc
 Source5: compute-classpath.sh
 Source6: init.d.tmpl
 Source7: packaging_functions.sh
+Source8: spark-history-server.svc
 Requires: bigtop-utils >= 0.7, hadoop-client
 Requires: avro-libs
 Requires(preun): /sbin/service
@@ -114,6 +115,14 @@ Requires: spark-core = %{version}-%{release}, %{pyspark_python}
 
 %description -n spark-python
 Includes PySpark, an interactive Python shell for Spark, and related libraries
+
+%package -n spark-history-server
+Summary: History Server for Spark
+Group: Development/Libraries
+Requires: spark-core = %{version}-%{release}
+
+%description -n spark-history-server
+History server for Spark
 
 %prep
 %setup -n %{spark_name}-%{spark_patched_version}
@@ -200,3 +209,4 @@ if [ $1 -ge 1 ]; then \
 fi
 %service_macro spark-master
 %service_macro spark-worker
+%service_macro spark-history-server

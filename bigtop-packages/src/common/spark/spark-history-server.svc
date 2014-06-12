@@ -1,0 +1,85 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+TYPE="history-server"
+DAEMON="spark-${TYPE}"
+DESC="Spark ${TYPE}"
+EXEC_DIR="/usr/lib/spark/sbin/"
+SVC_USER="spark"
+COMMAND_NAME="org.apache.spark.deploy.history.HistoryServer"
+WORKING_DIR="/var/lib/spark"
+DAEMON_FLAGS=""
+CONF_DIR="/etc/spark/conf"
+PIDFILE="/var/run/spark/spark-$SVC_USER-$COMMAND_NAME-1.pid"
+
+generate_start() {
+
+cat <<'__EOT__'
+start() {
+    [ -x $EXE_DIR ] || exit $ERROR_PROGRAM_NOT_INSTALLED
+
+    checkstatusofproc
+    status=$?
+    if [ "$status" -eq "$STATUS_RUNNING" ]; then
+        log_success_msg "${DESC} is running"
+        exit 0
+    fi
+
+    LOG_FILE=/var/log/spark/${DAEMON}.out
+
+    # Need to source the env-sh file here to get SPARK_HISTORY_SERVER_LOG_DIR
+    . /etc/spark/conf/spark-env.sh
+
+    su -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
+        ${EXEC_DIR}/start-history-server.sh "$SPARK_HISTORY_SERVER_LOG_DIR" > $LOG_FILE 2>&1"
+
+    sleep 3
+
+    checkstatusofproc
+    RETVAL=$?
+    if [ $RETVAL -eq $STATUS_RUNNING ]; then
+        touch $LOCKFILE
+        log_success_msg "Starting $DESC (${DAEMON}): "
+    else
+        log_failure_msg "Failure to start $DESC (${DAEMON}). Return value: $RETVAL_SUCCESS"
+    fi
+    return $RETVAL
+}
+__EOT__
+
+}
+
+generate_stop() {
+
+cat <<'__EOT__'
+stop() {
+    su -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
+        ${EXEC_DIR}/stop-history-server.sh > /dev/null 2>&1"
+
+    RETVAL=$?
+
+    if [ $RETVAL -eq $RETVAL_SUCCESS ]; then
+	  log_success_msg "Stopping $DESC (${DAEMON}): "
+	  rm -f $LOCKFILE $PIDFILE
+    else
+	   log_failure_msg "Failed to stop $DESC (${DAEMON}): Return value: $RETVAL"
+    fi
+
+    return $RETVAL
+}
+__EOT__
+
+}
+
