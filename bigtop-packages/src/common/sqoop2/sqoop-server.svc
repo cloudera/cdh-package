@@ -71,7 +71,6 @@ generate_stop() {
 
 cat <<'__EOT__'
 stop() {
-  log_success_msg "Stopping ${DESC}: "
   # FIXME: workaround for BIGTOP-537
   checkstatusofproc
   if [ "$?" = "$STATUS_RUNNING" ] ; then
@@ -90,7 +89,9 @@ stop() {
           kill -0 ${SQOOP_PID} &>/dev/null || break
           sleep 1
         done
-        kill -KILL ${SQOOP_PID} &>/dev/null
+        if [ ! kill -0 ${SQOOP_PID} &>/dev/null ]; then
+          kill -KILL ${SQOOP_PID} &>/dev/null
+        fi
       fi
     fi
 
@@ -99,7 +100,12 @@ stop() {
     RETVAL=$RETVAL_SUCCESS
   fi
 
-  [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE
+  if [ $RETVAL -eq $RETVAL_SUCCESS ]; then
+     rm -f $LOCKFILE $PIDFILE
+     log_success_msg "Stopped ${DESC}: "
+  else
+     log_failure_msg "Failed to stop ${DESC}. Return value: $RETVAL"
+  fi
 }
 __EOT__
 

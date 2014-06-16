@@ -93,8 +93,6 @@ stop() {
     return 0
   fi
 
-  log_success_msg "Stopping $desc (flume-ng-agent): "
-
   FLUME_PID=`cat $FLUME_PID_FILE`
   if [ -n $FLUME_PID ]; then
     kill -TERM ${FLUME_PID} &>/dev/null
@@ -102,10 +100,21 @@ stop() {
       kill -0 ${FLUME_PID} &>/dev/null || break
       sleep 1
     done
-    kill -KILL ${FLUME_PID} &>/dev/null
+    if [ ! kill -0 ${FLUME_PID} &>/dev/null ]; then
+      kill -KILL ${FLUME_PID} &>/dev/null
+    fi
   fi
-  rm -f $LOCKFILE $FLUME_PID_FILE
-  return 0
+
+  RETVAL=$?
+
+  if [ $RETVAL -eq 0 ]; then
+     rm -f $LOCKFILE $FLUME_PID_FILE
+     log_success_msg "Stopped ${desc}: "
+  else
+     log_failure_msg "Failed to stop ${desc}. Return value: $RETVAL"
+  fi
+
+  return $RETVAL
 }
 
 restart() {
