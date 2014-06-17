@@ -22,6 +22,7 @@ WORKING_DIR="/var/lib/spark"
 DAEMON_FLAGS=""
 CONF_DIR="/etc/spark/conf"
 PIDFILE="/var/run/spark/${DAEMON}.pid"
+PRIORITY=86
 
 generate_start() {
 
