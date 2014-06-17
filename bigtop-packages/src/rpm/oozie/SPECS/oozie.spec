@@ -70,7 +70,7 @@ Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
 Requires: oozie-client = %{version}, hadoop-client, bigtop-tomcat
-Requires: avro-libs, parquet, zookeeper, hadoop, hadoop-hdfs, hadoop-mapreduce, hadoop-yarn, hive, hive-hcatalog, hive-webhcat
+Requires: avro-libs, parquet, zookeeper, hadoop, hadoop-hdfs, hadoop-mapreduce, hadoop-yarn, hive >= 0.12.0+cdh5.1.0, hive-hcatalog >= 0.12.0+cdh5.1.0, hive-webhcat >= 0.12.0+cdh5.1.0
 BuildArch: noarch
 
 %description 

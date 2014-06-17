@@ -67,7 +67,7 @@ Source6: init.d.tmpl
 Source7: packaging_functions.sh
 Source8: spark-history-server.svc
 Requires: bigtop-utils >= 0.7, hadoop-client
-Requires: avro-libs
+Requires: avro-libs, parquet
 Requires(preun): /sbin/service
 
 %global initd_dir %{_sysconfdir}/init.d
