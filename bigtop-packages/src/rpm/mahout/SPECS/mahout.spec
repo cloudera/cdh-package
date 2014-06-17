@@ -46,7 +46,7 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: packaging_functions.sh
 Requires: hadoop-client, bigtop-utils >= 0.7
-Requires: avro-libs
+Requires: avro-libs, hbase, zookeeper
 
 %description 
 Mahout's goal is to build scalable machine learning libraries. 

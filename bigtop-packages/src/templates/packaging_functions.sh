@@ -22,9 +22,7 @@ get_directory_for_jar() {
         sentry*) lib_dir='sentry/lib';;
         solr*) lib_dir='solr';;
         lucene*) lib_dir='solr/webapps/solr/WEB-INF/lib';;
-        kite-morphlines*) lib_dir='kite';;
-        kite-data*) lib_dir='kite/lib';;
-        kite-tools*) lib_dir='kite/lib';;
+        kite*) lib_dir='kite';;
         *) return;;
     esac
     echo "/usr/lib/${lib_dir}"
