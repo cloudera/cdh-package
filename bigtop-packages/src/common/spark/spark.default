@@ -1,0 +1,1 @@
+export SPARK_HISTORY_SERVER_LOG_DIR=/user/spark/applicationHistory

@@ -38,6 +38,6 @@ $(svcs): debian/init.d.tmpl
 override_dh_auto_install: $(svcs)
 	bash -x debian/install_spark.sh \
 	  --build-dir=`pwd` \
-          --doc-dir=/usr/share/doc/spark \
-          --source-dir=debian \
+	  --doc-dir=/usr/share/doc/spark \
+	  --source-dir=debian \
 	  --prefix=debian/tmp

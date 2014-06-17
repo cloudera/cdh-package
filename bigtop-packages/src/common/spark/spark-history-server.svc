@@ -39,8 +39,8 @@ start() {
 
     LOG_FILE=/var/log/spark/${DAEMON}.out
 
-    # Need to source the env-sh file here to get SPARK_HISTORY_SERVER_LOG_DIR
-    . /etc/spark/conf/spark-env.sh
+    # Need to source the defaults file here to get SPARK_HISTORY_SERVER_LOG_DIR
+    . /etc/default/spark
 
     su -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
         ${EXEC_DIR}/start-history-server.sh "$SPARK_HISTORY_SERVER_LOG_DIR" > $LOG_FILE 2>&1"
@@ -53,7 +53,7 @@ start() {
         touch $LOCKFILE
         log_success_msg "Starting $DESC (${DAEMON}): "
     else
-        log_failure_msg "Failure to start $DESC (${DAEMON}). Return value: $RETVAL_SUCCESS"
+        log_failure_msg "Failure to start $DESC (${DAEMON}). Return value: $RETVAL"
     fi
     return $RETVAL
 }

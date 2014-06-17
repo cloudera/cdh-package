@@ -155,6 +155,10 @@ cp -a ${BUILD_DIR}/conf/* $PREFIX/$CONF_DIR
 cp  $PREFIX/$CONF_DIR/spark-env.sh.template $PREFIX/$CONF_DIR/spark-env.sh
 ln -s /etc/spark/conf $PREFIX/$LIB_DIR/conf
 
+# Copy in the defaults file
+install -d -m 0755 ${PREFIX}/etc/default
+cp ${SOURCE_DIR}/spark.default ${PREFIX}/etc/default/spark
+
 # Unpack static UI resources into install_dir/spark where it is expected to be
 tar --wildcards -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz ui-resources/\*
 
@@ -198,7 +202,6 @@ export SPARK_WORKER_PORT=7078
 export SPARK_WORKER_WEBUI_PORT=18081
 export SPARK_WORKER_DIR=/var/run/spark/work
 export SPARK_LOG_DIR=/var/log/spark
-export SPARK_HISTORY_SERVER_LOG_DIR='/user/spark/applicationHistory'
 export SPARK_PID_DIR='/var/run/spark/'
 
 if [ -n "\$HADOOP_HOME" ]; then

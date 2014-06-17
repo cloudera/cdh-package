@@ -66,6 +66,7 @@ Source5: compute-classpath.sh
 Source6: init.d.tmpl
 Source7: packaging_functions.sh
 Source8: spark-history-server.svc
+Source9: spark.default
 Requires: bigtop-utils >= 0.7, hadoop-client
 Requires: avro-libs
 Requires(preun): /sbin/service
@@ -173,6 +174,7 @@ done
 %files
 %defattr(-,root,root,755)
 %config(noreplace) %{config_spark}.dist
+%config(noreplace) /etc/default/spark
 %doc %{doc_spark}
 %{lib_spark}
 %exclude %{lib_spark}/bin/pyspark
