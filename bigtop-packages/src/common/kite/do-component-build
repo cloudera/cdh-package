@@ -17,23 +17,20 @@
 set -ex
 
 if [ -z "$GIT_REPO" ]; then
-    KITE=build/kite-${FULL_VERSION}
     if [ -z "${DO_MAVEN_DEPLOY}" ]; then
         MAVEN_INST_DEPLOY=install
     else
         MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
     fi
     
-    rm -rf build
-    mkdir -p $KITE/dist/lib
-    
     mvn clean -DskipTests $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
-    
-    cp `find ./ -name \*.jar | grep -v '\./lib'` $KITE/dist/lib || :
-    mv `find ./ -name kite*.jar` $KITE/dist || :
-    mv `find ./ -name LICENSE* -o -name NOTICE*` $KITE/dist || :
 
-    (cd build ; tar czf kite-${FULL_VERSION}.tar.gz kite-${FULL_VERSION})
+    rm -rf build
+
+    ALL_FILES=`ls`
+    mkdir -p build/kite-${FULL_VERSION}
+    cp -r ${ALL_FILES} build/kite-${FULL_VERSION}/
+    (cd build; tar czf kite-${FULL_VERSION}.tar.gz kite-${FULL_VERSION})
 else
     git add .
     git commit -a -m "Temporary commit for tarball"
