@@ -84,7 +84,16 @@ LIB_DIR=${LIB_DIR:-/usr/lib/kite}
 
 # First we'll move everything into lib
 install -d -m 0755 $PREFIX/$LIB_DIR
-cp -r $BUILD_DIR/* $PREFIX/$LIB_DIR
+install -d -m 0755 $PREFIX/$LIB_DIR/lib
+
+# JARs in ./lib are build dependencies - so we'll copy everything else
+for file in `cd ${BUILD_DIR}; find . -name \*.jar | grep -v '\./lib'`; do
+    cp ${file} ${PREFIX}/${LIB_DIR}/lib/
+done
+rm ${PREFIX}/${LIB_DIR}/lib/kite*-{sources,javadoc,tests}.jar
+(cd ${PREFIX}/${LIB_DIR}; ln -s lib/kite*.jar ./)
+
+cp ${BUILD_DIR}/{LICENSE,NOTICE}* ${PREFIX}/${LIB_DIR}/
 
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera

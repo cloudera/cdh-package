@@ -55,7 +55,7 @@ env FULL_VERSION=%{kite_patched_version} bash $RPM_SOURCE_DIR/do-component-build
 %install
 %__rm -rf $RPM_BUILD_ROOT
 bash $RPM_SOURCE_DIR/install_kite.sh \
-          --build-dir=build/kite-%{kite_patched_version}/dist \
+          --build-dir=build/kite-%{kite_patched_version} \
           --prefix=$RPM_BUILD_ROOT \
           --extra-dir=$RPM_SOURCE_DIR
 
