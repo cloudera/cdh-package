@@ -209,11 +209,10 @@ wrapper=$BIN_DIR/hcat
 cat >>$wrapper <<EOF
 #!/bin/bash
 
-BIGTOP_DEFAULTS_DIR=\${BIGTOP_DEFAULTS_DIR-/etc/default}
-[ -n "\${BIGTOP_DEFAULTS_DIR}" -a -r \${BIGTOP_DEFAULTS_DIR}/hadoop ] && . \${BIGTOP_DEFAULTS_DIR}/hadoop
-
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
+
+export HADOOP_PREFIX=/usr/lib/hadoop
 
 # FIXME: HCATALOG-636 (and also HIVE-2757)
 export HIVE_HOME=/usr/lib/hive
