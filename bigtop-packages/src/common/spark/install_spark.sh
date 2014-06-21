@@ -208,6 +208,8 @@ if [ -n "\$HADOOP_HOME" ]; then
   export SPARK_LIBRARY_PATH=\$SPARK_LIBRARY_PATH:\${HADOOP_HOME}/lib/native
 fi
 
+export HADOOP_CONF_DIR=/etc/hadoop/conf
+
 ### Comment above 2 lines and uncomment the following if
 ### you want to run with scala version, that is included with the package
 #export SCALA_HOME=\${SCALA_HOME:-$LIB_DIR/scala}
