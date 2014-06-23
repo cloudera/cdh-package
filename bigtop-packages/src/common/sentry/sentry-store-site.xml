@@ -20,5 +20,5 @@
         <name>sentry.store.jdbc.driver</name>
         <value>org.apache.derby.jdbc.EmbeddedDriver</value>
     </property>
-<configuration>
+</configuration>
 
