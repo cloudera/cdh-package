@@ -120,6 +120,7 @@ BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 PYTHON_DIR=${PYTHON_DIR:-$HIVE_DIR/lib/py}
 HCATALOG_DIR=${HCATALOG_DIR:-$PREFIX/usr/lib/hive-hcatalog}
 HCATALOG_SHARE_DIR=${HCATALOG_DIR}/share/hcatalog
+HBASE_STORAGE_HANDLER_DIR=${HCATALOG_SHARE_DIR}/storage-handlers/hbase/lib
 INSTALLED_HCATALOG_DIR=${INSTALLED_HCATALOG_DIR:-/usr/lib/hive-hcatalog}
 CONF_DIR=/etc/hive
 CONF_DIST_DIR=/etc/hive/conf.dist
@@ -127,11 +128,6 @@ CONF_DIST_DIR=/etc/hive/conf.dist
 # First we'll move everything into lib
 install -d -m 0755 ${HIVE_DIR}
 (cd ${BUILD_DIR} && tar -cf - .)|(cd ${HIVE_DIR} && tar -xf -)
-
-for jar in `ls ${HIVE_DIR}/lib/hive-*.jar`; do
-    base=`basename $jar`
-    (cd ${HIVE_DIR}/lib && ln -s $base ${base/-[0-9].*/.jar})
-done
 
 for thing in conf README.txt examples lib/py;
 do
@@ -239,15 +235,25 @@ install -d -m 0755 $PREFIX/var/log/hive
 install -d -m 0755 $PREFIX/var/lib/hive-hcatalog
 install -d -m 0755 $PREFIX/var/log/hive-hcatalog
 
+for DIR in ${HBASE_STORAGE_HANDLER_DIR} ${HCATALOG_SHARE_DIR} ; do
+    (cd $DIR &&
+     for j in hive-hcatalog-*.jar; do
+       if [[ $j =~ hive-hcatalog-(.*)-${HIVE_VERSION}.jar ]]; then
+         name=${BASH_REMATCH[1]}
+         ln -s $j hive-hcatalog-$name.jar
+       fi
+    done)
+done
+
 # Cloudera specific
 install -d -m 0755 $HIVE_DIR/cloudera
-cp src/cloudera/cdh_version.properties $HIVE_DIR/cloudera/
+cp cloudera/cdh_version.properties $HIVE_DIR/cloudera/
 install -d -m 0755 $HCATALOG_DIR/cloudera
-grep -v 'cloudera.pkg.name=' src/cloudera/cdh_version.properties > $HCATALOG_DIR/cloudera/cdh_version.properties
+grep -v 'cloudera.pkg.name=' cloudera/cdh_version.properties > $HCATALOG_DIR/cloudera/cdh_version.properties
 echo "cloudera.pkg.name=hive-hcatalog" >> $HCATALOG_DIR/cloudera/cdh_version.properties
 
 internal_versionless_symlinks \
-    ${HIVE_DIR}/lib/hive-shims*.jar \
+    ${HIVE_DIR}/lib/hive-*.jar \
     ${HCATALOG_DIR}/share/webhcat/java-client/*.jar \
     ${HCATALOG_DIR}/share/hcatalog/*.jar \
 

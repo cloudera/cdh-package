@@ -27,7 +27,7 @@
 %define man_dir %{_mandir}
 %define hive_services hive-server hive-metastore hive-server2 hive-webhcat-server
 # After we run "ant package" we'll find the distribution here
-%define hive_dist src/build/hive-%{hive_patched_version}
+%define hive_dist build/hive-%{hive_patched_version}
 
 %if  %{!?suse_version:1}0
 
@@ -173,33 +173,6 @@ Requires: %{name}-hcatalog = %{version}-%{release}
 %description webhcat
 WebHcat provides a REST-like web API for HCatalog and related Hadoop components.
 
-
-%package hcatalog-server
-Summary: Init scripts for HCatalog server
-Group: System/Daemons
-Requires: %{name}-hcatalog = %{version}-%{release}
-
-%if  %{?suse_version:1}0
-# Required for init scripts
-Requires: insserv
-%endif
-
-%if  0%{?mgaversion}
-# Required for init scripts
-Requires: initscripts
-%endif
-
-# CentOS 5 does not have any dist macro
-# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
-%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
-# Required for init scripts
-Requires: redhat-lsb
-%endif
-
-%description hcatalog-server
-Init scripts for HCatalog server
-
-
 %package webhcat-server
 Summary: Init scripts for WebHcat server
 Group: System/Daemons
@@ -218,6 +191,12 @@ Requires: initscripts
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+%define __os_install_post \
+    /usr/lib/rpm/redhat/brp-compress ; \
+    /usr/lib/rpm/redhat/brp-strip-static-archive %{__strip} ; \
+    /usr/lib/rpm/redhat/brp-strip-comment-note %{__strip} %{__objdump} ; \
+    /usr/lib/rpm/brp-python-bytecompile ; \
+    %{nil}
 # Required for init scripts
 Requires: redhat-lsb
 %endif
@@ -264,9 +243,6 @@ $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/htrace-core*.jar
 %__ln_s  /usr/lib/hbase/hbase-common.jar /usr/lib/hbase/hbase-client.jar /usr/lib/hbase/hbase-server.jar \
 /usr/lib/hbase/hbase-hadoop-compat.jar /usr/lib/hbase/hbase-hadoop2-compat.jar /usr/lib/hbase/hbase-protocol.jar \
 /usr/lib/hbase/lib/htrace-core.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
-
-# Workaround for BIGTOP-583
-%__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/slf4j-log4j12-*.jar
 
 for service in %{hive_services}
 do
@@ -345,7 +321,6 @@ fi
 %exclude %{usr_lib_hive}/lib/libthrift-*.jar
 %exclude %{usr_lib_hive}/lib/hive-service*.jar
 %exclude %{usr_lib_hive}/lib/libfb303-*.jar
-%exclude %{usr_lib_hive}/lib/slf4j-*.jar
 %exclude %{usr_lib_hive}/lib/log4j-*.jar
 %exclude %{usr_lib_hive}/lib/commons-logging-*.jar
 %exclude %{usr_lib_hive}/lib/htrace-core.jar
@@ -369,7 +344,6 @@ fi
 %{usr_lib_hive}/lib/libthrift-*.jar
 %{usr_lib_hive}/lib/hive-service*.jar
 %{usr_lib_hive}/lib/libfb303-*.jar
-%{usr_lib_hive}/lib/slf4j-*.jar
 %{usr_lib_hive}/lib/log4j-*.jar
 %{usr_lib_hive}/lib/commons-logging-*.jar
 
