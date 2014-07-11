@@ -32,7 +32,7 @@ get_directory_for_jar() {
 # strip_versions <file name>
 function strip_versions() {
     # This regex matches upstream versions, plus CDH versions, betas and snapshots if they are present
-    versions='s#-[0-9]\+.[0-9]\+.[0-9]\+\(-mr1\)\?\(-cdh[0-9\-\.]\+\)\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?\([-\.0-9]\+[0-9]\)\?##'
+    versions='s#-[0-9]\+.[0-9]\+.[0-9]\+\(-mr1\)\?\(-cdh[0-9\-\.]\+[0-9]\)\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?\([-\.0-9]\+[0-9]\)\?##'
     echo ${1} | sed -e $versions
 }
 
