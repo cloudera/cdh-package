@@ -291,7 +291,7 @@ install -d -m 0755 ${PREFIX}/${SYSTEM_LIB_DIR}
 cp be/build/release/udf/libImpalaUdf.a ${PREFIX}/${SYSTEM_LIB_DIR}/libImpalaUdf-retail.a
 cp be/build/debug/udf/libImpalaUdf.a ${PREFIX}/${SYSTEM_LIB_DIR}/libImpalaUdf-debug.a
 
-NOTICES=`find thirdparty -name LICENSE* -o -name NOTICE* | grep -v llama | grep -v hive | grep -v hbase |  grep -v hadoop`
+NOTICES=`find thirdparty -name 'LICENSE*' -o -name 'NOTICE*' | grep -v llama | grep -v hive | grep -v hbase |  grep -v hadoop`
 for notice in ${NOTICES}; do
     dir=`dirname ${LIB_DIR}/${notice}`
     install -d -m 0755 ${dir}
