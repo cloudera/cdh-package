@@ -44,7 +44,7 @@ start() {
     . /etc/default/spark
 
     su -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
-        ${EXEC_DIR}/start-history-server.sh "$SPARK_HISTORY_SERVER_LOG_DIR" > $LOG_FILE 2>&1"
+        ${EXEC_DIR}/start-history-server.sh > $LOG_FILE 2>&1"
 
     sleep 3
 
