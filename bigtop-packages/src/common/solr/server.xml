@@ -68,6 +68,7 @@
     -->
     <Connector port="${solr.port}" protocol="HTTP/1.1" 
                connectionTimeout="20000" 
+               maxThreads="${solr.max.connector.thread}" 
                redirectPort="8443" />
     <!-- A "Connector" using the shared thread pool-->
     <!--
