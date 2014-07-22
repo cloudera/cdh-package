@@ -167,7 +167,6 @@ getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --she
 
 %preun
 if [ "$1" = 0 ]; then
-  rm /etc/oozie/tomcat-deployment
   /sbin/service oozie stop > /dev/null
   /sbin/chkconfig --del oozie
   %{alternatives_cmd} --remove %{name}-tomcat-deployment %{tomcat_conf_oozie}.http || :
