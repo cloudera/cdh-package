@@ -153,6 +153,7 @@ touch $PREFIX/$LIB_DIR/RELEASE
 install -d -m 0755 $PREFIX/$CONF_DIR
 cp -a ${BUILD_DIR}/conf/* $PREFIX/$CONF_DIR
 cp  $PREFIX/$CONF_DIR/spark-env.sh.template $PREFIX/$CONF_DIR/spark-env.sh
+cp  $PREFIX/$CONF_DIR/spark-defaults.conf.template $PREFIX/$CONF_DIR/spark-defaults.conf
 ln -s /etc/spark/conf $PREFIX/$LIB_DIR/conf
 
 # Copy in the defaults file
