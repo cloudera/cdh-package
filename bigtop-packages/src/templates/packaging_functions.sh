@@ -28,6 +28,34 @@ get_directory_for_jar() {
     echo "/usr/lib/${lib_dir}"
 }
 
+# Looks up which package can be depended on to install a certain directory, to map symlinks to package dependencies
+function check_for_package_dependency() {
+    case ${1} in
+        /usr/lib/avro) pkg=avro-libs;;
+        /usr/lib/parquet) pkg=parquet;;
+        /usr/lib/zookeeper) pkg=zookeeper;;
+        /usr/lib/hadoop-yarn) pkg=hadoop-yarn;;
+        /usr/lib/hadoop-hdfs) pkg=hadoop-hdfs;;
+        /usr/lib/hadoop-mapreduce) pkg=hadoop-mapreduce;;
+        /usr/lib/hadoop/client-0.20) pkg=hadoop-client;;
+        /usr/lib/hadoop) pkg=hadoop;;
+        /usr/lib/hbase-solr/lib) pkg=hbase-solr;;
+        /usr/lib/hbase) pkg=hbase;;
+        /usr/lib/hive-hcatalog/share/hcatalog) pkg=hcatalog;;
+        /usr/lib/hive-hcatalog/share/webhcat/java-client) pkg=hive-webhcat;;
+        /usr/lib/hive/lib) pkg=hive;;
+        /usr/lib/sentry/lib) pkg=sentry;;
+        /usr/lib/solr*) pkg=solr;;
+        /usr/lib/kite) pkg=kite;;
+        *) return;;
+    esac
+
+    metadata_files=$(find ../.. -name *.spec -o -name control)
+    if ! cat ${metadata_files} | grep "^\(Depends\|Requires\).*\\b${pkg}\\b" > /dev/null; then
+        echo "[SYMLINKING WARNING] Package may have broken symlink to ${pkg}"
+    fi
+}
+
 # Strips all versioning info from a JAR file name (e.g. avro-1.7.5-cdh5.0.0-SNAPSHOT-hadoop2.jar -> avro-hadoop2.jar)
 # strip_versions <file name>
 function strip_versions() {
@@ -68,6 +96,7 @@ function external_versionless_symlinks() {
             new_jar=`strip_versions $base_jar`
             new_dir=`get_directory_for_jar ${base_jar}`
             if [ -z "${new_dir}" ]; then continue; fi
+            check_for_package_dependency ${new_dir}
             rm $old_jar && ln -fs ${new_dir}/${new_jar} $dir/
         done
     done
