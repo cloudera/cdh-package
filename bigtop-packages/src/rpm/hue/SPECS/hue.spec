@@ -192,7 +192,7 @@ Provides: config(%{name}-common) = %{version}
 
 %if %{?suse_version:1}0
 BuildRequires: sqlite3-devel, openldap2-devel, libmysqlclient-devel, libopenssl-devel, python-devel, python-setuptools
-Requires: insserv, python-xml, python
+Requires: insserv, python-xml, python, libmysqlclient_r15
 %else
 BuildRequires: /sbin/runuser, sqlite-devel, openldap-devel, mysql-devel, openssl-devel
 Requires: redhat-lsb
