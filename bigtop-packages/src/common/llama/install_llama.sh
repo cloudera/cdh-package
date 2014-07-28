@@ -133,6 +133,7 @@ cp -r ${BUILD_DIR}/target/site/* ${PREFIX}/${DOC_DIR}/
 
 install -d -m 0755 ${PREFIX}/var/run/llama
 install -d -m 0755 ${PREFIX}/var/log/llama
+install -d -m 0755 ${PREFIX}/var/lib/llama
 
 cp ${BUILD_DIR}/LICENSE.txt ${PREFIX}/${LIB_DIR}/
 

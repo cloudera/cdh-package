@@ -146,7 +146,7 @@ bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/sqoop-server.svc rpm $init_file
 
 %pre
 getent group sqoop >/dev/null || groupadd -r sqoop
-getent passwd sqoop2 >/dev/null || useradd -c "Sqoop 2 User" -s /sbin/nologin -g sqoop -r -d %{run_sqoop} sqoop2 2> /dev/null || :
+getent passwd sqoop2 >/dev/null || useradd -c "Sqoop 2 User" -s /sbin/nologin -g sqoop -r -d /var/lib/sqoop2 sqoop2 2> /dev/null || :
 %__install -d -o sqoop2 -g sqoop -m 0755 /var/lib/sqoop2
 %__install -d -o sqoop2 -g sqoop -m 0755 /var/log/sqoop2
 %__install -d -o sqoop2 -g sqoop -m 0755 /var/tmp/sqoop2

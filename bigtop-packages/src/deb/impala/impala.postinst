@@ -25,7 +25,7 @@ case "$1" in
         update-alternatives --install /usr/lib/impala/sbin impala /usr/lib/impala/sbin-retail  20
         update-alternatives --install /usr/lib/impala/sbin impala /usr/lib/impala/sbin-debug   10
 
-        chown impala:impala -R /var/run/impala /var/log/impala
+        chown impala:impala -R /var/run/impala /var/log/impala /var/lib/impala
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

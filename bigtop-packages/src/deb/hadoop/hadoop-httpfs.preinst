@@ -36,7 +36,7 @@ case "$1" in
             adduser \
                 --system \
                 --group \
-                --home /var/run/hadoop-httpfs \
+                --home /var/lib/hadoop-httpfs \
                 --gecos "Hadoop HTTPFS" \
                 --shell /bin/bash \
                 httpfs >/dev/null 2>/dev/null || :

@@ -18,6 +18,7 @@
 %define run_llama /var/run/llama
 %define log_llama /var/log/llama
 %define hadoop_home /usr/lib/hadoop
+%define state_llama /var/lib/llama
 
 %if  %{?suse_version:1}0
 %define initd_dir %{_sysconfdir}/rc.d
@@ -88,7 +89,7 @@ This package provides documentation for Llama
 
 %pre
 getent group llama >/dev/null || groupadd -r llama
-getent passwd llama > /dev/null || useradd -c "Llama" -s /bin/bash -g llama -d %{run_llama} llama 2> /dev/null || :
+getent passwd llama > /dev/null || useradd -c "Llama" -s /bin/bash -g llama -d %{state_llama} llama 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{etc_llama}/conf llama-conf %{etc_llama}/conf.dist 30
@@ -124,6 +125,7 @@ fi
 %defattr(-,llama,llama,755)
 %{log_llama}
 %{run_llama}
+%{state_llama}
 
 %files master
 %attr(755, root, root) %{initd_dir}/llama

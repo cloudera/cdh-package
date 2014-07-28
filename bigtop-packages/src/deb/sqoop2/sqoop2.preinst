@@ -37,7 +37,7 @@ case "$1" in
                 adduser \
                   --system \
                   --ingroup sqoop \
-                  --home /var/run/sqoop2 \
+                  --home /var/lib/sqoop2 \
                   --gecos "Sqoop 2 User" \
                   --shell /bin/false \
                   sqoop2 >/dev/null

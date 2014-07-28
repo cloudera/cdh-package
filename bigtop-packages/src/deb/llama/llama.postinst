@@ -22,6 +22,7 @@ case "$1" in
         update-alternatives --install /etc/llama/conf llama-conf /etc/llama/conf.dist 30
         chown llama:llama -R /var/log/llama
         chown llama:llama -R /var/run/llama
+        chown llama:llama -R /var/lib/llama
     ;;
     abort-upgrade|abort-remove|abort-deconfigure)
     ;;

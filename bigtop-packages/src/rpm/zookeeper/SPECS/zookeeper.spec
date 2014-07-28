@@ -159,15 +159,15 @@ chmod 755 $init_file
 
 %pre
 getent group zookeeper >/dev/null || groupadd -r zookeeper
-getent passwd zookeeper > /dev/null || useradd -c "ZooKeeper" -s /sbin/nologin -g zookeeper -r -d %{run_zookeeper} zookeeper 2> /dev/null || :
+getent passwd zookeeper > /dev/null || useradd -c "ZooKeeper" -s /sbin/nologin -g zookeeper -r -d %{vlb_zookeeper} zookeeper 2> /dev/null || :
 
 %__install -d -o zookeeper -g zookeeper -m 0755 %{run_zookeeper}
 %__install -d -o zookeeper -g zookeeper -m 0755 %{log_zookeeper}
+%__install -d -o zookeeper -g zookeeper -m 0755 %{vlb_zookeeper}
 
 # Manage configuration symlink
 %post
 %{alternatives_cmd} --install %{etc_zookeeper}/conf %{name}-conf %{etc_zookeeper}/conf.dist 30
-%__install -d -o zookeeper -g zookeeper -m 0755 %{vlb_zookeeper}
 
 %preun
 if [ "$1" = 0 ]; then

@@ -128,7 +128,7 @@ chmod 755 $init_file
 
 %pre
 getent group solr >/dev/null || groupadd -r solr
-getent passwd solr > /dev/null || useradd -c "Solr" -s /sbin/nologin -g solr -r -d %{run_solr} solr 2> /dev/null || :
+getent passwd solr > /dev/null || useradd -c "Solr" -s /sbin/nologin -g solr -r -d /var/lib/solr solr 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{config_solr} %{solr_name}-conf %{config_solr}.dist 30

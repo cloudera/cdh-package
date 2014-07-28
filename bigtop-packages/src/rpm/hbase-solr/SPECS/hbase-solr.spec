@@ -21,6 +21,7 @@
 %define bin_solr /usr/bin
 %define man_dir /usr/share/man
 %define run_solr /var/run/%{solr_name}
+%define state_solr /var/lib/%{solr_name}
 %define svc_solr %{name}-indexer
 %define user_solr hbase 
 
@@ -116,7 +117,7 @@ chmod 755 $init_file
 
 #%pre
 #getent group solr >/dev/null || groupadd -r %{user_solr}
-#getent passwd solr > /dev/null || useradd -c "Solr" -s /sbin/nologin -g %{user_solr} -r -d %{run_solr} %{user_solr} 2> /dev/null || :
+#getent passwd solr > /dev/null || useradd -c "Solr" -s /sbin/nologin -g %{user_solr} -r -d %{state_solr} %{user_solr} 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{config_solr} %{solr_name}-conf %{config_solr}.dist 30
@@ -151,6 +152,7 @@ fi
 %defattr(-,%{user_solr},%{user_solr},755)
 /var/run/hbase-solr
 /var/log/hbase-solr
+/var/lib/hbase-solr
 
 %files doc
 %defattr(-,root,root)
