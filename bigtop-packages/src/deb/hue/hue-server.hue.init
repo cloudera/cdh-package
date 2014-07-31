@@ -121,7 +121,7 @@ start_server() {
         # dont setuid, since supervisor will drop privileges on its
         # own
         PATH=/usr/lib/hue/build/env/bin:$PATH start-stop-daemon --start --quiet --pidfile $PIDFILE \
-                    --exec $DAEMON -- $DAEMON_OPTS
+                    --chuid $DAEMONUSER --exec $DAEMON -- $DAEMON_OPTS
         errcode=$?
         return $errcode
 }
