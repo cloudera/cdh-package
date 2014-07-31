@@ -240,5 +240,7 @@ cp ${BUILD_DIR}/{LICENSE,NOTICE} ${PREFIX}/${LIB_DIR}/
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 
+internal_versionless_symlinks ${PREFIX}/${LIB_DIR}/assembly/lib/spark-assembly-*.jar
+
 external_versionless_symlinks 'spark' ${PREFIX}/${LIB_DIR}/lib
 
