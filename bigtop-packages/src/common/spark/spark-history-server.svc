@@ -16,20 +16,19 @@
 TYPE="history-server"
 DAEMON="spark-${TYPE}"
 DESC="Spark ${TYPE}"
-EXEC_DIR="/usr/lib/spark/sbin/"
+EXEC_PATH="/usr/lib/spark/bin/spark-class"
 SVC_USER="spark"
-COMMAND_NAME="org.apache.spark.deploy.history.HistoryServer"
 WORKING_DIR="/var/lib/spark"
 DAEMON_FLAGS=""
 CONF_DIR="/etc/spark/conf"
-PIDFILE="/var/run/spark/spark-$SVC_USER-$COMMAND_NAME-1.pid"
+PIDFILE="/var/run/spark/$DAEMON.pid"
 PRIORITY=86
 
 generate_start() {
 
 cat <<'__EOT__'
 start() {
-    [ -x $EXE_DIR ] || exit $ERROR_PROGRAM_NOT_INSTALLED
+    [ -x $EXE_PATH ] || exit $ERROR_PROGRAM_NOT_INSTALLED
 
     checkstatusofproc
     status=$?
@@ -44,7 +43,8 @@ start() {
     . /etc/default/spark
 
     su -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
-        ${EXEC_DIR}/start-history-server.sh > $LOG_FILE 2>&1"
+        ${EXEC_PATH} org.apache.spark.deploy.history.HistoryServer $DAEMON_FLAGS \
+        > $LOG_FILE 2>&1 & "'echo $!' > "$PIDFILE"
 
     sleep 3
 
@@ -66,9 +66,8 @@ generate_stop() {
 
 cat <<'__EOT__'
 stop() {
-    su -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
-        ${EXEC_DIR}/stop-history-server.sh > /dev/null 2>&1"
-
+    killproc -p $PIDFILE java
+	
     RETVAL=$?
 
     if [ $RETVAL -eq $RETVAL_SUCCESS ]; then
