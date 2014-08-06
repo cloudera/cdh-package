@@ -16,11 +16,11 @@
 
 set -ex
 
-. /mnt/toolchain/toolchain.sh
 export LLVM_HOME=/opt/toolchain/llvm-3.3
 export PATH=$LLVM_HOME/bin:$PATH
 export IMPALA_HOME=`pwd`
 export PIC_LIB_PATH=/opt/toolchain/impala_3rdparty-0.5
+export BOOST_ROOT=/opt/toolchain/boost-pic-1.55.0
 
 if [ -z "$GIT_REPO" ]; then
     . $IMPALA_HOME/bin/impala-config.sh
