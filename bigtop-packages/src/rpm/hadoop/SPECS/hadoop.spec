@@ -178,6 +178,9 @@ Source30: 0.20.default
 Source31: hadoop-hdfs-nfs3.svc
 Source32: httpfs-tomcat-deployment.sh
 Source33: packaging_functions.sh
+Source34: yarn.1
+Source35: hdfs.1
+Source36: mapred.1
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, zookeeper >= 3.4.0
@@ -797,6 +800,9 @@ fi
 %{lib_hadoop}/libexec/hadoop-layout.sh
 %{bin_hadoop}/hadoop
 %{man_hadoop}/man1/hadoop.1.*
+%{man_hadoop}/man1/yarn.1.*
+%{man_hadoop}/man1/hdfs.1.*
+%{man_hadoop}/man1/mapred.1.*
 
 # Shouldn't the following be moved to hadoop-hdfs?
 %exclude %{lib_hadoop}/bin/fuse_dfs
