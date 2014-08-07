@@ -36,6 +36,7 @@ Requires: %{name}-impala = %{version}-%{release}
 Requires: %{name}-hbase = %{version}-%{release}
 Requires: %{name}-sqoop = %{version}-%{release}
 Requires: %{name}-search = %{version}-%{release}
+Requires: %{name}-security = %{version}-%{release}
 Requires: %{name}-zookeeper = %{version}-%{release}
 Requires: %{name}-rdbms = %{version}-%{release}
 Requires: %{name}-spark = %{version}-%{release}
@@ -97,6 +98,7 @@ AutoReqProv: no
 %define hbase_app_dir %{hue_dir}/apps/hbase
 %define sqoop_app_dir %{hue_dir}/apps/sqoop
 %define search_app_dir %{hue_dir}/apps/search
+%define security_app_dir %{hue_dir}/apps/security
 %define zookeeper_app_dir %{hue_dir}/apps/zookeeper
 %define rdbms_app_dir %{hue_dir}/apps/rdbms
 %define spark_app_dir %{hue_dir}/apps/spark
@@ -303,6 +305,7 @@ fi
 %exclude %{hbase_app_dir}
 %exclude %{sqoop_app_dir}
 %exclude %{search_app_dir}
+%exclude %{security_app_dir}
 %exclude %{zookeeper_app_dir}
 %exclude %{rdbms_app_dir}
 %exclude %{spark_app_dir}
@@ -481,6 +484,22 @@ It allows users to interact with Solr
 %files -n %{name}-search
 %defattr(-, %{username}, %{username})
 %{search_app_dir}
+
+#### HUE-SECURITY PLUGIN ######
+%package -n %{name}-security
+Summary: A UI for security on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+
+%description -n %{name}-security
+A web interface for security.
+
+%app_post_macro security
+%app_preun_macro security
+
+%files -n %{name}-security
+%defattr(-, %{username}, %{username})
+%{security_app_dir}
 
 #### HUE-ZOOKEEPER PLUGIN ######
 %package -n %{name}-zookeeper

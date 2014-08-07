@@ -23,7 +23,7 @@
 # Implicit targets
 SHELL := /bin/bash
 
-APPS=beeswax pig impala hbase sqoop search zookeeper rdbms spark
+APPS=beeswax pig impala hbase sqoop search security zookeeper rdbms spark
 
 $(APPS:%=debian/hue-%.postinst): debian/hue-app.postinst.tpl
 	sed -e 's#@APP@#$(patsubst debian/hue-%.postinst,%,$@)#'  < $< > $@
