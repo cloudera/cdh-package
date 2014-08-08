@@ -4,11 +4,7 @@
 /usr/bin/spark-shell
 /usr/bin/spark-submit
 /usr/lib/spark/assembly
-/usr/lib/spark/bin/compute-classpath.sh
-/usr/lib/spark/bin/spark-class
-/usr/lib/spark/bin/spark-shell
-/usr/lib/spark/bin/spark-submit
-/usr/lib/spark/bin/load-spark-env.sh
+/usr/lib/spark/bin/
 /usr/lib/spark/sbin
 /usr/lib/spark/examples
 /usr/lib/spark/ui-resources

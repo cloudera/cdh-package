@@ -134,18 +134,17 @@ install -d -m 0755 $PREFIX/$LIB_DIR/examples/lib
 cp ${BUILD_DIR}/examples/target/spark-examples*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/examples/lib
 tar -czf $PREFIX/$LIB_DIR/examples/lib/python.tar.gz -C ${BUILD_DIR}/examples/src/main/python .
 
-cp -a ${BUILD_DIR}/bin/*.sh $PREFIX/$LIB_DIR/bin/
-cp -a ${BUILD_DIR}/sbin/*.sh $PREFIX/$LIB_DIR/sbin/
+# Copy files to the bin and sbin directories
+rsync --exclude="*.cmd" ${BUILD_DIR}/bin/* $PREFIX/$LIB_DIR/bin/
+rsync --exclude="*.cmd" ${BUILD_DIR}/sbin/* $PREFIX/$LIB_DIR/sbin/
+
+# override the compute-classpath file from the source dir.
+cp -a ${SOURCE_DIR}/compute-classpath.sh $PREFIX/$LIB_DIR/bin/
+
 chmod 755 $PREFIX/$LIB_DIR/bin/*
 chmod 755 $PREFIX/$LIB_DIR/sbin/*
 
 # FIXME: executor scripts need to reside in bin
-cp -a $BUILD_DIR/bin/spark-class $PREFIX/$LIB_DIR/bin/
-cp -a $BUILD_DIR/sbin/spark-executor $PREFIX/$LIB_DIR/sbin/
-cp -a ${SOURCE_DIR}/compute-classpath.sh $PREFIX/$LIB_DIR/bin/
-cp -a ${BUILD_DIR}/bin/spark-shell $PREFIX/$LIB_DIR/bin/
-cp -a ${BUILD_DIR}/bin/spark-submit $PREFIX/$LIB_DIR/bin
-cp -a ${BUILD_DIR}/bin/load-spark-env.sh $PREFIX/$LIB_DIR/bin
 touch $PREFIX/$LIB_DIR/RELEASE
 
 # Copy in the configuration files
@@ -161,12 +160,6 @@ cp ${SOURCE_DIR}/spark.default ${PREFIX}/etc/default/spark
 
 # Unpack static UI resources into install_dir/spark where it is expected to be
 tar --wildcards -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz ui-resources/\*
-
-# set correct permissions for exec. files
-for execfile in bin/spark-class bin/spark-shell sbin/spark-executor bin/spark-submit bin/load-spark-env.sh; do
-  chmod 755 $PREFIX/$LIB_DIR/$execfile
-done
-chmod 755 $PREFIX/$LIB_DIR/bin/compute-classpath.sh
 
 # Copy in the wrappers
 install -d -m 0755 $PREFIX/$BIN_DIR
