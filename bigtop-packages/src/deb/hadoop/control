@@ -82,7 +82,7 @@ Description: The Hadoop MapReduce (MRv2)
 
 Package: hadoop-hdfs-fuse
 Architecture: i386 amd64
-Depends: ${shlibs:Depends}, hadoop-hdfs (= ${source:Version}), hadoop-client (= ${source:Version}), libfuse2, fuse-utils, bigtop-utils (>= 0.7)
+Depends: ${shlibs:Depends}, hadoop-hdfs (= ${source:Version}), hadoop-client (= ${source:Version}), libfuse2, fuse-utils|fuse, bigtop-utils (>= 0.7)
 Enhances: hadoop
 Description: HDFS exposed over a Filesystem in Userspace
  These projects (enumerated below) allow HDFS to be mounted (on most flavors 
