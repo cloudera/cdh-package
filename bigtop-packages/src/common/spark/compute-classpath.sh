@@ -22,8 +22,15 @@ SCALA_VERSION=2.10
 # Figure out where Spark is installed
 FWDIR="$(cd `dirname $0`/..; pwd)"
 
-# Load environment variables from conf/spark-env.sh, if it exists
-if [ -e $FWDIR/conf/spark-env.sh ] ; then
+# Sourcing defaults file. Note: CM does not source defaults file and sets
+# BIGTOP_DEFAULTS_DIR to a empty string. 
+BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
+[ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/spark ] && . ${BIGTOP_DEFAULTS_DIR}/spark
+
+# Load environment variables
+if [ -n "$SPARK_CONF_DIR" ]; then
+  . $SPARK_CONF_DIR/spark-env.sh
+elif [ -e $FWDIR/conf/spark-env.sh ]; then
   . $FWDIR/conf/spark-env.sh
 fi
 
