@@ -59,11 +59,16 @@ start() {
     exit 0
   fi
 
-  log_success_msg "Starting ${DESC}: "
-
   /bin/su -s /bin/bash -c "/bin/bash -c 'cd ~ && echo \$\$ > ${PIDFILE} && exec ${EXEC_PATH} ${DAEMON_FLAGS} >>${IMPALA_LOG_DIR}/impala-state-store.log 2>&1' &" $SVC_USER
   RETVAL=$?
-  [ $RETVAL -eq 0 ] && touch $LOCKFILE
+
+  if [ $RETVAL -eq $STATUS_RUNNING ]; then
+    touch $LOCKFILE
+    log_success_msg "Started ${DESC} (${DAEMON}): "
+  else
+    log_failure_msg "Failed to start ${DESC}. Return value: $RETVAL"
+  fi
+
   return $RETVAL
 }
 __EOT__
@@ -74,12 +79,16 @@ generate_stop() {
 
 cat <<'__EOT__'
 stop() {
-  log_success_msg "Stopping ${DESC}: "
-
   killproc -p $PIDFILE $EXEC_PATH
   RETVAL=$?
 
-  [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE
+  if [ $RETVAL -eq $RETVAL_SUCCESS ]; then
+    log_success_msg "Stopped ${DESC}: "
+    rm -f $LOCKFILE $PIDFILE
+  else
+    log_failure_msg "Failure to stop ${DESC}. Return value: $RETVAL"
+  fi
+
   return $RETVAL
 }
 __EOT__
