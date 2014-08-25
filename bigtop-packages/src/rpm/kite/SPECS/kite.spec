@@ -38,8 +38,8 @@ Source0: %{kite_name}-%{kite_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{kite_name}.sh
 Source3: packaging_functions.sh
-Requires: hadoop-client, bigtop-utils >= 0.7, solr >= 4.4.0+cdh5.1.1-SNAPSHOT
-Requires: avro-libs, parquet, sentry >= 1.3.0+cdh5.1.1-SNAPSHOT, hadoop, zookeeper
+Requires: hadoop-client, bigtop-utils >= 0.7, solr >= 4.4.0+cdh5.1.2
+Requires: avro-libs, parquet, sentry >= 1.3.0+cdh5.1.2, hadoop, zookeeper
 
 %description 
 The Kite Software Development Kit, is a set of libraries, tools, examples, and

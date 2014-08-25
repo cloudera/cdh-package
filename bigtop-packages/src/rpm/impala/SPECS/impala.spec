@@ -76,7 +76,7 @@ Source7: statestored.svc
 Source8: catalogd.svc
 Source9: packaging_functions.sh
 Requires: bigtop-utils >= 0.7, /usr/sbin/useradd, /usr/sbin/usermod, openssl
-Requires: hadoop, hadoop-hdfs, hadoop-yarn, hadoop-mapreduce, hbase, hive >= 0.12.0+cdh5.1.1-SNAPSHOT, zookeeper, hadoop-libhdfs, avro-libs, parquet, sentry >= 1.3.0+cdh5.1.1-SNAPSHOT
+Requires: hadoop, hadoop-hdfs, hadoop-yarn, hadoop-mapreduce, hbase, hive >= 0.12.0+cdh5.1.2, zookeeper, hadoop-libhdfs, avro-libs, parquet, sentry >= 1.3.0+cdh5.1.2
 Requires: avro-libs, parquet, sentry
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 Requires: redhat-lsb
