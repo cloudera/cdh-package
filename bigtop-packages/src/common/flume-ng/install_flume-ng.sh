@@ -181,5 +181,7 @@ cp {LICENSE,NOTICE} ${PREFIX}/${FLUME_DIR}/
 install -d -m 0755 $PREFIX/$FLUME_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$FLUME_DIR/cloudera/
 
+rm ${PREFIX}/${FLUME_DIR}/lib/hadoop-client*.jar # contains no executable code and isn't in Hadoop packages
+
 external_versionless_symlinks 'flume' $PREFIX/$FLUME_DIR/lib
 

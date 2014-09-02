@@ -258,5 +258,7 @@ ln -s ${DATA_DIR#${SERVER_PREFIX}} ${SERVER_LIB_DIR}/libext
 install -d -m 0755 ${SERVER_LIB_DIR}/cloudera
 cp ${BUILD_DIR}/cloudera/cdh_version.properties ${SERVER_LIB_DIR}/cloudera/
 
+rm ${SERVER_LIB_DIR}/libtools/hadoop-client*.jar # contains no executable code and isn't in Hadoop packages
+
 external_versionless_symlinks 'oozie' ${SERVER_LIB_DIR}/lib ${SERVER_LIB_DIR}/libtools ${SERVER_LIB_DIR}/libserver
 
