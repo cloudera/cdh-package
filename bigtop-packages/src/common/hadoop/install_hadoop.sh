@@ -295,7 +295,7 @@ cp -a ${BUILD_DIR}/sbin/mr-jobhistory-daemon.sh ${MAPREDUCE_DIR}/sbin
 # native libs
 install -d -m 0755 ${SYSTEM_LIB_DIR}
 install -d -m 0755 ${HADOOP_NATIVE_LIB_DIR}
-for library in libhdfs.so.0.0.0; do
+for library in libhdfs.so.0.0.0 libnativetask.so.1.0.0; do
   cp ${BUILD_DIR}/lib/native/${library} ${SYSTEM_LIB_DIR}/
   ldconfig -vlN ${SYSTEM_LIB_DIR}/${library}
   ln -s ${library} ${SYSTEM_LIB_DIR}/${library/.so.*/}.so
