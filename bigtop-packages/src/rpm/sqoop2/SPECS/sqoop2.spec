@@ -71,7 +71,6 @@ Source11: sqoop-server.sh
 Source12: sqoop-tool.sh
 Source13: tomcat-deployment.sh
 Buildarch: noarch
-BuildRequires: asciidoc
 Requires: hadoop-client, bigtop-utils >= 0.7, bigtop-tomcat >= 0.7, %{name}-client = %{version}-%{release}
 
 %description
