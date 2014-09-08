@@ -37,6 +37,7 @@ License: ASL 2.0
 Source0: %{datafu_name}-%{datafu_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{datafu_name}.sh
+Source3: packaging_functions.sh
 Requires: hadoop-client, bigtop-utils >= 0.7
 
 
@@ -60,7 +61,8 @@ env FULL_VERSION=%{datafu_patched_version} bash $RPM_SOURCE_DIR/do-component-bui
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh $RPM_SOURCE_DIR/install_datafu.sh \
+bash $RPM_SOURCE_DIR/install_datafu.sh \
+          --distro-dir=$RPM_SOURCE_DIR \
           --build-dir=. \
           --prefix=$RPM_BUILD_ROOT
 

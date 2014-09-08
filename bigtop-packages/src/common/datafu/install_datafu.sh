@@ -37,6 +37,7 @@ OPTS=$(getopt \
   -o '' \
   -l 'prefix:' \
   -l 'lib-dir:' \
+  -l 'distro-dir:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -54,6 +55,9 @@ while true ; do
         ;;
         --lib-dir)
         LIB_DIR=$2 ; shift 2
+        ;;
+        --distro-dir)
+        DISTRO_DIR=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -73,11 +77,14 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
+. ${DISTRO_DIR}/packaging_functions.sh
+
 LIB_DIR=${LIB_DIR:-/usr/lib/pig}
 
 # First we'll move everything into lib
 install -d -m 0755 $PREFIX/$LIB_DIR
 cp $BUILD_DIR/dist/datafu-*.jar $PREFIX/$LIB_DIR
+rm $PREFIX/$LIB_DIR/*-javadoc.jar $PREFIX/$LIB_DIR/*-sources.jar
 
 install -d -m 0755 $PREFIX/$LIB_DIR/datafu
 cp ${BUILD_DIR}/LICENSE ${BUILD_DIR}/NOTICE $PREFIX/$LIB_DIR/datafu/
@@ -85,4 +92,6 @@ cp ${BUILD_DIR}/LICENSE ${BUILD_DIR}/NOTICE $PREFIX/$LIB_DIR/datafu/
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/datafu/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/datafu/cloudera/
+
+internal_versionless_symlinks $PREFIX/$LIB_DIR/*.jar
 
