@@ -517,6 +517,8 @@ install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-yarn
 install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-mapreduce
 install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-0.20-mapreduce
 
+ln -s /var/log/hadoop-mapreduce/ ${PREFIX}/usr/lib/hadoop-mapreduce/logs
+
 # Remove all source and create version-less symlinks to offer integration point with other projects
 # FIXME MR1: we should probably unify the versions to begin with
 MR1_VERSION=`grep '^version' ${SOURCE_DIR}/hadoop-mapreduce1-project/build.properties | cut -f2 -d=`
