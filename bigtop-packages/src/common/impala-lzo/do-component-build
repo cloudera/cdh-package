@@ -41,7 +41,7 @@ if [ -z "$GIT_REPO" ]; then
 
         (cd $IMPALA_HOME && \
             . bin/impala-config.sh && \
-            ./buildall.sh -noclean -skiptests)
+            ./buildall.sh -noclean -notests -skiptests)
 
         if [ -n "${DELETE_WORKSPACE}" ]; then
             rm -r ${WORKSPACE}
