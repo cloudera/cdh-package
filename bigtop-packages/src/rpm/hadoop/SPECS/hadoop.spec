@@ -25,13 +25,17 @@
 %define etc_hadoop /etc/%{name}
 %define etc_yarn /etc/yarn
 %define etc_httpfs /etc/%{name}-httpfs
+%define etc_kms /etc/%{name}-kms
 %define config_hadoop %{etc_hadoop}/conf
 %define config_yarn %{etc_yarn}/conf
 %define config_httpfs %{etc_httpfs}/conf
+%define config_kms %{etc_kms}/conf
 %define tomcat_deployment_httpfs %{etc_httpfs}/tomcat-conf
+%define tomcat_deployment_kms %{etc_kms}/tomcat-conf
 %define lib_hadoop_dirname /usr/lib
 %define lib_hadoop %{lib_hadoop_dirname}/%{name}
 %define lib_httpfs %{lib_hadoop_dirname}/%{name}-httpfs
+%define lib_kms %{lib_hadoop_dirname}/%{name}-kms
 %define lib_hdfs %{lib_hadoop_dirname}/%{name}-hdfs
 %define lib_yarn %{lib_hadoop_dirname}/%{name}-yarn
 %define lib_mapreduce %{lib_hadoop_dirname}/%{name}-mapreduce
@@ -41,12 +45,14 @@
 %define log_yarn %{log_hadoop_dirname}/%{name}-yarn
 %define log_hdfs %{log_hadoop_dirname}/%{name}-hdfs
 %define log_httpfs %{log_hadoop_dirname}/%{name}-httpfs
+%define log_kms %{log_hadoop_dirname}/%{name}-kms
 %define log_mapreduce %{log_hadoop_dirname}/%{name}-mapreduce
 %define run_hadoop_dirname /var/run
 %define run_hadoop %{run_hadoop_dirname}/hadoop
 %define run_yarn %{run_hadoop_dirname}/%{name}-yarn
 %define run_hdfs %{run_hadoop_dirname}/%{name}-hdfs
 %define run_httpfs %{run_hadoop_dirname}/%{name}-httpfs
+%define run_kms %{run_hadoop_dirname}/%{name}-https
 %define run_mapreduce %{run_hadoop_dirname}/%{name}-mapreduce
 %define state_hadoop_dirname /var/lib
 %define state_hadoop %{state_hadoop_dirname}/hadoop
@@ -54,16 +60,18 @@
 %define state_hdfs %{state_hadoop_dirname}/%{name}-hdfs
 %define state_mapreduce %{state_hadoop_dirname}/%{name}-mapreduce
 %define state_httpfs %{state_hadoop_dirname}/%{name}-httpfs
+%define state_kms %{state_hadoop_dirname}/%{name}-kms
 %define bin_hadoop %{_bindir}
 %define man_hadoop %{_mandir}
 %define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define doc_hadoop_mr1 %{_docdir}/hadoop-0.20-mapreduce
 %define httpfs_services httpfs
+%define kms_services kms
 %define mapreduce_services mapreduce-historyserver
 %define mapreduce_mr1_services 0.20-mapreduce-jobtracker 0.20-mapreduce-tasktracker 0.20-mapreduce-zkfc 0.20-mapreduce-jobtrackerha
 %define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode hdfs-nfs3
 %define yarn_services yarn-resourcemanager yarn-nodemanager yarn-proxyserver
-%define hadoop_services %{hdfs_services} %{mapreduce_services} %{yarn_services} %{httpfs_services} %{mapreduce_mr1_services}
+%define hadoop_services %{hdfs_services} %{mapreduce_services} %{yarn_services} %{httpfs_services} %{kms_services} %{mapreduce_mr1_services}
 # Hadoop outputs built binaries into %{hadoop_build}
 %define hadoop_build_path build
 %define static_images_dir src/webapps/static/images
@@ -181,6 +189,9 @@ Source33: packaging_functions.sh
 Source34: yarn.1
 Source35: hdfs.1
 Source36: mapred.1
+Source37: hadoop-kms.svc
+Source38: kms.default
+Source39: kms-tomcat-deployment.sh
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, zookeeper >= 3.4.0
@@ -367,6 +378,18 @@ Requires(pre): %{name}-hdfs = %{version}-%{release}
 The Data Nodes in the Hadoop Cluster are responsible for serving up
 blocks of data over the network to Hadoop Distributed Filesystem
 (HDFS) clients.
+
+%package kms
+Summary: KMS for Hadoop
+Group: System/Daemons
+Requires: %{name}-kms = %{version}-%{release}, bigtop-tomcat
+Requires: zookeeper
+Requires(pre): %{name} = %{version}-%{release}
+Requires(pre): %{name}-hdfs = %{version}-%{release}
+
+%description kms
+Hadoop KMS is a cryptographic Key Management Server based on Hadoop KeyProvider API.
+
 
 %package hdfs-nfs3
 Summary: Hadoop HDFS NFS v3 gateway service
@@ -613,6 +636,8 @@ bash %{SOURCE2} \
   --native-build-string=%{hadoop_arch} \
   --installed-lib-dir=%{lib_hadoop} \
   --man-dir=$RPM_BUILD_ROOT%{man_hadoop} \
+  --kms-dir=$RPM_BUILD_ROOT%{lib_kms} \
+  --kms-etc-dir=$RPM_BUILD_ROOT%{etc_kms} \
 
 # Forcing Zookeeper dependency to be on the packaged jar
 %__ln_s -f /usr/lib/zookeeper/zookeeper.jar $RPM_BUILD_ROOT/%{lib_hadoop}/lib/zookeeper*.jar
@@ -661,11 +686,13 @@ done
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{log_hdfs}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{log_mapreduce}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{log_httpfs}
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{log_kms}
 # /var/run/*
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{run_yarn}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{run_hdfs}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{run_mapreduce}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{run_httpfs}
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{run_kms}
 
 %pre
 getent group hadoop >/dev/null || groupadd -r hadoop
@@ -677,6 +704,10 @@ getent passwd hdfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HDFS" --she
 %pre httpfs 
 getent group httpfs >/dev/null   || groupadd -r httpfs
 getent passwd httpfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HTTPFS" --shell /bin/bash -M -r -g httpfs -G httpfs --home %{state_httpfs} httpfs
+
+%pre kms 
+getent group kms >/dev/null   || groupadd -r kms
+getent passwd kms >/dev/null || /usr/sbin/useradd --comment "Hadoop KMS" --shell /bin/bash -M -r -g kms -G kms --home %{state_kms} kms
 
 %pre yarn
 getent group yarn >/dev/null   || groupadd -r yarn
@@ -698,6 +729,11 @@ getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce
 %{alternatives_cmd} --install %{tomcat_deployment_httpfs} %{name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.dist 10
 %{alternatives_cmd} --install %{tomcat_deployment_httpfs} %{name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.https 5
 chkconfig --add %{name}-httpfs
+
+%post kms
+%{alternatives_cmd} --install %{config_kms} %{name}-kms-conf %{etc_kms}/conf.dist 10
+%{alternatives_cmd} --install %{tomcat_deployment_kms} %{name}-kms-tomcat-conf %{etc_kms}/tomcat-conf.dist 5
+chkconfig --add %{name}-kms
 
 %preun
 if [ "$1" = 0 ]; then
@@ -721,9 +757,22 @@ if [ $1 = 0 ]; then
   %{alternatives_cmd} --remove %{name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.https || :
 fi
 
+%preun kms
+if [ $1 = 0 ]; then
+  service %{name}-kms stop > /dev/null 2>&1
+  chkconfig --del %{name}-kms
+  %{alternatives_cmd} --remove %{name}-kms-conf %{etc_kms}/conf.dist || :
+  %{alternatives_cmd} --remove %{name}-kms-tomcat-conf %{etc_kms}/tomcat-conf.dist || :
+fi
+
 %postun httpfs
 if [ $1 -ge 1 ]; then
   service %{name}-httpfs condrestart >/dev/null 2>&1
+fi
+
+%postun kms
+if [ $1 -ge 1 ]; then
+  service %{name}-kms condrestart >/dev/null 2>&1
 fi
 
 
@@ -806,6 +855,17 @@ fi
 
 # Shouldn't the following be moved to hadoop-hdfs?
 %exclude %{lib_hadoop}/bin/fuse_dfs
+
+%files kms
+%defattr(-,root,root)
+%config(noreplace) %{etc_kms}
+%config(noreplace) /etc/default/%{name}-kms
+%{lib_hadoop}/libexec/kms-config.sh
+%{initd_dir}/%{name}-kms
+%{lib_kms}
+%attr(0775,kms,kms) %{run_kms}
+%attr(0775,kms,kms) %{log_kms}
+%attr(0775,kms,kms) %{state_kms}
 
 %files doc
 %defattr(-,root,root)

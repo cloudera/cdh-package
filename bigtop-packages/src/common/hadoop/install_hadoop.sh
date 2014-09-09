@@ -56,6 +56,8 @@ OPTS=$(getopt \
   -l 'man-dir:' \
   -l 'example-dir:' \
   -l 'apache-branch:' \
+  -l 'kms-dir:' \
+  -l 'kms-etc-dir:' \
   -- "$@")
 
 if [ $? != 0 ] ; then
@@ -134,6 +136,12 @@ while true ; do
         --example-dir)
         EXAMPLE_DIR=$2 ; shift 2
         ;;
+        --kms-dir)
+        KMS_DIR=$2 ; shift 2
+        ;;
+        --kms-etc-dir)
+        KMS_ETC_DIR=$2 ; shift 2
+		;;
         --)
         shift ; break
         ;;
@@ -172,6 +180,8 @@ EXAMPLE_DIR=${EXAMPLE_DIR:-$DOC_DIR/examples}
 HADOOP_ETC_DIR=${HADOOP_ETC_DIR:-$PREFIX/etc/hadoop}
 HTTPFS_ETC_DIR=${HTTPFS_ETC_DIR:-$PREFIX/etc/hadoop-httpfs}
 BASH_COMPLETION_DIR=${BASH_COMPLETION_DIR:-$PREFIX/etc/bash_completion.d}
+KMS_DIR=${KMS_DIR:-$PREFIX/usr/lib/hadoop-kms}
+KMS_ETC_DIR=${KMS_ETC_DIR:-$PREFIX/etc/hadoop-KMS}
 
 INSTALLED_HADOOP_DIR=${INSTALLED_HADOOP_DIR:-/usr/lib/hadoop}
 HADOOP_NATIVE_LIB_DIR=${HADOOP_DIR}/lib/native
@@ -392,6 +402,25 @@ for manpage in hadoop hdfs yarn mapred; do
 	gzip -c < $DISTRO_DIR/$manpage.1 > $MAN_DIR/man1/$manpage.1.gz
 	chmod 644 $MAN_DIR/man1/$manpage.1.gz
 done
+
+# KMS
+install -d -m 0755 ${KMS_DIR}/sbin
+cp ${BUILD_DIR}/sbin/kms.sh ${KMS_DIR}/sbin/
+cp -r ${BUILD_DIR}/share/hadoop/kms/tomcat/webapps ${KMS_DIR}/webapps
+install -d -m 0755 ${PREFIX}/var/lib/hadoop-kms
+install -d -m 0755 $KMS_ETC_DIR/conf.dist
+
+install -m 0755 ${DISTRO_DIR}/kms-tomcat-deployment.sh ${KMS_DIR}/tomcat-deployment.sh
+KMS_HTTPS_DIRECTORY=$KMS_ETC_DIR/tomcat-conf.dist
+
+install -d -m 0755 ${KMS_HTTPS_DIRECTORY}
+cp -r ${BUILD_DIR}/share/hadoop/kms/tomcat/conf ${KMS_HTTPS_DIRECTORY}
+chmod 644 ${KMS_HTTPS_DIRECTORY}/conf/*
+install -d -m 0755 ${KMS_HTTPS_DIRECTORY}/WEB-INF
+mv ${KMS_DIR}/webapps/kms/WEB-INF/*.xml ${KMS_HTTPS_DIRECTORY}/WEB-INF/
+mv ${KMS_HTTPS_DIRECTORY}/conf/ssl-server.xml ${KMS_HTTPS_DIRECTORY}/conf/server.xml
+
+mv $HADOOP_ETC_DIR/conf.empty/kms* $KMS_ETC_DIR/conf.dist
 
 # HTTPFS
 install -d -m 0755 ${HTTPFS_DIR}/sbin

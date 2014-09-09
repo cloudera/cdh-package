@@ -188,6 +188,12 @@ Architecture: any
 Depends: hadoop (= ${source:Version}), ${shlibs:Depends}
 Description: JNI Bindings to access Hadoop HDFS from C
  See http://wiki.apache.org/hadoop/LibHDFS
+ 
+Package: hadoop-kms
+Architecture: all
+Depends: hadoop (= ${source:Version}), hadoop-client (= ${source:Version}), bigtop-tomcat, zookeeper
+Description: KMS for Hadoop
+   Hadoop KMS is a cryptographic Key Management Server based on Hadoop's KeyProvider API.
 
 Package: libhdfs0-dev
 Architecture: any
