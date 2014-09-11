@@ -13,14 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 HADOOP_NAME="kms"
-DAEMON="hadoop-$HADOOP_NAME"
-DESC="Hadoop $HADOOP_NAME"
+DAEMON="hadoop-$HADOOP_NAME-server"
+DESC="Hadoop $HADOOP_NAME server"
 EXEC_PATH="/usr/lib/hadoop-kms/sbin/kms.sh"
 SVC_USER="$HADOOP_NAME"
 WORKING_DIR="/var/lib/hadoop-kms"
 DAEMON_FLAGS="$HADOOP_NAME"
-CONF_DIR="/etc/$DAEMON/conf"
-PIDFILE="/var/run/$DAEMON/hadoop-$SVC_USER-$HADOOP_NAME.pid"
+CONF_DIR="/etc/hadoop-${HADOOP_NAME}/conf"
+PIDFILE="/var/run/hadoop-${HADOOP_NAME}/hadoop-$SVC_USER-$HADOOP_NAME-server.pid"
 PRIORITY=90
 
 generate_start() {
@@ -69,7 +69,11 @@ generate_stop() {
 
 cat <<'__EOT__'
 stop() {
-
+	
+  export KMS_TEMP="$(dirname $PIDFILE)"
+  export CATALINA_PID="$PIDFILE"
+  export CATALINA_TMPDIR="$KMS_TEMP"
+	
   # FIXME: workaround for BIGTOP-537
   checkstatusofproc
   if [ "$?" = "$STATUS_RUNNING" ] ; then

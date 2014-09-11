@@ -43,7 +43,7 @@ hadoop_svcs=hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-jo
             yarn-resourcemanager yarn-nodemanager yarn-proxyserver \
             mapreduce-historyserver httpfs 0.20-mapreduce-zkfc \
             0.20-mapreduce-jobtracker 0.20-mapreduce-jobtrackerha 0.20-mapreduce-tasktracker \
-            kms
+            kms-server
 
 $(hadoop_svcs): debian/init.d.tmpl
 	bash $< debian/hadoop-$@.svc deb debian/hadoop-$@.init
@@ -90,6 +90,8 @@ override_dh_auto_install:
 	cp debian/0.20.default debian/tmp/etc/default/hadoop-0.20
 	# MR1 hack
 	cp debian/mapreduce.conf debian/tmp/etc/security/limits.d/mapred.conf
+	# Copy in defaults for KMS service
+	cp debian/kms.default debian/tmp/etc/default/hadoop-kms
 
 override_dh_install: $(hadoop_svcs)
 	dh_install

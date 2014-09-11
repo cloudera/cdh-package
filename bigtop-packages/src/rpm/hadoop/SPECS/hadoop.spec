@@ -66,7 +66,7 @@
 %define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define doc_hadoop_mr1 %{_docdir}/hadoop-0.20-mapreduce
 %define httpfs_services httpfs
-%define kms_services kms
+%define kms_services kms-server
 %define mapreduce_services mapreduce-historyserver
 %define mapreduce_mr1_services 0.20-mapreduce-jobtracker 0.20-mapreduce-tasktracker 0.20-mapreduce-zkfc 0.20-mapreduce-jobtrackerha
 %define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode hdfs-nfs3
@@ -189,7 +189,7 @@ Source33: packaging_functions.sh
 Source34: yarn.1
 Source35: hdfs.1
 Source36: mapred.1
-Source37: hadoop-kms.svc
+Source37: hadoop-kms-server.svc
 Source38: kms.default
 Source39: kms-tomcat-deployment.sh
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
@@ -381,14 +381,19 @@ blocks of data over the network to Hadoop Distributed Filesystem
 
 %package kms
 Summary: KMS for Hadoop
-Group: System/Daemons
-Requires: %{name}-kms = %{version}-%{release}, bigtop-tomcat
-Requires: zookeeper
-Requires(pre): %{name} = %{version}-%{release}
-Requires(pre): %{name}-hdfs = %{version}-%{release}
+Group: Development/Libraries
+Requires: %{name}-client = %{version}-%{release}, bigtop-tomcat
 
 %description kms
 Hadoop KMS is a cryptographic Key Management Server based on Hadoop KeyProvider API.
+
+%package kms-server
+Summary: KMS for Hadoop
+Group: System/Daemons
+Requires: %{name}-kms = %{version}-%{release}
+
+%description kms-server
+Bundles KMS init scripts.
 
 
 %package hdfs-nfs3
@@ -671,6 +676,10 @@ done
 # MR1 hack
 %__install -m 0644 %{SOURCE10} $RPM_BUILD_ROOT/etc/security/limits.d/mapred.conf
 
+# Install KMS default file
+%__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
+%__cp %{SOURCE38} $RPM_BUILD_ROOT/etc/default/hadoop-kms
+
 # Install fuse default file
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
 %__cp %{SOURCE4} $RPM_BUILD_ROOT/etc/default/hadoop-fuse
@@ -774,7 +783,7 @@ fi
 
 %postun kms
 if [ $1 -ge 1 ]; then
-  service %{name}-kms condrestart >/dev/null 2>&1
+  service %{name}-kms-server condrestart >/dev/null 2>&1
 fi
 
 
@@ -862,11 +871,13 @@ fi
 %config(noreplace) %{etc_kms}
 %config(noreplace) /etc/default/%{name}-kms
 %{lib_hadoop}/libexec/kms-config.sh
-%{initd_dir}/%{name}-kms
 %{lib_kms}
 %attr(0775,kms,kms) %{run_kms}
 %attr(0775,kms,kms) %{log_kms}
 %attr(0775,kms,kms) %{state_kms}
+
+%files kms-server
+%{initd_dir}/%{name}-kms-server
 
 %files doc
 %defattr(-,root,root)
