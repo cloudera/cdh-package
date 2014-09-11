@@ -283,7 +283,7 @@ the tasks.
 %package mapreduce
 Summary: The Hadoop MapReduce (MRv2)
 Group: System/Daemons
-Requires: %{name}-yarn = %{version}-%{release}, %{name}-libnativetask = %{version}-%{release}
+Requires: %{name}-yarn = %{version}-%{release}, %{name} = %{version}-%{release}
 Requires: avro-libs, zookeeper
 
 %description mapreduce
@@ -558,14 +558,6 @@ Group: Documentation
 Obsoletes: %{name}-docs
 %description doc
 Documentation for Hadoop
-
-%package libnativetask
-Summary: Native task implementation for MapReduce
-Group: Development/Libraries
-AutoReq: no
-
-%description libnativetask
-Native task implementation for MapReduce
 
 %package libhdfs
 Summary: Hadoop Filesystem Library
@@ -951,10 +943,6 @@ fi
 %defattr(-,root,root)
 %{lib_hadoop}/client
 %{lib_hadoop}/client-0.20
-
-%files libnativetask
-%defattr(-,root,root)
-%{_libdir}/libnativetask*
 
 %files libhdfs
 %defattr(-,root,root)

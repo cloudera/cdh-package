@@ -74,7 +74,7 @@ Description: The Hadoop NextGen MapReduce (YARN)
 
 Package: hadoop-mapreduce
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.7), hadoop-yarn (= ${source:Version}), avro-libs, zookeeper, libnativetask1 (= ${source:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.7), hadoop-yarn (= ${source:Version}), avro-libs, zookeeper, hadoop (= ${source:Version})
 Description: The Hadoop MapReduce (MRv2)
  Hadoop MapReduce is a programming model and software framework for
  writing applications that rapidly process vast amounts of data
@@ -182,11 +182,6 @@ Package: hadoop-hdfs-nfs3
 Architecture: all
 Depends: hadoop-hdfs (= ${source:Version}), rpcbind
 Description: Hadoop HDFS NFS v3 gateway service
-
-Package: libnativetask1
-Architecture: all
-Depends: ${shlibs:Depends}
-Description: Native task implementation for MapReduce
 
 Package: libhdfs0
 Architecture: any
