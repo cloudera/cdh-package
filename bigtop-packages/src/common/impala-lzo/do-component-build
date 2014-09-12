@@ -2,8 +2,8 @@
 
 set -ex
 
-export IMPALA_LZO_IMPALA_REF=origin/cdh5-1.4_5.1.2
-export IMPALA_LZO_HADOOP_LZO_REF=origin/cdh5-0.4.15_5.1.2
+export IMPALA_LZO_IMPALA_REF=origin/cdh5-1.4_5.1.3
+export IMPALA_LZO_HADOOP_LZO_REF=origin/cdh5-0.4.15_5.1.3
 
 if [ -z "$GIT_REPO" ]; then
     . /mnt/toolchain/toolchain.sh
