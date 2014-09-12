@@ -17,13 +17,15 @@
 set -ex
 
 if [ -z "$GIT_REPO" ]; then
+    PROTOC_CDH5_PATH=/opt/toolchain/protobuf-2.5.0/bin/protoc
+
     if [ -z "${DO_MAVEN_DEPLOY}" ]; then
         MAVEN_INST_DEPLOY=install
     else
         MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
     fi
 
-    MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn source:jar-no-fork javadoc:jar $MAVEN_INST_DEPLOY -DskipTests
+    MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn source:jar-no-fork javadoc:jar $MAVEN_INST_DEPLOY -Dprotoc.executable=${PROTOC_CDH5_PATH} -DskipTests
     
     rm -rf build parquet-${FULL_VERSION}
     ALL_FILES=`echo *`
