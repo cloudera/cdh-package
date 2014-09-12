@@ -417,10 +417,11 @@ install -d -m 0755 ${KMS_HTTPS_DIRECTORY}
 cp -r ${BUILD_DIR}/share/hadoop/kms/tomcat/conf ${KMS_HTTPS_DIRECTORY}
 chmod 644 ${KMS_HTTPS_DIRECTORY}/conf/*
 install -d -m 0755 ${KMS_HTTPS_DIRECTORY}/WEB-INF
-mv ${KMS_DIR}/webapps/kms/WEB-INF/*.xml ${KMS_HTTPS_DIRECTORY}/WEB-INF/
+cp ${KMS_DIR}/webapps/kms/WEB-INF/*.xml ${KMS_HTTPS_DIRECTORY}/WEB-INF/
 mv ${KMS_HTTPS_DIRECTORY}/conf/ssl-server.xml ${KMS_HTTPS_DIRECTORY}/conf/server.xml
 
 mv $HADOOP_ETC_DIR/conf.empty/kms* $KMS_ETC_DIR/conf.dist
+cp $HADOOP_ETC_DIR/conf.empty/core-site.xml  $KMS_ETC_DIR/conf.dist
 
 # HTTPFS
 install -d -m 0755 ${HTTPFS_DIR}/sbin
@@ -586,7 +587,7 @@ cp hadoop-hdfs-project/hadoop-hdfs/{LICENSE,NOTICE}.txt ${PREFIX}/usr/lib/hadoop
 # Cloudera specific
 for map in hadoop_${HADOOP_DIR} hadoop-hdfs_${HDFS_DIR} hadoop-yarn_${YARN_DIR} \
            hadoop-mapreduce_${MAPREDUCE_DIR} hadoop-0.20-mapreduce_${MAPREDUCE_MR1_DIR} \
-           hadoop-httpfs_${HTTPFS_DIR} ; do
+           hadoop-httpfs_${HTTPFS_DIR} hadoop-kms_${KMS_DIR} ; do
   dir=${map#*_}/cloudera
   install -d -m 0755 $dir
   grep -v 'cloudera.pkg.name=' cloudera/cdh_version.properties > $dir/cdh_version.properties
