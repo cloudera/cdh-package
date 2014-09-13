@@ -28,7 +28,7 @@ BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
 [ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/spark ] && . ${BIGTOP_DEFAULTS_DIR}/spark
 
 # Load environment variables
-if [ -n "$SPARK_CONF_DIR" ]; then
+if [ -n "$SPARK_CONF_DIR" ] && [ -e $SPARK_CONF_DIR/spark-env.sh ]; then
   . $SPARK_CONF_DIR/spark-env.sh
 elif [ -e $FWDIR/conf/spark-env.sh ]; then
   . $FWDIR/conf/spark-env.sh
