@@ -411,14 +411,19 @@ install -d -m 0755 ${PREFIX}/var/lib/hadoop-kms
 install -d -m 0755 $KMS_ETC_DIR/conf.dist
 
 install -m 0755 ${DISTRO_DIR}/kms-tomcat-deployment.sh ${KMS_DIR}/tomcat-deployment.sh
-KMS_HTTPS_DIRECTORY=$KMS_ETC_DIR/tomcat-conf.dist
 
-install -d -m 0755 ${KMS_HTTPS_DIRECTORY}
-cp -r ${BUILD_DIR}/share/hadoop/kms/tomcat/conf ${KMS_HTTPS_DIRECTORY}
-chmod 644 ${KMS_HTTPS_DIRECTORY}/conf/*
-install -d -m 0755 ${KMS_HTTPS_DIRECTORY}/WEB-INF
-cp ${KMS_DIR}/webapps/kms/WEB-INF/*.xml ${KMS_HTTPS_DIRECTORY}/WEB-INF/
+KMS_HTTPS_DIRECTORY=$KMS_ETC_DIR/tomcat-conf.https
+KMS_HTTP_DIRECTORY=$KMS_ETC_DIR/tomcat-conf.http
+
+install -d -m 0755 ${KMS_HTTP_DIRECTORY}
+cp -r ${BUILD_DIR}/share/hadoop/kms/tomcat/conf ${KMS_HTTP_DIRECTORY}
+chmod 644 ${KMS_HTTP_DIRECTORY}/conf/*
+install -d -m 0755 ${KMS_HTTP_DIRECTORY}/WEB-INF
+cp ${KMS_DIR}/webapps/kms/WEB-INF/*.xml ${KMS_HTTP_DIRECTORY}/WEB-INF/
+
+cp -r ${KMS_HTTP_DIRECTORY} ${KMS_HTTPS_DIRECTORY}
 mv ${KMS_HTTPS_DIRECTORY}/conf/ssl-server.xml ${KMS_HTTPS_DIRECTORY}/conf/server.xml
+rm ${KMS_HTTP_DIRECTORY}/conf/ssl-server.xml
 
 mv $HADOOP_ETC_DIR/conf.empty/kms* $KMS_ETC_DIR/conf.dist
 cp $HADOOP_ETC_DIR/conf.empty/core-site.xml  $KMS_ETC_DIR/conf.dist
