@@ -76,16 +76,46 @@ LIB_DIR=${LIB_DIR:-/usr/lib/parquet}
 HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
 RELATIVE_PATH='../parquet' # LIB_DIR relative to HADOOP_HOME
 
-# First we'll move everything into lib
-install -d -m 0755 $PREFIX/$LIB_DIR
+# install parquet-tools first because it unpacks the lib/ folder
+install -d -m 0755 ${PREFIX}/${LIB_DIR}/bin
+
+# unpack the assembly (created by parquet-tools build)
+parquet_tools_tar=`echo ${BUILD_DIR}/parquet-tools/target/parquet-tools-*.tar.gz`
+tar -C ${PREFIX}/${LIB_DIR}/bin -xzvf $parquet_tools_tar --strip-components=1
+
+# relocate the bundled dependencies
+mv ${PREFIX}/${LIB_DIR}/bin/lib ${PREFIX}/${LIB_DIR}/lib
+ln -s ../lib ${PREFIX}/${LIB_DIR}/bin/lib
+chmod 755 ${PREFIX}/${LIB_DIR}/lib
+
+# install a wrapper in prefix that calls the dataset tool
+wrapper=$PREFIX/usr/bin/parquet-tools
+mkdir -p `dirname $wrapper`
+cat > $wrapper <<EOF
+#!/bin/bash
+
+# Autodetect JAVA_HOME if not defined
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
+
+exec ${LIB_DIR}/bin/parquet-tools "\$@"
+EOF
+chmod 755 $wrapper
+
+# move everything into the LIB_DIR/lib folder created above
 install -d -m 0755 $PREFIX/$HADOOP_HOME
+
+
 versions='s#-[0-9.]\+-cdh[0-9\-\.]*[0-9]\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
-for jar in `find $BUILD_DIR -name *.jar | grep -v '\-tests.jar' | grep -v '\/original-parquet'`; do
-    cp $jar $PREFIX/$LIB_DIR/
+for jar in `find $BUILD_DIR -name *.jar | grep -v '\-sources.jar' | grep -v '\-javadoc.jar' | grep -v '\-tests.jar' | grep -v '\/original-parquet'`; do
+    # copy the jar if it isn't already in LIB_DIR/lib
+    [ -f "${PREFIX}/${LIB_DIR}/lib/`basename ${jar}`" ] || cp $jar $PREFIX/$LIB_DIR/lib/
     versionless=`echo \`basename ${jar}\` | sed -e ${versions}`
-    ln -fs `basename ${jar}` ${PREFIX}/${LIB_DIR}/${versionless}
+    ln -fs lib/`basename ${jar}` ${PREFIX}/${LIB_DIR}/${versionless}
     ln -fs ${RELATIVE_PATH}/${versionless} $PREFIX/$HADOOP_HOME/
+    # parquet jars used to be located in the LIB_DIR dir; add a symlink for the old location
+    ln -fs lib/`basename ${jar}` ${PREFIX}/${LIB_DIR}/`basename ${jar}`
 done
+
 
 cp ${BUILD_DIR}/{LICENSE,NOTICE} ${PREFIX}/${LIB_DIR}/
 
