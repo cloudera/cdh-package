@@ -16,7 +16,7 @@
 /usr/lib/hive/lib/asm-commons-*.jar
 /usr/lib/hive/lib/asm-tree-*.jar
 /usr/lib/hive/lib/avro*.jar
-/usr/lib/hive/lib/bonecp-0.8.0.RELEASE.jar
+/usr/lib/hive/lib/bonecp-*.jar
 /usr/lib/hive/lib/commons-cli-*.jar
 /usr/lib/hive/lib/commons-codec-*.jar
 /usr/lib/hive/lib/commons-compress-*.jar
@@ -46,6 +46,8 @@
 /usr/lib/hive/lib/httpclient-*.jar
 /usr/lib/hive/lib/httpcore-*.jar
 /usr/lib/hive/lib/jdo-api-*.jar
+/usr/lib/hive/lib/jersey-server-*.jar
+/usr/lib/hive/lib/jersey-servlet-*.jar
 /usr/lib/hive/lib/jetty-*.jar
 /usr/lib/hive/lib/jetty-all-*.jar
 /usr/lib/hive/lib/jetty-util-*.jar
@@ -60,11 +62,11 @@
 /usr/lib/hive/lib/php
 /usr/lib/hive/lib/py
 /usr/lib/hive/lib/servlet-api-*.jar
-/usr/lib/hive/lib/servlet-api-*.jar
 /usr/lib/hive/lib/snappy-java-*.jar
 /usr/lib/hive/lib/ST4-*.jar
 /usr/lib/hive/lib/stax-api-*.jar
 /usr/lib/hive/lib/stringtemplate-*.jar
+/usr/lib/hive/lib/super-csv-*.jar
 /usr/lib/hive/lib/tempus-fugit-*.jar
 /usr/lib/hive/lib/velocity-*.jar
 /usr/lib/hive/lib/xz-*.jar
