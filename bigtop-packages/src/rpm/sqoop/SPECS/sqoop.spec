@@ -165,6 +165,7 @@ fi
 %files 
 %defattr(0755,root,root)
 %{lib_sqoop}
+%attr(0644,root,root) %{lib_sqoop}/*.jar
 %config(noreplace) %{conf_sqoop_dist}
 %{_bindir}/sqoop
 %{_bindir}/sqoop-codegen
@@ -183,20 +184,5 @@ fi
 %attr(0755,sqoop,sqoop) /var/lib/sqoop
 
 %defattr(0644,root,root,0755)
-%{lib_sqoop}/lib/
-%{lib_sqoop}/*.jar
-%{_mandir}/man1/sqoop.1.*
-%{_mandir}/man1/sqoop-codegen.1.*
-%{_mandir}/man1/sqoop-create-hive-table.1.*
-%{_mandir}/man1/sqoop-eval.1.*
-%{_mandir}/man1/sqoop-export.1.*
-%{_mandir}/man1/sqoop-help.1.*
-%{_mandir}/man1/sqoop-import-all-tables.1.*
-%{_mandir}/man1/sqoop-import.1.*
-%{_mandir}/man1/sqoop-job.1.*
-%{_mandir}/man1/sqoop-list-databases.1.*
-%{_mandir}/man1/sqoop-list-tables.1.*
-%{_mandir}/man1/sqoop-metastore.1.*
-%{_mandir}/man1/sqoop-version.1.*
-%{_mandir}/man1/sqoop-merge.1.*
+%{_mandir}/man1/*
 %doc %{doc_sqoop}
