@@ -10,7 +10,9 @@ if [ -z "$GIT_REPO" ]; then
 
     export LLVM_HOME=$TOOLCHAIN_HOME/llvm-3.3
     export PATH=$LLVM_HOME/bin:$PATH
-
+    export BOOST_ROOT=/opt/toolchain/boost-pic-1.55.0
+    export PIC_LIB_PATH=/opt/toolchain/impala_3rdparty-0.5
+    
     export IMPALA_LZO=`pwd`
     if [ -z "${WORKSPACE}" ]; then
         WORKSPACE=~/impala-lzo-repos
