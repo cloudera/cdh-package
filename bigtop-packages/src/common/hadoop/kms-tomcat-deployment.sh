@@ -49,6 +49,11 @@ if [ -n "${BIGTOP_CLASSPATH}" ] ; then
   sed -i -e "s#^\(common.loader=.*\)\$#\1,${BIGTOP_CLASSPATH/:/,}#" ${TOMCAT_DEPLOYMENT}/conf/catalina.properties
 fi
 
+# Loading all jars from the plugin directory
+if [ -n "${KMS_PLUGIN_DIR}" ] && [ -d "${KMS_PLUGIN_DIR}" ] ; then
+  sed -i -e "s#^\(common.loader=.*\)\$#\1,${KMS_PLUGIN_DIR}/*.jar#" ${TOMCAT_DEPLOYMENT}/conf/catalina.properties
+fi
+
 chown -R kms:kms ${TOMCAT_DEPLOYMENT}
 chmod -R 755 ${TOMCAT_DEPLOYMENT}
 
