@@ -29,6 +29,18 @@ cat <<'__EOT__'
       DAEMON_FLAGS="$DAEMON_FLAGS -${@}"
       start
       ;;
+    rollingUpgradeStarted)
+      DAEMON_FLAGS="$DAEMON_FLAGS -rollingUpgrade started"
+      start
+      ;;
+    rollingUpgradeRollback)
+      DAEMON_FLAGS="$DAEMON_FLAGS -rollingUpgrade rollback"
+      start
+      ;;
+    rollingUpgradeDowngrade)
+      DAEMON_FLAGS="$DAEMON_FLAGS -rollingUpgrade downgrade"
+      start
+      ;;
     init)
       check_for_root
       checkstatusofproc
@@ -40,7 +52,7 @@ cat <<'__EOT__'
       fi
       ;;
     *)
-      echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart|upgrade|rollback|init}"
+      echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart|upgrade|rollback|rollingUpgradeStarted|rollingUpgradeRollback|rollingUpgradeDowngrade|init}"
       exit 1
 __EOT__
 
