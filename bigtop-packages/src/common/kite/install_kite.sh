@@ -85,11 +85,31 @@ LIB_DIR=${LIB_DIR:-/usr/lib/kite}
 # First we'll move everything into lib
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
+install -d -m 0755 $PREFIX/$LIB_DIR/bin
 
 # JARs in ./lib are build dependencies - so we'll copy everything else
 for file in `cd ${BUILD_DIR}; find . -name \*.jar | grep -v '\./lib'`; do
     cp ${file} ${PREFIX}/${LIB_DIR}/lib/
 done
+
+# copy the Kite dataset tool into bin
+dataset_bin=${BUILD_DIR}/kite-tools/target/kite-dataset
+install -m 0755 ${dataset_bin} ${PREFIX}/${LIB_DIR}/bin/kite-dataset
+
+# install a wrapper in prefix that calls the dataset tool
+wrapper=$PREFIX/usr/bin/kite-dataset
+mkdir -p `dirname $wrapper`
+cat > $wrapper <<EOF
+#!/bin/bash
+
+# Autodetect JAVA_HOME if not defined
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
+
+exec ${LIB_DIR}/bin/kite-dataset "\$@"
+EOF
+chmod 755 $wrapper
+
+
 rm ${PREFIX}/${LIB_DIR}/lib/kite*-{sources,javadoc,tests}.jar
 (cd ${PREFIX}/${LIB_DIR}; ln -s lib/kite*.jar ./)
 

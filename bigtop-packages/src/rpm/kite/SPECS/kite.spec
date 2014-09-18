@@ -65,5 +65,5 @@ bash $RPM_SOURCE_DIR/install_kite.sh \
 %files 
 %defattr(-,root,root,755)
 %{lib_kite}
-%{lib_kite}/cloudera/cdh_version.properties
+%{_bindir}/kite-dataset
 
