@@ -29,7 +29,12 @@ Description: Cloudera Search Project
 
 Package: solr-mapreduce
 Architecture: all
-Depends: hadoop-client, bigtop-utils (>= 0.7)
+Depends: hadoop-client, bigtop-utils (>= 0.7), solr
 Description: Solr mapreduce indexer
  Solr mapreduce indexer
 
+Package: solr-crunch
+Architecture: all
+Depends: hadoop-client, bigtop-utils (>= 0.7), crunch, kite, parquet, avro-libs, zookeeper, solr, sentry
+Description: Solr Crunch indexer
+ Solr crunch indexer

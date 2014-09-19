@@ -27,7 +27,7 @@ if [ -z "$GIT_REPO" ]; then
     
     rm -rf build
     mkdir build
-    cp search-dist/*/*search-dist.tar.gz build/search-${FULL_VERSION}.tar.gz
+    cp search-dist/*/cloudera-search-${FULL_VERSION}-search-dist.tar.gz build/search-${FULL_VERSION}.tar.gz
 else
     git init
     git add .

@@ -85,11 +85,23 @@ bash %{SOURCE2} \
 %package -n solr-mapreduce
 Summary: Solr mapreduce indexer
 Group: Development/Libraries
-Requires: hadoop-client, bigtop-utils >= 0.7
+Requires: hadoop-client, bigtop-utils >= 0.7, solr
 
 %description -n solr-mapreduce
 Solr mapreduce indexer
 
 %files -n solr-mapreduce
 %defattr(644,root,root,755)
-/usr/lib/solr/contrib
+/usr/lib/solr/contrib/mr
+
+%package -n solr-crunch
+Summary: Solr Crunch indexer
+Group: Development/Libraries
+Requires: hadoop-client, crunch, bigtop-utils >= 0.7, kite, parquet, avro-libs, zookeeper, solr, sentry
+
+%description -n solr-crunch
+Solr Crunch indexer
+
+%files -n solr-crunch
+%defattr(644,root,root,755)
+/usr/lib/solr/contrib/crunch

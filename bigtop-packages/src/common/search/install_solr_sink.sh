@@ -100,6 +100,7 @@ DOC_DIR_PREFIX=${DOC_DIR_PREFIX:-$PREFIX}
 FLUME_DIR=${FLUME_DIR:-/usr/lib/flume-ng}
 # FIXME: once solr-mr and core indexer go upstream we need to rationalize this
 SOLR_MR_DIR=${SOLR_MR_DIR:-/usr/lib/solr/contrib/mr}
+SOLR_CRUNCH_DIR=${SOLR_CRUNCH_DIR:-/usr/lib/solr/contrib/crunch}
 CONF_DIR=/etc/flume-ng/
 CONF_DIST_DIR=/etc/flume-ng/conf.dist/
 ETC_DIR=${ETC_DIR:-/etc/flume-ng}
@@ -114,6 +115,9 @@ cp -r ${BUILD_DIR}/search-dist/target/dist/* ${PREFIX}/${LIB_DIR}
 # FIXME: once solr-mr
 install -d -m 0755 ${PREFIX}/${SOLR_MR_DIR}
 mv -f ${PREFIX}/${LIB_DIR}/search-mr*.jar ${PREFIX}/${SOLR_MR_DIR}
+
+install -d -m 0755 ${PREFIX}/${SOLR_CRUNCH_DIR}
+mv -f ${PREFIX}/${LIB_DIR}/search-crunch*.jar ${PREFIX}/${SOLR_CRUNCH_DIR}
 
 install -d -m 0755 ${PREFIX}/${DOC_DIR}
 
