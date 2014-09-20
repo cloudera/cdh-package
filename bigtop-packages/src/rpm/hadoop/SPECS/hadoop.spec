@@ -743,7 +743,9 @@ chkconfig --add %{name}-httpfs
 %{alternatives_cmd} --install %{config_kms} %{name}-kms-conf %{etc_kms}/conf.dist 10
 %{alternatives_cmd} --install %{tomcat_deployment_kms} %{name}-kms-tomcat-conf %{etc_kms}/tomcat-conf.http 5
 %{alternatives_cmd} --install %{tomcat_deployment_kms} %{name}-kms-tomcat-conf %{etc_kms}/tomcat-conf.https 5
-chkconfig --add %{name}-kms
+
+%post kms-server
+chkconfig --add %{name}-kms-server
 
 %preun
 if [ "$1" = 0 ]; then
@@ -769,12 +771,17 @@ fi
 
 %preun kms
 if [ $1 = 0 ]; then
-  service %{name}-kms stop > /dev/null 2>&1
-  chkconfig --del %{name}-kms
   %{alternatives_cmd} --remove %{name}-kms-conf %{etc_kms}/conf.dist || :
   %{alternatives_cmd} --remove %{name}-kms-tomcat-conf %{etc_kms}/tomcat-conf.http || :
   %{alternatives_cmd} --remove %{name}-kms-tomcat-conf %{etc_kms}/tomcat-conf.https || :
 fi
+
+%preun kms-server
+if [ $1 = 0 ]; then
+  service %{name}-kms-server stop > /dev/null 2>&1
+  chkconfig --del %{name}-kms-server
+fi
+
 
 %postun httpfs
 if [ $1 -ge 1 ]; then
