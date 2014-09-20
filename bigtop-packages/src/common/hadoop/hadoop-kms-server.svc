@@ -21,6 +21,7 @@ WORKING_DIR="/var/lib/hadoop-kms"
 DAEMON_FLAGS="$HADOOP_NAME"
 CONF_DIR="/etc/hadoop-${HADOOP_NAME}/conf"
 PIDFILE="/var/run/hadoop-${HADOOP_NAME}/hadoop-$SVC_USER-$HADOOP_NAME-server.pid"
+DEFAULTS_FILE="hadoop-$HADOOP_NAME"
 PRIORITY=90
 
 generate_start() {
