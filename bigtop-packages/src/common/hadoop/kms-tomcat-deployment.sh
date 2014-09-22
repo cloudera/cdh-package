@@ -49,9 +49,9 @@ if [ -n "${BIGTOP_CLASSPATH}" ] ; then
   sed -i -e "s#^\(common.loader=.*\)\$#\1,${BIGTOP_CLASSPATH/:/,}#" ${TOMCAT_DEPLOYMENT}/conf/catalina.properties
 fi
 
-# Loading all jars from the plugin directory
+# Copying in all the jars from the plugin directory to lib.
 if [ -n "${KMS_PLUGIN_DIR}" ] && [ -d "${KMS_PLUGIN_DIR}" ] ; then
-  sed -i -e "s#^\(common.loader=.*\)\$#\1,${KMS_PLUGIN_DIR}/*.jar#" ${TOMCAT_DEPLOYMENT}/conf/catalina.properties
+  cp -r -n $KMS_PLUGIN_DIR/*.jar ${TOMCAT_DEPLOYMENT}/webapps/kms/WEB-INF/lib
 fi
 
 chown -R kms:kms ${TOMCAT_DEPLOYMENT}
