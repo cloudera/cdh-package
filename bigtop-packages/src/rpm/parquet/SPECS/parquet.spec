@@ -31,7 +31,8 @@ License: ASL 2.0
 Source0: parquet-%{parquet_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_parquet.sh
-Requires: hadoop, parquet-format
+Source3: packaging_functions.sh
+Requires: hadoop, parquet-format, avro-libs, zookeeper, hadoop-yarn, hadoop-mapreduce, hadoop-hdfs
 
 
 %description 
@@ -48,7 +49,8 @@ env FULL_VERSION=%{parquet_patched_version} bash $RPM_SOURCE_DIR/do-component-bu
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh $RPM_SOURCE_DIR/install_parquet.sh \
+bash $RPM_SOURCE_DIR/install_parquet.sh \
+          --distro-dir=$RPM_SOURCE_DIR \
           --build-dir=./ \
           --prefix=$RPM_BUILD_ROOT
 

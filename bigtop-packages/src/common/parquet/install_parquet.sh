@@ -36,6 +36,7 @@ OPTS=$(getopt \
   -o '' \
   -l 'prefix:' \
   -l 'lib-dir:' \
+  -l 'distro-dir:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -54,6 +55,9 @@ while true ; do
         --lib-dir)
         LIB_DIR=$2 ; shift 2
         ;;
+        --distro-dir)
+        DISTRO_DIR=$2 ; shift 2
+        ;;
         --)
         shift ; break
         ;;
@@ -71,6 +75,8 @@ for var in PREFIX BUILD_DIR ; do
     usage
   fi
 done
+
+. ${DISTRO_DIR}/packaging_functions.sh
 
 LIB_DIR=${LIB_DIR:-/usr/lib/parquet}
 HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
@@ -104,22 +110,22 @@ chmod 755 $wrapper
 # move everything into the LIB_DIR/lib folder created above
 install -d -m 0755 $PREFIX/$HADOOP_HOME
 
-
 versions='s#-[0-9.]\+-cdh[0-9\-\.]*[0-9]\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
-for jar in `find $BUILD_DIR -name *.jar | grep -v '\-sources.jar' | grep -v '\-javadoc.jar' | grep -v '\-tests.jar' | grep -v '\/original-parquet'`; do
+for jar in `find $BUILD_DIR -name parquet*.jar | grep -v 'sources.jar' | grep -v 'javadoc.jar' | grep -v 'tests.jar' | grep -v 'original-parquet'`; do
     # copy the jar if it isn't already in LIB_DIR/lib
     [ -f "${PREFIX}/${LIB_DIR}/lib/`basename ${jar}`" ] || cp $jar $PREFIX/$LIB_DIR/lib/
     versionless=`echo \`basename ${jar}\` | sed -e ${versions}`
     ln -fs lib/`basename ${jar}` ${PREFIX}/${LIB_DIR}/${versionless}
     ln -fs ${RELATIVE_PATH}/${versionless} $PREFIX/$HADOOP_HOME/
-    # parquet jars used to be located in the LIB_DIR dir; add a symlink for the old location
-    ln -fs lib/`basename ${jar}` ${PREFIX}/${LIB_DIR}/`basename ${jar}`
 done
 
-
 cp ${BUILD_DIR}/{LICENSE,NOTICE} ${PREFIX}/${LIB_DIR}/
+
+rm ${PREFIX}/${LIB_DIR}/lib/hadoop-client*.jar
 
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
+
+external_versionless_symlinks 'parquet' ${PREFIX}/${LIB_DIR}/lib/
 
