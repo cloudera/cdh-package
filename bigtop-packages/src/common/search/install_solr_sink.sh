@@ -104,6 +104,7 @@ SOLR_CRUNCH_DIR=${SOLR_CRUNCH_DIR:-/usr/lib/solr/contrib/crunch}
 CONF_DIR=/etc/flume-ng/
 CONF_DIST_DIR=/etc/flume-ng/conf.dist/
 ETC_DIR=${ETC_DIR:-/etc/flume-ng}
+SEARCH_CRUNCH_DOC_DIR=${DOC_DIR}/search-crunch
 
 # Untar the build tar
 (cd ${BUILD_DIR}/search-dist/target ; tar --strip-components=1 -xzf cloudera-search*.tar.gz)
@@ -130,6 +131,10 @@ install -d -m 0755 ${PREFIX}/${DOC_DIR}
 
 # Sample (twitter) configs
 cp -r ${BUILD_DIR}/samples ${PREFIX}/${DOC_DIR}/examples
+
+# Install files needed to run bundled search-crunch tests
+install -d -m 0755 ${PREFIX}/${SEARCH_CRUNCH_DOC_DIR}
+cp -r ${BUILD_DIR}/search-crunch/src/test/resources/* ${PREFIX}/${SEARCH_CRUNCH_DOC_DIR}
 
 # Quickstart script/files
 cp -r ${BUILD_DIR}/quickstart ${PREFIX}/${DOC_DIR}/.
