@@ -40,7 +40,7 @@ Description: Plug-ins for Hadoop to enable integration with Hue
 
 Package: hue
 Architecture: all
-Depends: hue-common (= ${source:Version}), hue-server (= ${source:Version}), hue-beeswax (= ${source:Version}), hue-pig (= ${source:Version}), hue-plugins (= ${source:Version}), hue-hbase (= ${source:Version}), hue-impala (= ${source:Version}), hue-search (= ${source:Version}), hue-sqoop (= ${source:Version}), hue-zookeeper (= ${source:Version}), hue-rdbms (= ${source:Version}), hue-spark (= ${source:Version})
+Depends: hue-common (= ${source:Version}), hue-server (= ${source:Version}), hue-beeswax (= ${source:Version}), hue-pig (= ${source:Version}), hue-plugins (= ${source:Version}), hue-hbase (= ${source:Version}), hue-impala (= ${source:Version}), hue-search (= ${source:Version}), hue-sqoop (= ${source:Version}), hue-zookeeper (= ${source:Version}), hue-rdbms (= ${source:Version}), hue-spark (= ${source:Version}), hue-security (= ${source:Version})
 Description: The hue metapackage
  Hue is a browser-based desktop interface for interacting with Hadoop.
  It supports a file browser, job tracker interface, cluster health monitor, and more.
