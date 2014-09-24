@@ -48,11 +48,12 @@ Source2: install_llama.sh
 Source3: llama.default
 Source4: llama.svc
 Source5: init.d.tmpl
+Source6: packaging_functions.sh
 Requires: hadoop-yarn
 Requires(post): %{alternatives_dep}
 Requires(preun): %{alternatives_dep}
 
-%description 
+%description
  Llama is a low-latency application master for hosting applications like Impala on a YARN cluster.
  This package should be installed on every node in the YARN / Impala cluster.
 
@@ -65,6 +66,7 @@ env FULL_VERSION=%{llama_patched_version} bash $RPM_SOURCE_DIR/do-component-buil
 %install
 %__rm -rf $RPM_BUILD_ROOT
 bash $RPM_SOURCE_DIR/install_llama.sh \
+          --distro-dir=$RPM_SOURCE_DIR \
           --build-dir=./ \
           --prefix=$RPM_BUILD_ROOT \
           --extra-dir=$RPM_SOURCE_DIR

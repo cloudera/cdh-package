@@ -605,10 +605,14 @@ external_versionless_symlinks 'hadoop' \
     ${PREFIX}/usr/lib/hadoop-mapreduce/lib \
     ${PREFIX}/usr/lib/hadoop-yarn/lib \
     ${PREFIX}/usr/lib/hadoop/client \
-    ${PREFIX}/usr/lib/hadoop/client-0.20 hadoop/lib
+    ${PREFIX}/usr/lib/hadoop/client-0.20 \
+    ${PREFIX}/usr/lib/hadoop/lib
 
 external_versionless_symlinks 'hadoop-httpfs' \
     ${PREFIX}/usr/lib/hadoop-httpfs/webapps/webhdfs/WEB-INF/lib
+
+external_versionless_symlinks 'hadoop-kms' \
+    ${PREFIX}/usr/lib/hadoop-kms/webapps/kms/WEB-INF/lib
 
 # FIXME: CDH-17129 removes OpenStack support until it can be tested properly
 rm ${MAPREDUCE_DIR}/hadoop-openstack*.jar

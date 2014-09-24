@@ -115,6 +115,8 @@ rm ${PREFIX}/${LIB_DIR}/lib/kite*-{sources,javadoc,tests}.jar
 
 cp ${BUILD_DIR}/{LICENSE,NOTICE}* ${PREFIX}/${LIB_DIR}/
 
+rm ${PREFIX}/${LIB_DIR}/lib/original-kite-tools*.jar
+
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/

@@ -44,6 +44,7 @@ OPTS=$(getopt \
   -l 'installed-lib-dir:' \
   -l 'bin-dir:' \
   -l 'examples-dir:' \
+  -l 'distro-dir:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -74,6 +75,9 @@ while true ; do
         --examples-dir)
         EXAMPLES_DIR=$2 ; shift 2
         ;;
+        --distro-dir)
+        DISTRO_DIR=$2 ; shift 2
+        ;;
         --)
         shift ; break
         ;;
@@ -91,6 +95,8 @@ for var in PREFIX BUILD_DIR ; do
     usage
   fi
 done
+
+. ${DISTRO_DIR}/packaging_functions.sh
 
 MAN_DIR=$PREFIX/usr/share/man/man1
 DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/whirr}
@@ -137,3 +143,6 @@ cp ${BUILD_DIR}/{LICENSE,NOTICE}.txt ${LIB_DIR}/
 # Cloudera specific
 install -d -m 0755 $LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $LIB_DIR/cloudera/
+
+external_versionless_symlinks 'whirr' ${LIB_DIR}/lib
+

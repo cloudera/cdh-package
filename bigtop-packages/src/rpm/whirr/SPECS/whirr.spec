@@ -37,6 +37,7 @@ Source0: %{name}-%{whirr_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: whirr.1
+Source4: packaging_functions.sh
 Requires: bigtop-utils >= 0.7
 
 %description 
@@ -60,9 +61,10 @@ bash %{SOURCE1}
 %__rm -rf $RPM_BUILD_ROOT
 cp $RPM_SOURCE_DIR/whirr.1 .
 bash %{SOURCE2} \
-          --build-dir=build \
-	  --doc-dir=$RPM_BUILD_ROOT%{doc_whirr} \
-          --prefix=$RPM_BUILD_ROOT
+    --distro-dir=$RPM_SOURCE_DIR \
+    --build-dir=build \
+    --doc-dir=$RPM_BUILD_ROOT%{doc_whirr} \
+    --prefix=$RPM_BUILD_ROOT
 
 %files 
 %defattr(-,root,root)

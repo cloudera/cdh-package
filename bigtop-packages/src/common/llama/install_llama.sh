@@ -42,6 +42,7 @@ OPTS=$(getopt \
   -l 'conf-dir:' \
   -l 'extra-dir:' \
   -l 'doc-dir:' \
+  -l 'distro-dir:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -69,6 +70,9 @@ while true ; do
         --doc-dir)
         DOC_DIR=$2 ; shift 2
         ;;
+        --distro-dir)
+        DISTRO_DIR=$2 ; shift 2
+        ;;
         --)
         shift ; break
         ;;
@@ -86,6 +90,8 @@ for var in PREFIX BUILD_DIR ; do
     usage
   fi
 done
+
+. ${DISTRO_DIR}/packaging_functions.sh
 
 DOC_DIR=${DOC_DIR:-/usr/share/doc/llama}
 LIB_DIR=${LIB_DIR:-/usr/lib/llama}
@@ -140,4 +146,6 @@ cp ${BUILD_DIR}/LICENSE.txt ${PREFIX}/${LIB_DIR}/
 # Cloudera specific
 install -d -m 0755 ${PREFIX}/${LIB_DIR}/cloudera
 cp cloudera/cdh_version.properties ${PREFIX}/${LIB_DIR}/cloudera/
+
+external_versionless_symlinks 'llama' ${PREFIX}/${LIB_DIR}/lib
 

@@ -40,6 +40,7 @@ override_dh_auto_build:
 
 override_dh_auto_install:
 	bash -x debian/install_whirr.sh \
+	  --distro-dir=debian \
 	  --build-dir=build \
 	  --doc-dir=debian/whirr/usr/share/doc/whirr \
 	  --prefix=debian/whirr

@@ -132,6 +132,7 @@ install -d -m 0755 $LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $LIB_DIR/cloudera/
 
 internal_versionless_symlinks ${LIB_DIR}/lib/sentry*.jar
+external_versionless_symlinks 'sentry' ${LIB_DIR}/lib ${LIB_DIR}/lib/server
 
 # Backwards compatibility with CM 5.0.x
 install -d -m 0755 ${PREFIX}/usr/lib/hive/sentry/cloudera

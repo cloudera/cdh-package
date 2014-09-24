@@ -4,14 +4,16 @@
 get_directory_for_jar() {
     case ${1} in
         avro*cassandra*) return;; # This is not included in our Avro distribution, but Mahout used to use it
-        hadoop-client*) return;; # FIXME: We do not currently package this JAR. See CDH-19526.
+        hadoop-client*) return;;
         avro*) lib_dir='avro';;
+        trevni*) lib_dir='avro';;
         parquet*) lib_dir='parquet';;
         zookeeper*) lib_dir='zookeeper';;
         hadoop-yarn*) lib_dir='hadoop-yarn';;
         hadoop-hdfs*) lib_dir='hadoop-hdfs';;
         hadoop-mapreduce*) lib_dir='hadoop-mapreduce';;
         hadoop-core*) lib_dir='hadoop/client-0.20';;
+        hadoop-archives*) lib_dir='hadoop-mapreduce';;
         hadoop*) lib_dir='hadoop';;
         hbase-indexer*) lib_dir='hbase-solr/lib';;
         hbase-sep*) lib_dir='hbase-solr/lib';;
@@ -23,6 +25,8 @@ get_directory_for_jar() {
         solr*) lib_dir='solr';;
         lucene*) lib_dir='solr/webapps/solr/WEB-INF/lib';;
         kite*) lib_dir='kite';;
+        crunch*) lib_dir='crunch';;
+        search*) lib_dir='search/lib';;
         *) return;;
     esac
     echo "/usr/lib/${lib_dir}"
@@ -47,6 +51,8 @@ function check_for_package_dependency() {
         /usr/lib/sentry/lib) pkg=sentry;;
         /usr/lib/solr*) pkg=solr;;
         /usr/lib/kite) pkg=kite;;
+        /usr/lib/crunch) pkg=crunch;;
+        /usr/lib/search/lib) pkg=search;;
         *) return;;
     esac
 
@@ -83,7 +89,7 @@ function external_versionless_symlinks() {
     predicate=''
     skip=${1}; shift 1;
     # Find all files we might want to symlink (it's okay if this returns a superset of what we actually want to symlink)
-    for prefix in avro parquet zookeeper hive hadoop hbase sentry solr lucene kite; do
+    for prefix in avro crunch parquet zookeeper hive hadoop hbase search sentry solr lucene kite; do
         if [ -n "${predicate}" ]; then predicate="${predicate} -o "; fi
         predicate="${predicate} -name ${prefix}*.jar";
     done
@@ -101,3 +107,4 @@ function external_versionless_symlinks() {
         done
     done
 }
+

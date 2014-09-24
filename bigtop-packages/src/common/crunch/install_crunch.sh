@@ -108,5 +108,6 @@ mv $PREFIX/$LIB_DIR/crunch-test-*.jar $PREFIX/$DOC_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 
-. ${EXTRA_DIR}/packaging_functions.sh
+internal_versionless_symlinks ${PREFIX}/${LIB_DIR}/crunch*.jar
+external_versionless_symlinks 'crunch' ${PREFIX}/${LIB_DIR}/lib
 
