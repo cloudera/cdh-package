@@ -64,7 +64,7 @@ Source5: packaging_functions.sh
 Buildarch: noarch
 BuildRequires: asciidoc, xmlto
 Requires: hadoop-client, bigtop-utils >= 0.7
-Requires: avro-libs
+Requires: avro-libs, parquet, kite
 
 %description 
 Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).

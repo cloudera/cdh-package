@@ -68,7 +68,7 @@ Description: Provides libraries necessary to connect to Apache Hive via JDBC
 
 Package: hive-hcatalog
 Architecture: all
-Depends: hadoop, hive, bigtop-utils (>= 0.7), avro-libs
+Depends: hadoop, hadoop-hdfs, hive, bigtop-utils (>= 0.7), avro-libs
 Description: Apache HCatalog is a table and storage management service.
  Apache HCatalog is a table and storage management service for data created using Apache Hadoop.
 

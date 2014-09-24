@@ -35,7 +35,7 @@ Description: Client for Oozie Workflow Engine
 
 Package: oozie
 Architecture: all
-Depends: oozie-client (= ${source:Version}), hadoop-client, bigtop-tomcat, avro-libs, parquet, zookeeper, hadoop, hadoop-hdfs, hadoop-mapreduce, hadoop-yarn, hive (>= 0.12.0+cdh5.1.0), hive-hcatalog (>= 0.12.0+cdh5.1.0), hive-webhcat (>= 0.12.0+cdh5.1.0)
+Depends: oozie-client (= ${source:Version}), hadoop-client, bigtop-tomcat, avro-libs, parquet, zookeeper, hadoop, hadoop-hdfs, hadoop-mapreduce, hadoop-yarn, hive (>= 0.12.0+cdh5.1.0), hive-hcatalog (>= 0.12.0+cdh5.1.0), hive-webhcat (>= 0.12.0+cdh5.1.0), hbase
 Pre-Depends: oozie-client (= ${source:Version})
 Description: Oozie is a system that runs workflows of Hadoop jobs.
  Oozie is a system that runs workflows of Hadoop jobs.
