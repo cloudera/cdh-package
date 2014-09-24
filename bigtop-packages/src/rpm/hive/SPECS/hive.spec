@@ -304,6 +304,7 @@ fi
 %{usr_bin}/beeline
 %{usr_bin}/hiveserver2
 %dir %{var_lib_hive}
+%attr(-,hive,hive) %{var_lib_hive}
 %attr(0755,hive,hive) %dir %{_localstatedir}/log/%{name}
 %attr(0755,hive,hive) %dir %{_localstatedir}/run/%{name}
 %doc %{doc_hive}
