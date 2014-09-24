@@ -238,6 +238,21 @@ for x in contrib/vaidya contrib/thriftfs contrib/hod contrib/failmon contrib/dat
   rm -rf ${MAPREDUCE_MR1_DIR}/$x 
 done
 
+# Updating the client list to include aws jars and its dependencies.
+for jar in hadoop-aws-[0-9]*.jar aws-java-sdk*.jar jackson-annotations*.jar jackson-core-[0-9].[0-9].[0-9]*.jar joda-time*.jar ; do
+        (cd ${MAPREDUCE_DIR} && ls $jar) >> ${BUILD_DIR}/hadoop-client.list
+        (cd ${MAPREDUCE_DIR} && ls $jar) >> ${BUILD_DIR}/hadoop-mr1-client.list
+done
+
+# Now, move over hadoop-aws*.jar and its dependencies over from hadoop-mapreduce dir
+mv ${MAPREDUCE_DIR}/hadoop-aws-[0-9]*.jar ${HADOOP_DIR}/
+
+install -d -m 0755 ${HADOOP_DIR}/lib
+mv ${MAPREDUCE_DIR}/aws-java-sdk*.jar ${HADOOP_DIR}/lib
+cp ${MAPREDUCE_DIR}/jackson-annotations*.jar ${HADOOP_DIR}/lib/
+cp ${MAPREDUCE_DIR}/jackson-core-[0-9].[0-9].[0-9]*.jar ${HADOOP_DIR}/lib/
+cp ${MAPREDUCE_DIR}/joda-time*.jar ${HADOOP_DIR}/lib/
+
 # Remove the convenience symlink so we can copy the stuff over
 rm ${MAPREDUCE_MR1_DIR}/bin
 cp -r ${BUILD_DIR}/bin-mapreduce1 ${MAPREDUCE_MR1_DIR}/bin
@@ -256,7 +271,6 @@ cp -r ${BUILD_DIR}/examples-mapreduce1/*/lib/* ${MAPREDUCE_MR1_DIR}/lib/native/
 cp -r ${BUILD_DIR}/src/hadoop-mapreduce1-project/example-confs ${MAPREDUCE_MR1_DIR}
 
 # lib jars
-install -d -m 0755 ${HADOOP_DIR}/lib
 cp ${BUILD_DIR}/share/hadoop/common/lib/*.jar ${HADOOP_DIR}/lib
 install -d -m 0755 ${MAPREDUCE_DIR}/lib
 cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/*.jar ${MAPREDUCE_DIR}/lib
