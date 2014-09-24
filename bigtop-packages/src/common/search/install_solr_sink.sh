@@ -112,6 +112,13 @@ ETC_DIR=${ETC_DIR:-/etc/flume-ng}
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
 cp -r ${BUILD_DIR}/search-dist/target/dist/* ${PREFIX}/${LIB_DIR}
 
+# Remove the dist, it doesn't need to be in the LIB_DIR
+rm ${PREFIX}/${LIB_DIR}/lib/search-crunch*-dist.tar.gz
+
+# search-crunch.jar is being bundled in /usr/lib/solr/contrib/crunch. We don't need it here
+# or it will contiminate solr-mr's classpath
+rm ${PREFIX}/${LIB_DIR}/lib/search-crunch*.jar
+
 # FIXME: once solr-mr
 install -d -m 0755 ${PREFIX}/${SOLR_MR_DIR}
 mv -f ${PREFIX}/${LIB_DIR}/search-mr*.jar ${PREFIX}/${SOLR_MR_DIR}
@@ -130,4 +137,5 @@ cp -r ${BUILD_DIR}/quickstart ${PREFIX}/${DOC_DIR}/.
 cp ${BUILD_DIR}/{LICENSE,NOTICE}.txt ${PREFIX}/${LIB_DIR}/
 
 external_versionless_symlinks 'search' ${PREFIX}/${LIB_DIR}/lib
+external_versionless_symlinks 'search-crunch' ${PREFIX}/${LIB_DIR}/lib/search-crunch
 
