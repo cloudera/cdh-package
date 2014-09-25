@@ -116,9 +116,12 @@ cp -r ${BUILD_DIR}/search-dist/target/dist/* ${PREFIX}/${LIB_DIR}
 # Remove the dist, it doesn't need to be in the LIB_DIR
 rm ${PREFIX}/${LIB_DIR}/lib/search-crunch*-dist.tar.gz
 
-# search-crunch.jar is being bundled in /usr/lib/solr/contrib/crunch. We don't need it here
-# or it will contiminate solr-mr's classpath
-rm ${PREFIX}/${LIB_DIR}/lib/search-crunch*.jar
+# Remove the kite-morphlines.pom which seems to be getting added. This hack can be removed when 
+# CDH-21821 gets resolved
+rm ${PREFIX}/${LIB_DIR}/lib/kite-morphlines-all*.pom
+
+# Remove search-*.jars from /usr/lib/search/lib. Can remove this hack when CDH-21822 gets resolved
+rm ${PREFIX}/${LIB_DIR}/lib/search*.jar
 
 # FIXME: once solr-mr
 install -d -m 0755 ${PREFIX}/${SOLR_MR_DIR}
