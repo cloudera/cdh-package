@@ -228,6 +228,7 @@ located.
 %package hdfs
 Summary: The Hadoop Distributed File System
 Group: System/Daemons
+Requires(pre): %{name} = %{version}-%{release}
 Requires: %{name} = %{version}-%{release}, bigtop-jsvc
 # Workaround for 4.0 to 4.X upgrade (CDH-7856) (upgrades from 4.1 onwards are fine)
 Requires: libhadoop.so.1.0.0%{requires_lib_tag}
@@ -241,6 +242,7 @@ computations.
 %package yarn
 Summary: The Hadoop NextGen MapReduce (YARN)
 Group: System/Daemons
+Requires(pre): %{name} = %{version}-%{release}
 Requires: %{name} = %{version}-%{release}
 # Workaround for 4.0 to 4.X upgrade (CDH-7856) (upgrades from 4.1 onwards are fine)
 Requires: libhadoop.so.1.0.0%{requires_lib_tag}
@@ -263,6 +265,7 @@ the tasks.
 %package mapreduce
 Summary: The Hadoop MapReduce (MRv2)
 Group: System/Daemons
+Requires(pre): %{name} = %{version}-%{release}
 Requires: %{name}-yarn = %{version}-%{release}
 
 %description mapreduce
@@ -273,6 +276,7 @@ in parallel on large clusters of hosts.
 %package 0.20-mapreduce
 Summary: Hadoop is a software platform for processing vast amounts of data
 Group: System/Daemons
+Requires(pre): %{name} = %{version}-%{release}
 Requires: %{name} = %{version}-%{release}, %{name}-hdfs = %{version}-%{release}
 
 %description 0.20-mapreduce
