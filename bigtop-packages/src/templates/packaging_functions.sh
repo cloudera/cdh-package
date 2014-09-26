@@ -91,7 +91,7 @@ function external_versionless_symlinks() {
     predicate=''
     skip=${1}; shift 1;
     # Find all files we might want to symlink (it's okay if this returns a superset of what we actually want to symlink)
-    for prefix in avro crunch parquet zookeeper hive hadoop hbase search sentry solr lucene kite; do
+    for prefix in avro crunch parquet zookeeper hive hadoop hbase search sentry solr lucene kite trevni; do
         if [ -n "${predicate}" ]; then predicate="${predicate} -o "; fi
         predicate="${predicate} -name ${prefix}*.jar";
     done
