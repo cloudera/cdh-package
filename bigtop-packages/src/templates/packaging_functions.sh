@@ -27,7 +27,7 @@ get_directory_for_jar() {
         kite*) lib_dir='kite';;
         crunch*) lib_dir='crunch';;
         search-crunch*) lib_dir='solr/contrib/crunch';;
-        search*) lib_dir='search/lib';;
+        search-mr*) lib_dir='solr/contrib/mr';;
         *) return;;
     esac
     echo "/usr/lib/${lib_dir}"
