@@ -27,8 +27,6 @@ if [ -z "$GIT_REPO" ]; then
 
     rm -f CMakeCache.txt
     ./buildall.sh -noclean -skiptests -notests
-    rm -rf fe/target/dependency
-    mvn -f fe/pom.xml dependency:copy-dependencies
     ./bin/make_release.sh -notests -build_static_libs
 else
     rm -rf build impala-${FULL_VERSION}
