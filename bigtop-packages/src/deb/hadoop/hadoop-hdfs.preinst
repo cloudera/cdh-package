@@ -32,6 +32,7 @@ set -e
 
 case "$1" in
     install|upgrade)
+        addgroup --system hadoop >/dev/null 2>/dev/null || :
         if ! getent passwd hdfs >/dev/null; then
             # Adding system user: hdfs.
             adduser \
