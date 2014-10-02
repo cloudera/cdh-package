@@ -239,7 +239,7 @@ for x in contrib/vaidya contrib/thriftfs contrib/hod contrib/failmon contrib/dat
 done
 
 # Updating the client list to include aws jars and its dependencies.
-for jar in hadoop-aws-[0-9]*.jar aws-java-sdk*.jar jackson-annotations*.jar jackson-core-[0-9].[0-9].[0-9]*.jar joda-time*.jar ; do
+for jar in hadoop-aws-[0-9]*.jar ; do
         (cd ${MAPREDUCE_DIR} && ls $jar) >> ${BUILD_DIR}/hadoop-client.list
         (cd ${MAPREDUCE_DIR} && ls $jar) >> ${BUILD_DIR}/hadoop-mr1-client.list
 done
@@ -248,10 +248,6 @@ done
 mv ${MAPREDUCE_DIR}/hadoop-aws-[0-9]*.jar ${HADOOP_DIR}/
 
 install -d -m 0755 ${HADOOP_DIR}/lib
-mv ${MAPREDUCE_DIR}/aws-java-sdk*.jar ${HADOOP_DIR}/lib
-cp ${MAPREDUCE_DIR}/jackson-annotations*.jar ${HADOOP_DIR}/lib/
-cp ${MAPREDUCE_DIR}/jackson-core-[0-9].[0-9].[0-9]*.jar ${HADOOP_DIR}/lib/
-cp ${MAPREDUCE_DIR}/joda-time*.jar ${HADOOP_DIR}/lib/
 
 # Remove the convenience symlink so we can copy the stuff over
 rm ${MAPREDUCE_MR1_DIR}/bin
