@@ -1,3 +1,3 @@
-export SPARK_HISTORY_SERVER_LOG_DIR=/user/spark/applicationHistory
+export SPARK_HISTORY_SERVER_LOG_DIR=hdfs:///user/spark/applicationHistory
 export SPARK_HISTORY_OPTS="$SPARK_HISTORY_OPTS -Dspark.history.fs.logDirectory=${SPARK_HISTORY_SERVER_LOG_DIR}"
 export SPARK_CONF_DIR=/etc/spark/conf
