@@ -131,7 +131,7 @@ done
 
 ## FIXME: Spark maven assembly needs to include examples into it.
 install -d -m 0755 $PREFIX/$LIB_DIR/examples/lib
-cp ${BUILD_DIR}/examples/target/spark-examples*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/examples/lib
+cp ${BUILD_DIR}/examples/target/scala-*/spark-examples*.jar $PREFIX/$LIB_DIR/examples/lib
 tar -czf $PREFIX/$LIB_DIR/examples/lib/python.tar.gz -C ${BUILD_DIR}/examples/src/main/python .
 
 # Copy files to the bin and sbin directories
