@@ -56,7 +56,7 @@ BuildArch: noarch
 License: ASL 2.0
 Source0: search-%{search_patched_version}.tar.gz
 Source1: do-component-build
-Source2: install_solr_sink.sh
+Source2: install_search.sh
 Source3: packaging_functions.sh
 Requires: bigtop-utils >= 0.7
 Requires: avro-libs, parquet, sentry >= 1.3.0+cdh5.1.0, solr >= 4.4.0+cdh5.1.0, kite >= 0.10.0+cdh5.1.0, hbase, hadoop-hdfs, hadoop, zookeeper
