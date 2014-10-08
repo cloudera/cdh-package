@@ -39,8 +39,10 @@ if [ -z "$GIT_REPO" ]; then
   mvn -Pbigtop-dist -Phadoop-provided -Pyarn -Psql -Phive -DskipTests $BUILD_OPTS $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
 
   rm -rf build
-  mkdir build
-  cp assembly/target/spark-assembly_*-dist.tar.gz build/spark-${FULL_VERSION}.tar.gz
+  mkdir -p build/spark-${FULL_VERSION}
+  tar zxf assembly/target/spark-assembly_*-dist.tar.gz -C build/spark-${FULL_VERSION}
+  (cd build ; tar zcf spark-${FULL_VERSION}.tar.gz spark-${FULL_VERSION}/ ; rm -rf spark-${FULL_VERSION}/)
+
 else
     git add .
     git commit -a -m "Temporary commit for tarball"
