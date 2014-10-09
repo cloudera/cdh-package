@@ -33,7 +33,9 @@ if [ -z "$GIT_REPO" ]; then
         mkdir -p build/hive-${FULL_VERSION}
         tar --strip-components 1 -C build/hive-${FULL_VERSION} -xf packaging/target/apache-hive*bin.tar.gz
         mkdir -p build/hive-${FULL_VERSION}/docs
+        mkdir -p build/hive-${FULL_VERSION}/data/scripts
         cp -r docs/* build/hive-${FULL_VERSION}/docs
+        cp data/scripts/q_test_*.sql build/hive-${FULL_VERSION}/data/scripts
         (cd build && tar --exclude='*/native/lib*' --exclude='*/lib/native/*' -czf hive-${FULL_VERSION}.tar.gz hive-${FULL_VERSION})
     fi
 else

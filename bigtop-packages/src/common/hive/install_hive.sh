@@ -15,6 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+set -ex
+
 usage() {
   echo "
 usage: $0 <options>
@@ -124,6 +126,7 @@ HBASE_STORAGE_HANDLER_DIR=${HCATALOG_SHARE_DIR}/storage-handlers/hbase/lib
 INSTALLED_HCATALOG_DIR=${INSTALLED_HCATALOG_DIR:-/usr/lib/hive-hcatalog}
 CONF_DIR=/etc/hive
 CONF_DIST_DIR=/etc/hive/conf.dist
+SCRIPTS_DIR=$DOC_DIR/scripts
 
 # First we'll move everything into lib
 install -d -m 0755 ${HIVE_DIR}
@@ -174,6 +177,10 @@ cp ${BUILD_DIR}/README.txt ${DOC_DIR}
 # Examples
 install -d -m 0755 ${EXAMPLES_DIR}
 cp -a ${BUILD_DIR}/examples/* ${EXAMPLES_DIR}
+ 
+# Copy over the test init and cleanup files
+install -d -m 0755 ${SCRIPTS_DIR}
+cp ${BUILD_DIR}/data/scripts/q_test*.sql ${SCRIPTS_DIR}
 
 # Python libs
 install -d -m 0755 ${PYTHON_DIR}
