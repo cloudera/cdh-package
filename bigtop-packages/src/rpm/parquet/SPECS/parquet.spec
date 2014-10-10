@@ -32,7 +32,7 @@ Source0: parquet-%{parquet_patched_version}.tar.gz
 Source1: do-component-build 
 Source2: install_parquet.sh
 Source3: packaging_functions.sh
-Requires: hadoop, parquet-format, avro-libs, zookeeper, hadoop-yarn, hadoop-mapreduce, hadoop-hdfs
+Requires: hadoop, parquet-format >= 2.1.0, avro-libs, zookeeper, hadoop-yarn, hadoop-mapreduce, hadoop-hdfs
 
 
 %description 

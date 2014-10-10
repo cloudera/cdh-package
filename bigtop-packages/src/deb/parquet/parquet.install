@@ -1,3 +1,3 @@
-/usr/lib/parquet/*
+/usr/lib/parquet
 /usr/lib/hadoop/*.jar
 /usr/bin/parquet-tools
