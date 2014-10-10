@@ -77,11 +77,11 @@ HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
 RELATIVE_PATH='../parquet' # LIB_DIR relative to HADOOP_HOME
 
 # First we'll move everything into lib
-install -d -m 0755 $PREFIX/$LIB_DIR
+install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$HADOOP_HOME
 versions='s#-[0-9.]\+-cdh[0-9\-\.]*[0-9]\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
 for jar in `find $BUILD_DIR -name *.jar | grep -v '\-tests.jar' | grep -v '\/original-parquet'`; do
-    cp $jar $PREFIX/$LIB_DIR/
+    cp $jar $PREFIX/$LIB_DIR/lib
     versionless=`echo \`basename ${jar}\` | sed -e ${versions}`
     ln -fs `basename ${jar}` ${PREFIX}/${LIB_DIR}/${versionless}
     ln -fs ${RELATIVE_PATH}/${versionless} $PREFIX/$HADOOP_HOME/

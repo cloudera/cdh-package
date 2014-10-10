@@ -54,5 +54,7 @@ sh $RPM_SOURCE_DIR/install_parquet-format.sh \
 #######################
 %files 
 %defattr(-,root,root,755)
-%{lib_parquet}
+%{lib_parquet}/parquet-format
+%{lib_parquet}/*.jar
+%{lib_parquet}/lib/*.jar
 %{hadoop_home}/*.jar
