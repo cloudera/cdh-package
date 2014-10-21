@@ -9,6 +9,7 @@ get_directory_for_jar() {
         trevni*) lib_dir='avro';;
         parquet*) lib_dir='parquet';;
         zookeeper*) lib_dir='zookeeper';;
+        hadoop-aws*) lib_dir='hadoop/client';;
         hadoop-yarn*) lib_dir='hadoop-yarn';;
         hadoop-hdfs*) lib_dir='hadoop-hdfs';;
         hadoop-mapreduce*) lib_dir='hadoop-mapreduce';;
@@ -43,7 +44,7 @@ function check_for_package_dependency() {
         /usr/lib/hadoop-yarn) pkg=hadoop-yarn;;
         /usr/lib/hadoop-hdfs) pkg=hadoop-hdfs;;
         /usr/lib/hadoop-mapreduce) pkg=hadoop-mapreduce;;
-        /usr/lib/hadoop/client-0.20) pkg=hadoop-client;;
+        /usr/lib/hadoop/client*) pkg=hadoop-client;;
         /usr/lib/hadoop) pkg=hadoop;;
         /usr/lib/hbase-solr/lib) pkg=hbase-solr;;
         /usr/lib/hbase) pkg=hbase;;
