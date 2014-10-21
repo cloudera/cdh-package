@@ -27,6 +27,7 @@ get_directory_for_jar() {
         kite*) lib_dir='kite';;
         crunch*) lib_dir='crunch';;
         search-crunch*) lib_dir='solr/contrib/crunch';;
+        search-mr*) lib_dir='solr/contrib/mr';;
         search*) lib_dir='search/lib';;
         *) return;;
     esac
@@ -51,6 +52,7 @@ function check_for_package_dependency() {
         /usr/lib/hive/lib) pkg=hive;;
         /usr/lib/sentry/lib) pkg=sentry;;
         /usr/lib/solr/contrib/crunch) pkg=solr-crunch;;
+        /usr/lib/solr/contrib/mr) pkg=solr-mapreduce;;
         /usr/lib/solr*) pkg=solr;;
         /usr/lib/kite) pkg=kite;;
         /usr/lib/crunch) pkg=crunch;;

@@ -134,6 +134,8 @@ cp -r ${BUILD_DIR}/quickstart ${PREFIX}/${DOC_DIR}/.
 
 cp ${BUILD_DIR}/{LICENSE,NOTICE}.txt ${PREFIX}/${LIB_DIR}/
 
+internal_versionless_symlinks ${PREFIX}/${SOLR_CRUNCH_DIR}/search*.jar ${PREFIX}/${SOLR_MR_DIR}/search*.jar
+
 external_versionless_symlinks 'search' ${PREFIX}/${LIB_DIR}/lib
 external_versionless_symlinks 'search-crunch' ${PREFIX}/${LIB_DIR}/lib/search-crunch
 
