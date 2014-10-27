@@ -93,6 +93,7 @@ done
 CONF_DIR=${CONF_DIR:-${PREFIX}/etc/sentry/conf.dist}
 LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/sentry}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
+PLUGIN_DIR=${LIB_DIR}/lib/plugins
 
 TARBALL=sentry-dist/target/apache-sentry-${FULL_VERSION}-bin.tar.gz
 DIRECTORY=${TARBALL/.tar.gz/}
@@ -133,6 +134,8 @@ cp cloudera/cdh_version.properties $LIB_DIR/cloudera/
 
 internal_versionless_symlinks ${LIB_DIR}/lib/sentry*.jar
 external_versionless_symlinks 'sentry' ${LIB_DIR}/lib ${LIB_DIR}/lib/server
+
+internal_versionless_symlinks ${PLUGIN_DIR}/sentry*.jar
 
 # Backwards compatibility with CM 5.0.x
 install -d -m 0755 ${PREFIX}/usr/lib/hive/sentry/cloudera

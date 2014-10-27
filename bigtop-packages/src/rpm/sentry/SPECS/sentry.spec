@@ -56,6 +56,14 @@ Requires: sentry = %{version}-%{release}
 %description -n sentry-store
 Server for Sentry
 
+%package -n sentry-hdfs-plugin
+Summary: Sentry HDFS plugin
+Group: Development/Libraries
+Requires: sentry = %{version}-%{release}, hadoop-hdfs
+
+%description -n sentry-hdfs-plugin
+Sentry HDFS plugin
+
 %prep
 %setup -n sentry-%{sentry_patched_version}
 
@@ -109,9 +117,14 @@ fi
 /usr/lib/hive/sentry
 /usr/bin/sentry
 /usr/lib/sentry
+%exclude /usr/lib/sentry/lib/plugins
 /etc/sentry/conf.dist
 %defattr(-,sentry,sentry,755)
 /var/lib/sentry
 /var/log/sentry
 /var/run/sentry
+
+%files -n sentry-hdfs-plugin
+%defattr(-,root,root,755)
+/usr/lib/sentry/lib/plugins
 

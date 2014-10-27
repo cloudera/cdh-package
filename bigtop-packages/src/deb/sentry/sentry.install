@@ -1,8 +1,0 @@
-/usr/lib/hive/sentry
-/usr/bin/sentry
-/usr/lib/sentry
-/etc/sentry/conf.dist
-/var/lib/sentry
-/var/log/sentry
-/var/run/sentry
-

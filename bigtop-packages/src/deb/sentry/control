@@ -32,3 +32,8 @@ Depends: sentry (= ${source:Version}), adduser
 Description: Sentry Server
  Server for Sentry
 
+Package: sentry-hdfs-plugin
+Architecture: all
+Depends: sentry (= ${source:Version}), hadoop-hdfs
+Description: Sentry HDFS plugin
+

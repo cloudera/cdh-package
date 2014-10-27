@@ -1,0 +1,12 @@
+/usr/lib/hive/sentry
+/usr/lib/sentry/bin
+/usr/lib/sentry/cloudera
+/usr/lib/sentry/LICENSE.txt
+/usr/lib/sentry/NOTICE.txt
+/usr/lib/sentry/scripts
+/usr/bin/sentry
+/etc/sentry/conf.dist
+/var/lib/sentry
+/var/log/sentry
+/var/run/sentry
+

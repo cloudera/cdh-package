@@ -46,3 +46,5 @@ override_dh_auto_install: $(svcs)
 	  --build-dir=${PWD} \
 	  --prefix=debian/tmp \
 	  --extras-dir=debian
+
+	  bash debian/generate-sentry-install.sh
