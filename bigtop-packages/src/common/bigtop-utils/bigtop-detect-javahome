@@ -46,6 +46,17 @@ OPENJAVA7_HOME_CANDIDATES='\
     /usr/lib/jvm/java-1.7.0-openjdk* \
     /usr/lib/jvm/java-7-openjdk*'
 
+JAVA8_HOME_CANDIDATES='\
+    /usr/java/jdk1.8* \
+    /usr/java/jre1.8* \
+    /usr/lib/jvm/j2sdk1.8-oracle \
+    /usr/lib/jvm/j2sdk1.8-oracle/jre \
+    /usr/lib/jvm/java-8-oracle*'
+
+OPENJAVA8_HOME_CANDIDATES='\
+    /usr/lib/jvm/java-1.8.0-openjdk* \
+    /usr/lib/jvm/java-8-openjdk*'
+
 MISCJAVA_HOME_CANDIDATES='\
     /Library/Java/Home \
     /usr/java/default \
@@ -60,11 +71,15 @@ case $BIGTOP_JAVA_MAJOR in
      ;;
   7) JAVA_HOME_CANDIDATES="$JAVA7_HOME_CANDIDATES $OPENJAVA7_HOME_CANDIDATES"
      ;;
+  8) JAVA_HOME_CANDIDATES="$JAVA8_HOME_CANDIDATES $OPENJAVA8_HOME_CANDIDATES"
+     ;;
   *) JAVA_HOME_CANDIDATES="$JAVA7_HOME_CANDIDATES     \
                            $JAVA6_HOME_CANDIDATES     \
+                           $JAVA8_HOME_CANDIDATES     \
                            $MISCJAVA_HOME_CANDIDATES  \
                            $OPENJAVA7_HOME_CANDIDATES \
-                           $OPENJAVA6_HOME_CANDIDATES"
+                           $OPENJAVA6_HOME_CANDIDATES \
+                           $OPENJAVA8_HOME_CANDIDATES"
      ;;
 esac
 
