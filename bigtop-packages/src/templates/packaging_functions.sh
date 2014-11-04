@@ -12,9 +12,10 @@ get_directory_for_jar() {
         hadoop-aws*) lib_dir='hadoop/client';;
         hadoop-yarn*) lib_dir='hadoop-yarn';;
         hadoop-hdfs*) lib_dir='hadoop-hdfs';;
+        hadoop-archives*) lib_dir='hadoop-mapreduce';;
+        hadoop-distcp*) lib_dir='hadoop-mapreduce';;
         hadoop-mapreduce*) lib_dir='hadoop-mapreduce';;
         hadoop-core*) lib_dir='hadoop/client-0.20';;
-        hadoop-archives*) lib_dir='hadoop-mapreduce';;
         hadoop*) lib_dir='hadoop';;
         hbase-indexer*) lib_dir='hbase-solr/lib';;
         hbase-sep*) lib_dir='hbase-solr/lib';;
