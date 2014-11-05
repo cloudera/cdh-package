@@ -70,7 +70,7 @@ Requires: /usr/sbin/useradd
 Requires: coreutils
 Requires: hadoop-hdfs
 Requires: bigtop-utils >= 0.7
-Requires: avro-libs, parquet, hadoop-mapreduce, hadoop-yarn, kite >= 0.10.0+cdh5.1.4-SNAPSHOT, hadoop
+Requires: avro-libs, parquet, hadoop-mapreduce, hadoop-yarn, kite >= 0.10.0+cdh5.1.4, hadoop
 
 %if  0%{?mgaversion}
 Requires: bsh-utils
