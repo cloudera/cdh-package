@@ -43,7 +43,7 @@ Source3: init.d.tmpl
 Source4: sentry-store-site.xml
 Source5: sentry-store.svc
 Source6: packaging_functions.sh
-Requires: hadoop-hdfs
+Requires: hadoop-hdfs, hadoop-mapreduce
 
 %description
 A system for enforcing fine grained role based authorization to data and metadata stored on a Hadoop cluster.
