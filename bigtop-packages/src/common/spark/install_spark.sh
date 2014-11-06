@@ -124,15 +124,14 @@ install -d -m 0755 $PREFIX/var/log/spark/
 install -d -m 0755 $PREFIX/var/run/spark/
 install -d -m 0755 $PREFIX/var/run/spark/work/
 
+install -d -m 0755 $PREFIX/$LIB_DIR/lib
 for comp in assembly; do
-  install -d -m 0755 $PREFIX/$LIB_DIR/$comp/lib
-  tar --wildcards -C $PREFIX/$LIB_DIR/$comp/lib -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz spark-$comp\*
+  tar --wildcards -C $PREFIX/$LIB_DIR/lib -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz spark-$comp\*
 done
 
 ## FIXME: Spark maven assembly needs to include examples into it.
-install -d -m 0755 $PREFIX/$LIB_DIR/examples/lib
-cp ${BUILD_DIR}/examples/target/scala-*/spark-examples*.jar $PREFIX/$LIB_DIR/examples/lib
-tar -czf $PREFIX/$LIB_DIR/examples/lib/python.tar.gz -C ${BUILD_DIR}/examples/src/main/python .
+cp ${BUILD_DIR}/examples/target/scala-*/spark-examples*.jar $PREFIX/$LIB_DIR/lib
+tar -czf $PREFIX/$LIB_DIR/lib/python.tar.gz -C ${BUILD_DIR}/examples/src/main/python .
 
 # Copy files to the bin and sbin directories
 rsync --exclude="*.cmd" ${BUILD_DIR}/bin/* $PREFIX/$LIB_DIR/bin/
@@ -232,7 +231,7 @@ cp ${BUILD_DIR}/{LICENSE,NOTICE} ${PREFIX}/${LIB_DIR}/
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 
-internal_versionless_symlinks ${PREFIX}/${LIB_DIR}/assembly/lib/spark-assembly-*.jar
+internal_versionless_symlinks ${PREFIX}/${LIB_DIR}/lib/spark-assembly-*.jar
 
 external_versionless_symlinks 'spark' ${PREFIX}/${LIB_DIR}/lib
 
