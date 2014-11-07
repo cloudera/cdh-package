@@ -48,15 +48,7 @@ SPARK_ASSEMBLY_JAR="$FWDIR/lib/spark-assembly.jar"
 if [ ! -d $FWDIR/lib ]; then
     echo "Missing directory $FWDIR/lib" >&2
 fi
-#The following is necessary because the packaging code is currently
-#not creating a symlink called spark-assembly.jar as it is expected
-#to create
 if [ ! -f $SPARK_ASSEMBLY_JAR ]; then
-    SPARK_ASSEMBLY_JAR=`ls $FWDIR/lib/spark-assembly*.jar | head -1`
-fi
-#Additional check, just to make sure
-if [[ -z $SPARK_ASSEMBLY_JAR ]]
-then
 	echo "Missing spark-assembly jar file in $FWDIR/lib" >&2
 	ls -l  $FWDIR/lib  >&2
 	exit 1
