@@ -231,7 +231,14 @@ cp ${BUILD_DIR}/{LICENSE,NOTICE} ${PREFIX}/${LIB_DIR}/
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 
-internal_versionless_symlinks ${PREFIX}/${LIB_DIR}/lib/spark-assembly-*.jar
+#Currently commenting this since the internal_versionless_symlinks
+#function is generating a symlink with a wrong name but once that is fixed
+#we need to uncomment the next line and remove the explicit call to ln below
+#internal_versionless_symlinks ${PREFIX}/${LIB_DIR}/lib/spark-assembly-*.jar
+pushd ${PREFIX}/${LIB_DIR}/lib || \
+    { echo "Failed to change dir to ${PREFIX}/${LIB_DIR}/lib" >&2 ; exit 1 ; }
+ln -s spark-assembly-*.jar ./spark-assembly.jar
+popd
 
 external_versionless_symlinks 'spark' ${PREFIX}/${LIB_DIR}/lib
 
