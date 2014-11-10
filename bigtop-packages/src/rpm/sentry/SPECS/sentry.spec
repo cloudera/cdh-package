@@ -40,7 +40,7 @@ Source0: sentry-%{sentry_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_sentry.sh
 Source3: init.d.tmpl
-Source4: sentry-store-site.xml
+Source4: sentry-site.xml
 Source5: sentry-store.svc
 Source6: packaging_functions.sh
 Requires: hadoop-hdfs, hadoop-mapreduce
@@ -118,7 +118,7 @@ fi
 /usr/bin/sentry
 /usr/lib/sentry
 %exclude /usr/lib/sentry/lib/plugins
-/etc/sentry/conf.dist
+%config(noreplace) /etc/sentry/conf.dist
 %defattr(-,sentry,sentry,755)
 /var/lib/sentry
 /var/log/sentry

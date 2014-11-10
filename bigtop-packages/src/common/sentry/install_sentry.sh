@@ -122,7 +122,7 @@ EOF
 chmod 755 $wrapper
 
 install -d -m 0755 ${CONF_DIR}
-cp ${EXTRAS_DIR}/sentry-store-site.xml ${CONF_DIR}/
+cp ${EXTRAS_DIR}/sentry-site.xml ${CONF_DIR}/
 
 install -d -m 0755 ${PREFIX}/var/lib/sentry
 install -d -m 0755 ${PREFIX}/var/log/sentry
