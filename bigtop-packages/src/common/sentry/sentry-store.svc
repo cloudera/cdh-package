@@ -19,7 +19,7 @@ EXEC_PATH="/usr/bin/sentry"
 SVC_USER="sentry"
 WORKING_DIR="/var/lib/sentry"
 CONF_DIR="/etc/sentry/conf"
-DAEMON_FLAGS="--command service --conffile ${CONF_DIR}/sentry-store-site.xml"
+DAEMON_FLAGS="--command service --conffile ${CONF_DIR}/sentry-site.xml"
 PIDFILE="/var/run/sentry/${DAEMON}.pid"
 
 generate_start() {
