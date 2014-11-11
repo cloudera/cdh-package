@@ -83,7 +83,7 @@ Source4: pig.1
 Source5: pig.properties
 Source6: packaging_functions.sh
 Requires: hadoop-client, bigtop-utils >= 0.7
-Requires: avro-libs, parquet
+Requires: avro-libs, parquet, hive, hive-hcatalog
 Conflicts: hadoop-pig
 
 %description 
