@@ -197,7 +197,7 @@ export SPARK_LOG_DIR=/var/log/spark
 export SPARK_PID_DIR='/var/run/spark/'
 
 if [ -n "\$HADOOP_HOME" ]; then
-  export SPARK_LIBRARY_PATH=\$SPARK_LIBRARY_PATH:\${HADOOP_HOME}/lib/native
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${HADOOP_HOME}/lib/native
 fi
 
 export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-etc/hadoop/conf}
