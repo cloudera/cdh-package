@@ -60,6 +60,7 @@ Source6: solr.default
 Source7: solr-server.init
 Source8: tomcat-deployment.sh
 Source9: packaging_functions.sh
+Requires: curl
 Requires: bigtop-utils >= 0.7, bigtop-tomcat
 Requires: hadoop, hadoop-hdfs, sentry >= 1.3.0+cdh5.1.0, zookeeper
 
