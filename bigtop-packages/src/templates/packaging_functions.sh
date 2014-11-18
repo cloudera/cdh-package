@@ -103,6 +103,8 @@ function external_versionless_symlinks() {
         for old_jar in `find $dir -maxdepth 1 ${predicate}`; do
             base_jar=`basename $old_jar`;
             for prefix in ${skip}; do
+                # Leave JARs from the specified component alone (parquet format is an exception in parquet)
+                if [[ "${prefix}" == "parquet" && "${base_jar}" =~ ^parquet-format ]]; then continue 1; fi
                 if [[ "${base_jar}" =~ ^${prefix} ]]; then continue 2; fi
             done
             new_jar=`strip_versions $base_jar`

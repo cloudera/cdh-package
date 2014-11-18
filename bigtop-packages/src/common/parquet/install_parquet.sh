@@ -94,9 +94,6 @@ mv ${PREFIX}/${LIB_DIR}/bin/lib ${PREFIX}/${LIB_DIR}/lib
 ln -s ../lib ${PREFIX}/${LIB_DIR}/bin/lib
 chmod 755 ${PREFIX}/${LIB_DIR}/lib
 
-# parquet-format is provided by the parquet-format build and package
-rm -f ${PREFIX}/${LIB_DIR}/lib/parquet-format*.jar
-
 # install a wrapper in prefix that calls the dataset tool
 wrapper=$PREFIX/usr/bin/parquet-tools
 mkdir -p `dirname $wrapper`
