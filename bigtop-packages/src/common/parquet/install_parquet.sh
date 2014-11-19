@@ -119,6 +119,11 @@ for jar in `find $BUILD_DIR -name parquet*.jar | grep -v 'sources.jar' | grep -v
     ln -fs ${RELATIVE_PATH}/${versionless} $PREFIX/$HADOOP_HOME/
 done
 
+# parquet-format is provided by the parquet-format build and package
+rm -f ${PREFIX}/${LIB_DIR}/parquet-format*.jar
+rm -f ${PREFIX}/${LIB_DIR}/lib/parquet-format*.jar
+rm -f ${PREFIX}/${HADOOP_HOME}/parquet-format*.jar
+
 cp ${BUILD_DIR}/{LICENSE,NOTICE} ${PREFIX}/${LIB_DIR}/
 
 rm ${PREFIX}/${LIB_DIR}/lib/hadoop-client*.jar

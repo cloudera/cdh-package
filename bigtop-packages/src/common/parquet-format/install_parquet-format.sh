@@ -83,7 +83,7 @@ versions='s#-[0-9.]\+-cdh[0-9\-\.]*[0-9]\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
 for jar in `find $BUILD_DIR -name *.jar | grep -v '\-tests.jar' | grep -v '\/original-parquet'`; do
     cp $jar $PREFIX/$LIB_DIR/lib
     versionless=`echo \`basename ${jar}\` | sed -e ${versions}`
-    ln -fs `basename ${jar}` ${PREFIX}/${LIB_DIR}/${versionless}
+    ln -fs lib/`basename ${jar}` ${PREFIX}/${LIB_DIR}/${versionless}
     ln -fs ${RELATIVE_PATH}/${versionless} $PREFIX/$HADOOP_HOME/
 done
 
