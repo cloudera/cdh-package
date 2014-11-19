@@ -23,7 +23,7 @@
 #Example usage in a shell script : bigtop-monitor-service $$ http://127.0.0.1:8983/solr
 
 function info() {
-  echo "INFO:" "$@"
+  echo "INFO:" `date +"%X %Z %x"` "$@"
 }
 
 function monitor() {
