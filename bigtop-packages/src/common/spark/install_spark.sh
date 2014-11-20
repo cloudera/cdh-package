@@ -113,6 +113,10 @@ BIN_DIR=${BIN_DIR:-/usr/bin}
 CONF_DIR=${CONF_DIR:-/etc/spark/conf.dist}
 SCALA_HOME=${SCALA_HOME:-/usr/share/scala}
 PYSPARK_PYTHON=${PYSPARK_PYTHON:-python}
+HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
+HADOOP_HDFS_HOME=${HADOOP_HDFS_HOME:-/usr/lib/hadoop-hdfs}
+HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME:-/usr/lib/hadoop-mapreduce}
+HADOOP_YARN_HOME=${HADOOP_YARN_HOME:-/usr/lib/hadoop-yarn}
 
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
@@ -136,9 +140,6 @@ tar -czf $PREFIX/$LIB_DIR/lib/python.tar.gz -C ${BUILD_DIR}/examples/src/main/py
 # Copy files to the bin and sbin directories
 rsync --exclude="*.cmd" ${BUILD_DIR}/bin/* $PREFIX/$LIB_DIR/bin/
 rsync --exclude="*.cmd" ${BUILD_DIR}/sbin/* $PREFIX/$LIB_DIR/sbin/
-
-# override the compute-classpath file from the source dir.
-cp -a ${SOURCE_DIR}/compute-classpath.sh $PREFIX/$LIB_DIR/bin/
 
 chmod 755 $PREFIX/$LIB_DIR/bin/*
 chmod 755 $PREFIX/$LIB_DIR/sbin/*
@@ -187,7 +188,6 @@ export SPARK_MASTER_IP=\$STANDALONE_SPARK_MASTER_HOST
 ### Let's run everything with JVM runtime, instead of Scala
 export SPARK_LAUNCH_WITH_SCALA=0
 export SPARK_LIBRARY_PATH=\${SPARK_HOME}/lib
-export SCALA_LIBRARY_PATH=\${SPARK_HOME}/lib
 export SPARK_MASTER_WEBUI_PORT=18080
 export SPARK_MASTER_PORT=7077
 export SPARK_WORKER_PORT=7078
@@ -202,10 +202,24 @@ fi
 
 export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-etc/hadoop/conf}
 
-### Comment above 2 lines and uncomment the following if
-### you want to run with scala version, that is included with the package
-#export SCALA_HOME=\${SCALA_HOME:-$LIB_DIR/scala}
-#export PATH=\$PATH:\$SCALA_HOME/bin
+if [[ -d \$SPARK_HOME/python ]]
+then
+    for i in `ls \$SPARK_HOME/python/*.jar`
+    do
+        SPARK_DIST_CLASSPATH=\${SPARK_DIST_CLASSPATH}:\$i
+    done
+fi
+
+SPARK_DIST_CLASSPATH="\$SPARK_DIST_CLASSPATH:\$SPARK_LIBRARY_PATH/spark-assembly.jar"
+SPARK_DIST_CLASSPATH="\$SPARK_DIST_CLASSPATH:$HADOOP_CONF_DIR"
+SPARK_DIST_CLASSPATH="\$SPARK_DIST_CLASSPATH:$HADOOP_HOME/lib/*"
+SPARK_DIST_CLASSPATH="\$SPARK_DIST_CLASSPATH:$HADOOP_HOME/*"
+SPARK_DIST_CLASSPATH="\$SPARK_DIST_CLASSPATH:$HADOOP_HDFS_HOME/lib/*"
+SPARK_DIST_CLASSPATH="\$SPARK_DIST_CLASSPATH:$HADOOP_HDFS_HOME/*"
+SPARK_DIST_CLASSPATH="\$SPARK_DIST_CLASSPATH:$HADOOP_MAPRED_HOME/lib/*"
+SPARK_DIST_CLASSPATH="\$SPARK_DIST_CLASSPATH:$HADOOP_MAPRED_HOME/*"
+SPARK_DIST_CLASSPATH="\$SPARK_DIST_CLASSPATH:$HADOOP_YARN_HOME/lib/*"
+SPARK_DIST_CLASSPATH="\$SPARK_DIST_CLASSPATH:$HADOOP_YARN_HOME/*"
 
 EOF
 

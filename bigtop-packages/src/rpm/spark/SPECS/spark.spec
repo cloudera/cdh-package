@@ -62,7 +62,6 @@ Source1: do-component-build
 Source2: install_%{spark_name}.sh
 Source3: spark-master.svc
 Source4: spark-worker.svc
-Source5: compute-classpath.sh
 Source6: init.d.tmpl
 Source7: packaging_functions.sh
 Source8: spark-history-server.svc
