@@ -219,7 +219,7 @@ cat > $PREFIX/$BIN_DIR/pyspark <<EOF
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-export PYSPARK_PYTHON=${PYSPARK_PYTHON}
+export PYSPARK_PYTHON=\${PYSPARK_PYTHON:-${PYSPARK_PYTHON}}
 
 exec $INSTALLED_LIB_DIR/bin/pyspark "\$@"
 EOF
