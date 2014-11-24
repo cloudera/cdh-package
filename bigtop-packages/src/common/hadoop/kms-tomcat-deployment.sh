@@ -51,7 +51,7 @@ fi
 
 # Copying in all the jars from the plugin directory to lib.
 if [ -n "${KMS_PLUGIN_DIR}" ] && [ -d "${KMS_PLUGIN_DIR}" ] ; then
-  cp -r -n $KMS_PLUGIN_DIR/*.jar ${TOMCAT_DEPLOYMENT}/webapps/kms/WEB-INF/lib
+  yes n | cp -r -i $KMS_PLUGIN_DIR/*.jar ${TOMCAT_DEPLOYMENT}/webapps/kms/WEB-INF/lib
 fi
 
 chown -R kms:kms ${TOMCAT_DEPLOYMENT}
