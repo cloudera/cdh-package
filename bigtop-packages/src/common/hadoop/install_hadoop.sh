@@ -433,8 +433,8 @@ install -d -m 0755 ${KMS_HTTP_DIRECTORY}/WEB-INF
 cp ${KMS_DIR}/webapps/kms/WEB-INF/*.xml ${KMS_HTTP_DIRECTORY}/WEB-INF/
 
 cp -r ${KMS_HTTP_DIRECTORY} ${KMS_HTTPS_DIRECTORY}
-mv ${KMS_HTTPS_DIRECTORY}/conf/ssl-server.xml ${KMS_HTTPS_DIRECTORY}/conf/server.xml
-rm ${KMS_HTTP_DIRECTORY}/conf/ssl-server.xml
+rm -f ${KMS_HTTPS_DIRECTORY}/conf/{server.xml,ssl-server.xml,server.xml.conf}
+rm -f ${KMS_HTTP_DIRECTORY}/conf/{server.xml,ssl-server.xml,ssl-server.xml.conf}
 
 mv $HADOOP_ETC_DIR/conf.empty/kms* $KMS_ETC_DIR/conf.dist
 cp $HADOOP_ETC_DIR/conf.empty/core-site.xml  $KMS_ETC_DIR/conf.dist
