@@ -59,4 +59,11 @@ chmod -R 755 ${TOMCAT_DEPLOYMENT}
 
 export CATALINA_BASE=${TOMCAT_DEPLOYMENT}
 
+# check if the ssl file is present and set the URL to monitor accordingly
+if [ -f ${TOMCAT_DEPLOYMENT}/conf/ssl-server.xml.conf ]; then
+  echo "export KMS_URL=https://localhost:16000/kms" > ${TOMCAT_DEPLOYMENT}/conf/kms-server.properties
+else
+  echo "export KMS_URL=http://localhost:16000/kms" > ${TOMCAT_DEPLOYMENT}/conf/kms-server.properties
+fi
+
 
