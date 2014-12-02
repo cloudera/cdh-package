@@ -37,6 +37,18 @@ interval="$1"
 pid="$2"
 url="$3"
 
+# hack to get Curl to return the right HTTP_CODE on Ubuntu 12.04
+# https://bugs.launchpad.net/ubuntu/+source/openssl/+bug/861137
+if [[ "$url" == *"kms" ]] && [ -f ${CATALINA_BASE}/conf/kms-server.properties ]; then
+  . ${CATALINA_BASE}/conf/kms-server.properties
+  url=${KMS_URL:-$url}
+  distro=`lsb_release -i -s`
+  release=`lsb_release -r -s`
+  if [ "$distro" == "Ubuntu" ] && [[ "$release" == "12."* ]]; then
+    cipher="--ciphers DHE-RSA-AES256-SHA"
+  fi
+fi
+
 if  ! expr "$interval" : '^[0-9][0-9]*$' >/dev/null 
 then
     echo "Invalid value for polling_interval_seconds $interval - must be a positive integer" >&2
@@ -61,7 +73,7 @@ do
      sleep $interval
      info  "Sending a heartbeat request to $url"
 
-     HTTP_CODE=`curl -m$interval --retry 5 -L -k -s --negotiate -u : -o /dev/null -w "%{http_code}" "$url"`
+     HTTP_CODE=`curl -m$interval --retry 5 -L -k -s --negotiate -u : -o /dev/null -w "%{http_code}" "$url" $cipher`
      HTTP_CODE=${HTTP_CODE:-600}
 
      # If we're getting 5xx+ (server side error) kill the service and exit
