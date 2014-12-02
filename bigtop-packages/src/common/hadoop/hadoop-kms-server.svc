@@ -62,7 +62,6 @@ start() {
     daemon_pid=`cat $PIDFILE`
     url_to_monitor=${KMS_URL:-http://localhost:16000/kms}
     wd_timeout=${KMS_WATCHDOG_TIMEOUT:-30}
-    echo "monitoring kms server at $url_to_monitor using watchdog with timeout $wd_timeout"
     /usr/lib/bigtop-utils/bigtop-monitor-service $wd_timeout $daemon_pid $url_to_monitor
   else
     log_failure_msg "Failed to start ${DESC}. Return value: $RETVAL"
