@@ -41,7 +41,7 @@ start() {
 
   . /usr/lib/hadoop-kms/tomcat-deployment.sh
 
-  su -s /bin/bash -c "${EXEC_PATH} start $DAEMON_FLAGS" $KMS_USER
+  su -s /bin/bash $KMS_USER -c "nohup nice ${EXEC_PATH} start $DAEMON_FLAGS > /dev/null 2>&1"
 
   for second in {5..0}
   do
@@ -62,7 +62,7 @@ start() {
     daemon_pid=`cat $PIDFILE`
     url_to_monitor=${KMS_URL:-http://localhost:16000/kms}
     wd_timeout=${KMS_WATCHDOG_TIMEOUT:-30}
-    /usr/lib/bigtop-utils/bigtop-monitor-service $wd_timeout $daemon_pid $url_to_monitor
+    /usr/lib/bigtop-utils/bigtop-monitor-service $wd_timeout $daemon_pid $url_to_monitor > /dev/null 2>&1 &
   else
     log_failure_msg "Failed to start ${DESC}. Return value: $RETVAL"
   fi
@@ -85,7 +85,7 @@ stop() {
   # FIXME: workaround for BIGTOP-537
   checkstatusofproc
   if [ "$?" = "$STATUS_RUNNING" ] ; then
-    su -s /bin/bash $SVC_USER -c "${EXEC_PATH} stop $SLEEP_TIME -force"
+    su -s /bin/bash $SVC_USER -c "${EXEC_PATH} stop $SLEEP_TIME -force > /dev/null 2>&1"
     RETVAL=$?
   else
     RETVAL=$RETVAL_SUCCESS
