@@ -308,7 +308,7 @@ export JAVA_OPTS="$CATALINA_OPTS"
 
 if [ -x /usr/lib/bigtop-utils/bigtop-monitor-service ]; then
 if ([ "$1" = "start" -o "$1" = "run" ]) && [ -n "$SOLRD_WATCHDOG_TIMEOUT" ] ; then
-  /usr/lib/bigtop-utils/bigtop-monitor-service $SOLRD_WATCHDOG_TIMEOUT $$ http://127.0.0.1:8983/solr
+  /usr/lib/bigtop-utils/bigtop-monitor-service $SOLRD_WATCHDOG_TIMEOUT $$
 fi
 fi
 

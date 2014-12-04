@@ -20,34 +20,46 @@
 #If it finds that the process is not alive any more we exit
 #Typically used in startup scripts for services such as solr that should be terminated if the
 #server is not running
-#Example usage in a shell script : bigtop-monitor-service $$ http://127.0.0.1:8983/solr
+#Example usage in a shell script : bigtop-monitor-service $$
+#The URL itself that needs to be monitored will be generated in the tomcat-deployment.sh script. 
 
 function info() {
   echo "INFO:" `date +"%X %Z %x"` "$@"
 }
 
+# hack to get Curl to return the right HTTP_CODE on Ubuntu 12.04
+# https://bugs.launchpad.net/ubuntu/+source/openssl/+bug/861137
+function add_cipher_if_needed() {
+distro=`lsb_release -i -s`
+release=`lsb_release -r -s`
+if [ "$distro" == "Ubuntu" ] && [[ "$release" == "12."* ]]; then
+  cipher="--ciphers DHE-RSA-AES256-SHA"
+fi
+}
+
 function monitor() {
-USAGE="$0 polling_interval_seconds process_id_to_kill url_to_monitor "
-if [ $# -ne 3 ]
+USAGE="$0 polling_interval_seconds process_id_to_kill"
+if [ $# -ne 2 ]
 then
     echo $USAGE >&2
     exit 1
 fi
 interval="$1"
 pid="$2"
-url="$3"
 
-# hack to get Curl to return the right HTTP_CODE on Ubuntu 12.04
-# https://bugs.launchpad.net/ubuntu/+source/openssl/+bug/861137
-if [[ "$url" == *"kms" ]] && [ -f ${CATALINA_BASE}/conf/kms-server.properties ]; then
-  . ${CATALINA_BASE}/conf/kms-server.properties
-  url=${KMS_URL:-$url}
-  distro=`lsb_release -i -s`
-  release=`lsb_release -r -s`
-  if [ "$distro" == "Ubuntu" ] && [[ "$release" == "12."* ]]; then
-    cipher="--ciphers DHE-RSA-AES256-SHA"
-  fi
+if [ ! -f ${CATALINA_BASE}/conf/watchdog.properties ]; then
+  echo "watchdog.properties not found under ${CATALINA_BASE}/conf. Terminating watchdog." >&2
+  exit 1
 fi
+
+. ${CATALINA_BASE}/conf/watchdog.properties
+if [ -z $WATCHDOG_MONITOR_URL ]; then
+  echo "WATCHDOG_MONITOR_URL not set.. Terminating watchdog." >&2
+  exit 1
+fi
+
+url=${WATCHDOG_MONITOR_URL}
+add_cipher_if_needed
 
 if  ! expr "$interval" : '^[0-9][0-9]*$' >/dev/null 
 then
