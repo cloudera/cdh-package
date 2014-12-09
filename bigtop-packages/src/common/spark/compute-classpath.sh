@@ -23,7 +23,7 @@ SCALA_VERSION=2.10
 FWDIR="$(cd `dirname $0`/..; pwd)"
 
 # Sourcing defaults file. Note: CM does not source defaults file and sets
-# BIGTOP_DEFAULTS_DIR to a empty string. 
+# BIGTOP_DEFAULTS_DIR to a empty string.
 BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
 [ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/spark ] && . ${BIGTOP_DEFAULTS_DIR}/spark
 
@@ -77,8 +77,11 @@ CLASSPATH="$CLASSPATH:$HADOOP_CONF_DIR"
 if [ "x" != "x$YARN_CONF_DIR" ]; then
   CLASSPATH="$CLASSPATH:$YARN_CONF_DIR"
 fi
+
 # Let's make sure that all needed hadoop libs are added properly
-CLASSPATH="$CLASSPATH:$(hadoop classpath)"
+CLASSPATH="$CLASSPATH:$HADOOP_HOME/client/*"
+CLASSPATH="$CLASSPATH:$($HADOOP_HOME/bin/hadoop classpath)"
+
 # Add Scala standard library
 if [ -z "$SCALA_LIBRARY_PATH" ]; then
   if [ -z "$SCALA_HOME" ]; then
