@@ -22,6 +22,26 @@ if [ -z "$GIT_REPO" ]; then
     mkdir -p build
     
     mv dist/*.tar.gz build/datafu-$FULL_VERSION.tar.gz
+
+    # Get rid of cobertura directory from the tarball
+    pushd build; 
+    tar -xzvf datafu-$FULL_VERSION.tar.gz;
+    #Just making sure that our assumptions about the layout of the
+    #tar file are correct
+    numdirs=`find . -maxdepth 1 -type d -name 'datafu*' | wc -l` 
+    if [ $numdirs -ne 1 ] ; then
+        echo "Unexpected tar file layout in `pwd`" >&2
+        exit 1
+    fi
+    dir_to_tar=`find . -maxdepth 1 -type d -name 'datafu*'`
+    if [ $dir_to_tar != "./datafu-$FULL_VERSION" ] ; then
+       mv $dir_to_tar datafu-$FULL_VERSION
+    fi
+    rm -rf datafu-$FULL_VERSION.tar.gz; 
+    rm -rf datafu-$FULL_VERSION/cobertura; 
+    tar -czvf datafu-$FULL_VERSION.tar.gz datafu-$FULL_VERSION
+    popd
+
     cp dist/datafu-$FULL_VERSION.jar build
 
     if [ -n "$DO_MAVEN_DEPLOY" ]; then
