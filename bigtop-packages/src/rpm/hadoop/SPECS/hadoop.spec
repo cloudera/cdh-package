@@ -873,6 +873,7 @@ fi
 %{man_hadoop}/man1/yarn.1.*
 %{man_hadoop}/man1/hdfs.1.*
 %{man_hadoop}/man1/mapred.1.*
+%{state_hadoop}/extra/native
 
 # Shouldn't the following be moved to hadoop-hdfs?
 %exclude %{lib_hadoop}/bin/fuse_dfs
