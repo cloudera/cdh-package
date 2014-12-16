@@ -18,6 +18,7 @@ set -ex
 
 if [ -z "$GIT_REPO" ]; then
     export HADOOP_PROTOC_CDH5_PATH=/opt/toolchain/protobuf-2.5.0/bin/protoc
+    export HADOOP_OPENSSL_101J_PATH=/opt/toolchain/openssl-1.0.1j
 
     if [ -z "${DO_MAVEN_DEPLOY}" ]; then
         MAVEN_INST_DEPLOY=install
@@ -45,6 +46,8 @@ if [ -z "$GIT_REPO" ]; then
         MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
         mvn $BUNDLE_SNAPPY \
         -Pdist -Pnative -Pfuse -Psrc -Dtar -Drequire.fuse=true \
+        -Drequire.openssl -Dopenssl.prefix=$HADOOP_OPENSSL_101J_PATH \
+        -Dextra.libhadoop.rpath=/var/lib/hadoop/extra/native \
         ${MAVEN_SKIP_TESTS} \
         $MAVEN_INST_DEPLOY \
         "$@" 

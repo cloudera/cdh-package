@@ -25,6 +25,9 @@ case "$1" in
 	# things like task-controller are very particular about ownership
 	chown -R root:hadoop /etc/hadoop
 	update-alternatives --install /etc/hadoop/conf hadoop-conf /etc/hadoop/conf.empty 10
+
+        mkdir -p /var/lib/hadoop/extra/native
+        chmod 0755 /var/lib/hadoop/extra/native
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
