@@ -39,16 +39,20 @@ if [ -z "$GIT_REPO" ]; then
         [ -f /usr/lib/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib -Drequire.snappy=true"
         [ -f /usr/lib64/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib64 -Drequire.snappy=true"
     fi
-    
+
+    if [ -z "${DO_MAVEN_DEPLOY}" ]; then
+        MAVEN_SSL_FLAGS="-Drequire.openssl -Dopenssl.prefix=$HADOOP_OPENSSL_101J_PATH -Dextra.libhadoop.rpath=/var/lib/hadoop/extra/native"
+    else
+        MAVEN_SSL_FLAGS=""
+    fi
+        
 # Build artifacts
     MAVEN_SKIP_TESTS="-DskipTests -DskipTest -DskipITs"
     JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
         MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
         mvn $BUNDLE_SNAPPY \
         -Pdist -Pnative -Pfuse -Psrc -Dtar -Drequire.fuse=true \
-        -Drequire.openssl -Dopenssl.prefix=$HADOOP_OPENSSL_101J_PATH \
-        -Dextra.libhadoop.rpath=/var/lib/hadoop/extra/native \
-        ${MAVEN_SKIP_TESTS} \
+        ${MAVEN_SSL_FLAGS} ${MAVEN_SKIP_TESTS} \
         $MAVEN_INST_DEPLOY \
         "$@" 
 
