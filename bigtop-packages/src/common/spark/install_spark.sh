@@ -254,5 +254,21 @@ pushd ${PREFIX}/${LIB_DIR}/lib || \
 ln -s spark-assembly-*.jar ./spark-assembly.jar
 popd
 
+#Temporary fix to workaround cdh-24083.  This needs to be eliminated in the
+#next major release of CDH 
+install -d -m 0755 $PREFIX/$LIB_DIR/assembly/lib
+install -d -m 0755 $PREFIX/$LIB_DIR/examples/lib
+
+pushd $PREFIX/$LIB_DIR/assembly/lib
+ln -s ../../lib/spark-assembly-*.jar ./spark-assembly.jar
+popd
+
+pushd $PREFIX/$LIB_DIR/examples/lib
+ln -s ../../lib/spark-examples-*.jar .
+ln -s ../../lib/python.tar.gz .
+popd
+
+#end of temporary workaround
+
 external_versionless_symlinks 'spark' ${PREFIX}/${LIB_DIR}/lib
 
