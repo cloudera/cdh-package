@@ -36,7 +36,7 @@ if [ -z "$GIT_REPO" ]; then
   #        http://maven.40175.n5.nabble.com/Not-finding-artifact-in-local-repo-td3727753.html
   export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -XX:PermSize=1024m -XX:MaxPermSize=1024m"
 
-  mvn -Pbigtop-dist -Dcdh.build=true -DskipTests $BUILD_OPTS $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
+  mvn -T 2.0C -Pbigtop-dist -Dcdh.build=true -DskipTests $BUILD_OPTS $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
 
   rm -rf build
   mkdir -p build/spark-${FULL_VERSION}
