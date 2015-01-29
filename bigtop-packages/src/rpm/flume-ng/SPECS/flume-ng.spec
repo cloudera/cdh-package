@@ -181,15 +181,14 @@ fi
 
 %files 
 %defattr(644,root,root,755)
-
 %dir %{etc_flume}.empty
 %dir %{lib_flume}
-%dir %{lib_flume}/NOTICE
-%dir %{lib_flume}/LICENSE
 %dir %{lib_flume}/bin
 %dir %{lib_flume}/lib
 %dir %{lib_flume}/tools
 %dir %{lib_flume}/cloudera
+%{lib_flume}/NOTICE
+%{lib_flume}/LICENSE
 
 %config(noreplace) %{etc_flume}.empty/*
 %{etc_flume}.dist
