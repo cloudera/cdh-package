@@ -367,7 +367,7 @@ install -m 0644 \
 for bin_wrapper in hadoop-0.20 ; do
   wrapper=$BIN_DIR/$bin_wrapper
   cat > $wrapper <<EOF
-#!/bin/sh
+#!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
