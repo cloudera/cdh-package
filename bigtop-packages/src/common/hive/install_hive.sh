@@ -122,7 +122,6 @@ BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 PYTHON_DIR=${PYTHON_DIR:-$HIVE_DIR/lib/py}
 HCATALOG_DIR=${HCATALOG_DIR:-$PREFIX/usr/lib/hive-hcatalog}
 HCATALOG_SHARE_DIR=${HCATALOG_DIR}/share/hcatalog
-HBASE_STORAGE_HANDLER_DIR=${HCATALOG_SHARE_DIR}/storage-handlers/hbase/lib
 INSTALLED_HCATALOG_DIR=${INSTALLED_HCATALOG_DIR:-/usr/lib/hive-hcatalog}
 CONF_DIR=/etc/hive
 CONF_DIST_DIR=/etc/hive/conf.dist
@@ -242,7 +241,7 @@ install -d -m 0755 $PREFIX/var/log/hive
 install -d -m 0755 $PREFIX/var/lib/hive-hcatalog
 install -d -m 0755 $PREFIX/var/log/hive-hcatalog
 
-for DIR in ${HBASE_STORAGE_HANDLER_DIR} ${HCATALOG_SHARE_DIR} ; do
+for DIR in ${HCATALOG_SHARE_DIR} ; do
     (cd $DIR &&
      for j in hive-hcatalog-*.jar; do
        if [[ $j =~ hive-hcatalog-(.*)-${HIVE_VERSION}.jar ]]; then
