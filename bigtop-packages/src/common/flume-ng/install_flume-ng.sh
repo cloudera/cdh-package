@@ -128,7 +128,8 @@ for x in flume-* \
           cloudera/CHANGES.cloudera.txt \
           cloudera/apply-patches \
           cloudera/build.properties \
-          cloudera/patches; do
+          cloudera/patches \
+          lib/*.pom; do
   rm -rf ${PREFIX}/$FLUME_DIR/$x 
 done
 
