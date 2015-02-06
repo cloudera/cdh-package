@@ -66,5 +66,4 @@ env FULL_VERSION=%{keytrustee_keyprovider_patched_version} bash %{SOURCE2} \
 /usr/share/keytrustee-keyprovider/cloudera
 /usr/share/keytrustee-keyprovider/lib
 /usr/share/keytrustee-keyprovider/README.md
-/usr/share/keytrustee-keyprovider/keytrusteekp-%{keytrustee_keyprovider_patched_version}.jar
 

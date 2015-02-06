@@ -91,8 +91,7 @@ DIRECTORY="build/keytrusteekp-${FULL_VERSION}"
 
 install -d -m 0755 ${LIB_DIR}
 mv ${DIRECTORY}/README.md `dirname ${LIB_DIR}`
-cp --preserve build/keytrusteekp-*.jar ${LIB_DIR}
-mv build/keytrusteekp-*.jar `dirname ${LIB_DIR}`
+mv build/keytrusteekp-*.jar ${LIB_DIR}
 mv ${DIRECTORY}/lib/* ${LIB_DIR}/
 
 # Cloudera specific
