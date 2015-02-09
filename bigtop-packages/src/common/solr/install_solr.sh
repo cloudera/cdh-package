@@ -317,7 +317,7 @@ EOF
 chmod 755 $PREFIX/$LIB_DIR/bin/solrd
 
 # installing the only script that goes into /usr/bin
-install -D -m 0755 ${BUILD_DIR}/example/cloud-scripts/solrctl.sh $PREFIX/usr/bin/solrctl
+install -D -m 0755 ${BUILD_DIR}/example/scripts/cloud-scripts/solrctl.sh $PREFIX/usr/bin/solrctl
 
 # precreating /var layout
 install -d -m 0755 $VAR_DIR/log/solr
