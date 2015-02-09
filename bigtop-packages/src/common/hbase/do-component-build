@@ -27,7 +27,9 @@ if [ -z "$GIT_REPO" ]; then
     fi
     
     set -ex
-    
+    # First do a local install so that goals that fail to look in the current reactor will see modules in the project (i.e. javadoc and site)
+    mvn -DskipTests -Dmaven.repo.local="${HOME}/.m2/repository" clean install
+
     mvn $build_args "$@"
 
     if [ -z "${MAVEN_ONLY}" ]; then
