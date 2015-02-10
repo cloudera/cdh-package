@@ -27,10 +27,11 @@ if [ -z "$GIT_REPO" ]; then
     fi
     
     set -ex
+    JAVA_OPTS="-Xmx3G -XX:MaxPermSize=256m"
     # First do a local install so that goals that fail to look in the current reactor will see modules in the project (i.e. javadoc and site)
-    mvn -DskipTests -Dmaven.repo.local="${HOME}/.m2/repository" clean install
+    MAVEN_OPTS="$JAVA_OPTS" mvn -DskipTests -Dmaven.repo.local="${HOME}/.m2/repository" clean install
 
-    mvn $build_args "$@"
+    MAVEN_OPTS="$JAVA_OPTS" mvn $build_args "$@"
 
     if [ -z "${MAVEN_ONLY}" ]; then
         mkdir -p build
@@ -44,6 +45,10 @@ if [ -z "$GIT_REPO" ]; then
         (cd build && tar --exclude='*/native/lib*' --exclude='*/lib/native/*' -czf hbase-${FULL_VERSION}.tar.gz hbase-${FULL_VERSION})
     fi
 else
+    # Since we'll be adding to git, need to preserve empty directories from source tarball
+    for empty_dir in `find . -type d -empty`; do
+      touch "${empty_dir}/.gitignore"
+    done
     git add .
     git commit -a -m "Temporary commit for tarball"
     mkdir -p build
