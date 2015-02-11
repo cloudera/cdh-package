@@ -93,7 +93,7 @@ for file in `cd ${BUILD_DIR}; find . -name \*.jar | grep -v '\./lib'`; do
 done
 
 # copy the Kite dataset tool into bin
-dataset_bin=${BUILD_DIR}/kite-tools/target/kite-dataset
+dataset_bin=${BUILD_DIR}/kite-tools-parent/kite-tools/target/kite-dataset
 install -m 0755 ${dataset_bin} ${PREFIX}/${LIB_DIR}/bin/kite-dataset
 
 # install a wrapper in prefix that calls the dataset tool
@@ -114,8 +114,6 @@ rm ${PREFIX}/${LIB_DIR}/lib/kite*-{sources,javadoc,tests}.jar
 (cd ${PREFIX}/${LIB_DIR}; ln -s lib/kite*.jar ./)
 
 cp ${BUILD_DIR}/{LICENSE,NOTICE}* ${PREFIX}/${LIB_DIR}/
-
-rm ${PREFIX}/${LIB_DIR}/lib/original-kite-tools*.jar
 
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
