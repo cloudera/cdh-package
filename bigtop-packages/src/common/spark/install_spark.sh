@@ -117,11 +117,13 @@ HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
 HADOOP_HDFS_HOME=${HADOOP_HDFS_HOME:-/usr/lib/hadoop-hdfs}
 HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME:-/usr/lib/hadoop-mapreduce}
 HADOOP_YARN_HOME=${HADOOP_YARN_HOME:-/usr/lib/hadoop-yarn}
+HADOOP_YARN_LIB=$PREFIX/$HADOOP_YARN_HOME/lib
 
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 install -d -m 0755 $PREFIX/$LIB_DIR/sbin
 install -d -m 0755 $PREFIX/$DOC_DIR
+install -d -m 0755 $HADOOP_YARN_LIB
 
 install -d -m 0755 $PREFIX/var/lib/spark/
 install -d -m 0755 $PREFIX/var/log/spark/
@@ -135,6 +137,11 @@ done
 
 ## FIXME: Spark maven assembly needs to include examples into it.
 cp ${BUILD_DIR}/examples/target/scala-*/spark-examples*.jar $PREFIX/$LIB_DIR/lib
+
+#This is so that users can optionally use spark-*-yarn-shuffle.jar - see
+#https://jira.cloudera.com/browse/CDH-25073 for details
+cp ${BUILD_DIR}/network/yarn/target/scala-*/spark-*-yarn-shuffle.jar $HADOOP_YARN_LIB
+
 tar -czf $PREFIX/$LIB_DIR/lib/python.tar.gz -C ${BUILD_DIR}/examples/src/main/python .
 
 # Copy files to the bin and sbin directories

@@ -8,3 +8,4 @@
 /var/run/spark/
 /var/run/spark/work/
 /usr/lib/spark/cloudera
+/usr/lib/hadoop-yarn/lib

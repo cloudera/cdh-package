@@ -15,6 +15,7 @@
 
 %define spark_name spark
 %define lib_spark /usr/lib/%{spark_name}
+%define lib_yarn /usr/lib/hadoop-yarn
 %define var_lib_spark /var/lib/%{spark_name}
 %define var_run_spark /var/run/%{spark_name}
 %define var_log_spark /var/log/%{spark_name}
@@ -178,6 +179,7 @@ done
 %{lib_spark}
 %exclude %{lib_spark}/bin/pyspark
 %exclude %{lib_spark}/python
+%{lib_yarn}
 %{etc_spark}
 %attr(0755,spark,spark) %{var_lib_spark}
 %attr(0755,spark,spark) %{var_run_spark}
