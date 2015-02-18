@@ -1,0 +1,55 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+Source: kudu
+Section: misc
+Priority: extra
+Maintainer: Cloudera Inc. <https://issues.cloudera.org>
+Build-Depends: debhelper (>= 7.0.0~)
+Standards-Version: 3.8.0
+Homepage: http://cloudera.com/
+
+Package: kudu
+Architecture: any
+Depends: ${misc:Depends}, adduser, bigtop-utils (>= 0.7)
+Description: Columnar storage engine for Hadoop
+
+Package: kudu-master
+Architecture: any
+Depends: ${misc:Depends}, kudu (= ${source:Version})
+Description: Kudu master service
+
+Package: kudu-tablet-server
+Architecture: any
+Depends: ${misc:Depends}, kudu (= ${source:Version})
+Description: Kudu tablet-server service
+
+# We should rename this package to follow conventions for packages that provide only shared libraries
+Package: kudu-client
+Architecture: any
+Depends: ${misc:Depends}
+Description: Kudu client library
+
+Package: kudu-client-dev
+Architecture: any
+Depends: ${misc:Depends}, kudu-client (= ${source:Version})
+Description: Kudu client development package
+
+Package: kudu-dbg
+Architecture: any
+Section: debug
+Depends: ${misc:Depends}, kudu (= ${binary:Version}),
+Description: Debugging symbols for Kudu
+

@@ -1,0 +1,8 @@
+/usr/lib/kudu
+/usr/bin/*
+/var/log/kudu
+/var/run/kudu
+/var/lib/kudu
+/etc/kudu/conf.dist
+/etc/default/kudu
+

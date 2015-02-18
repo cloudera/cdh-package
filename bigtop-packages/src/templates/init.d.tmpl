@@ -202,7 +202,9 @@ BIGTOP_DEFAULTS_DIR=\${BIGTOP_DEFAULTS_DIR-/etc/default}
 [ -n "\${BIGTOP_DEFAULTS_DIR}" -a -r \${BIGTOP_DEFAULTS_DIR}/$DEFAULTS_FILE ] && . \${BIGTOP_DEFAULTS_DIR}/$DEFAULTS_FILE
 
 # Autodetect JAVA_HOME if not defined
-. /usr/lib/bigtop-utils/bigtop-detect-javahome
+if [ -f /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
 
 RETVAL_SUCCESS=0
 
