@@ -792,7 +792,7 @@ if [ $1 -ge 1 ]; then
   service %{name}-httpfs condrestart >/dev/null 2>&1
 fi
 
-%postun kms
+%postun kms-server
 if [ $1 -ge 1 ]; then
   service %{name}-kms-server condrestart >/dev/null 2>&1
 fi
