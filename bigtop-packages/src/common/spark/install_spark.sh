@@ -207,7 +207,7 @@ if [ -n "\$HADOOP_HOME" ]; then
   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${HADOOP_HOME}/lib/native
 fi
 
-export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-etc/hadoop/conf}
+export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-/etc/hadoop/conf}
 
 if [[ -d \$SPARK_HOME/python ]]
 then
