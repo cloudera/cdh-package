@@ -144,13 +144,17 @@ __EOT__
 
 install -m 0755 ${DISTRO_DIR}/tomcat-deployment.sh ${PREFIX}/${LIB_DIR}/tomcat-deployment.sh
 
-install -d -m 0755 $PREFIX/etc/solr/tomcat-conf.dist/conf
-cp $DISTRO_DIR/web.xml $PREFIX/etc/solr/tomcat-conf.dist/conf
-cp $DISTRO_DIR/server.xml $PREFIX/etc/solr/tomcat-conf.dist/conf
-cp $DISTRO_DIR/logging.properties $PREFIX/etc/solr/tomcat-conf.dist/conf
+HTTP_DIRECTORY=${PREFIX}/etc/solr/tomcat-conf.dist
+install -d -m 0755 ${HTTP_DIRECTORY}/conf
+cp $DISTRO_DIR/web.xml ${HTTP_DIRECTORY}/conf
+cp $DISTRO_DIR/server.xml ${HTTP_DIRECTORY}/conf
+cp $DISTRO_DIR/logging.properties ${HTTP_DIRECTORY}/conf
+install -d -m 0755 ${HTTP_DIRECTORY}/WEB-INF
+mv $PREFIX/$LIB_DIR/webapps/solr/WEB-INF/*.xml ${HTTP_DIRECTORY}/WEB-INF/ || :
 
-install -d -m 0755 $PREFIX/etc/solr/tomcat-conf.dist/WEB-INF
-mv $PREFIX/$LIB_DIR/webapps/solr/WEB-INF/*.xml $PREFIX/etc/solr/tomcat-conf.dist/WEB-INF/ || :
+HTTPS_DIRECTORY=${PREFIX}/etc/solr/tomcat-conf.https
+cp -r ${HTTP_DIRECTORY} ${HTTPS_DIRECTORY}
+cp ${DISTRO_DIR}/server-ssl.xml ${HTTPS_DIRECTORY}/conf/server.xml
 
 cp -ra ${BUILD_DIR}/dist/*.*ar $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist/solrj-lib $PREFIX/$LIB_DIR/lib
@@ -295,12 +299,25 @@ export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.host=$HOSTNAME
                                         -Dsolr.max.connector.thread=$SOLR_MAX_CONNECTOR_THREAD
                                         -Dsolr.solr.home=$SOLR_HOME"
 
+if [ -n "${SOLR_KEYSTORE_PATH}" ]; then
+  export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.keystore.path=${SOLR_KEYSTORE_PATH}"
+fi
+if [ -n "${SOLR_KEYSTORE_PASSWORD}" ]; then
+  export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.keystore.password=${SOLR_KEYSTORE_PASSWORD}"
+fi
+if [ -n "${SOLR_TRUSTSTORE_PATH}" ]; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Djavax.net.ssl.trustStorePassword=${SOLR_TRUSTSTORE_PASSWORD}"
+fi
+if [ -n "${SOLR_TRUSTSTORE_PASSWORD}" ]; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Djavax.net.ssl.trustStorePassword=${SOLR_TRUSTSTORE_PASSWORD}"
+fi
+
 if [ -n "$SOLR_AUTHORIZATION_SENTRY_SITE" ] ; then
-  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authorization.sentry.site=${SOLR_AUTHORIZATION_SENTRY_SITE}"
+  export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authorization.sentry.site=${SOLR_AUTHORIZATION_SENTRY_SITE}"
 fi
 
 if [ -n "$SOLR_AUTHORIZATION_SUPERUSER" ] ; then
-  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authorization.superuser=${SOLR_AUTHORIZATION_SUPERUSER}"
+  export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authorization.superuser=${SOLR_AUTHORIZATION_SUPERUSER}"
 fi
 
 #  FIXME: for some reason catalina doesn't use CATALINA_OPTS for stop action

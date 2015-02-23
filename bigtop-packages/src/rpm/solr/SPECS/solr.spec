@@ -60,6 +60,7 @@ Source6: solr.default
 Source7: solr-server.init
 Source8: tomcat-deployment.sh
 Source9: packaging_functions.sh
+Source10: server-ssl.xml
 Requires: curl
 Requires: bigtop-utils >= 0.7, bigtop-tomcat
 Requires: hadoop, hadoop-hdfs, sentry >= 1.3.0+cdh5.1.0, zookeeper
@@ -134,6 +135,7 @@ getent passwd solr > /dev/null || useradd -c "Solr" -s /sbin/nologin -g solr -r 
 %post
 %{alternatives_cmd} --install %{config_solr} %{solr_name}-conf %{config_solr}.dist 30
 %{alternatives_cmd} --install %{tomcat_conf_solr} %{solr_name}-tomcat-conf %{tomcat_conf_solr}.dist 30
+%{alternatives_cmd} --install %{tomcat_conf_solr} %{solr_name}-tomcat-conf %{tomcat_conf_solr}.https 20
 # [ -e /var/lib/solr/solr.xml ] || /usr/bin/solrctl nodeconfig >/dev/null 2>&1 || :
 touch /var/lib/solr/solr.cloud.ini || :
 chown solr:solr /var/lib/solr/* || :
@@ -147,6 +149,7 @@ __EOT__
 if [ "$1" = 0 ]; then
         %{alternatives_cmd} --remove %{solr_name}-conf %{config_solr}.dist || :
         %{alternatives_cmd} --remove %{solr_name}-tomcat-conf %{tomcat_conf_solr}.dist || :
+        %{alternatives_cmd} --remove %{solr_name}-tomcat-conf %{tomcat_conf_solr}.https || :
 fi
 
 %post server
@@ -169,7 +172,7 @@ fi
 %files 
 %defattr(-,root,root,755)
 %config(noreplace) %{config_solr}.dist
-%config(noreplace) %{tomcat_conf_solr}.dist
+%config(noreplace) %{tomcat_conf_solr}.*
 %config(noreplace) /etc/default/solr 
 %{lib_solr}
 %{bin_solr}/solrctl

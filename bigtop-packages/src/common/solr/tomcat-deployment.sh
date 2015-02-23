@@ -54,5 +54,9 @@ chown -R solr:solr ${TOMCAT_DEPLOYMENT}
 
 export CATALINA_BASE=${TOMCAT_DEPLOYMENT}
 
-# Right now we only bundle one configuration with solr.
-echo "export WATCHDOG_MONITOR_URL=http://127.0.0.1:8983/solr" > ${TOMCAT_DEPLOYMENT}/conf/watchdog.properties
+PROTOCOL='http'
+if [ "${SOLR_SSL_ENABLED}" == 'true' ]; then
+    PROTOCOL='https'
+fi
+echo "export WATCHDOG_MONITOR_URL=${PROTOCOL}://127.0.0.1:${SOLR_PORT}/solr" > ${TOMCAT_DEPLOYMENT}/conf/watchdog.properties
+

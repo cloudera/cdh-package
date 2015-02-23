@@ -21,6 +21,7 @@ case "$1" in
         # Install config alternatives
         update-alternatives --install /etc/solr/conf solr-conf /etc/solr/conf.dist 30
         update-alternatives --install /etc/solr/tomcat-conf solr-tomcat-conf /etc/solr/tomcat-conf.dist 30
+        update-alternatives --install /etc/solr/tomcat-conf solr-tomcat-conf /etc/solr/tomcat-conf.https 20
         # [ -e /var/lib/solr/solr.xml ] || /usr/bin/solrctl nodeconfig >/dev/null 2>&1 || :
         touch /var/lib/solr/solr.cloud.ini || :
 	chown -R solr:solr /var/log/solr /var/lib/solr /var/run/solr

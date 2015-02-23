@@ -33,6 +33,8 @@
 
 . /lib/lsb/init-functions
 
+. /etc/default/solr
+
 STATUS_RUNNING=0
 STATUS_DEAD=1
 STATUS_DEAD_AND_LOCK=2
