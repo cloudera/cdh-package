@@ -155,6 +155,7 @@ mv $PREFIX/$LIB_DIR/webapps/solr/WEB-INF/*.xml $PREFIX/etc/solr/tomcat-conf.dist
 cp -ra ${BUILD_DIR}/dist/*.*ar $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist/solrj-lib $PREFIX/$LIB_DIR/lib
 
+# The cloud-scripts folder contains solrctl.sh and zkcli.sh presently.
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 cp -a ${BUILD_DIR}/example/scripts/cloud-scripts/*.sh $PREFIX/$LIB_DIR/bin
 sed -i -e 's#/../solr-webapp/webapp/WEB-INF/lib/#/../webapps/solr/WEB-INF/lib/#' $PREFIX/$LIB_DIR/bin/zkcli.sh
@@ -319,8 +320,18 @@ exec ${CATALINA_HOME}/bin/catalina.sh "$@"
 EOF
 chmod 755 $PREFIX/$LIB_DIR/bin/solrd
 
-# installing the only script that goes into /usr/bin
-install -D -m 0755 ${BUILD_DIR}/example/scripts/cloud-scripts/solrctl.sh $PREFIX/usr/bin/solrctl
+# Wrapper script placed under /usr/bin. Invokes $INSTALLED_LIB_DIR/bin/solrctl.sh.
+install -d -m 0755 $PREFIX/$BIN_DIR
+cat > $PREFIX/$BIN_DIR/solrctl <<EOF
+#!/bin/bash
+
+# Autodetect JAVA_HOME if not defined
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
+
+exec $INSTALLED_LIB_DIR/bin/solrctl.sh "\$@"
+
+EOF
+chmod 755 $PREFIX/$BIN_DIR/solrctl
 
 # precreating /var layout
 install -d -m 0755 $VAR_DIR/log/solr
