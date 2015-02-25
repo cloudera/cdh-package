@@ -42,7 +42,7 @@ OPTS=$(getopt \
   -l 'lib-dir:' \
   -l 'bin-dir:' \
   -l 'conf-dir:' \
-  -l 'extras-dir:' \
+  -l 'extra-dir:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -67,8 +67,8 @@ while true ; do
         --conf-dir)
         CONF_DIR=$2 ; shift 2
         ;;
-        --extras-dir)
-        EXTRAS_DIR=$2 ; shift 2
+        --extra-dir)
+        EXTRA_DIR=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -88,7 +88,7 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
-. ${EXTRAS_DIR}/packaging_functions.sh
+. ${EXTRA_DIR}/packaging_functions.sh
 
 CONF_DIR=${CONF_DIR:-${PREFIX}/etc/sentry/conf.dist}
 LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/sentry}
@@ -122,7 +122,7 @@ EOF
 chmod 755 $wrapper
 
 install -d -m 0755 ${CONF_DIR}
-cp ${EXTRAS_DIR}/sentry-site.xml ${CONF_DIR}/
+cp ${EXTRA_DIR}/sentry-site.xml ${CONF_DIR}/
 
 install -d -m 0755 ${PREFIX}/var/lib/sentry
 install -d -m 0755 ${PREFIX}/var/log/sentry

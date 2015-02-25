@@ -75,7 +75,7 @@ env FULL_VERSION=%{sentry_patched_version} bash $RPM_SOURCE_DIR/do-component-bui
 env FULL_VERSION=%{sentry_patched_version} bash $RPM_SOURCE_DIR/install_sentry.sh \
           --build-dir=$PWD \
           --prefix=$RPM_BUILD_ROOT \
-          --extras-dir=$RPM_SOURCE_DIR
+          --extra-dir=$RPM_SOURCE_DIR
 
 for service in sentry-store; do
     # Install init script
