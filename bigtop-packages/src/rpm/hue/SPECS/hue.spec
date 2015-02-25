@@ -197,7 +197,7 @@ BuildRequires: sqlite3-devel, openldap2-devel, libmysqlclient-devel, libopenssl-
 Requires: insserv, python-xml, python, libmysqlclient_r15
 %else
 BuildRequires: /sbin/runuser, sqlite-devel, openldap-devel, mysql-devel, openssl-devel
-Requires: redhat-lsb
+Requires: /lib/lsb/init-functions
 %if 0%{?rhel:%{rhel}} < 6
 # Python 2.5+ is required, but RHEL 5's `python` is 2.4
 BuildRequires: python26-devel, python26-distribute

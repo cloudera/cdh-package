@@ -79,7 +79,7 @@ Requires: bigtop-utils >= 0.7, /usr/sbin/useradd, /usr/sbin/usermod, openssl
 Requires: hadoop, hadoop-hdfs, hadoop-yarn, hadoop-mapreduce, hbase, hive >= 0.12.0+cdh5.1.0, zookeeper, hadoop-libhdfs, avro-libs, parquet, sentry >= 1.3.0+cdh5.1.0
 Requires: avro-libs, parquet, sentry
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
-Requires: redhat-lsb
+Requires: /lib/lsb/init-functions
 %else
 Requires: libopenssl0_9_8
 %endif

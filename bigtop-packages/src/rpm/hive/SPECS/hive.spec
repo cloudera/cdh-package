@@ -106,7 +106,7 @@ Requires(pre): %{name} = %{version}-%{release}
 Requires: insserv
 %else
 # Required for init scripts
-Requires: redhat-lsb
+Requires: /lib/lsb/init-functions
 %endif
 
 
@@ -127,7 +127,7 @@ Requires(pre): %{name} = %{version}-%{release}
 Requires: insserv
 %else
 # Required for init scripts
-Requires: redhat-lsb
+Requires: /lib/lsb/init-functions
 %endif
 
 
@@ -198,7 +198,7 @@ Requires: initscripts
     /usr/lib/rpm/brp-python-bytecompile ; \
     %{nil}
 # Required for init scripts
-Requires: redhat-lsb
+Requires: /lib/lsb/init-functions
 %endif
 
 %description webhcat-server

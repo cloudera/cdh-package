@@ -68,7 +68,7 @@ Requires: hadoop, hadoop-hdfs, sentry >= 1.3.0+cdh5.1.0, zookeeper
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
-Requires: redhat-lsb
+Requires: /lib/lsb/init-functions
 %endif
 
 %description 
