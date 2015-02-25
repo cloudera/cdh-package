@@ -8,7 +8,7 @@ Homepage: https://github.com/cloudera/hadoop-lzo
 
 Package: hadoop-lzo
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, liblzo2-2
 Description: GPL compression libraries for Hadoop in CDH 4
  Hadoop can use some compression libraries like LZO that are released
  under a GPL license. GPL is not compatible with the Apache license.
