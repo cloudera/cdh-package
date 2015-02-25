@@ -70,7 +70,7 @@ Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
 Requires: oozie-client = %{version}, hadoop-client, bigtop-tomcat
-Requires: avro-libs, parquet, zookeeper, hadoop, hadoop-hdfs, hadoop-mapreduce, hadoop-yarn, hive >= 0.12.0+cdh5.1.0, hive-hcatalog >= 0.12.0+cdh5.1.0, hive-webhcat >= 0.12.0+cdh5.1.0, hbase
+Requires: avro-libs, parquet, zookeeper, hadoop, hadoop-hdfs, hadoop-mapreduce, hadoop-yarn, hive >= 0.12.0+cdh5.1.0, hive-hcatalog >= 0.12.0+cdh5.1.0, hive-webhcat >= 0.12.0+cdh5.1.0, hbase, sqoop, pig, kite
 BuildArch: noarch
 
 %description 
@@ -162,6 +162,8 @@ getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --she
 %{alternatives_cmd} --install %{tomcat_conf_oozie} %{name}-tomcat-deployment %{tomcat_conf_oozie}.http.mr1 15
 %{alternatives_cmd} --install %{tomcat_conf_oozie} %{name}-tomcat-deployment %{tomcat_conf_oozie}.https.mr1 10
 %{alternatives_cmd} --install %{conf_oozie} %{name}-conf %{conf_oozie_dist} 30
+%{alternatives_cmd} --install %{lib_oozie}/oozie-sharelib oozie-sharelib %{lib_oozie}/oozie-sharelib-yarn 30
+%{alternatives_cmd} --install %{lib_oozie}/oozie-sharelib oozie-sharelib %{lib_oozie}/oozie-sharelib-mr1 20
 
 /sbin/chkconfig --add oozie 
 
@@ -174,6 +176,8 @@ if [ "$1" = 0 ]; then
   %{alternatives_cmd} --remove %{name}-tomcat-deployment %{tomcat_conf_oozie}.http.mr1 || :
   %{alternatives_cmd} --remove %{name}-tomcat-deployment %{tomcat_conf_oozie}.https.mr1 || :
   %{alternatives_cmd} --remove %{name}-conf %{conf_oozie_dist} || :
+  %{alternatives_cmd} --remove oozie-sharelib %{lib_oozie}/oozie-sharelib-yarn || :
+  %{alternatives_cmd} --remove oozie-sharelib %{lib_oozie}/oozie-sharelib-mr1 || :
 fi
 
 %postun
@@ -194,9 +198,7 @@ fi
 %{lib_oozie}/webapps
 %{lib_oozie}/libtools
 %{lib_oozie}/libserver
-%{lib_oozie}/oozie-sharelib.tar.gz
-%{lib_oozie}/oozie-sharelib-yarn.tar.gz
-%{lib_oozie}/oozie-sharelib-mr1.tar.gz
+%{lib_oozie}/oozie-sharelib*
 %{lib_oozie}/libext
 %{lib_oozie}/tomcat-deployment.sh
 %{lib_oozie}/cloudera/

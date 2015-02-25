@@ -206,7 +206,15 @@ if [ "${INITD_DIR}" != "" ]; then
 fi
 mv ${BUILD_DIR}/oozie-sharelib-*-yarn.tar.gz ${SERVER_LIB_DIR}/oozie-sharelib-yarn.tar.gz
 mv ${BUILD_DIR}/oozie-sharelib-*.tar.gz ${SERVER_LIB_DIR}/oozie-sharelib-mr1.tar.gz
-ln -s oozie-sharelib-yarn.tar.gz ${SERVER_LIB_DIR}/oozie-sharelib.tar.gz
+
+pushd ${SERVER_LIB_DIR}
+    for mr_arch in mr1 yarn; do
+        tar xzf oozie-sharelib-${mr_arch}.tar.gz
+        mv share oozie-sharelib-${mr_arch}
+        rm oozie-sharelib-${mr_arch}.tar.gz
+    done
+popd
+
 ln -s -f /etc/oozie/conf/oozie-env.sh ${SERVER_LIB_DIR}/bin
 
 cp -R ${BUILD_DIR}/oozie-server/webapps ${SERVER_LIB_DIR}/webapps
@@ -260,5 +268,6 @@ cp ${BUILD_DIR}/cloudera/cdh_version.properties ${SERVER_LIB_DIR}/cloudera/
 
 rm ${SERVER_LIB_DIR}/libtools/hadoop-client*.jar # contains no executable code and isn't in Hadoop packages
 
-external_versionless_symlinks 'oozie' ${SERVER_LIB_DIR}/lib ${SERVER_LIB_DIR}/libtools ${SERVER_LIB_DIR}/libserver
+external_versionless_symlinks 'oozie' ${SERVER_LIB_DIR}/lib ${SERVER_LIB_DIR}/libtools ${SERVER_LIB_DIR}/libserver \
+    ${SERVER_LIB_DIR}/oozie-sharelib-{mr1,yarn}/lib/*
 

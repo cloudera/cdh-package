@@ -175,3 +175,5 @@ cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 
 external_versionless_symlinks 'sqoop' ${PREFIX}/${LIB_DIR}/lib
 
+internal_versionless_symlinks ${PREFIX}/${LIB_DIR}/sqoop*.jar
+

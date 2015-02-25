@@ -15,7 +15,9 @@ get_directory_for_jar() {
         hadoop-archives*) lib_dir='hadoop-mapreduce';;
         hadoop-distcp*) lib_dir='hadoop-mapreduce';;
         hadoop-mapreduce*) lib_dir='hadoop-mapreduce';;
-        hadoop-core*) lib_dir='hadoop/client-0.20';;
+        hadoop-ant*) lib_dir='hadoop-0.20-mapreduce';;
+        hadoop-core*) lib_dir='hadoop-0.20-mapreduce';;
+        hadoop-tools*) lib_dir='hadoop-0.20-mapreduce';;
         hadoop*) lib_dir='hadoop';;
         hbase-indexer*) lib_dir='hbase-solr/lib';;
         hbase-sep*) lib_dir='hbase-solr/lib';;
@@ -31,6 +33,12 @@ get_directory_for_jar() {
         search-crunch*) lib_dir='solr/contrib/crunch';;
         search-mr*) lib_dir='solr/contrib/mr';;
         search*) lib_dir='search/lib';;
+        pig*) lib_dir='pig';;
+        spark-examples*) lib_dir='spark/lib';;
+        spark-assembly*) lib_dir='spark/lib';;
+        # Sqoop and Sqoop 2 JARs will look very similar
+        sqoop*-1.4*) lib_dir='sqoop';;
+        sqoop*-1.99*) lib_dir='sqoop2/client-lib';;
         *) return;;
     esac
     echo "/usr/lib/${lib_dir}"
@@ -44,6 +52,7 @@ function check_for_package_dependency() {
         /usr/lib/zookeeper) pkg=zookeeper;;
         /usr/lib/hadoop-yarn) pkg=hadoop-yarn;;
         /usr/lib/hadoop-hdfs) pkg=hadoop-hdfs;;
+        /usr/lib/hadoop-0.20-mapreduce) pkg=hadoop-0.20-mapreduce;;
         /usr/lib/hadoop-mapreduce) pkg=hadoop-mapreduce;;
         /usr/lib/hadoop/client*) pkg=hadoop-client;;
         /usr/lib/hadoop) pkg=hadoop;;
@@ -59,6 +68,10 @@ function check_for_package_dependency() {
         /usr/lib/kite) pkg=kite;;
         /usr/lib/crunch) pkg=crunch;;
         /usr/lib/search/lib) pkg=search;;
+        /usr/lib/pig) pkg=pig;;
+        /usr/lib/sqoop) pkg=sqoop;;
+        /usr/lib/sqoop2*) pkg=sqoop2;;
+        /usr/lib/spark*) pkg=spark;;
         *) return;;
     esac
 
@@ -95,7 +108,7 @@ function external_versionless_symlinks() {
     predicate=''
     skip=${1}; shift 1;
     # Find all files we might want to symlink (it's okay if this returns a superset of what we actually want to symlink)
-    for prefix in avro crunch parquet zookeeper hive hadoop hbase search sentry solr lucene kite trevni; do
+    for prefix in avro crunch parquet zookeeper hive hadoop hbase search sentry solr lucene kite trevni sqoop spark pig; do
         if [ -n "${predicate}" ]; then predicate="${predicate} -o "; fi
         predicate="${predicate} -name ${prefix}*.jar";
     done

@@ -46,6 +46,10 @@ case "$1" in
         update-alternatives --install ${conf_tomcat} oozie-tomcat-conf ${conf_tomcat}.https 20
         update-alternatives --install ${conf_tomcat} oozie-tomcat-conf ${conf_tomcat}.http.mr1 15
         update-alternatives --install ${conf_tomcat} oozie-tomcat-conf ${conf_tomcat}.https.mr1 10
+
+        sharelib_dir=/usr/lib/oozie
+        update-alternatives --install ${sharelib_dir}/oozie-sharelib oozie-sharelib ${sharelib_dir}/oozie-sharelib-yarn 30
+        update-alternatives --install ${sharelib_dir}/oozie-sharelib oozie-sharelib ${sharelib_dir}/oozie-sharelib-mr1 20
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
