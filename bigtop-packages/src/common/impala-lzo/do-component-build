@@ -6,7 +6,7 @@ export IMPALA_LZO_IMPALA_REF=origin/cdh5-trunk
 export IMPALA_LZO_HADOOP_LZO_REF=origin/cdh5-0.4.15
 
 if [ -z "$GIT_REPO" ]; then
-    . /mnt/toolchain/toolchain.sh
+#    . /mnt/toolchain/toolchain.sh
 
     export LLVM_HOME=$TOOLCHAIN_HOME/llvm-3.3
     export PATH=$LLVM_HOME/bin:$PATH
