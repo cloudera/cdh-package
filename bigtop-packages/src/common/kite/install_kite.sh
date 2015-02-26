@@ -88,7 +88,7 @@ install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 
 # JARs in ./lib are build dependencies - so we'll copy everything else
-for file in `cd ${BUILD_DIR}; find . -name \*.jar | grep -v '\./lib'`; do
+for file in `cd ${BUILD_DIR}; find . -name \*.jar | grep -v '\./lib' | grep -v '\./kite-minicluster' | grep -v '\./kite-tools-parent/kite-tools-cdh5'`; do
     cp ${file} ${PREFIX}/${LIB_DIR}/lib/
 done
 
