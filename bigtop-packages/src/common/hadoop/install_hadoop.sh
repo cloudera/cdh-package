@@ -603,7 +603,6 @@ for map in hadoop_${HADOOP_DIR} hadoop-hdfs_${HDFS_DIR} hadoop-yarn_${YARN_DIR} 
 done
 
 internal_versionless_symlinks \
-    ${PREFIX}/usr/lib/hadoop-mapreduce/hadoop-*-tests.jar \
     ${HADOOP_DIR}/hadoop-*.jar \
     ${HDFS_DIR}/hadoop-*.jar \
     ${YARN_DIR}/hadoop-*.jar \
