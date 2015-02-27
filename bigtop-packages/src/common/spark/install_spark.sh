@@ -258,7 +258,7 @@ cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 #internal_versionless_symlinks ${PREFIX}/${LIB_DIR}/lib/spark-assembly-*.jar
 pushd ${PREFIX}/${LIB_DIR}/lib || \
     { echo "Failed to change dir to ${PREFIX}/${LIB_DIR}/lib" >&2 ; exit 1 ; }
-ln -s spark-assembly-*.jar ./spark-assembly.jar
+ln -s spark-assembly*.jar ./spark-assembly.jar
 popd
 
 #Temporary fix to workaround cdh-24083.  This needs to be eliminated in the
