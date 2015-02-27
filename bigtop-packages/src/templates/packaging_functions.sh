@@ -5,6 +5,7 @@ get_directory_for_jar() {
     case ${1} in
         avro*cassandra*) return;; # This is not included in our Avro distribution, but Mahout used to use it
         hadoop-client*) return;;
+        hbase-client*-tests.jar) return;;
         avro*) lib_dir='avro';;
         trevni*) lib_dir='avro';;
         parquet*) lib_dir='parquet';;
@@ -18,6 +19,8 @@ get_directory_for_jar() {
         hadoop-ant*) lib_dir='hadoop-0.20-mapreduce';;
         hadoop-core*) lib_dir='hadoop-0.20-mapreduce';;
         hadoop-tools*) lib_dir='hadoop-0.20-mapreduce';;
+        hadoop-streaming*-mr1*) lib_dir='hadoop-0.20-mapreduce/contrib/streaming';;
+        hadoop-streaming*) lib_dir='lib/hadoop-mapreduce';;
         hadoop*) lib_dir='hadoop';;
         hbase-indexer*) lib_dir='hbase-solr/lib';;
         hbase-sep*) lib_dir='hbase-solr/lib';;
@@ -82,11 +85,33 @@ function check_for_package_dependency() {
 }
 
 # Strips all versioning info from a JAR file name (e.g. avro-1.7.5-cdh5.0.0-SNAPSHOT-hadoop2.jar -> avro-hadoop2.jar)
+# This function is known to behave incorrectly when using BSD versions of sed and grep instead of GNU
 # strip_versions <file name>
 function strip_versions() {
-    # This regex matches upstream versions, plus CDH versions, betas and snapshots if they are present
-    versions='s#-[0-9]\+.[0-9]\+.[0-9]\+\(-mr1\)\?\(-cdh[0-9\-\.]\+[0-9]\)\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?\([-\.0-9]\+[0-9]\)\?##'
-    echo ${1} | sed -e $versions
+    original="${1}"
+    if echo "${original}" | grep 'hive-shims-0.23' > /dev/null; then
+        # 0.23 is significant (i.e. hive-shims-0.23 and hive-shims must be distinct)
+        # This cannot be generalized as being different from similar expressions
+        hive_shims_mr1_exception='true'
+    else
+        hive_shims_mr1_exception='false'
+    fi
+    modified="${original}"
+    # First we remove easy stuff like -SNAPSHOT and -beta-*
+    modified=`echo ${modified} | sed -e 's/-SNAPSHOT//g'`
+    modified=`echo ${modified} | sed -e 's/-beta-[0-9]\+//g'`
+    # Next we remove all CDH versions and similar "profile" versions
+    modified=`echo ${modified} | sed -e 's/-\(cdh\|hbase\|hadoop\)[0-9]\.[0-9.]\+\?[0-9]//g'`
+    # Compound versions (e.g. in Oozie) confuse things (has happened in Spark too)
+    modified=`echo ${modified} | sed -e 's/\.oozie//g'`
+    # Penultimately, remove all component versions and timestamps - this may remove trailing hyphens that previous expressions rely on
+    modified=`echo ${modified} | sed -e 's/\(-\|_\)[0-9]\+\.[-0-9\.]\+\?[0-9]//g'`
+    # Finally, make sure the filename ends with '.jar' - previous expressions have to risk remove the period
+    modified=`echo ${modified} | sed -e 's/\([^.]\)jar$/\1.jar/'`
+    if "${hive_shims_mr1_exception}" == 'true'; then
+        modified="${modified/hive-shims/hive-shims-0.23}"
+    fi
+    echo "${modified}"
 }
 
 # Creates versionless symlinks to JARs in the same directory (e.g. /usr/lib/zookeeper/zookeeper.jar -> /usr/lib/zookeeper/zookeeper-3.4.5-cdh5.0.0-SNAPSHOT.jar)
@@ -120,6 +145,7 @@ function external_versionless_symlinks() {
                 if [[ "${base_jar}" =~ ^${prefix} ]]; then continue 2; fi
             done
             new_jar=`strip_versions $base_jar`
+            # dir must be looked up using the versioned JAR!
             new_dir=`get_directory_for_jar ${base_jar}`
             if [ -z "${new_dir}" ]; then continue; fi
             check_for_package_dependency ${new_dir}
