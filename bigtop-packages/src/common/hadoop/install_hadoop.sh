@@ -536,20 +536,12 @@ install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-0.20-mapreduce
 
 ln -s /var/log/hadoop-mapreduce/ ${PREFIX}/usr/lib/hadoop-mapreduce/logs
 
-# Remove all source and create version-less symlinks to offer integration point with other projects
-# FIXME MR1: we should probably unify the versions to begin with
-MR1_VERSION=`grep '^version' ${SOURCE_DIR}/hadoop-mapreduce1-project/build.properties | cut -f2 -d=`
+# Remove all source
 for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} \
   ${MAPREDUCE_MR1_DIR} ${MAPREDUCE_MR1_DIR}/contrib/*; do
   (cd $DIR &&
    rm -fv *-sources.jar
-   rm -fv lib/hadoop-*.jar
-   for j in hadoop-*.jar; do
-     if [[ $j =~ hadoop-(.*)-${HADOOP_VERSION}.jar ]] || [[ $j =~ hadoop-(.*)-${MR1_VERSION}.jar ]] ; then
-       name=${BASH_REMATCH[1]}
-       ln -s $j hadoop-$name.jar
-     fi
-   done)
+   rm -fv lib/hadoop-*.jar)
 done
 
 # CDH3/4 MR1 specific: we make fair scheduler available by default
@@ -610,9 +602,18 @@ for map in hadoop_${HADOOP_DIR} hadoop-hdfs_${HDFS_DIR} hadoop-yarn_${YARN_DIR} 
   echo "cloudera.pkg.name=${map%%_*}" >> $dir/cdh_version.properties
 done
 
-internal_versionless_symlinks ${PREFIX}/usr/lib/hadoop-mapreduce/hadoop-*-tests.jar
+internal_versionless_symlinks \
+    ${PREFIX}/usr/lib/hadoop-mapreduce/hadoop-*-tests.jar \
+    ${HADOOP_DIR}/hadoop-*.jar \
+    ${HDFS_DIR}/hadoop-*.jar \
+    ${YARN_DIR}/hadoop-*.jar \
+    ${MAPREDUCE_DIR}/hadoop-*.jar \
+    ${HTTPFS_DIR}/hadoop-*.jar \
+    ${MAPREDUCE_MR1_DIR}/hadoop-*.jar \
+    ${MAPREDUCE_MR1_DIR}/contrib/**/hadoop-*.jar
 
 external_versionless_symlinks 'hadoop' \
+    ${PREFIX}/usr/lib/hadoop-0.20-mapreduce \
     ${PREFIX}/usr/lib/hadoop-0.20-mapreduce/lib \
     ${PREFIX}/usr/lib/hadoop-mapreduce \
     ${PREFIX}/usr/lib/hadoop-mapreduce/lib \
