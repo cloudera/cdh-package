@@ -30,6 +30,7 @@ License: ASL 2.0
 Source0: avro-%{avro_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_avro.sh
+Source3: packaging_functions.sh
 
 %description
  Avro provides rich data structures, a compact & fast binary data format, a
@@ -64,7 +65,8 @@ env FULL_VERSION=%{avro_patched_version} bash $RPM_SOURCE_DIR/do-component-build
 %__rm -rf $RPM_BUILD_ROOT
 env FULL_VERSION=%{avro_patched_version} bash $RPM_SOURCE_DIR/install_avro.sh \
           --build-dir=./ \
-          --prefix=$RPM_BUILD_ROOT
+          --prefix=$RPM_BUILD_ROOT \
+          --source-dir=$RPM_SOURCE_DIR
 
 #######################
 #### FILES SECTION ####

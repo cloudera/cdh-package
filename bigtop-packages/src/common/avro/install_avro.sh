@@ -23,6 +23,7 @@ usage: $0 <options>
   Required not-so-options:
      --build-dir=DIR             path to avro build dir
      --prefix=PREFIX             path to install into
+     --source-dir=DIR            path to shared files
 
   Optional options:
      --doc-dir=DIR               path to install docs into [/usr/share/doc/avro]
@@ -44,6 +45,7 @@ OPTS=$(getopt \
   -l 'installed-lib-dir:' \
   -l 'bin-dir:' \
   -l 'examples-dir:' \
+  -l 'source-dir:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -74,6 +76,9 @@ while true ; do
         --examples-dir)
         EXAMPLES_DIR=$2 ; shift 2
         ;;
+        --source-dir)
+        SOURCE_DIR=$2 ; shift 2
+        ;;
         --)
         shift ; break
         ;;
@@ -85,12 +90,14 @@ while true ; do
     esac
 done
 
-for var in PREFIX BUILD_DIR ; do
+for var in PREFIX BUILD_DIR  SOURCE_DIR; do
   if [ -z "$(eval "echo \$$var")" ]; then
     echo Missing param: $var
     usage
   fi
 done
+
+. ${SOURCE_DIR}/packaging_functions.sh
 
 LIB_DIR=${LIB_DIR:-/usr/lib/avro}
 DOC_DIR=${DOC_DIR:-/usr/share/doc}
@@ -109,11 +116,7 @@ rm -f ${PREFIX}/${LIB_DIR}/${AVRO_MAPRED}.jar ${PREFIX}/${LIB_DIR}/${AVRO_MAPRED
 ln -s ${AVRO_MAPRED}-hadoop2.jar ${PREFIX}/${LIB_DIR}/${AVRO_MAPRED}.jar
 
 # Install versionless symlinks
-versions='s#-[0-9.]\+-cdh[0-9\-\.]*[0-9]\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
-for jar in `ls ${PREFIX}/${LIB_DIR}/*.jar`; do
-    base=`basename $jar`
-    (cd ${PREFIX}/${LIB_DIR} && ln -s $base `echo $base | sed -e $versions`)
-done
+internal_versionless_symlinks ${PREFIX}/${LIB_DIR}/*.jar
 
 # Install documentation
 install -d ${PREFIX}/${DOC_DIR}

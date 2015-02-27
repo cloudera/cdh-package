@@ -23,6 +23,7 @@ usage: $0 <options>
   Required not-so-options:
      --build-dir=DIR             path to zookeeper dist.dir
      --prefix=PREFIX             path to install into
+     --source-dir=DIR            path to shared files
 
   Optional options:
      --doc-dir=DIR               path to install docs into [/usr/share/doc/zookeeper]
@@ -46,6 +47,7 @@ OPTS=$(getopt \
   -l 'examples-dir:' \
   -l 'system-include-dir:' \
   -l 'system-lib-dir:' \
+  -l 'source-dir:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -79,6 +81,9 @@ while true ; do
         --system-lib-dir)
         SYSTEM_LIB_DIR=$2 ; shift 2
         ;;
+        --source-dir)
+        SOURCE_DIR=$2 ; shift 2
+        ;;
         --)
         shift ; break
         ;;
@@ -90,12 +95,14 @@ while true ; do
     esac
 done
 
-for var in PREFIX BUILD_DIR ; do
+for var in PREFIX BUILD_DIR SOURCE_DIR; do
   if [ -z "$(eval "echo \$$var")" ]; then
     echo Missing param: $var
     usage
   fi
 done
+
+. ${SOURCE_DIR}/packaging_functions.sh
 
 MAN_DIR=/usr/share/man/man1
 DOC_DIR=${DOC_DIR:-/usr/share/doc/zookeeper}
@@ -110,11 +117,8 @@ install -d -m 0755 $PREFIX/$LIB_DIR/
 rm -f $BUILD_DIR/zookeeper-*-javadoc.jar $BUILD_DIR/zookeeper-*-bin.jar $BUILD_DIR/zookeeper-*-sources.jar $BUILD_DIR/zookeeper-*-test.jar
 cp $BUILD_DIR/zookeeper*.jar $PREFIX/$LIB_DIR/
 
-# Make a symlink of zookeeper.jar to zookeeper-version.jar
-for x in $PREFIX/$LIB_DIR/zookeeper*jar ; do
-  x=$(basename $x)
-  ln -s $x $PREFIX/$LIB_DIR/zookeeper.jar
-done
+# Install versionless symlinks
+internal_versionless_symlinks ${PREFIX}/${LIB_DIR}/zookeeper*jar
 
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
 cp $BUILD_DIR/lib/*.jar $PREFIX/$LIB_DIR/lib

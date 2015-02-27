@@ -75,6 +75,7 @@ Source4: zookeeper-server.sh.suse
 Source5: zookeeper.1
 Source6: zoo.cfg
 Source7: zookeeper.default
+Source8: packaging_functions.sh
 BuildRequires: ant, autoconf, automake, cppunit-devel
 Requires(pre): coreutils, shadow-utils, /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): %{alternatives_dep}
@@ -142,8 +143,8 @@ env FULL_VERSION=%{zookeeper_patched_version} bash %{SOURCE2} \
           --doc-dir=%{doc_zookeeper} \
           --prefix=$RPM_BUILD_ROOT \
           --system-include-dir=%{_includedir} \
-          --system-lib-dir=%{_libdir}
-
+          --system-lib-dir=%{_libdir} \
+          --source-dir=$RPM_SOURCE_DIR
 
 %if  %{?suse_version:1}0
 orig_init_file=%{SOURCE4}
