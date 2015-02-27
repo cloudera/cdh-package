@@ -20,7 +20,22 @@
 %define tomcat_conf_oozie %{_sysconfdir}/%{name}/tomcat-conf
 %define data_oozie /var/lib/oozie
 
-%if  %{!?suse_version:1}0
+# CentOS 5 does not have any dist macro
+# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
+%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+
+# FIXME: brp-repack-jars uses unzip to expand jar files
+# Unfortunately aspectjtools-1.6.5.jar pulled by ivy contains some files and directories without any read permission
+# and make whole process to fail.
+# So for now brp-repack-jars is being deactivated until this is fixed.
+# See BIGTOP-294
+%define __os_install_post \
+    /usr/lib/rpm/redhat/brp-compress ; \
+    /usr/lib/rpm/redhat/brp-strip-static-archive %{__strip} ; \
+    /usr/lib/rpm/redhat/brp-strip-comment-note %{__strip} %{__objdump} ; \
+    /usr/lib/rpm/brp-python-bytecompile ; \
+    %{nil}
+
   %define doc_oozie %{_docdir}/oozie-%{oozie_version}
   %define initd_dir %{_sysconfdir}/rc.d/init.d
   %define alternatives_cmd alternatives
