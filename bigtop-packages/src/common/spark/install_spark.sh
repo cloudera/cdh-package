@@ -118,6 +118,9 @@ HADOOP_HDFS_HOME=${HADOOP_HDFS_HOME:-/usr/lib/hadoop-hdfs}
 HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME:-/usr/lib/hadoop-mapreduce}
 HADOOP_YARN_HOME=${HADOOP_YARN_HOME:-/usr/lib/hadoop-yarn}
 HADOOP_YARN_LIB=$PREFIX/$HADOOP_YARN_HOME/lib
+FLUME_HOME=${FLUME_HOME:-/usr/lib/flume-ng}
+HIVE_HOME=${HIVE_HOME:-/usr/lib/hive}
+PARQUET_HOME=${PARQUET_HOME:-/usr/lib/paquet}
 
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
@@ -172,7 +175,7 @@ tar --wildcards -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/assembly/target/spark-asse
 install -d -m 0755 $PREFIX/$BIN_DIR
 for wrap in sbin/spark-executor bin/spark-shell bin/spark-submit; do
   cat > $PREFIX/$BIN_DIR/`basename $wrap` <<EOF
-#!/bin/bash 
+#!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
@@ -227,7 +230,9 @@ SPARK_DIST_CLASSPATH="\$SPARK_DIST_CLASSPATH:$HADOOP_MAPRED_HOME/lib/*"
 SPARK_DIST_CLASSPATH="\$SPARK_DIST_CLASSPATH:$HADOOP_MAPRED_HOME/*"
 SPARK_DIST_CLASSPATH="\$SPARK_DIST_CLASSPATH:$HADOOP_YARN_HOME/lib/*"
 SPARK_DIST_CLASSPATH="\$SPARK_DIST_CLASSPATH:$HADOOP_YARN_HOME/*"
-
+SPARK_DIST_CLASSPATH="\$SPARK_DIST_CLASSPATH:$HIVE_HOME/lib/*"
+SPARK_DIST_CLASSPATH="\$SPARK_DIST_CLASSPATH:$FLUME_HOME/lib/*"
+SPARK_DIST_CLASSPATH="\$SPARK_DIST_CLASSPATH:$PARQUET_HOME/lib/*"
 EOF
 
 ln -s /var/run/spark/work $PREFIX/$LIB_DIR/work
@@ -256,7 +261,7 @@ internal_versionless_symlinks \
    ${PREFIX}/${LIB_DIR}/lib/spark-*.jar
 
 #Temporary fix to workaround cdh-24083.  This needs to be eliminated in the
-#next major release of CDH 
+#next major release of CDH
 install -d -m 0755 $PREFIX/$LIB_DIR/assembly/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/examples/lib
 
