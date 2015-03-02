@@ -607,7 +607,6 @@ internal_versionless_symlinks \
     ${HDFS_DIR}/hadoop-*.jar \
     ${YARN_DIR}/hadoop-*.jar \
     ${MAPREDUCE_DIR}/hadoop-*.jar \
-    ${HTTPFS_DIR}/hadoop-*.jar \
     ${MAPREDUCE_MR1_DIR}/hadoop-*.jar \
     ${MAPREDUCE_MR1_DIR}/contrib/**/hadoop-*.jar
 

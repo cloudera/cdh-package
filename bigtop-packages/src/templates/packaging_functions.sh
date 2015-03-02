@@ -20,7 +20,7 @@ get_directory_for_jar() {
         hadoop-core*) lib_dir='hadoop-0.20-mapreduce';;
         hadoop-tools*) lib_dir='hadoop-0.20-mapreduce';;
         hadoop-streaming*-mr1*) lib_dir='hadoop-0.20-mapreduce/contrib/streaming';;
-        hadoop-streaming*) lib_dir='lib/hadoop-mapreduce';;
+        hadoop-streaming*) lib_dir='hadoop-mapreduce';;
         hadoop*) lib_dir='hadoop';;
         hbase-indexer*) lib_dir='hbase-solr/lib';;
         hbase-sep*) lib_dir='hbase-solr/lib';;
