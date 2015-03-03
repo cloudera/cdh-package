@@ -118,11 +118,20 @@ function strip_versions() {
 # internal_versionless_symlinks <JAR files to link>
 function internal_versionless_symlinks() {
     for file in ${@}; do
-        (
-            cd `dirname ${file}`
-            base_jar=`basename ${file}`
-            ln -s ${base_jar} `strip_versions ${base_jar}`
-        )
+        pushd `dirname ${file}`
+        base_jar=`basename ${file}`
+        #Do the following in a subshell so that we do not
+        #mess up shell options in current shell
+        test_base_jar=` shopt -s nullglob ; echo $base_jar`
+        if [ -z "$test_base_jar" ] ; then
+            echo "'$base_jar' seems like an invalid link" >&2
+            exit 1
+        fi
+            
+        #Do not need to make sure that base_jar does not have multiple 
+        #components since that will lead to the next ln failing
+        ln -s ${base_jar} `strip_versions ${base_jar}`
+        popd
     done
 }
 
