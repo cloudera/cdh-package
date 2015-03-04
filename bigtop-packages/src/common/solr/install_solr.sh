@@ -306,7 +306,7 @@ if [ -n "${SOLR_KEYSTORE_PASSWORD}" ]; then
   export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.keystore.password=${SOLR_KEYSTORE_PASSWORD}"
 fi
 if [ -n "${SOLR_TRUSTSTORE_PATH}" ]; then
-  CATALINA_OPTS="${CATALINA_OPTS} -Djavax.net.ssl.trustStorePassword=${SOLR_TRUSTSTORE_PASSWORD}"
+  CATALINA_OPTS="${CATALINA_OPTS} -Djavax.net.ssl.trustStore=${SOLR_TRUSTSTORE_PATH}"
 fi
 if [ -n "${SOLR_TRUSTSTORE_PASSWORD}" ]; then
   CATALINA_OPTS="${CATALINA_OPTS} -Djavax.net.ssl.trustStorePassword=${SOLR_TRUSTSTORE_PASSWORD}"
