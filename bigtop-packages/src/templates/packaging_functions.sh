@@ -130,7 +130,10 @@ function internal_versionless_symlinks() {
             
         #Do not need to make sure that base_jar does not have multiple 
         #components since that will lead to the next ln failing
-        ln -s ${base_jar} `strip_versions ${base_jar}`
+        new_name=`strip_versions ${base_jar}`
+        ln -s ${base_jar} "$new_name"
+        #Adding diagnostic message to help testing changes
+        echo "internal_versionless_symlink_createlink:linkname=${new_name}:linktarget=${base_jar}"
         popd
     done
 }
@@ -159,6 +162,8 @@ function external_versionless_symlinks() {
             if [ -z "${new_dir}" ]; then continue; fi
             check_for_package_dependency ${new_dir}
             rm $old_jar && ln -fs ${new_dir}/${new_jar} $dir/
+            #Adding diagnostic message to help testing changes
+            echo "external_versionless_symlink_replacement:oldjar=$old_jar:newjar=${new_jar}"
         done
     done
 }
