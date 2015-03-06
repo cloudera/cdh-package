@@ -345,6 +345,9 @@ cat > $PREFIX/$BIN_DIR/solrctl <<EOF
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
+export SOLR_HOME=${SOLR_HOME:-/usr/lib/solr/}
+export SOLR_DEFAULTS=${SOLR_DEFAULTS:-/etc/default/solr}
+
 exec $INSTALLED_LIB_DIR/bin/solrctl.sh "\$@"
 
 EOF
