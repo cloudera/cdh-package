@@ -141,13 +141,6 @@ cat > ${PREFIX}/${DOC_DIR}/demo/hbase-site.xml <<'__EOT__'
     <name>replication.source.nb.capacity</name>
     <value>1000</value>
   </property>
-  <!-- A custom replication source that fixes a few things and adds
-       some functionality (doesn't interfere with normal replication
-       usage). -->
-  <property>
-    <name>replication.replicationsource.implementation</name>
-    <value>com.ngdata.sep.impl.SepReplicationSource</value>
-  </property>
 </configuration>
 __EOT__
 
