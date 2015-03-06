@@ -110,6 +110,7 @@ install -d -m 0755 ${PREFIX}/${FLUME_DIR}
 
 (cd ${PREFIX}/${FLUME_DIR} &&
   tar --strip-components=1 -xvzf ${BUILD_DIR}/flume-ng-dist/target/apache-flume-*-bin.tar.gz)
+rm -f ${PREFIX}${FLUME_DIR}/bin/*.{cmd,ps1}
 
 # Take out useless things or we've installed elsewhere
 for x in flume-* \
