@@ -27,13 +27,17 @@ function info() {
   echo "INFO:" `date +"%X %Z %x"` "$@"
 }
 
-# hack to get Curl to return the right HTTP_CODE on Ubuntu 12.04
-# https://bugs.launchpad.net/ubuntu/+source/openssl/+bug/861137
+#Although this was written specifically for Ubuntu, I suspect this
+#might work for any distro
+#In case you face problems with this function you may want to try
+#using 'ALL:COMPLEMENTOFALL' instead of 'DEFAULT' below
+
 function add_cipher_if_needed() {
 distro=`lsb_release -i -s`
 release=`lsb_release -r -s`
 if [ "$distro" == "Ubuntu" ] && [[ "$release" == "12."* ]]; then
-  cipher="--ciphers DHE-RSA-AES256-SHA"
+  cipher=`openssl ciphers -v 'DEFAULT' | awk 'BEGIN{ORS=","}{print $1}'`
+  cipher="--ciphers `echo $cipher | sed 's/,$//'`"
 fi
 }
 

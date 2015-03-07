@@ -34,6 +34,8 @@ Source4:    bigtop-detect-classpath
 Source5:    bigtop-monitor-service
 
 Requires:   bash
+Requires:   openssl
+Requires:   curl
 
 # "which" command is needed for a lot of projects.
 # It is part of the package "util-linux" on suse and "which" everywhere else
