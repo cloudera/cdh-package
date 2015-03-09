@@ -28,7 +28,7 @@ if [ -z "$GIT_REPO" ]; then
     fi
 
     MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
-        mvn clean install -DskipTests -Dhadoop.profile=hbase-98 ${MAVEN_DEPL} "$@" 
+        mvn clean install -DskipTests -Dhadoop.profile=hbase-98 ${MAVEN_DEPL} -fae "$@" 
     
     if [ -z "${MAVEN_ONLY}" ]; then
         MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
