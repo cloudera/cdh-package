@@ -22,7 +22,7 @@ Homepage: http://whirr.apache.org/
 
 Package:  whirr
 Architecture: all
-Depends: bigtop-utils (>= 0.7)
+Depends: bigtop-utils (>= 0.7), solr (>= 4.10.3+cdh5.4.0), zookeeper
 Description: Scripts and libraries for running software services on cloud infrastructure.
  Whirr provides
  .

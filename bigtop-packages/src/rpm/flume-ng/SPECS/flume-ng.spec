@@ -69,7 +69,7 @@ Source5: packaging_functions.sh
 Requires: /usr/sbin/useradd
 Requires: coreutils
 Requires: hadoop-hdfs
-Requires: bigtop-utils >= 0.7
+Requires: bigtop-utils >= 0.7, hive-jdbc >= 1.1.0+cdh5.4.0, hive >= 1.1.0+cdh5.4.0
 Requires: avro-libs, parquet, hadoop-mapreduce, hadoop-yarn, kite >= 0.10.0+cdh5.1.0, hadoop
 
 %if  0%{?mgaversion}

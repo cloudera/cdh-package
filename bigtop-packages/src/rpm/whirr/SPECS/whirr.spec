@@ -38,7 +38,7 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: whirr.1
 Source4: packaging_functions.sh
-Requires: bigtop-utils >= 0.7
+Requires: bigtop-utils >= 0.7, solr >= 4.10.3+cdh5.4.0, zookeeper
 
 %description 
 Whirr provides

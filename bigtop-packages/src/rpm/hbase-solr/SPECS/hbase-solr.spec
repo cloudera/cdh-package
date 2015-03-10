@@ -58,7 +58,7 @@ Source3: init.d.tmpl
 Source4: hbase-solr-indexer.svc
 Source5: packaging_functions.sh
 Requires: bigtop-utils >= 0.7, hbase, solr, hadoop-client
-Requires: avro-libs, parquet, sentry >= 1.3.0+cdh5.1.0, search, kite >= 0.10.0+cdh5.1.0, hadoop-hdfs, hadoop, zookeeper, hadoop-0.20-mapreduce
+Requires: avro-libs, parquet, sentry >= 1.3.0+cdh5.1.0, search, kite >= 0.10.0+cdh5.1.0, hadoop-hdfs, hadoop, zookeeper, hadoop-0.20-mapreduce, solr-mapreduce >= 1.0.0+cdh5.4.0
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
