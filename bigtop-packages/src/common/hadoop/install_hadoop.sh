@@ -610,6 +610,9 @@ internal_versionless_symlinks \
     ${MAPREDUCE_MR1_DIR}/hadoop-*.jar \
     ${MAPREDUCE_MR1_DIR}/contrib/**/hadoop-*.jar
 
+# Creating an explicit hadoop-examples.jar symlink in MR1 for backwards compatibility
+ln -s hadoop-examples-mr1.jar ${MAPREDUCE_MR1_DIR}/hadoop-examples.jar
+
 external_versionless_symlinks 'hadoop' \
     ${PREFIX}/usr/lib/hadoop-0.20-mapreduce \
     ${PREFIX}/usr/lib/hadoop-0.20-mapreduce/lib \
