@@ -157,6 +157,8 @@ if [ -d "\$PARQUET_HOME" ] ; then
   export PIG_CLASSPATH=\$PIG_CLASSPATH:\$PARQUET_HOME/*.jar
 fi
 
+export HADOOP_USER_CLASSPATH_FIRST=true
+
 exec $INSTALLED_LIB_DIR/bin/pig -useHCatalog "\$@"
 EOF
 chmod 755 $PREFIX/$BIN_DIR/pig
