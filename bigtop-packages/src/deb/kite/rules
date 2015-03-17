@@ -35,3 +35,6 @@ override_dh_auto_install:
 	  --build-dir=build/kite-${KITE_PATCHED_VERSION} \
 	  --prefix=debian/tmp \
 	  --extra-dir=debian/
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

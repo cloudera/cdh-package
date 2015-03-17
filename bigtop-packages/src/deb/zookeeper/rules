@@ -49,3 +49,6 @@ override_dh_auto_install:
 	mv debian/zookeeper/usr/lib/zookeeper-native debian/zookeeper-native/usr/lib/
 	mv debian/zookeeper/usr/include debian/zookeeper-native/usr/include
 	dh_install -i
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

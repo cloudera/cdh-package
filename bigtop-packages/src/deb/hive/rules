@@ -66,3 +66,6 @@ override_dh_auto_install: server server2 metastore webhcat-server
 	# Hive source contains a directory docs/changes that is interpreted a special way in Debian 7+ packaging
 	mv docs/changes docs/changes_
 
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

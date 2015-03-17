@@ -74,3 +74,6 @@ binary: build install install-indep binary-common
 	@echo Build completed
 
 .PHONY: clean install-indep binary-arc
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

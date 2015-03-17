@@ -44,3 +44,6 @@ override_dh_auto_install:
 	  --build-dir=build \
 	  --doc-dir=debian/whirr/usr/share/doc/whirr \
 	  --prefix=debian/whirr
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

@@ -38,3 +38,6 @@ override_dh_auto_install:
 	# Workaround for GIRAPH-198
 	cp -f debian/giraph-site.xml debian/giraph/etc/giraph/conf.dist
 
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

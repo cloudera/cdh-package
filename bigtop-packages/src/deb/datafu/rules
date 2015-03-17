@@ -35,3 +35,6 @@ override_dh_auto_install:
 	  --distro-dir=debian \
 	  --build-dir=. \
 	  --prefix=debian/tmp
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

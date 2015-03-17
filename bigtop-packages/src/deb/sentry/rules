@@ -53,3 +53,6 @@ override_dh_auto_install: $(svcs)
 	   --exclude-files="sentry-hdfs-plugin.install" \
 	   --include-file=sentry.install.include \
 	   --prefix=debian/tmp
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

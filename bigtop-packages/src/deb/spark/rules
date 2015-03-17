@@ -48,3 +48,6 @@ override_dh_auto_install: $(svcs)
 	  --exclude-files="spark-python.install" \
 	  --include-file=spark-core.install.include \
 	  --prefix=debian/tmp
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

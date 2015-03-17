@@ -28,3 +28,6 @@ override_dh_auto_install:
 	env FULL_VERSION=${IMPALA_LZO_PATCHED_VERSION} NATIVE_BUILD=true bash debian/install_impala-lzo.sh --build-dir=. --prefix=debian/impala-lzo
 	install debian/gpl-2.0.txt debian/impala-lzo/usr/lib/impala/lib/COPYING.impala-lzo
 	dh_install -i
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

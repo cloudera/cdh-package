@@ -77,3 +77,6 @@ binary-indep: build-indep install-indep
 binary-arch:
 binary: binary-indep
 .PHONY: build clean binary-indep binary install-indep binary-arc
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

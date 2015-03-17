@@ -43,3 +43,6 @@ override_dh_auto_install:
 	bash debian/init.d.tmpl debian/sqoop-server.svc deb debian/tmp/etc/init.d/sqoop2-server
 	dh_install --sourcedir=debian/tmp
 
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

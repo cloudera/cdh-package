@@ -41,3 +41,6 @@ override_dh_auto_install:
           --examples-dir=debian/${pig_pkg_name}/usr/share/doc/${pig_pkg_name}/examples \
 	  --extra-dir=debian/
 
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

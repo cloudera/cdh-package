@@ -38,3 +38,6 @@ override_dh_auto_install:
 	  --doc-dir=../llama-doc/usr/share/doc/llama
 	mkdir -p debian/llama-master/etc/init.d/
 	bash debian/init.d.tmpl debian/llama.svc deb debian/llama-master/etc/init.d/llama
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

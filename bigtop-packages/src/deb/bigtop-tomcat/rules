@@ -34,3 +34,6 @@ override_dh_auto_install:
 	  --build-dir=build/bigtop-tomcat-${BIGTOP_TOMCAT_PATCHED_VERSION} \
 	  --doc-dir=/usr/share/doc/bigtop-tomcat \
 	  --prefix=debian/bigtop-tomcat
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

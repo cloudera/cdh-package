@@ -45,3 +45,6 @@ override_dh_installchangelogs:
 
 override_dh_compress:
 	dh_compress -Xusr/share/doc/solr-doc
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

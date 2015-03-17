@@ -20,3 +20,6 @@ override_dh_auto_install:
 	  --build-dir=. \
 	  --prefix=debian/tmp
 	install debian/gpl-3.0.txt debian/tmp/usr/lib/hadoop/lib/COPYING.hadoop-lzo
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip
