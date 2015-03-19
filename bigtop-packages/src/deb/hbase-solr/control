@@ -23,7 +23,7 @@ Homepage: http://www.ngdata.com/
 
 Package: hbase-solr
 Architecture: all
-Depends: bigtop-utils (>= 0.7), hbase, solr (>= 4.4.0+cdh5.1.0), avro-libs, sentry (>= 1.3.0+cdh5.1.0), parquet, kite (>= 0.10.0+cdh5.1.0), hadoop-hdfs, hadoop, hadoop-0.20-mapreduce, kite, parquet, zookeeper
+Depends: bigtop-utils (>= 0.7), hbase, solr (>= 4.4.0+cdh5.1.0), avro-libs, sentry (>= 1.3.0+cdh5.1.0), parquet, kite (>= 0.10.0+cdh5.1.0), hadoop-hdfs, hadoop, hadoop-0.20-mapreduce, kite, parquet, zookeeper, solr-mapreduce (>= 1.0.0+cdh5.4.0)
 Description: NGData HBase Solr indexer
  NGData HBase Solr indexer 
 
