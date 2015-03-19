@@ -33,7 +33,7 @@ set -e
 case "$1" in
     install|upgrade)
         getent group kudu >/dev/null || groupadd -r kudu
-        getent passwd kudu >/dev/null || /usr/sbin/kudu --comment "Kudu" --shell /bin/nologin -M -r -g kudu --home /var/lib/kudu kudu
+        getent passwd kudu >/dev/null || adduser --comment "Kudu" --shell /bin/nologin -M -r -g kudu --home /var/lib/kudu kudu
     ;;
 
     abort-upgrade)
