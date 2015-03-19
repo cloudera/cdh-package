@@ -68,15 +68,26 @@ function get_all_files_in_package() {
   done
 }
 
-# ToDo: Will parameterize this and expose this as part of the Jenkins job with default.
-  PACKAGES="avro-tools crunch flume-ng hadoop hadoop-hdfs-fuse hadoop-hdfs-nfs3 hadoop-httpfs hbase-solr hive hive-hbase hive-webhcat hue-beeswax hue-hbase hue-impala hue-pig hue-plugins hue-rdbms hue-search hue-spark hue-sqoop hue-zookeeper impala impala-shell kite llama mahout oozie pig pig-udf-datafu search sentry solr-mapreduce spark-core spark-python sqoop sqoop2 whirr"
-
   external_symlinks_in_component=symlinks_in_component.txt
   files_in_dependent_packages=all_files_from_dependencies.txt
   dependencies_file=dependencies_file.txt
   symlink_map_file=symlink_map_file.txt
   final_output_file=final_output.txt
-  rm -f ${external_symlinks_in_component} ${files_in_dependent_packages} ${final_output_file} ${dependencies_file} ${symlink_map_file}
+  packages_file=packages.txt
+  rm -f ${external_symlinks_in_component} ${files_in_dependent_packages} ${final_output_file} ${dependencies_file} ${symlink_map_file} ${packages_file}
+
+  # Get the list of packages from the repo.
+  # Clean up the file generated to remove blank lines
+  yum --disablerepo="*" --enablerepo="cloudera-cdh5" list available |  sed -e '1,/Available Packages/d' | cut -d' ' -f1 > ${packages_file}
+  sed -i '/^$/d' ${packages_file}
+
+  # Error: hadoop-0.20-mapreduce-jobtrackerha conflicts with hadoop-0.20-mapreduce-jobtracker
+  # Error: hadoop-0.20-conf-pseudo conflicts with hadoop-conf-pseudo
+  # 0.20-conf-pseudo has a dependency on 0.20-mapreduce-jobtracker
+  # Resolving by not installing hadoop-0.20-mapreduce-jobtracker and hadoop-0.20-conf-pseudo.
+  sed -i '/\(hadoop-0.20-mapreduce-jobtracker\.x86_64$\|hadoop-0.20-conf-pseudo\)/d' ${packages_file}
+
+  #PACKAGES="avro-tools crunch flume-ng hadoop hadoop-hdfs-fuse hadoop-hdfs-nfs3 hadoop-httpfs hbase-solr hive hive-hbase hive-webhcat hue-beeswax hue-hbase hue-impala hue-pig hue-plugins hue-rdbms hue-search hue-spark hue-sqoop hue-zookeeper impala impala-shell kite llama mahout oozie pig pig-udf-datafu search sentry solr-mapreduce spark-core spark-python sqoop sqoop2 whirr"
 
   # Install yum-utils which provides repotrack
   yum -y install yum-utils
@@ -93,7 +104,7 @@ function get_all_files_in_package() {
 
   # Clean install all packages.
   yum -y remove bigtop-utils
-  yum -y install ${PACKAGES}
+  yum -y install `cat ${packages_file}`
 
   # Temp files
   temp_file_1=temp_file_1.txt
@@ -107,7 +118,7 @@ function get_all_files_in_package() {
   #
   # Note: Internal symlinks are already validated as part of building the package, so they are ignored here.
   #
-  for component in ${PACKAGES}; do
+  for component in `cat ${packages_file}`; do
 
     rm -f ${temp_file_1} ${temp_file_2} ${symlink_map_file} ${external_symlinks_in_component}
     echo "----------------"
