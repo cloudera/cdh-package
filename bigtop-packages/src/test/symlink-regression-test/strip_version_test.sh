@@ -3,7 +3,7 @@ set -e
 
 MYDIR=`dirname "${BASH_SOURCE[0]}"`
 
-. ${MYDIR}/../templates/packaging_functions.sh
+. ${MYDIR}/../../templates/packaging_functions.sh
 
 function checkName() {
     if [[ $1  = avro* ]] ; then
