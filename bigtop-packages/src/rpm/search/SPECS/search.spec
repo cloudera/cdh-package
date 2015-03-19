@@ -59,7 +59,7 @@ Source1: do-component-build
 Source2: install_solr_sink.sh
 Source3: packaging_functions.sh
 Requires: bigtop-utils >= 0.7
-Requires: avro-libs, parquet, sentry >= 1.3.0+cdh5.1.4, solr >= 4.4.0+cdh5.1.4, kite >= 0.10.0+cdh5.1.4, hbase, hadoop-hdfs, hadoop, zookeeper, avro-libs
+Requires: avro-libs, parquet, sentry >= 1.3.0+cdh5.1.5, solr >= 4.4.0+cdh5.1.5, kite >= 0.10.0+cdh5.1.5, hbase, hadoop-hdfs, hadoop, zookeeper, avro-libs
 
 %description
 Cloudera Search Project
