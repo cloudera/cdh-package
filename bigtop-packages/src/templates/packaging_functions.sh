@@ -99,15 +99,15 @@ function strip_versions() {
     modified="${original}"
     # First we remove easy stuff like -SNAPSHOT and -beta-*
     modified=`echo ${modified} | sed -e 's/-SNAPSHOT//g'`
-    modified=`echo ${modified} | sed -e 's/-beta-[0-9]\+//g'`
+    modified=`echo ${modified} | sed -r -e 's/-beta-[0-9]+//g'`
     # Next we remove all CDH versions and similar "profile" versions
-    modified=`echo ${modified} | sed -e 's/-\(cdh\|hbase\|hadoop\)[0-9]\.[0-9.]\+\?[0-9]//g'`
+    modified=`echo ${modified} | sed -r -e 's/-(cdh|hbase|hadoop)[0-9]+(\.[0-9]+)+//g'`
     # Compound versions (e.g. in Oozie) confuse things (has happened in Spark too)
     modified=`echo ${modified} | sed -e 's/\.oozie//g'`
     # Penultimately, remove all component versions and timestamps - this may remove trailing hyphens that previous expressions rely on
-    modified=`echo ${modified} | sed -e 's/\(-\|_\)[0-9]\+\.[-0-9\.]\+\?[0-9]//g'`
+    modified=`echo ${modified} | sed -r -e 's/(-|_)[0-9]+\.[-0-9\.]+?[0-9]//g'`
     # Finally, make sure the filename ends with '.jar' - previous expressions have to risk remove the period
-    modified=`echo ${modified} | sed -e 's/\([^.]\)jar$/\1.jar/'`
+    modified=`echo ${modified} | sed -r -e 's/([^.])jar$/\1.jar/'`
     if "${hive_shims_mr1_exception}" == 'true'; then
         modified="${modified/hive-shims/hive-shims-0.23}"
     fi
