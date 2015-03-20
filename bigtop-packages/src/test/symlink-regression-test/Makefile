@@ -15,11 +15,13 @@ MYDIR=$(shell pwd)
 #test data too is changed
 
 #Typical usage : make test 
-test:internal_test external_test
+test:internal_test external_test custom_test
 internal_test: internal_symlinks.dat
 	cat internal_symlinks.dat | ./strip_version_test.sh | (grep -i ^fail ; test $$? -eq 1 )
 external_test: external_symlinks.dat
 	cat external_symlinks.dat | ./strip_version_test.sh |  (grep -i ^fail ; test $$? -eq 1 )
+custom_test: custom_symlinks.dat
+	cat custom_symlinks.dat | ./strip_version_test.sh |  (grep -i ^fail ; test $$? -eq 1 )
 
 help:
 	echo "Try make PARCEL_LIBDIR=<location of your parcels/lib>"
