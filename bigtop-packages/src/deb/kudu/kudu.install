@@ -5,4 +5,3 @@
 /var/lib/kudu
 /etc/kudu/conf.dist
 /etc/default/kudu
-

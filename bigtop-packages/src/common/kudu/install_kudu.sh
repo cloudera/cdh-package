@@ -36,7 +36,6 @@ OPTS=$(getopt \
   -l 'doc-dir:' \
   -l 'man-dir:' \
   -l 'conf-dir:' \
-  -l 'native-lib-dir:' \
   -l 'system-include-dir:' \
   -l 'system-lib-dir:' \
   -l 'extra-dir:' \
@@ -67,9 +66,6 @@ while true ; do
         --conf-dir)
         CONF_DIR=$2 ; shift 2
         ;;
-        --native-lib-dir)
-        NATIVE_LIB_DIR=$2 ; shift 2
-        ;;
         --system-include-dir)
         SYSTEM_INCLUDE_DIR=$2 ; shift 2
         ;;
@@ -97,15 +93,12 @@ for var in PREFIX BUILD_DIR; do
   fi
 done
 
-. ${EXTRA_DIR}/packaging_functions.sh
-
 ETC_DIR=${ETC_DIR:-$PREFIX/etc}
 LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/kudu}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/kudu}
 MAN_DIR=${MAN_DIR:-$PREFIX/usr/man}
 CONF_DIR=${CONF_DIR:-$PREFIX/etc/kudu/conf.dist}
-NATIVE_LIB_DIR=${NATIVE_LIB_DIR:-lib}
 SYSTEM_INCLUDE_DIR=${SYSTEM_INCLUDE_DIR:-/usr/include}
 SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 
@@ -113,8 +106,6 @@ install -d -m 0755 ${LIB_DIR}
 
 executables="kudu-tablet_server kudu-master kudu-fs_dump kudu-ts-cli \
              log-dump kudu-fs_list kudu-ksck kudu-pbc-dump cfile-dump"
-# Other files that are not tests, not protoc, and not not included:
-#create-demo-table insert-generated-rows log-dump ms3_demo rle rpc-bench rwlock-perf tpch1 wal_hiccup
 install -d -m 0755 ${LIB_DIR}/bin-release
 install -d -m 0755 ${LIB_DIR}/bin-debug
 for executable in ${executables}; do
@@ -134,9 +125,7 @@ chmod 0644 ${ETC_DIR}/default/kudu
 # create wrapper scripts in /usr/bin for user-facing executables
 install -d -m 0755 ${BIN_DIR}
 DO_EXEC="exec "
-wrappers="kudu-tablet_server kudu-master kudu-fs_dump kudu-ts-cli
-          log-dump kudu-fs_list kudu-ksck kudu-pbc-dump cfile-dump"
-for wrapper in ${wrappers}; do
+for wrapper in ${executables}; do
   cat > ${BIN_DIR}/${wrapper} <<__EOT__
 #!/bin/bash
 
@@ -155,9 +144,19 @@ install -d -m 0755 ${PREFIX}/var/lib/kudu
 
 install -d -m 0755 ${PREFIX}/${SYSTEM_LIB_DIR}
 install -d -m 0755 ${PREFIX}/${SYSTEM_INCLUDE_DIR}
-cp `find ${BUILD_DIR}/client/usr/local/lib* -name \*.so\*` ${PREFIX}/${SYSTEM_LIB_DIR}/
-cp -r ${BUILD_DIR}/client/usr/local/include/* ${PREFIX}/${SYSTEM_INCLUDE_DIR}/
-cp -r ${BUILD_DIR}/client/usr/local/share ${PREFIX}/usr/share
+
+for lib in `find ${BUILD_DIR}/client-fastdebug/usr/local/lib* -name \*.so\*`; do
+  BASE_LIB=$(basename $lib)
+  cp $lib ${PREFIX}/${SYSTEM_LIB_DIR}/${BASE_LIB/%.so/-debug.so}
+done
+for lib in `find ${BUILD_DIR}/client-release/usr/local/lib* -name \*.so\*`; do
+  BASE_LIB=$(basename $lib)
+  cp $lib ${PREFIX}/${SYSTEM_LIB_DIR}/${BASE_LIB/%.so/-release.so}
+done
+
+# Doesn't matter whether we use release or fastdebug here; we're not copying binaries.
+cp -r ${BUILD_DIR}/client-release/usr/local/include/* ${PREFIX}/${SYSTEM_INCLUDE_DIR}/
+cp -r ${BUILD_DIR}/client-release/usr/local/share ${PREFIX}/usr/share
 
 cp -r ${BUILD_DIR}/www ${LIB_DIR}/
 

@@ -30,8 +30,8 @@ PRIORITY=92
 generate_functions() {
 cat <<'__EOT__'
 
-    export KUDU_LOG_DIR
-    export KUDU_MASTER_ARGS
+export KUDU_LOG_DIR
+export KUDU_MASTER_ARGS
 
 __EOT__
 }

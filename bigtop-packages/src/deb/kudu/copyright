@@ -3,7 +3,7 @@ Source: http://github.com/cloudera/kudu
 Upstream-Name: Cloudera Kudu
 
 Files: *
-Copyright: 2012, Cloudera, Inc.
+Copyright: 2012-2015, Cloudera, Inc.
 License: Apache-2.0
 
 License: Apache-2.0

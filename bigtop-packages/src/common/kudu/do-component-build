@@ -16,27 +16,42 @@
 
 set -ex
 
+# This Boost deployment is special: even the static archives were compiled
+# with -fPIC. That makes it necessary for the client build
 export BOOST_ROOT=${BOOST_ROOT:-/opt/toolchain/boost-pic-1.55.0}
-LLVM_PATH=${LLVM_PATH:-/opt/toolchain/llvm-3.3}
 
 if [ -z "$GIT_REPO" ]; then
+    # We're building.
 
-    export NO_REBUILD_THIRDPARTY=true
+    # There's one thirdparty dependency (llvm-3.4.2) that cannot be built
+    # with el6's gcc. To work around that, we build all of thirdparty with
+    # clang 3.3.
+    LLVM_PATH=${LLVM_PATH:-/opt/toolchain/llvm-3.3}
     export CC=${LLVM_PATH}/bin/clang CXX=${LLVM_PATH}/bin/clang++
+    # ./thirdparty/build-if-necessary.sh does not work outside of a git
+    # repo, so we always rebuild thirdparty. It's unfortunate, but the only
+    # side effect is a slower build.
+    #
+    # TODO: Convert to Cloudera Toolchain.
     ./thirdparty/download-thirdparty.sh
     ./thirdparty/build-thirdparty.sh
     unset CC CXX
 
+    export NO_REBUILD_THIRDPARTY=1
     CMAKE='thirdparty/installed/bin/cmake -DKUDU_LINK=static'
     MAKE='make -j8'
     for type in release fastdebug; do
-        ${CMAKE} -DCMAKE_BUILD_TYPE=${type}
+        rm -rf CMakeCache.txt CMakeFiles/
+        ${CMAKE} -DCMAKE_BUILD_TYPE=${type} .
         ${MAKE}
+
+        rm -rf CMakeCache.txt CMakeFiles/
+        ${CMAKE} -DCMAKE_BUILD_TYPE=${type} -DKUDU_EXPORTED_CLIENT=1 .
+        ${MAKE} install DESTDIR=`pwd`/client-${type}
     done
 
-    ${CMAKE} -DCMAKE_BUILD_TYPE=debug -DKUDU_EXPORTED_CLIENT=1
-    ${MAKE} install DESTDIR=`pwd`/client
 else
+    # We're packaging up the source code to be built.
     rm -rf build kudu-${FULL_VERSION}
     ALL_FILES=`echo *`
     mkdir build kudu-${FULL_VERSION}

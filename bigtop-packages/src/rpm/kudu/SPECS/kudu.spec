@@ -24,7 +24,7 @@
 %else
   %define initd_dir %{_sysconfdir}/rc.d
   %define alternatives_cmd update-alternatives
-  %define alternatives_dep update-alternatives
+  %define alternatives_dep chkconfig
 %endif
 
 Name: kudu
@@ -41,7 +41,6 @@ Source2: install_kudu.sh
 Source3: init.d.tmpl
 Source4: kudu-master.svc
 Source5: kudu-tablet-server.svc
-Source6: packaging_functions.sh
 Requires: /usr/sbin/useradd
 Requires(post): %{alternatives_dep}
 Requires(preun): %{alternatives_dep}
@@ -50,20 +49,20 @@ Requires(preun): %{alternatives_dep}
 Columnar storage engine for Hadoop
 
 %package master
-Summary: Kudu master service
+Summary: Kudu Master service
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
 
 %description master
-Kudu master service
+Kudu Master service
 
 %package tablet-server
-Summary: Kudu tablet-server service
+Summary: Kudu Tablet Server service
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
 
 %description tablet-server
-Kudu tablet-server service
+Kudu Tablet Server service
 
 %package client
 Summary: Kudu client library
@@ -101,7 +100,6 @@ env FULL_VERSION=%{kudu_patched_version} bash %{SOURCE1}
 bash %{SOURCE2} \
           --build-dir=$PWD \
           --prefix=$RPM_BUILD_ROOT \
-          --native-lib-dir=lib64 \
           --system-include-dir=%{_includedir} \
           --system-lib-dir=%{_libdir} \
           --extra-dir=$RPM_SOURCE_DIR
