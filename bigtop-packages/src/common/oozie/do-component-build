@@ -68,6 +68,10 @@ if [ -z "$GIT_REPO" ]; then
 # We need to do this because in Linux Sun JVM inteprets '+' as ' ' in URLs
 # testcases uses URLs to access testcases directories and OpenJPA enhancer uses them as well
     WORKDIR=${RELEASE_DIR}
+    if [ -n "${MAVEN_ONLY}" ]; then
+        WORKDIR=${RELEASE_DIR}/source
+    fi
+    
     if [[ "${WORKDIR}" == *\+* ]]; then
   # There is a + sign. Create a temp work dir
   # and copy over the files to that place
@@ -171,7 +175,7 @@ EOM
             mv ${URLSAFE_NAME} ${ORIGINAL_NAME}
         fi
 
-        rm ${ORIGINAL_NAME}/oozie-sharelib-*-sharelib.tar.gz
+        rm -f ${ORIGINAL_NAME}/oozie-sharelib-*-sharelib.tar.gz
         mv ${ORIGINAL_NAME}/src/oozie-sharelib-*.tar.gz ${ORIGINAL_NAME}/
 
         tar cfz oozie${VERSION_SUFFIX}.tar.gz ${ORIGINAL_NAME}
