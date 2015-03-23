@@ -30,7 +30,7 @@ if [ -z "$GIT_REPO" ]; then
     if [ -z "${MAVEN_ONLY}" ]; then
         MAVEN_ARGS="-Psources -Pjavadoc"
     else
-        MAVEN_ARGS="-Denforcer.skip-true"
+        MAVEN_ARGS="-Denforcer.skip=true"
     fi
     
     mvn clean $MAVEN_INST_DEPLOY -DskipTests ${MAVEN_ARGS} -Phadoop-2 -fae "$@"
