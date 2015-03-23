@@ -32,8 +32,8 @@ function clean_dependencies() {
 #  zookeeper
 #
 function get_all_dependencies() {
-  if [ $# != 2 ]; then
-    echo "Usage: get_all_dependencies component_name out_file" >&2
+  if [ $# != 3 ]; then
+    echo "Usage: get_all_dependencies component_name out_file match_string" >&2
     exit 1
   fi
 
@@ -42,7 +42,7 @@ function get_all_dependencies() {
 
   # Get all dependencies that will be downloaded for a particular package installation.
   match=${3}
-  repotrack -u $1 -r cloudera-cdh5 > ${temp_file}
+  repotrack -u $1 -r cloudera-cdh5 | grep -i ${match} > ${temp_file}
 
   # Convert a link like :http://repos.jenkins.cloudera.com/cdh5-static/redhat/6/x86_64/cdh/5/RPMS/noarch/avro-libs-1.7.6+cdh5.5.0+87-1.cdh5.5.0.p0.531.el6.noarch.rpm to avro-libs
   for line in `cat ${temp_file}`; do
@@ -68,6 +68,24 @@ function get_all_files_in_package() {
   done
 }
 
+# Ignore some of the broken symlinks. They are expected to be broken.
+#
+function remove_exceptions() {
+  if [ $# != 1 ]; then
+    echo "Usage: remove_exceptions symlink_file" >&2
+    exit 1
+  fi
+
+  sed -i '\,/usr/include/python2.6,d' $1
+  sed -i '\,/usr/lib64/python2.6,d' $1
+
+  # FixMe: This symlink is planned to be dropped in the packaging code
+  # after necessary changes are made to include this path to the classpath of the component.
+  # Remove exception after CDH-26342 is fixed.
+  sed -i '\,/var/lib/oozie/ext-2.2,d' $1
+}
+
+
   external_symlinks_in_component=symlinks_in_component.txt
   files_in_dependent_packages=all_files_from_dependencies.txt
   dependencies_file=dependencies_file.txt
@@ -75,6 +93,16 @@ function get_all_files_in_package() {
   final_output_file=final_output.txt
   packages_file=packages.txt
   rm -f ${external_symlinks_in_component} ${files_in_dependent_packages} ${final_output_file} ${dependencies_file} ${symlink_map_file} ${packages_file}
+
+  # Remove repo file.
+  rm -f /etc/yum.repos.d/cloudera-cdh5.repo
+
+  # Install and enable repo.
+  repo_file_location=http://repos.jenkins.cloudera.com/cdh5-static/redhat/6/x86_64/cdh/cloudera-cdh5.repo
+  match_string=`echo ${repo_file_location%/*/*}`
+  wget -O /etc/yum.repos.d/cloudera-cdh5.repo ${repo_file_location}
+  yum clean all
+  yum-config-manager --enable cloudera-cdh5
 
   # Get the list of packages from the repo.
   # Clean up the file generated to remove blank lines
@@ -91,16 +119,6 @@ function get_all_files_in_package() {
 
   # Install yum-utils which provides repotrack
   yum -y install yum-utils
-
-  # Remove repo file.
-  rm -f /etc/yum.repos.d/cloudera-cdh5.repo
-
-  # Install and enable repo.
-  repo_file_location=http://repos.jenkins.cloudera.com/cdh5-static/redhat/6/x86_64/cdh/cloudera-cdh5.repo
-  #match_string=`echo ${repo_file_location%/*/*}`
-  wget -O /etc/yum.repos.d/cloudera-cdh5.repo ${repo_file_location}
-  yum clean all
-  yum-config-manager --enable cloudera-cdh5
 
   # Clean install all packages.
   yum -y remove bigtop-utils
@@ -123,7 +141,7 @@ function get_all_files_in_package() {
     rm -f ${temp_file_1} ${temp_file_2} ${symlink_map_file} ${external_symlinks_in_component}
     echo "----------------"
     echo "List of dependencies for ${component}"
-    get_all_dependencies ${component} ${dependencies_file}
+    get_all_dependencies ${component} ${dependencies_file} ${match_string}
     echo "----------------"
 
     for file in `rpm -ql ${component}`; do
@@ -138,7 +156,8 @@ function get_all_files_in_package() {
 
     if [ -e ${symlink_map_file} ]; then
       get_all_files_in_package ${files_in_dependent_packages} `cat ${dependencies_file}`
-      sed -i 's/\/\/\+/\//g' ${external_symlinks_in_component}
+      sed -i 's,//\+,/,g' ${external_symlinks_in_component}
+      sed -i 's,/$,,' ${external_symlinks_in_component}
 
       # Diff external symlinks in component with files in all its dependencies
       # If the diff is not empty, then we have broken symlinks and probably we need 
@@ -149,7 +168,10 @@ function get_all_files_in_package() {
 
         # Symlinks to conf is created in the postinstall step of installing the package
         # and they don't exist in the package itself. So, ignore.
-	sed -i '/\(conf\|config\|conf\.dist\)\/\?$/d' ${temp_file_2}
+	sed -i '/\(conf\|config\|conf\.dist\)\/\?/d' ${temp_file_2}
+
+	# Some symlinks are expected to be broken.
+	remove_exceptions ${temp_file_2}
 
 	if [ -s ${temp_file_2} ]; then
           echo "Broken links in ${component} :" >> ${final_output_file}
