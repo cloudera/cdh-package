@@ -2,7 +2,7 @@
 
 set -ex
 
-export IMPALA_LZO_IMPALA_REF=origin/cdh5-1.4_5.1.4
+export IMPALA_LZO_IMPALA_REF=origin/cdh5-1.4_5.1.5
 export IMPALA_LZO_HADOOP_LZO_REF=origin/cdh5-0.4.15_5.1.5
 
 if [ -z "$GIT_REPO" ]; then
