@@ -21,6 +21,7 @@ export PATH=$LLVM_HOME/bin:$PATH
 export IMPALA_HOME=`pwd`
 export PIC_LIB_PATH=/opt/toolchain/impala_3rdparty-0.5
 export BOOST_ROOT=/opt/toolchain/boost-pic-1.55.0
+export DISABLE_CCACHE=1
 
 if [ -z "$GIT_REPO" ]; then
     . $IMPALA_HOME/bin/impala-config.sh
