@@ -150,7 +150,8 @@ function external_versionless_symlinks() {
         predicate="${predicate} -name ${prefix}*.jar";
     done
     for dir in $@; do
-        for old_jar in `find $dir -maxdepth 1 ${predicate}`; do
+        jarList=`set -f; find $dir -maxdepth 1 ${predicate}`
+        for old_jar in ${jarList}; do
             base_jar=`basename $old_jar`;
             for prefix in ${skip}; do
                 # Leave JARs from the specified component alone (parquet format is an exception in parquet)
