@@ -105,12 +105,14 @@ while true ; do
     esac
 done
 
-for var in PREFIX BUILD_DIR ; do
+for var in PREFIX BUILD_DIR EXTRA_DIR; do
   if [ -z "$(eval "echo \$$var")" ]; then
     echo Missing param: $var
     usage
   fi
 done
+
+. ${EXTRA_DIR}/packaging_functions.sh
 
 DOC_DIR=${DOC_DIR:-/usr/share/doc/sqoop2}
 LIB_DIR=${LIB_DIR:-/usr/lib/sqoop2}
@@ -187,3 +189,5 @@ cp ${DIST_DIR}/{LICENSE,NOTICE}.txt ${PREFIX}/${LIB_DIR}/
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 
+# Create external symlinks
+external_versionless_symlinks 'sqoop' ${PREFIX}/${LIB_DIR}/webapps/sqoop/WEB-INF/lib

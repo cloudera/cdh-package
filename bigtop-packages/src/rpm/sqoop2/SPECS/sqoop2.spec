@@ -70,8 +70,9 @@ Source10: sqoop-server.svc
 Source11: sqoop-server.sh
 Source12: sqoop-tool.sh
 Source13: tomcat-deployment.sh
+Source14: packaging_functions.sh
 Buildarch: noarch
-Requires: hadoop-client, bigtop-utils >= 0.7, bigtop-tomcat >= 0.7, %{name}-client = %{version}-%{release}
+Requires: hadoop-client, bigtop-utils >= 0.7, bigtop-tomcat >= 0.7, %{name}-client = %{version}-%{release}, kite >= 1.0.0+cdh5.5.0
 
 %description
 Sqoop is a tool that provides the ability to import and export data sets between
