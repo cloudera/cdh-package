@@ -14,6 +14,7 @@
 # limitations under the License.
 
 %define lib_dir /usr/lib/bigtop-utils
+%define bin_dir /usr/bin
 %define plugins_dir /var/lib/bigtop
 
 Name: bigtop-utils
@@ -64,8 +65,10 @@ install -p -m 644 %{SOURCE5} .
 %install
 install -d -p -m 755 $RPM_BUILD_ROOT%{plugins_dir}/
 install -d -p -m 755 $RPM_BUILD_ROOT%{lib_dir}/
+install -d -p -m 755 $RPM_BUILD_ROOT%{bin_dir}/
 install -d -p -m 755 $RPM_BUILD_ROOT/etc/default
 install -p -m 755 %{SOURCE0} $RPM_BUILD_ROOT%{lib_dir}/
+ln -s -T ../lib/bigtop-utils/`basename %{SOURCE0}` $RPM_BUILD_ROOT%{bin_dir}/`basename %{SOURCE0}`
 install -p -m 755 %{SOURCE3} $RPM_BUILD_ROOT%{lib_dir}/
 install -p -m 755 %{SOURCE4} $RPM_BUILD_ROOT%{lib_dir}/
 install -p -m 755 %{SOURCE5} $RPM_BUILD_ROOT%{lib_dir}/
@@ -81,6 +84,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/default/bigtop-utils
 
 %{lib_dir}
+%{bin_dir}
 %{plugins_dir}
 
 %changelog
