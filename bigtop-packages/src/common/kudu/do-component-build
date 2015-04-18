@@ -42,11 +42,11 @@ if [ -z "$GIT_REPO" ]; then
     MAKE='make -j8'
     for type in release fastdebug; do
         rm -rf CMakeCache.txt CMakeFiles/
-        ${CMAKE} -DCMAKE_BUILD_TYPE=${type} .
+        ${CMAKE} -DCMAKE_BUILD_TYPE=${type} -DNO_TESTS=1 .
         ${MAKE}
 
         rm -rf CMakeCache.txt CMakeFiles/
-        ${CMAKE} -DCMAKE_BUILD_TYPE=${type} -DKUDU_EXPORTED_CLIENT=1 .
+        ${CMAKE} -DCMAKE_BUILD_TYPE=${type} -DKUDU_EXPORTED_CLIENT=1 -DNO_TESTS=1 .
         ${MAKE} install DESTDIR=`pwd`/client-${type}
     done
 
