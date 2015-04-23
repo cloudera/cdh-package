@@ -17,9 +17,12 @@ public class ParseTextFile {
     File f = new File("./jar_stats.txt");
     File f1 = new File("./jar_component_map.txt");
 
-    // Make sure that both these files exist.
-    if ( !f.exists() || !f1.exists()) {
-        throw new FileNotFoundException("One of jar_stats.txt or jar_component_map.txt does not exist");
+    // Ensure that these files are not present before we start 
+    if ( f.exists() ) {
+        f.delete();
+    }
+    if ( f1.exists()) {
+        f.delete();
     }
 
     PrintWriter statsWriter = new PrintWriter(f)
