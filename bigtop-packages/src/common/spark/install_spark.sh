@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
+set -ex
 
 usage() {
   echo "
@@ -135,22 +135,26 @@ install -d -m 0755 $PREFIX/var/run/spark/
 install -d -m 0755 $PREFIX/var/run/spark/work/
 
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
-for comp in assembly; do
-  tar --wildcards -C $PREFIX/$LIB_DIR/lib -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz spark-$comp\*
-done
+
+
+SPARK_TMP=spark_tmp
+rm -rf $SPARK_TMP ; mkdir $SPARK_TMP
+
+
+tar --wildcards -C $SPARK_TMP --strip-components=1 -xvzf build/*.tar.gz \*/\*
+mv $SPARK_TMP/lib/spark-assembly*.jar $PREFIX/$LIB_DIR/lib
 
 ## FIXME: Spark maven assembly needs to include examples into it.
-cp ${BUILD_DIR}/examples/target/scala-*/spark-examples*.jar $PREFIX/$LIB_DIR/lib
+mv $SPARK_TMP/lib/spark-examples*.jar $PREFIX/$LIB_DIR/lib
 
 #This is so that users can optionally use spark-*-yarn-shuffle.jar - see
 #https://jira.cloudera.com/browse/CDH-25073 for details
-cp ${BUILD_DIR}/network/yarn/target/scala-*/spark-*-yarn-shuffle.jar $HADOOP_YARN_LIB
-
-tar -czf $PREFIX/$LIB_DIR/lib/python.tar.gz -C ${BUILD_DIR}/examples/src/main/python .
+mv $SPARK_TMP/lib/spark-*-yarn-shuffle.jar $HADOOP_YARN_LIB
+tar -czf $PREFIX/$LIB_DIR/lib/python.tar.gz -C $SPARK_TMP/examples/src/main/python .
 
 # Copy files to the bin and sbin directories
-rsync --exclude="*.cmd" ${BUILD_DIR}/bin/* $PREFIX/$LIB_DIR/bin/
-rsync --exclude="*.cmd" ${BUILD_DIR}/sbin/* $PREFIX/$LIB_DIR/sbin/
+rsync --exclude="*.cmd" $SPARK_TMP/bin/* $PREFIX/$LIB_DIR/bin/
+rsync --exclude="*.cmd" $SPARK_TMP/sbin/* $PREFIX/$LIB_DIR/sbin/
 
 chmod 755 $PREFIX/$LIB_DIR/bin/*
 chmod 755 $PREFIX/$LIB_DIR/sbin/*
@@ -160,7 +164,7 @@ touch $PREFIX/$LIB_DIR/RELEASE
 
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/$CONF_DIR
-cp -a ${BUILD_DIR}/conf/* $PREFIX/$CONF_DIR
+cp -a $SPARK_TMP/conf/* $PREFIX/$CONF_DIR
 cp  $PREFIX/$CONF_DIR/spark-env.sh.template $PREFIX/$CONF_DIR/spark-env.sh
 cp  $PREFIX/$CONF_DIR/spark-defaults.conf.template $PREFIX/$CONF_DIR/spark-defaults.conf
 ln -s /etc/spark/conf $PREFIX/$LIB_DIR/conf
@@ -168,9 +172,6 @@ ln -s /etc/spark/conf $PREFIX/$LIB_DIR/conf
 # Copy in the defaults file
 install -d -m 0755 ${PREFIX}/etc/default
 cp ${SOURCE_DIR}/spark.default ${PREFIX}/etc/default/spark
-
-# Unpack static UI resources into install_dir/spark where it is expected to be
-tar --wildcards -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz ui-resources/\*
 
 # Copy in the wrappers
 install -d -m 0755 $PREFIX/$BIN_DIR
@@ -239,8 +240,8 @@ EOF
 
 ln -s /var/run/spark/work $PREFIX/$LIB_DIR/work
 
-cp -r ${BUILD_DIR}/python ${PREFIX}/${INSTALLED_LIB_DIR}/
-cp ${BUILD_DIR}/bin/pyspark ${PREFIX}/${INSTALLED_LIB_DIR}/bin/
+cp -r $SPARK_TMP/python ${PREFIX}/${INSTALLED_LIB_DIR}/
+cp $SPARK_TMP/bin/pyspark ${PREFIX}/${INSTALLED_LIB_DIR}/bin/
 cat > $PREFIX/$BIN_DIR/pyspark <<EOF
 #!/bin/bash
 
@@ -253,7 +254,7 @@ exec $INSTALLED_LIB_DIR/bin/pyspark "\$@"
 EOF
 chmod 755 $PREFIX/$BIN_DIR/pyspark
 
-cp ${BUILD_DIR}/{LICENSE,NOTICE} ${PREFIX}/${LIB_DIR}/
+cp $SPARK_TMP/{LICENSE,NOTICE} ${PREFIX}/${LIB_DIR}/
 
 # Cloudera specific
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
@@ -281,3 +282,4 @@ popd
 
 external_versionless_symlinks 'spark' ${PREFIX}/${LIB_DIR}/lib
 
+rm -rf $SPARK_TMP

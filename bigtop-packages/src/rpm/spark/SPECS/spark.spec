@@ -129,7 +129,7 @@ History server for Spark
 %setup -n %{spark_name}-%{spark_patched_version}
 
 %build
-bash $RPM_SOURCE_DIR/do-component-build
+env FULL_VERSION=%{spark_patched_version} $RPM_SOURCE_DIR/do-component-build
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
