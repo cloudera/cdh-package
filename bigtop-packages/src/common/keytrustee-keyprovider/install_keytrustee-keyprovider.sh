@@ -87,9 +87,16 @@ LIB_DIR=${LIB_DIR:-$PREFIX/usr/share/keytrustee-keyprovider/lib}
 
 TARBALL=`ls build/keytrustee-keyprovider-${FULL_VERSION}.tar.gz`
 DIRECTORY="build/keytrusteekp-${FULL_VERSION}"
-(cd build && tar xzf `basename ${TARBALL}`)
+pwd
+(cd build && tar xvzf `basename ${TARBALL}`)
 
 install -d -m 0755 ${LIB_DIR}
+if [ ! -d $DIRECTORY ] ; then
+    echo "Missing directory '$DIRECTORY' - most likely cause of this error is that the keytrustee pom.xml or cdh5.mk needs to be updated" >&2
+    echo "Current directory is `pwd`" >&2
+    ls -l build >&2
+    exit 1
+fi
 mv ${DIRECTORY}/README.md `dirname ${LIB_DIR}`
 mv build/keytrusteekp-*.jar ${LIB_DIR}
 mv ${DIRECTORY}/lib/* ${LIB_DIR}/
