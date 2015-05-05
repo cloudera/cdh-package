@@ -1,3 +1,16 @@
+if [ -z $PACK_ENG_COMMON ] ; then
+    echo "Variable PACK_ENG_COMMON undefined - this needs to point to the directory ec2_build/bin/pack-eng-common in the cdh4 branch of cdh" >&2 
+    exit 1
+fi
+if [ ! -d $PACK_ENG_COMMON ] ; then
+    echo "Directory '$PACK_ENG_COMMON' missing" >&2 
+fi
+
+for file in common.sh logger.sh ; do
+[ -f $PACK_ENG_COMMON/$file ]  || exit 1
+    . $PACK_ENG_COMMON/$file
+done
+
 # Looks up which subdirectory of /usr/lib or ${PARCELS_ROOT}/CDH/lib a JAR is owned by
 # Outputs nothing if a symlink should not be made or the directory is unknown
 # strip_versions <basename of JAR>
@@ -47,6 +60,7 @@ get_directory_for_jar() {
     echo "/usr/lib/${lib_dir}"
 }
 
+
 # Looks up which package can be depended on to install a certain directory, to map symlinks to package dependencies
 function check_for_package_dependency() {
     case ${1} in
@@ -88,6 +102,7 @@ function check_for_package_dependency() {
 # This function is known to behave incorrectly when using BSD versions of sed and grep instead of GNU
 # strip_versions <file name>
 function strip_versions() {
+
     original="${1}"
     if echo "${original}" | grep 'hive-shims-0.23' > /dev/null; then
         # 0.23 is significant (i.e. hive-shims-0.23 and hive-shims must be distinct)
@@ -133,7 +148,7 @@ function internal_versionless_symlinks() {
         new_name=`strip_versions ${base_jar}`
         ln -s ${base_jar} "$new_name"
         #Adding diagnostic message to help testing changes
-        echo "internal_versionless_symlink_createlink:linkname=${new_name}:linktarget=${base_jar}"
+        print_linkinfo internal ${new_name} ${base_jar}
         popd
     done
 }
@@ -164,7 +179,7 @@ function external_versionless_symlinks() {
             check_for_package_dependency ${new_dir}
             rm $old_jar && ln -fs ${new_dir}/${new_jar} $dir/
             #Adding diagnostic message to help testing changes
-            echo "external_versionless_symlink_replacement:oldjar=$old_jar:newjar=${new_jar}"
+            print_linkinfo external ${new_dir}/${new_jar} ${old_jar}
         done
     done
 }
