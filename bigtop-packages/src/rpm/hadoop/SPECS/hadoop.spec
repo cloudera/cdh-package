@@ -192,6 +192,7 @@ Source36: mapred.1
 Source37: hadoop-kms-server.svc
 Source38: kms.default
 Source39: kms-tomcat-deployment.sh
+Source40: filter-provides.sh
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, zookeeper >= 3.4.0
@@ -202,6 +203,9 @@ Conflicts: hadoop-0.20
 # to set AutoReq to no in order to minimize confusion. Not ideal, but seems to work.
 # I wish there was a way to disable just one auto dependency (libjvm.so)
 AutoReq: no
+
+%define _use_internal_dependency_generator 0
+%define __find_provides %{SOURCE40} 'libnativetask\\|libsnappy'
 
 %if  %{?suse_version:1}0
 BuildRequires: pkg-config, libfuse2, libopenssl-devel, gcc-c++
