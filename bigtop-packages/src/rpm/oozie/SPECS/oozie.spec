@@ -81,12 +81,16 @@ Source8: hive.xml
 Source9: catalina.properties.mr1
 Source10: tomcat-deployment.sh
 Source11: packaging_functions.sh
+Source12: filter-requires.sh
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
 Requires: oozie-client = %{version}, hadoop-client, bigtop-tomcat
 Requires: avro-libs, parquet, zookeeper, hadoop, hadoop-hdfs, hadoop-mapreduce, hadoop-yarn, hive >= 0.12.0+cdh5.1.0, hive-hcatalog >= 0.12.0+cdh5.1.0, hive-webhcat >= 0.12.0+cdh5.1.0, hbase, sqoop, pig, kite, spark-core >= 1.3.0+cdh5.4.0
 BuildArch: noarch
+
+%define _use_internal_dependency_generator 0
+%define __find_requires %{SOURCE12} 'osgi'
 
 %description 
  Oozie is a system that runs workflows of Hadoop jobs.
