@@ -122,18 +122,23 @@ getent passwd kudu >/dev/null || /usr/sbin/useradd --comment "Kudu" --shell /bin
 %{alternatives_cmd} --install /etc/kudu/conf kudu-conf /etc/kudu/conf.dist         30
 %{alternatives_cmd} --install /usr/lib/kudu/bin kudu-bin /usr/lib/kudu/bin-release 30
 %{alternatives_cmd} --install /usr/lib/kudu/bin kudu-bin /usr/lib/kudu/bin-debug   20
+%{alternatives_cmd} --install /usr/lib/kudu/sbin kudu-sbin /usr/lib/kudu/sbin-release 30
+%{alternatives_cmd} --install /usr/lib/kudu/sbin kudu-sbin /usr/lib/kudu/sbin-debug   20
 
 %preun
 if [ "$1" = 0 ]; then
     %{alternatives_cmd} --remove kudu-conf /etc/kudu/conf.dist || :
     %{alternatives_cmd} --remove kudu-bin /usr/lib/kudu/bin-release || :
     %{alternatives_cmd} --remove kudu-bin /usr/lib/kudu/bin-debug || :
+    %{alternatives_cmd} --remove kudu-sbin /usr/lib/kudu/sbin-release || :
+    %{alternatives_cmd} --remove kudu-sbin /usr/lib/kudu/sbin-debug || :
 fi
 
 %files
 %defattr(-,root,root)
 /usr/lib/kudu
 /usr/bin/*
+/usr/sbin/*
 %attr(0755,kudu,kudu) %{kudu_log}
 %attr(0755,kudu,kudu) %{kudu_run}
 %attr(0755,kudu,kudu) %{kudu_lib}

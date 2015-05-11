@@ -1,5 +1,6 @@
 /usr/lib/kudu
 /usr/bin/*
+/usr/sbin/*
 /var/log/kudu
 /var/run/kudu
 /var/lib/kudu

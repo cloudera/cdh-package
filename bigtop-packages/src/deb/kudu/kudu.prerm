@@ -37,6 +37,7 @@ case "$1" in
     remove|upgrade|deconfigure)
         update-alternatives --remove kudu-conf /etc/kudu/conf.dist || :
         update-alternatives --remove-all kudu-bin  || :
+        update-alternatives --remove-all kudu-sbin  || :
     ;;
 
     failed-upgrade)

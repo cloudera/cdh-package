@@ -33,6 +33,7 @@ OPTS=$(getopt \
   -l 'prefix:' \
   -l 'build-dir:' \
   -l 'bin-dir:' \
+  -l 'sbin-dir:' \
   -l 'doc-dir:' \
   -l 'man-dir:' \
   -l 'conf-dir:' \
@@ -56,6 +57,9 @@ while true ; do
         ;;
         --bin-dir)
         BIN_DIR=$2 ; shift 2
+        ;;
+        --sbin-dir)
+        SBIN_DIR=$2 ; shift 2
         ;;
         --man-dir)
         MAN_DIR=$2 ; shift 2
@@ -96,6 +100,7 @@ done
 ETC_DIR=${ETC_DIR:-$PREFIX/etc}
 LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/kudu}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
+SBIN_DIR=${SBIN_DIR:-$PREFIX/usr/sbin}
 DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/kudu}
 MAN_DIR=${MAN_DIR:-$PREFIX/usr/man}
 CONF_DIR=${CONF_DIR:-$PREFIX/etc/kudu/conf.dist}
@@ -104,13 +109,27 @@ SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 
 install -d -m 0755 ${LIB_DIR}
 
-executables="kudu-tablet_server kudu-master kudu-fs_dump kudu-ts-cli \
-             log-dump kudu-fs_list kudu-ksck kudu-pbc-dump cfile-dump"
+bin_executables="cfile-dump \
+                 kudu-fs_dump \
+                 kudu-fs_list \
+                 kudu-ksck \
+                 kudu-pbc-dump \
+                 kudu-ts-cli \
+                 log-dump"
 install -d -m 0755 ${LIB_DIR}/bin-release
 install -d -m 0755 ${LIB_DIR}/bin-debug
-for executable in ${executables}; do
+for executable in ${bin_executables}; do
     cp ${BUILD_DIR}/build/release/${executable} ${LIB_DIR}/bin-release/
     cp ${BUILD_DIR}/build/fastdebug/${executable} ${LIB_DIR}/bin-debug/
+done
+
+sbin_executables="kudu-master \
+                  kudu-tablet_server"
+install -d -m 0755 ${LIB_DIR}/sbin-release
+install -d -m 0755 ${LIB_DIR}/sbin-debug
+for executable in ${sbin_executables}; do
+    cp ${BUILD_DIR}/build/release/${executable} ${LIB_DIR}/sbin-release/
+    cp ${BUILD_DIR}/build/fastdebug/${executable} ${LIB_DIR}/sbin-debug/
 done
 
 # now, create a defaults file
@@ -125,7 +144,7 @@ chmod 0644 ${ETC_DIR}/default/kudu
 # create wrapper scripts in /usr/bin for user-facing executables
 install -d -m 0755 ${BIN_DIR}
 DO_EXEC="exec "
-for wrapper in ${executables}; do
+for wrapper in ${bin_executables}; do
   cat > ${BIN_DIR}/${wrapper} <<__EOT__
 #!/bin/bash
 
@@ -133,7 +152,20 @@ export KUDU_HOME=\${KUDU_HOME:-/usr/lib/kudu}
 
 ${DO_EXEC}\${KUDU_HOME}/bin/$wrapper "\$@"
 __EOT__
-  chmod 755 ${BIN_DIR} ${BIN_DIR}/${wrapper}
+  chmod 755 ${BIN_DIR}/${wrapper}
+done
+
+# and wrapper scripts in /usr/sbin
+install -d -m 0755 ${SBIN_DIR}
+for wrapper in ${sbin_executables}; do
+  cat > ${SBIN_DIR}/${wrapper} <<__EOT__
+#!/bin/bash
+
+export KUDU_HOME=\${KUDU_HOME:-/usr/lib/kudu}
+
+${DO_EXEC}\${KUDU_HOME}/sbin/$wrapper "\$@"
+__EOT__
+  chmod 755 ${SBIN_DIR}/${wrapper}
 done
 
 install -d -m 0755 $CONF_DIR
