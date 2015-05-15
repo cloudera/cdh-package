@@ -6,7 +6,7 @@ if [ ! -d $PACK_ENG_COMMON ] ; then
     echo "Directory '$PACK_ENG_COMMON' missing" >&2 
 fi
 
-for file in common.sh logger.sh ; do
+for file in common.sh ; do
 [ -f $PACK_ENG_COMMON/$file ]  || exit 1
     . $PACK_ENG_COMMON/$file
 done
