@@ -84,7 +84,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/default/bigtop-utils
 
 %{lib_dir}
-%{bin_dir}
+%{bin_dir}/bigtop-detect-javahome
 %{plugins_dir}
 
 %changelog

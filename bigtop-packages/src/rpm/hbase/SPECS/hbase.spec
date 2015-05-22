@@ -94,6 +94,7 @@ Source5: hbase.default
 Source6: hbase.nofiles.conf
 Source7: regionserver-init.d.tpl
 Source8: packaging_functions.sh
+Source9: filter-requires.sh
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
 Requires: hadoop-hdfs, zookeeper >= 3.3.1, bigtop-utils >= 0.7
 Requires: avro-libs
@@ -105,6 +106,8 @@ Requires: bsh-utils
 Requires: sh-utils
 %endif
 
+%define _use_internal_dependency_generator 0
+%define __find_requires %{SOURCE9} 'osgi'
 
 %description 
 HBase is an open-source, distributed, column-oriented store modeled after Google' Bigtable: A Distributed Storage System for Structured Data by Chang et al. Just as Bigtable leverages the distributed data storage provided by the Google File System, HBase provides Bigtable-like capabilities on top of Hadoop. HBase includes:

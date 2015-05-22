@@ -16,5 +16,5 @@ fi
 output=`$FINDREQ` 
 
 if [ ! -z "${output}" ]; then
-    echo "${output}" | grep -v -e "$1"
+    echo "${output}" | grep -v -e "^#" | grep -v -e "$1"
 fi
