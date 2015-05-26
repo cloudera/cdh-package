@@ -66,6 +66,7 @@ Source2: install_%{name}.sh
 Source3: %{name}-agent.init
 Source4: flume-ng-agent.default
 Source5: packaging_functions.sh
+Source6: filter-requires.sh
 Requires: /usr/sbin/useradd
 Requires: coreutils
 Requires: hadoop-hdfs
@@ -77,6 +78,9 @@ Requires: bsh-utils
 %else
 Requires: sh-utils
 %endif
+
+%define _use_internal_dependency_generator 0
+%define __find_requires %{SOURCE6} 'osgi'
 
 %description 
 Flume is a reliable, scalable, and manageable distributed data collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.  It can efficiently collect, aggregate, and move large amounts of log data.  It has a simple, but flexible, architecture based on streaming data flows.  It is robust and fault tolerant with tunable reliability mechanisms and many failover and recovery mechanisms.  The system is centrally managed and allows for intelligent dynamic management. It uses a simple extensible data model that allows for online analytic applications.

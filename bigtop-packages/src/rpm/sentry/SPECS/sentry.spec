@@ -43,7 +43,11 @@ Source3: init.d.tmpl
 Source4: sentry-site.xml
 Source5: sentry-store.svc
 Source6: packaging_functions.sh
+Source7: filter-requires.sh
 Requires: hadoop-hdfs, hadoop-mapreduce, zookeeper, hive-jdbc >= 1.1.0+cdh5.4.0, hive >= 1.1.0+cdh5.4.0, hadoop-client >= 2.6.0+cdh5.4.0
+
+%define _use_internal_dependency_generator 0
+%define __find_requires %{SOURCE7} 'osgi'
 
 %description
 A system for enforcing fine grained role based authorization to data and metadata stored on a Hadoop cluster.

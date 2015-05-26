@@ -82,10 +82,14 @@ Source13: hive-hcatalog.1
 Source14: hive-webhcat-server.svc
 Source15: hive-webhcat-server.default
 Source16: packaging_functions.sh
+Source17: filter-requires.sh
 Requires: hadoop-client, bigtop-utils >= 0.7, zookeeper, %{name}-jdbc = %{version}-%{release}
 Requires: avro-libs, parquet, sentry
 Conflicts: hadoop-hive
 Obsoletes: %{name}-webinterface
+
+%define _use_internal_dependency_generator 0
+%define __find_requires %{SOURCE17} 'osgi'
 
 %description 
 Hive is a data warehouse infrastructure built on top of Hadoop that provides tools to enable easy data summarization, adhoc querying and analysis of large datasets data stored in Hadoop files. It provides a mechanism to put structure on this data and it also provides a simple query language called Hive QL which is based on SQL and which enables users familiar with SQL to query this data. At the same time, this language also allows traditional map/reduce programmers to be able to plug in their custom mappers and reducers to do more sophisticated analysis which may not be supported by the built-in capabilities of the language. 

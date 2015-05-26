@@ -57,6 +57,7 @@ Source2: install_hbase_solr.sh
 Source3: init.d.tmpl
 Source4: hbase-solr-indexer.svc
 Source5: packaging_functions.sh
+Source6: filter-requires.sh
 Requires: bigtop-utils >= 0.7, hbase, solr, hadoop-client
 Requires: avro-libs, parquet, sentry >= 1.3.0+cdh5.1.0, search, kite >= 0.10.0+cdh5.1.0, hadoop-hdfs, hadoop, zookeeper, hadoop-0.20-mapreduce, solr-mapreduce >= 1.0.0+cdh5.4.0
 
@@ -66,6 +67,9 @@ Requires: avro-libs, parquet, sentry >= 1.3.0+cdh5.1.0, search, kite >= 0.10.0+c
 # Required for init scripts
 Requires: /lib/lsb/init-functions
 %endif
+
+%define _use_internal_dependency_generator 0
+%define __find_requires %{SOURCE6} 'osgi'
 
 %description 
 Solr is written in Java and runs as a standalone full-text search server within
