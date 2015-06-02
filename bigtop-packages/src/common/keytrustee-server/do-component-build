@@ -1,0 +1,125 @@
+#!/bin/bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -ex
+
+#If parcel-only is passed in we build the parcel, else we build the rpm
+#This switch is passed in by the custome keytrustee parcel creation job
+OPTS=$(getopt \
+  -n $0 \
+  -o '' \
+  -l 'parcel-only' \
+   -- "$@")
+
+function usage () {
+echo "usage : $0 [--parcel-only]"
+}
+
+
+if [ $? != 0 ] ; then
+    usage
+fi
+echo "opts are $OPTS"
+export PARCEL_ONLY=
+eval set -- "$OPTS"
+while true ; do
+case $1 in 
+--parcel-only)
+     PARCEL_ONLY=true
+     shift
+;;
+--)
+     shift ; break
+        ;;
+*)
+    echo "invalid argument '$1'"
+    usage
+;;
+esac
+done
+
+MYDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+if [ -z "$GIT_REPO" ]; then
+    
+    TMP_TARBALLDIR=`mktemp -d`/tmp$$/KEYTRUSTEE-SERVER-${FULL_VERSION}
+    TMP_RPMDIR=$TMP_TARBALLDIR/tmp_rpmdir
+    rm -rf $TMP_TARBALLDIR
+    mkdir -p  $TMP_RPMDIR
+
+    rm -rf build 
+    make clean
+    export KT_PG_BUILD_ON=true
+    export REVNO=${BUILD_STAMP:-000}
+    export PYCURL_SSL_LIBRARY=openssl
+    export PKG_CONFIG_PATH=/usr/lib64/pkgconfig
+    if [ ! -z $PARCEL_ONLY ] ; then
+        #Download Postgres binaries from artifactory or build them
+        $MYDIR/build_pg.sh
+        numPGTarballs=`ls postgresql*.tar | wc -l`
+        if [ $numPGTarballs -ne 1 ] ; then
+             echo "Found $numPGTarballs postgres tarballs in `pwd`, expected 1, exiting" >&2
+             find . -name postgresql*.tar
+             exit 1
+        else
+            export POSTGRES_TARBALL=`ls postgresql*tar`
+        fi
+    
+        make parcel
+        numParcelFiles=`ls *.parcel | wc -l`
+        if [ $numParcelFiles -ne 1 ] ; then
+             echo "Found $numParcelFiles parcel files, expected 1, exiting" >&2
+             find . -name \*.parcel 
+             exit 1
+        fi
+    
+        pwd
+        tar xzf *.parcel --strip-components=1 -C $TMP_TARBALLDIR
+        parcelBaseName=`basename *.parcel .parcel`
+        tar cvzf ${parcelBaseName}.parcel.meta.tar.gz $TMP_TARBALLDIR/meta
+        exit 0
+    else
+        rm -f *.cpio
+	    make rpmtarball
+        numCPIOFiles=`ls  *.cpio | \
+        egrep 'keytrustee-server-|python-keytrustee-|keytrustee-client-' | wc -l`
+        if [ $numCPIOFiles -ne 3 ] ; then
+             echo "Found $numCPIOFiles cpio files, expected 3, exiting" >&2
+             ls *.cpio
+             exit 1
+        fi
+        #TMP_RPMDIR contains the files that will go into RPMS
+        THISDIR=`pwd`
+        (cd $TMP_RPMDIR ; cat $THISDIR/keytrustee-server-*.cpio | cpio -idv )
+        (cd $TMP_RPMDIR ; cat $THISDIR/keytrustee-client-*.cpio | cpio -idv )
+        (cd $TMP_RPMDIR ; cat $THISDIR/python-keytrustee-*.cpio | cpio -idv )
+    
+        rm -rf build && mkdir build
+        tar czf build/keytrustee-server-${FULL_VERSION}.tar.gz -C `dirname $TMP_TARBALLDIR` KEYTRUSTEE-SERVER-${FULL_VERSION}
+        exit 0
+    fi
+else   
+    #For keytrustee-server there are no pristine tarballs etc. so we
+    #have to just generate a tarball for the source and copy it to 
+    #./build
+    #This code is basically copied from the do-component-build file
+    #for impala
+    rm -rf build keytrustee-server-${FULL_VERSION}
+    ALL_FILES=`echo *`
+    mkdir build keytrustee-server-${FULL_VERSION}
+    cp -r $ALL_FILES keytrustee-server-${FULL_VERSION}
+    tar czf build/keytrustee-server-${FULL_VERSION}.tar.gz keytrustee-server-${FULL_VERSION}
+fi
