@@ -81,6 +81,17 @@ wget -r -nH --no-parent -A '*el6.parcel' --cut-dirs=4 http://repos.jenkins.cloud
 mkdir -p ${parcel_dir}
 tar zxf *el6.parcel -C ${parcel_dir} --strip 1
 
+# Sourcing common functions.
+. ./common.sh
+
+cdh_jar_versions=`get_cdh_jar_versions ${parcel_dir}`
+count_unique_cdh_jar_versions=`echo ${cdh_jar_versions} | wc -w`
+echo "[CHECK_CDH_JAR_VERSIONS]: ${cdh_jar_versions}"
+if [ ${count_unique_cdh_jar_versions} -gt 1 ]; then
+    echo "[CHECK_CDH_JAR_VERSIONS_ERROR]: ${count_unique_cdh_jar_versions} unique versions of cdh version found across first-party jars" >&2
+    exit 1
+fi
+
 # Remove jars that have identical version number.
 # This should not exist, if it does exist duplicate detection needs to be updated 
 # for third party jars.

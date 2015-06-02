@@ -1,7 +1,7 @@
 {
-  "connectionString": "jdbc:mysql://mani-largecentos1.ent.cloudera.com?allowMultiQueries=true",
+  "connectionString": "jdbc:mysql://mthtest3.ent.cloudera.com?allowMultiQueries=true",
   "defaultDatabase": "thirdparty_harmonization",
-  "userName": "thirdparty",
-  "password": "cloudera",
+  "userName": "report",
+  "password": "report@123",
   "driver": "com.mysql.jdbc.Driver"
 }
