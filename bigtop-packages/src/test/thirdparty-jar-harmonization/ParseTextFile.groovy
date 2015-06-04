@@ -28,6 +28,7 @@ public class ParseTextFile {
     PrintWriter statsWriter = new PrintWriter(f)
     PrintWriter jarComponentWriter = new PrintWriter(f1)
     def date= out.date.text()
+    def parcelName = out.parcel.text()
     def separator="+++"
 
     try {
@@ -53,9 +54,9 @@ public class ParseTextFile {
             }
           }
 
-          statsWriter.println(date+separator+jarName+separator+jarCount+separator+jarNameSearchPattern+separator+jarVersions);
+          statsWriter.println(date+separator+jarName+separator+jarCount+separator+jarNameSearchPattern+separator+jarVersions+separator+parcelName);
           componentNameJarMap.each { entry ->
-              jarComponentWriter.println(date+separator+jarName+separator+entry.key+separator+entry.value)
+              jarComponentWriter.println(date+separator+jarName+separator+entry.key+separator+entry.value+separator+parcelName)
           }
         }
     } finally {
@@ -102,8 +103,6 @@ public class ParseTextFile {
                 // Nothing to do.
             }
        }
-       
-
         println "Finished loading database"
   }
 }

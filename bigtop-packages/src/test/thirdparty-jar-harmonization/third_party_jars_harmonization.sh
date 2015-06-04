@@ -84,6 +84,7 @@ tar zxf *el6.parcel -C ${parcel_dir} --strip 1
 # Sourcing common functions.
 . ./common.sh
 
+parcel_name=`basename *el6.parcel`
 cdh_jar_versions=`get_cdh_jar_versions ${parcel_dir}`
 count_unique_cdh_jar_versions=`echo ${cdh_jar_versions} | wc -w`
 echo "[CHECK_CDH_JAR_VERSIONS]: ${cdh_jar_versions}"
@@ -113,6 +114,7 @@ rm -rf ${xml_formatted_output}
 jar_file=''
 echo "<thirdpartyHarmonization>" >> ${xml_formatted_output}
 echo "<date>`date +%Y-%m-%d\ %H:%M:%S`</date>" >> ${xml_formatted_output}
+echo "<parcel>$parcel_name</parcel>" >> ${xml_formatted_output}
 for jar_file_1 in `cat ${all_unique_jars_without_versions_count}`; do
  if [[ ${jar_file_1} =~ ^[0-9]+$ ]]; then
    number_of_hits=${jar_file_1}
