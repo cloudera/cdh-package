@@ -1,4 +1,5 @@
 #!/usr/bin/env groovy
+// Copyright (c) 2015 Cloudera, Inc. All rights reserved.
 
 import java.util.jar.JarFile;
 import groovy.sql.Sql
@@ -29,12 +30,18 @@ public class ParseTextFile {
     PrintWriter jarComponentWriter = new PrintWriter(f1)
     def date= out.date.text()
     def parcelName = out.parcel.text()
+    def cdhVersion = out.cdh_version.text()
     def separator="+++"
 
     try {
         // Parse the XML and do formatting so that the resulting output file.
         // can be fed as bulk.
         out.jarFile.each {
+
+          // Reinitialize the list on each iteration.
+          ArrayList<String> statsTableList = new ArrayList<String>();
+          ArrayList<String> componentMapList = new ArrayList<String>();
+
           def jarName= it.'jarFileName'.text()
           def jarCount= it.'jarFileCount'.text()
           def jarNameSearchPattern=it.'jarFileSearchPattern'.text()
@@ -54,9 +61,31 @@ public class ParseTextFile {
             }
           }
 
-          statsWriter.println(date+separator+jarName+separator+jarCount+separator+jarNameSearchPattern+separator+jarVersions+separator+parcelName);
+          // Data to be inserted into the stats table.
+          statsTableList.add(date);
+          statsTableList.add(jarName);
+          statsTableList.add(jarCount);
+          statsTableList.add(jarNameSearchPattern);
+          statsTableList.add(jarVersions);
+          statsTableList.add(parcelName);
+          statsTableList.add(cdhVersion);
+          def statsRow = Utility.constructStringFromList(statsTableList, separator);
+          statsWriter.println(statsRow);
+
+          // Data to be inserted into the component map table.
           componentNameJarMap.each { entry ->
-              jarComponentWriter.println(date+separator+jarName+separator+entry.key+separator+entry.value+separator+parcelName)
+            
+            // Clear the Array list before each line is written.
+            componentMapList.clear();
+
+            componentMapList.add(date);
+            componentMapList.add(jarName);
+            componentMapList.add(entry.key);
+            componentMapList.add(entry.value);
+            componentMapList.add(parcelName);
+            componentMapList.add(cdhVersion);
+            def componentMapRow = Utility.constructStringFromList(componentMapList, separator);
+            jarComponentWriter.println(componentMapRow);
           }
         }
     } finally {
@@ -64,41 +93,39 @@ public class ParseTextFile {
         jarComponentWriter.close()
     }
 
-    // Check if the properties file that contains connection info is present.
-    File dbPropertiesFile=new File("./DbConnection.json");
-    if(! dbPropertiesFile.exists()) {
-      throw new FileNotFoundException("DbConnection.json file not found.");
-    }
+    def dbConnection = Utility.getDbConnection();
 
-    def dbPropertiesJson = new JsonSlurper().parseText(dbPropertiesFile.text);
-    
-    // Load data into tables now.
-    def db = Sql.newInstance(dbPropertiesJson."connectionString", dbPropertiesJson."userName", dbPropertiesJson."password", dbPropertiesJson."driver")
     try {
-        def isExists = db.firstRow("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='thirdparty_harmonization'")
+        def isExists = dbConnection.firstRow("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='thirdparty_harmonization'")
         // Create schema if it does not already exist.
         if (! isExists) {
           def sqlFileContents = new File("./create_schema.sql").text
-          db.execute (sqlFileContents)
+          dbConnection.execute (sqlFileContents)
         }
 
-        // At this point, we are guaranteed that the schema exists. Now populate.
-        // Backing up information into the history tables.
-        db.execute ("USE thirdparty_harmonization")
-        db.execute ("INSERT INTO thirdparty_jars_stats_history SELECT * FROM thirdparty_jars_stats;")
-        db.execute ("INSERT INTO thirdparty_jars_component_map_history SELECT * FROM thirdparty_jars_component_map;")
+        dbConnection.execute ("USE thirdparty_harmonization")
 
-        // Now, truncate the table that holds information about the "current" run.
-        db.execute ("TRUNCATE TABLE thirdparty_jars_stats;")
-        db.execute ("TRUNCATE TABLE thirdparty_jars_component_map;")
+        // Verify that this parcel has not already been analyzed
+        // ToDo: Move this check even before we download the parcel. For now, let it sit here.
+        def isDataExists=dbConnection.firstRow("SELECT parcel_name from thirdparty_jars_stats where parcel_name=? ;",parcelName)
+        if (! isDataExists) {
+          isDataExists=dbConnection.firstRow("SELECT parcel_name from thirdparty_jars_stats_history where parcel_name=? ;",parcelName)
+        }
 
-        //  Load stats from the current run.
-        def workingDir = new File(".").getCanonicalPath()
-        db.execute("LOAD DATA LOCAL INFILE '${Sql.expand(workingDir)}/jar_stats.txt' INTO TABLE thirdparty_jars_stats FIELDS TERMINATED BY '${Sql.expand(separator)}';")
-        db.execute ("LOAD DATA LOCAL INFILE '${Sql.expand(workingDir)}/jar_component_map.txt' INTO TABLE thirdparty_jars_component_map FIELDS TERMINATED BY '${Sql.expand(separator)}';")
+        if (! isDataExists ) {
+
+          Utility.insertIntoHistoryTables();
+
+          //  Load stats from the current run.
+          def workingDir = new File(".").getCanonicalPath()
+          dbConnection.execute("LOAD DATA LOCAL INFILE '${Sql.expand(workingDir)}/jar_stats.txt' INTO TABLE thirdparty_jars_stats FIELDS TERMINATED BY '${Sql.expand(separator)}';")
+          dbConnection.execute ("LOAD DATA LOCAL INFILE '${Sql.expand(workingDir)}/jar_component_map.txt' INTO TABLE thirdparty_jars_component_map FIELDS TERMINATED BY '${Sql.expand(separator)}';")
+        } else {
+          println("Tables not populated for parcel $parcelName as data already exits.")
+        }
       }finally {
           try {
-            db.close();
+            dbConnection.close();
             } catch (Exception e) {
                 // Nothing to do.
             }
