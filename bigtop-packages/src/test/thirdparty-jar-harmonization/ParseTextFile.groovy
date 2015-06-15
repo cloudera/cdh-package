@@ -6,7 +6,7 @@ import groovy.sql.Sql
 import groovy.json.JsonSlurper;
 
 // Parse the xml file, and does two things:
-// 1. Generates two files - one that contains stats for each jar and the other that ties each of these 
+// 1. Generates two files - one that contains stats for each jar and the other that ties each of these
 //                          jars to specific components.
 // 2. Bulk loads this into a database for analysis.
 public class ParseTextFile {
@@ -18,7 +18,7 @@ public class ParseTextFile {
     File f = new File("./jar_stats.txt");
     File f1 = new File("./jar_component_map.txt");
 
-    // Ensure that these files are not present before we start 
+    // Ensure that these files are not present before we start
     if ( f.exists() ) {
         f.delete();
     }
@@ -49,6 +49,10 @@ public class ParseTextFile {
           def jarComponentMap= it.'jarFileSymlinks'.text().trim().replaceAll("\n", ",")
           def componentNameJarMap = [:]
           jarComponentMap.split(",").each  {
+            // If the string is null or empty, return.
+            if ( ! it?.trim()) {
+              return;
+            }
             def local_splitString=it.split("->");
             def local_compoenentName=local_splitString[0]
             def local_jarName=local_splitString[1]
@@ -74,7 +78,7 @@ public class ParseTextFile {
 
           // Data to be inserted into the component map table.
           componentNameJarMap.each { entry ->
-            
+
             // Clear the Array list before each line is written.
             componentMapList.clear();
 
@@ -113,6 +117,8 @@ public class ParseTextFile {
         }
 
         if (! isDataExists ) {
+
+          println "Data does not exist. Loading"
 
           Utility.insertIntoHistoryTables();
 
