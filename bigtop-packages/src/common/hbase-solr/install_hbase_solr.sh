@@ -163,5 +163,10 @@ install -d -m 0755 $PREFIX/var/{run,log,lib}/hbase-solr
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 
+internal_versionless_symlinks \
+    ${PREFIX}/${LIB_DIR}/lib/hbase-sep*.jar \
+    ${PREFIX}/${LIB_DIR}/lib/hbase-indexer*.jar \
+    ${PREFIX}/${LIB_DIR}/tools/hbase-indexer*.jar
+
 external_versionless_symlinks 'hbase-indexer hbase-sep' $PREFIX/$LIB_DIR/lib
 

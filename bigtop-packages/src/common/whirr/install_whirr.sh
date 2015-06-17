@@ -144,5 +144,7 @@ cp ${BUILD_DIR}/{LICENSE,NOTICE}.txt ${LIB_DIR}/
 install -d -m 0755 $LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $LIB_DIR/cloudera/
 
+internal_versionless_symlinks ${LIB_DIR}/lib/whirr*.jar
+
 external_versionless_symlinks 'whirr' ${LIB_DIR}/lib
 

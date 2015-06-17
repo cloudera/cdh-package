@@ -119,6 +119,6 @@ cp ${BUILD_DIR}/{LICENSE,NOTICE}* ${PREFIX}/${LIB_DIR}/
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 
-internal_versionless_symlinks ${PREFIX}/${LIB_DIR}/kite*.jar
+internal_versionless_symlinks ${PREFIX}/${LIB_DIR}/kite*.jar ${PREFIX}/${LIB_DIR}/lib/original-kite*.jar
 external_versionless_symlinks 'kite' ${PREFIX}/${LIB_DIR}/lib
 

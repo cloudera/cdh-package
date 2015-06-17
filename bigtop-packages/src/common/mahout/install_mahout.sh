@@ -151,5 +151,8 @@ cp ${BUILD_DIR}/{LICENSE,NOTICE}.txt ${PREFIX}/${LIB_DIR}/
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 
+internal_versionless_symlinks ${PREFIX}/${LIB_DIR}/mahout*.jar
+
+# FIXME: Why are we excluding lucene and solr JARs? They are not built by Mahout
 external_versionless_symlinks 'mahout lucene solr' ${PREFIX}/${LIB_DIR}/lib
 

@@ -280,6 +280,8 @@ popd
 
 #end of temporary workaround
 
+internal_versionless_symlinks ${HADOOP_YARN_LIB}/spark*.jar
+
 external_versionless_symlinks 'spark' ${PREFIX}/${LIB_DIR}/lib
 
 rm -rf $SPARK_TMP

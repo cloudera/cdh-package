@@ -189,5 +189,10 @@ cp ${DIST_DIR}/{LICENSE,NOTICE}.txt ${PREFIX}/${LIB_DIR}/
 install -d -m 0755 $PREFIX/$LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 
+internal_versionless_symlinks \
+    ${PREFIX}/${LIB_DIR}/client-lib/sqoop*.jar \
+    ${PREFIX}/${LIB_DIR}/webapps/sqoop/WEB-INF/lib/sqoop*.jar \
+    ${PREFIX}/${LIB_DIR}/webapps/sqoop/WEB-INF/lib/connector-sdk*.jar
+
 # Create external symlinks
 external_versionless_symlinks 'sqoop' ${PREFIX}/${LIB_DIR}/webapps/sqoop/WEB-INF/lib

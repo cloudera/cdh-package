@@ -608,7 +608,8 @@ internal_versionless_symlinks \
     ${YARN_DIR}/hadoop-*.jar \
     ${MAPREDUCE_DIR}/hadoop-*.jar \
     ${MAPREDUCE_MR1_DIR}/hadoop-*.jar \
-    ${MAPREDUCE_MR1_DIR}/contrib/**/hadoop-*.jar
+    ${MAPREDUCE_MR1_DIR}/contrib/**/hadoop-*.jar \
+    ${PREFIX}/usr/lib/hadoop-kms/webapps/kms/WEB-INF/lib/hadoop-kms*.jar
 
 # Creating an explicit hadoop-examples.jar symlink in MR1 for backwards compatibility
 ln -s hadoop-examples-mr1.jar ${MAPREDUCE_MR1_DIR}/hadoop-examples.jar

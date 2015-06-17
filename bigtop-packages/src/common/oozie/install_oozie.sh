@@ -268,6 +268,8 @@ cp ${BUILD_DIR}/cloudera/cdh_version.properties ${SERVER_LIB_DIR}/cloudera/
 
 rm ${SERVER_LIB_DIR}/libtools/hadoop-client*.jar # contains no executable code and isn't in Hadoop packages
 
+internal_versionless_symlinks ${SERVER_LIB_DIR}/lib*/oozie*.jar ${SERVER_LIB_DIR}/oozie-sharelib-*/lib/*/oozie*.jar
+
 external_versionless_symlinks 'oozie' ${CLIENT_LIB_DIR}/lib ${SERVER_LIB_DIR}/libtools ${SERVER_LIB_DIR}/libserver \
     ${SERVER_LIB_DIR}/oozie-sharelib-{mr1,yarn}/lib/*
 
