@@ -177,6 +177,19 @@ orig_init_file=$RPM_SOURCE_DIR/%{name}.init
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}
 cp $orig_init_file $RPM_BUILD_ROOT/%{initd_dir}/hue
 
+# Remove references to the buildroot in the dist-info files
+%if 0%{?rhel:%{rhel}} < 6
+export SYS_PYTHON=`which python2.6`
+%else
+export SYS_PYTHON=python
+%endif
+
+export PYTHON_VERSION=`$SYS_PYTHON -c "import sys; sys.stdout.write(sys.version[:3])"`
+for DIST_INFO in %{buildroot}%{_prefix}/lib*/hue/build/env/lib*/python$PYTHON_VERSION/site-packages/*.dist-info
+do
+  sed -i 's|'%{buildroot}'||g' $DIST_INFO/RECORD
+done
+
 #### PLUGINS ######
 
 %package -n %{name}-common
