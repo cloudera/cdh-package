@@ -292,8 +292,8 @@ fi
 %{hue_dir}/tools
 %{hue_dir}/VERSION
 %{hue_dir}/build/env/bin/*
-%{hue_dir}/build/env/include/
-%{hue_dir}/build/env/lib*/
+%{hue_dir}/build/env/include
+%{hue_dir}/build/env/lib*
 %{hue_dir}/build/env/stamp
 %{hue_dir}/app.reg
 %{hue_dir}/apps/Makefile
