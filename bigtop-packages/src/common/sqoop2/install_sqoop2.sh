@@ -191,7 +191,7 @@ cp cloudera/cdh_version.properties $PREFIX/$LIB_DIR/cloudera/
 
 internal_versionless_symlinks \
     ${PREFIX}/${LIB_DIR}/client-lib/sqoop*.jar \
-    ${PREFIX}/${LIB_DIR}/webapps/sqoop/WEB-INF/lib/sqoop*.jar \
+    `ls ${PREFIX}/${LIB_DIR}/webapps/sqoop/WEB-INF/lib/sqoop*.jar | grep -v sqoop-connector` \
     ${PREFIX}/${LIB_DIR}/webapps/sqoop/WEB-INF/lib/connector-sdk*.jar
 
 # Create external symlinks
