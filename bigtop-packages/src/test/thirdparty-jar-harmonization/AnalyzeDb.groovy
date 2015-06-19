@@ -66,24 +66,27 @@ public class AnalyzeDb {
 
       // Find all jars where an increase the number of versions is identified.
       // This is relative to the last successful run.
-      def increased_count= "SELECT js.* FROM thirdparty_jars_stats js" +
-                           " INNER JOIN thirdparty_jars_stats_history jsh" +
-                           " ON (js.jar_name=jsh.jar_name AND js.cdh_version=jsh.cdh_version AND jsh.run_date=(SELECT max(run_date) from thirdparty_jars_stats_history where cdh_version=?))" +
-                           " WHERE js.jar_unique_count > jsh.jar_unique_count AND js.cdh_version=? ;"
+      def increased_count= "SELECT js.cdh_version,js.parcel_name,js.jar_name, js.jar_unique_count, js.jar_version_names, "
+        "jsh.parcel_name as new_parcel, jsh.jar_unique_count as new_count, jsh.jar_version_names as extended_versions "+
+        "FROM thirdparty_jars_stats js " +
+        "INNER JOIN thirdparty_jars_stats_history jsh " +
+        "ON (js.jar_name=jsh.jar_name AND js.cdh_version=jsh.cdh_version " +
+        "AND jsh.run_date=(SELECT max(run_date) from thirdparty_jars_stats_history where cdh_version=?)) " +
+        "WHERE js.jar_unique_count > jsh.jar_unique_count AND js.cdh_version=? ;"
 
       rowSet=sqlConnection.rows (increased_count, cdh_version, cdh_version)
       if (rowSet.size() > 0) {
           analysisFileWriter.println(lineSeperator)
           analysisFileWriter.println("List of jars where there is an increase in the number of duplicates.")
           rowSet.each { rows ->
-              analysisFileWriter.println("${rows.run_date},${rows.jar_name},${rows.jar_unique_count},${rows.jar_search_pattern},${rows.jar_version_names}")
+              analysisFileWriter.println("${rows.cdh_version},${rows.parcel_name},${rows.jar_name},${rows.jar_unique_count},${rows.jar_version_names},${rows.new_parcel}, ${rows.new_count}, ${rows.extended_versions}")
           }
 
           // Find all components which potentially added the same jar with a new version.
           def component= "SELECT jcm.* FROM thirdparty_jars_component_map jcm" +
                          " LEFT OUTER JOIN thirdparty_jars_component_map_history jcmh" +
                          " ON (jcm.jar_name=jcmh.jar_name AND jcm.component_name=jcmh.component_name AND jcmh.run_date=(SELECT max(run_date) from thirdparty_jars_component_map_history where cdh_version=?))" +
-                         " where jcmh.jar_name is NULL AND js.cdh_version=? ;"
+                         " where jcmh.jar_name is NULL AND jcm.cdh_version=? ;"
 
           rowSet=sqlConnection.rows (component, cdh_version, cdh_version)
           if (rowSet.size() > 0) {
