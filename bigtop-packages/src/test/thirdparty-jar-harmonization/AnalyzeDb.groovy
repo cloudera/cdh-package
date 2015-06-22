@@ -66,7 +66,7 @@ public class AnalyzeDb {
 
       // Find all jars where an increase the number of versions is identified.
       // This is relative to the last successful run.
-      def increased_count= "SELECT js.cdh_version,js.parcel_name,js.jar_name, js.jar_unique_count, js.jar_version_names, "
+      def increased_count= "SELECT js.cdh_version,js.parcel_name,js.jar_name, js.jar_unique_count, js.jar_version_names, " +
         "jsh.parcel_name as new_parcel, jsh.jar_unique_count as new_count, jsh.jar_version_names as extended_versions "+
         "FROM thirdparty_jars_stats js " +
         "INNER JOIN thirdparty_jars_stats_history jsh " +
