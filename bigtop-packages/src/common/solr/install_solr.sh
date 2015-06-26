@@ -327,6 +327,10 @@ if [ -n "$SOLR_AUTHORIZATION_SUPERUSER" ] ; then
   export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authorization.superuser=${SOLR_AUTHORIZATION_SUPERUSER}"
 fi
 
+if [ -n "$ZK_SASL_CLIENT_USERNAME" ] ; then
+  export CATALINA_OPTS="${CATALINA_OPTS} -Dzookeeper.sasl.client.username=${ZK_SASL_CLIENT_USERNAME}"
+fi
+
 #  FIXME: for some reason catalina doesn't use CATALINA_OPTS for stop action
 #        and thus doesn't know the admin port
 if [ "$1" = "stop" ] ; then
