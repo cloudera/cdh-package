@@ -1,5 +1,5 @@
 {
-  "connectionString": "jdbc:mysql://mthtest3.ent.cloudera.com?allowMultiQueries=true",
+  "connectionString": "jdbc:mysql://cat1.vpc.cloudera.com?allowMultiQueries=true",
   "defaultDatabase": "thirdparty_harmonization",
   "userName": "report",
   "password": "report@123",

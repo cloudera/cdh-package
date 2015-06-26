@@ -55,7 +55,7 @@ function get_search_pattern() {
 #
 # Relavant information:
 # At the end of each run, data is collected and pushed into mysql tables.
-# Mysql server: mthtest3.ent.cloudera.com  // This needs to be moved to a better location.
+# Mysql server: cat1.vpc.cloudera.com  
 # Database: thirdparty_harmonization
 # Tables:
 #   thirdparty_jars_stats

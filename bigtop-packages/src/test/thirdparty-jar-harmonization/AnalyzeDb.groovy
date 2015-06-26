@@ -11,7 +11,7 @@ import java.io.File;
  *  After each parcel is downloaded and analyzed, the following tables are updated:
  *  Database: thirdparty_harmonization
  *  Tables  : thirdparty_jars_stats, thirdparty_jars_component_map and corresponding history tables.
- *  Server  : mthtest3.ent.cloudera.com
+ *  Server  : cat1.vpc.cloudera.com
  *
  *  The queries in this script serve to answer questions about possible proliferation of thirdparty jars.
  #  The tables mentioned above are queried and the Jenkins job http://systest.jenkins.cloudera.com/job/Third-Party-Jar-Harmonization/
