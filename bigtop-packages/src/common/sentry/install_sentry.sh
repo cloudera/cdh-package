@@ -103,6 +103,9 @@ install -d -m 0755 ${LIB_DIR}
 mv ${DIRECTORY}/{bin,lib,scripts} ${LIB_DIR}/
 chmod 0755 ${LIB_DIR}/*
 
+# Cleaning up the lib dir
+(cd ${LIB_DIR}/lib; rm -f *-test-*.jar randomizedtesting-runner*.jar)
+
 mv ${BUILD_DIR}/LICENSE.txt ${LIB_DIR}/
 mv ${BUILD_DIR}/NOTICE.txt ${LIB_DIR}/
 
