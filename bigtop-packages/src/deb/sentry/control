@@ -23,7 +23,7 @@ Homepage: http://sentry.incubator.apache.org/
 
 Package: sentry
 Architecture: all
-Depends: hadoop-hdfs, hadoop-mapreduce, zookeeper, hive-jdbc (>= 1.1.0+cdh5.4.0), hive (>= 1.1.0+cdh5.4.0), hadoop-client (>= 2.6.0+cdh5.4.0)
+Depends: hadoop-hdfs, hadoop-mapreduce, zookeeper, hive-jdbc (>= 1.1.0+cdh5.4.0), hive (>= 1.1.0+cdh5.4.0), hadoop-client (>= 2.6.0+cdh5.4.0), solr (>= 4.10.3+cdh5.5.0)
 Description: A system for enforcing fine grained role based authorization to data and metadata stored on a Hadoop cluster.
 
 Package: sentry-store
