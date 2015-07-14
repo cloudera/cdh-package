@@ -46,6 +46,11 @@ copy_and_resolve ${TOMCAT_CONF}/conf    ${TOMCAT_DEPLOYMENT}/conf
 copy_and_resolve ${SOLR_HOME}/webapps   ${TOMCAT_DEPLOYMENT}/webapps
 copy_and_resolve ${TOMCAT_CONF}/WEB-INF ${TOMCAT_DEPLOYMENT}/webapps/solr/WEB-INF
 
+# Copying in all the jars from the plugin directory to lib.
+if [ -n "${SOLR_PLUGIN_DIR}" ] && [ -d "${SOLR_PLUGIN_DIR}" ] ; then
+  copy_and_resolve ${SOLR_PLUGIN_DIR} ${TOMCAT_DEPLOYMENT}/webapps/solr/WEB-INF/lib
+fi
+
 if [ -n "${BIGTOP_CLASSPATH}" ] ; then
   sed -i -e "s#^\(common.loader=.*\)\$#\1,${BIGTOP_CLASSPATH/:/,}#" ${TOMCAT_DEPLOYMENT}/conf/catalina.properties
 fi
