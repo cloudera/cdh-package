@@ -31,16 +31,32 @@ if [ -z "$GIT_REPO" ]; then
     ./thirdparty/download-thirdparty.sh
     ./thirdparty/build-thirdparty.sh
 
+    # Force cmake to omit the call to build-if-necessary.sh.
     export NO_REBUILD_THIRDPARTY=1
-    CMAKE='thirdparty/installed/bin/cmake -DKUDU_LINK=static'
-    MAKE='make -j8'
+
+    CMAKE="thirdparty/installed/bin/cmake"
+
+    # Always static link.
+    CMAKE="${CMAKE} -DKUDU_LINK=static"
+
+    # Skip building of unit tests to save time.
+    CMAKE="${CMAKE} -DNO_TESTS=1"
+
+    # Provide the git hash collected earlier.
+    CMAKE="${CMAKE} -DKUDU_GIT_HASH=$(cat kudu_git_hash)"
+
+    # Set parallelism level based on the number of CPUs.
+    MAKE="make -j$(nproc)"
     for type in release fastdebug; do
-        rm -rf CMakeCache.txt CMakeFiles/
-        ${CMAKE} -DCMAKE_BUILD_TYPE=${type} -DNO_TESTS=1 .
-        ${MAKE} install DESTDIR=`pwd`/client-${type}
+      rm -rf CMakeCache.txt CMakeFiles/
+      ${CMAKE} -DCMAKE_BUILD_TYPE=${type} .
+      ${MAKE} install DESTDIR=`pwd`/client-${type}
     done
 
 else
+    # Collect the git hash to be used by the build.
+    echo $(cd "$GIT_REPO" && git rev-parse HEAD) > kudu_git_hash
+
     # We're packaging up the source code to be built.
     rm -rf build kudu-${FULL_VERSION}
     ALL_FILES=`echo *`
