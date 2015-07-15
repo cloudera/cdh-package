@@ -23,7 +23,7 @@ Homepage: http://www.cloudera.com/
 
 Package: kudu
 Architecture: any
-Depends: ${misc:Depends}, adduser
+Depends: ${misc:Depends}, libsasl2-2, adduser, libssl0.9.8 | libssl1.0.0
 Description: Columnar storage engine for Hadoop
 
 Package: kudu-master
@@ -38,7 +38,7 @@ Description: Kudu Tablet Server service
 
 Package: libkuduclient0
 Architecture: any
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, libsasl2-2
 Description: Kudu client library
 
 Package: libkuduclient-dev

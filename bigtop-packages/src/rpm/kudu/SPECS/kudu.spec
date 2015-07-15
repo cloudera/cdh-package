@@ -41,7 +41,8 @@ Source2: install_kudu.sh
 Source3: init.d.tmpl
 Source4: kudu-master.svc
 Source5: kudu-tablet-server.svc
-Requires: /usr/sbin/useradd
+Requires: cyrus-sasl-lib
+Requires: /usr/sbin/useradd, openssl
 Requires(post): %{alternatives_dep}
 Requires(preun): %{alternatives_dep}
 
@@ -67,6 +68,7 @@ Kudu Tablet Server service
 %package client
 Summary: Kudu client library
 Group: Development/Libraries
+Requires: cyrus-sasl-lib
 
 %description client
 Kudu client library
