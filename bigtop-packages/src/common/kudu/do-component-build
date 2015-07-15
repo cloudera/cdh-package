@@ -50,6 +50,7 @@ if [ -z "$GIT_REPO" ]; then
     for type in release fastdebug; do
       rm -rf CMakeCache.txt CMakeFiles/
       ${CMAKE} -DCMAKE_BUILD_TYPE=${type} .
+      ${MAKE}
       ${MAKE} install DESTDIR=`pwd`/client-${type}
     done
 
