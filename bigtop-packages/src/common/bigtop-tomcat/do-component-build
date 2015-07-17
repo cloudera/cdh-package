@@ -32,7 +32,7 @@ if [ -z "$GIT_REPO" ]; then
     
     rm -rf dl
     mkdir dl
-    ant -Dbase.path=dl clean download -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
+    ant -Dbase.path=dl clean download -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar -Dnsis.loc=http://archive.cloudera.com/tarballs/nsis-2.46.zip
     ant -Dbase.path=dl -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
     ant -Dbase.path=dl -Dskip.installer=true -f dist.xml dist-static package-tgz -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
     
