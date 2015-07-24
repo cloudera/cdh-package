@@ -25,8 +25,12 @@ PIDFILE="/var/run/hadoop-hdfs/hadoop-$SVC_USER-$HADOOP_NAME.pid"
 generate_extra_commands() {
 
 cat <<'__EOT__'
+    # When running upgrade, ensure that -renameReserved is added by default.
     upgrade|rollback)
       DAEMON_FLAGS="$DAEMON_FLAGS -${@}"
+      if [[ ! " ${DAEMON_FLAGS} " =~ " -renameReserved " ]] && [[ " ${DAEMON_FLAGS} " =~ " -upgrade " ]]; then
+        DAEMON_FLAGS="$DAEMON_FLAGS -renameReserved"
+      fi
       start
       ;;
     rollingUpgradeStarted)
