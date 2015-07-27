@@ -73,7 +73,7 @@ KeyTrustee server.
 
 %package -n python-keytrustee
 Summary: Code shared between the client and server.
-Requires: pytz, python-argparse, python-pycurl
+Requires: pytz, python-argparse, python-pycurl, python-requests
 
 %description -n python-keytrustee
 Common code required to run the client and the server in keytrustee
