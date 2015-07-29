@@ -22,7 +22,7 @@ if [ -z "$GIT_REPO" ]; then
     else
         MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
     fi
-    mvn -DskipTests -s settings.xml -Pdev clean  package   -U
+    mvn -DskipTests -Pdev clean  package   -U
     rm -rf build
     mkdir build
     cp target/keytrusteekp-*.jar build
