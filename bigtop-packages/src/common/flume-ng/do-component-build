@@ -28,11 +28,11 @@ if [ -z "$GIT_REPO" ]; then
     fi
 
     MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
-        mvn clean install -DskipTests -Dhadoop.profile=hbase-98 ${MAVEN_DEPL} -fae "$@" 
+        mvn clean install -DskipTests ${MAVEN_DEPL} -fae "$@" 
     
     if [ -z "${MAVEN_ONLY}" ]; then
         MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
-            mvn clean source:jar javadoc:javadoc -DskipTests -Dhadoop.profile=hbase-98 -Psite ${MAVEN_INST_DEPLOY} "$@" 
+            mvn clean source:jar javadoc:javadoc -DskipTests -Psite ${MAVEN_INST_DEPLOY} "$@" 
         
         mkdir build
         tar -C build -xzvf flume-ng-dist/target/apache-flume-${FULL_VERSION}-bin.tar.gz
