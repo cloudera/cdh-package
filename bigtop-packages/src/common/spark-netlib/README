@@ -1,0 +1,8 @@
+How the license files were created :
+LICENSE.jniloader was copied from https://github.com/fommil/jniloader/blob/jniloader-1.1/LICENSE
+LICENSE.netlib-java was copied from https://github.com/fommil/netlib-java/blob/1.1/LICENSE.txt
+LICENSE.math-atlas was copied from https://github.com/math-atlas/math-atlas/blob/master/LICENSE.txt
+LICENSE.openblas was copied from https://github.com/xianyi/OpenBLAS/blob/develop/LICENSE
+
+If you decide to use a different version of the jar files you may need to update
+the license files in the unlikely event that the licenses have changed
