@@ -33,7 +33,7 @@ if [ -z "$GIT_REPO" ]; then
   export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -XX:PermSize=1024m -XX:MaxPermSize=1024m"
 
   mkdir -p target
-  MYMVN=$(realpath $(mktemp -p target mvn.XXXXXXXXXX))
+  MYMVN=$PWD/$(mktemp -p target mvn.XXXXXXXXXX)
   cat >$MYMVN <<EOF
 #!/bin/sh
 exec $PWD/build/mvn --force "\$@"
