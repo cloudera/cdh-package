@@ -32,10 +32,11 @@ if [ -z "$GIT_REPO" ]; then
   #        http://maven.40175.n5.nabble.com/Not-finding-artifact-in-local-repo-td3727753.html
   export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -XX:PermSize=1024m -XX:MaxPermSize=1024m"
 
-  mkdir -p target
+  mkdir -p target/zinc
   MYMVN=$PWD/$(mktemp -p target mvn.XXXXXXXXXX)
   cat >$MYMVN <<EOF
 #!/bin/sh
+export ZINC_OPTS="-Dzinc.dir=$PWD/target/zinc -Xmx2g -XX:MaxPermSize=512M -XX:ReservedCodeCacheSize=512m"
 exec $PWD/build/mvn --force "\$@"
 EOF
   chmod 700 $MYMVN
