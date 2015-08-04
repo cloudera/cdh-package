@@ -33,7 +33,7 @@ if [ -z "$GIT_REPO" ]; then
   export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -XX:PermSize=1024m -XX:MaxPermSize=1024m"
 
   mkdir -p target
-  MYMVN=$(mktemp -p target mvn.XXXXXXXXXX)
+  MYMVN=$(realpath $(mktemp -p target mvn.XXXXXXXXXX))
   cat >$MYMVN <<EOF
 #!/bin/sh
 exec $PWD/build/mvn --force "\$@"
@@ -41,7 +41,7 @@ EOF
   chmod 700 $MYMVN
 
   ./make-distribution.sh  --mvn $MYMVN --skip-java-test -Dcdh.build=true $BUILD_OPTS
-  rm $MYMVN
+  rm -f $MYMVN
 
   rm -rf build
   mkdir -p build/spark-${FULL_VERSION}
