@@ -16,7 +16,7 @@
 DAEMON="kudu-tablet-server"
 DESC="Kudu Tablet Server"
 # FIXME: Can we rename this to not use an underscore? Can't use them in Debian package names, and it breaks convention with other components. Don't want to be inconsistent WITHIN Kudu, especially.
-EXEC_PATH="/usr/bin/kudu-tablet_server"
+EXEC_PATH="/usr/sbin/kudu-tablet_server"
 PROC_NAME="kudu-tablet_server"
 SVC_USER="kudu"
 DEFAULTS_FILE="kudu"
