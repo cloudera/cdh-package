@@ -32,7 +32,7 @@ override_dh_auto_build:
 override_dh_auto_install:
 	bash -x debian/install_kudu.sh --build-dir=${PWD} --prefix=${PWD}/debian/tmp --extra-dir=debian/
 	bash debian/init.d.tmpl debian/kudu-master.svc deb debian/tmp/etc/init.d/kudu-master
-	bash debian/init.d.tmpl debian/kudu-tablet-server.svc deb debian/tmp/etc/init.d/kudu-tablet-server
+	bash debian/init.d.tmpl debian/kudu-tserver.svc deb debian/tmp/etc/init.d/kudu-tserver
 	#mkdir -p debian/tmp/etc/security/limits.d
 	#cp debian/kudu.conf debian/tmp/etc/security/limits.d/
 

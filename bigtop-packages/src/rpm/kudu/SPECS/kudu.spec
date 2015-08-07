@@ -40,7 +40,7 @@ Source1: do-component-build
 Source2: install_kudu.sh
 Source3: init.d.tmpl
 Source4: kudu-master.svc
-Source5: kudu-tablet-server.svc
+Source5: kudu-tserver.svc
 Requires: cyrus-sasl-lib
 Requires: /usr/sbin/useradd, openssl
 Requires(post): %{alternatives_dep}
@@ -57,12 +57,12 @@ Requires: %{name} = %{version}-%{release}
 %description master
 Kudu Master service
 
-%package tablet-server
+%package tserver
 Summary: Kudu Tablet Server service
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
 
-%description tablet-server
+%description tserver
 Kudu Tablet Server service
 
 %package client
@@ -110,7 +110,7 @@ bash %{SOURCE2} \
 init_source=$RPM_SOURCE_DIR
 init_target=$RPM_BUILD_ROOT/%{initd_dir}
 bash $init_source/init.d.tmpl $init_source/kudu-master.svc rpm $init_target/kudu-master
-bash $init_source/init.d.tmpl $init_source/kudu-tablet-server.svc rpm $init_target/kudu-tablet-server
+bash $init_source/init.d.tmpl $init_source/kudu-tserver.svc rpm $init_target/kudu-tserver
 
 # Install security limits
 #%__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
@@ -177,6 +177,6 @@ if [ $1 -ge 1 ]; then \
     service %2 condrestart >/dev/null 2>&1 || : \
 fi
 
-%service_macro master        kudu-master
-%service_macro tablet-server kudu-tablet-server
+%service_macro master  kudu-master
+%service_macro tserver kudu-tserver
 

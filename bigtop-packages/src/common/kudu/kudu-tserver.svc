@@ -13,26 +13,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-DAEMON="kudu-tablet-server"
+DAEMON="kudu-tserver"
 DESC="Kudu Tablet Server"
-# FIXME: Can we rename this to not use an underscore? Can't use them in Debian package names, and it breaks convention with other components. Don't want to be inconsistent WITHIN Kudu, especially.
-EXEC_PATH="/usr/sbin/kudu-tablet_server"
-PROC_NAME="kudu-tablet_server"
+EXEC_PATH="/usr/sbin/kudu-tserver"
+PROC_NAME="kudu-tserver"
 SVC_USER="kudu"
 DEFAULTS_FILE="kudu"
-DAEMON_FLAGS="\${KUDU_TABLET_SERVER_ARGS}"
+DAEMON_FLAGS="\${KUDU_TSERVER_ARGS}"
 CONF_DIR="/etc/kudu/conf"
 RUNDIR=/var/run/kudu
 PIDFILE="${RUNDIR}/${DAEMON}-${SVC_USER}.pid"
 LOCKDIR="/var/lock/subsys"
-LOCKFILE="kudu-tablet_server"
+LOCKFILE="kudu-tserver"
 PRIORITY=90
 
 generate_functions() {
 cat <<'__EOT__'
 
 export KUDU_LOG_DIR
-export KUDU_TABLET_SERVER_ARGS
+export KUDU_TSERVER_ARGS
 
 __EOT__
 }
@@ -51,7 +50,7 @@ start() {
     exit 0
   fi
 
-  /bin/su -s /bin/bash -c "/bin/bash -c 'cd ~ && echo \$\$ > ${PIDFILE} && exec ${EXEC_PATH} ${DAEMON_FLAGS} > ${KUDU_LOG_DIR}/kudu-tablet_server.out 2>&1' &" $SVC_USER
+  /bin/su -s /bin/bash -c "/bin/bash -c 'cd ~ && echo \$\$ > ${PIDFILE} && exec ${EXEC_PATH} ${DAEMON_FLAGS} > ${KUDU_LOG_DIR}/kudu-tserver.out 2>&1' &" $SVC_USER
   RETVAL=$?
 
   if [ $RETVAL -eq $STATUS_RUNNING ]; then

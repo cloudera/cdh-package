@@ -31,7 +31,7 @@ Architecture: any
 Depends: ${misc:Depends}, kudu (= ${source:Version})
 Description: Kudu Master service
 
-Package: kudu-tablet-server
+Package: kudu-tserver
 Architecture: any
 Depends: ${misc:Depends}, kudu (= ${source:Version})
 Description: Kudu Tablet Server service

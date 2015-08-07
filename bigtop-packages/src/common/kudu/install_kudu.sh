@@ -125,7 +125,7 @@ for executable in ${bin_executables}; do
 done
 
 sbin_executables="kudu-master \
-                  kudu-tablet_server"
+                  kudu-tserver"
 install -d -m 0755 ${LIB_DIR}/sbin-release
 install -d -m 0755 ${LIB_DIR}/sbin-debug
 for executable in ${sbin_executables}; do
@@ -138,7 +138,7 @@ install -d -m 0755 ${ETC_DIR}/default
 cat > ${ETC_DIR}/default/kudu <<__EOT__
 KUDU_LOG_DIR=/var/log/kudu
 KUDU_MASTER_ARGS="-log_dir \${KUDU_LOG_DIR}"
-KUDU_TABLET_SERVER_ARGS="-log_dir \${KUDU_LOG_DIR}"
+KUDU_TSERVER_ARGS="-log_dir \${KUDU_LOG_DIR}"
 __EOT__
 chmod 0644 ${ETC_DIR}/default/kudu
 
