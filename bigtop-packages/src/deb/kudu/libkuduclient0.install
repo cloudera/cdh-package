@@ -1,1 +1,2 @@
-/usr/lib/libkudu*.so
+/usr/lib/libkudu_client.so.*
+/usr/lib/debug/libkudu_client.so.*

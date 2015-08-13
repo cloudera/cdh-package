@@ -65,18 +65,18 @@ Requires: %{name} = %{version}-%{release}
 %description tserver
 Kudu Tablet Server service
 
-%package client
+%package client0
 Summary: Kudu client library
 Group: Development/Libraries
 Requires: cyrus-sasl-lib
 
-%description client
+%description client0
 Kudu client library
 
 %package client-devel
 Summary: Kudu client development package
 Group: Development/Libraries
-Requires: %{name}-client = %{version}-%{release}
+Requires: %{name}-client0 = %{version}-%{release}
 
 %description client-devel
 Kudu client development package
@@ -148,10 +148,13 @@ fi
 %attr(0644,root,root) %config(noreplace) /etc/default/kudu
 #%config(noreplace) /etc/security/limits.d/kudu.conf
 
-%files client
-%{_libdir}/libkudu*.so
+%files client0
+%{_libdir}/libkudu_client.so.*
+%{_libdir}/debug/libkudu_client.so.*
 
 %files client-devel
+%{_libdir}/libkudu_client.so
+%{_libdir}/debug/libkudu_client.so
 /usr/include/kudu
 %attr(0755,root,root) /usr/share/doc/kuduClient
 %attr(0755,root,root) /usr/share/kuduClient
