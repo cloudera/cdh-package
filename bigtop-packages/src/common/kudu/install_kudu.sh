@@ -178,6 +178,7 @@ install -d -m 0755 ${PREFIX}/var/lib/kudu
 install -d -m 0755 ${PREFIX}/${SYSTEM_LIB_DIR}
 install -d -m 0755 ${PREFIX}/${SYSTEM_INCLUDE_DIR}
 
+# Copy in the client libraries and symlink to one of them.
 for lib in `find ${BUILD_DIR}/client-fastdebug/usr/local/lib* -name \*.so\*`; do
   BASE_LIB=$(basename $lib)
   cp $lib ${PREFIX}/${SYSTEM_LIB_DIR}/${BASE_LIB/%.so/-debug.so}
@@ -186,6 +187,7 @@ for lib in `find ${BUILD_DIR}/client-release/usr/local/lib* -name \*.so\*`; do
   BASE_LIB=$(basename $lib)
   cp $lib ${PREFIX}/${SYSTEM_LIB_DIR}/${BASE_LIB/%.so/-release.so}
 done
+ln -s libkudu_client-release.so ${PREFIX}/${SYSTEM_LIB_DIR}/libkudu_client.so
 
 # Doesn't matter whether we use release or fastdebug here; we're not copying binaries.
 cp -r ${BUILD_DIR}/client-release/usr/local/include/* ${PREFIX}/${SYSTEM_INCLUDE_DIR}/
