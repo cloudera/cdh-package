@@ -25,8 +25,11 @@ if [ -z "$GIT_REPO" ]; then
         MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
     fi
 
+    THRIFT_HOME=/opt/toolchain/thrift-0.9.0
+    export PATH=${THRIFT_HOME}/bin:${PATH}
+
     MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn source:jar-no-fork javadoc:jar $MAVEN_INST_DEPLOY -Dprotoc.executable=${PROTOC_CDH5_PATH} -DskipTests
-    
+
     rm -rf build parquet-${FULL_VERSION}
     ALL_FILES=`echo *`
     mkdir build parquet-${FULL_VERSION}
