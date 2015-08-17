@@ -276,9 +276,6 @@ fi
 
 if [ -n "$SOLR_AUTHENTICATION_TYPE" ] ; then
   CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authentication.type=${SOLR_AUTHENTICATION_TYPE}"
-  if [ "$SOLR_AUTHENTICATION_TYPE" == "kerberos" ] && [ -z "$SOLR_ZKACL_PROVIDER" ]; then
-    CATALINA_OPTS="${CATALINA_OPTS} -DzkACLProvider=org.apache.solr.common.cloud.ConfigAwareSaslZkACLProvider"
-  fi
 fi
 
 if [ -n "$SOLR_ZKACL_PROVIDER" ] ; then
