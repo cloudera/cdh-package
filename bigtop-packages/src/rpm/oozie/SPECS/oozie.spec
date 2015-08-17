@@ -208,6 +208,20 @@ fi
 %defattr(-,root,root)
 %config(noreplace) %{conf_oozie_dist}
 %config(noreplace) %{tomcat_conf_oozie}.*
+# https://jira.cloudera.com/browse/CDH-30420
+%attr(0750,oozie,oozie) %{tomcat_conf_oozie}.https/conf/server.xml
+%attr(0750,oozie,oozie) %{tomcat_conf_oozie}.https/conf/ssl/ssl-server.xml
+%attr(0750,oozie,oozie) %{tomcat_conf_oozie}.https/conf/ssl/server.xml
+%attr(0750,oozie,oozie) %{tomcat_conf_oozie}.https.mr1/conf/server.xml
+%attr(0750,oozie,oozie) %{tomcat_conf_oozie}.https.mr1/conf/ssl/ssl-server.xml
+%attr(0750,oozie,oozie) %{tomcat_conf_oozie}.https.mr1/conf/ssl/server.xml
+%attr(0750,oozie,oozie) %{tomcat_conf_oozie}.http.mr1/conf/server.xml
+%attr(0750,oozie,oozie) %{tomcat_conf_oozie}.http.mr1/conf/ssl/ssl-server.xml
+%attr(0750,oozie,oozie) %{tomcat_conf_oozie}.http.mr1/conf/ssl/server.xml
+%attr(0750,oozie,oozie) %{tomcat_conf_oozie}.http/conf/server.xml
+%attr(0750,oozie,oozie) %{tomcat_conf_oozie}.http/conf/ssl/ssl-server.xml
+%attr(0750,oozie,oozie) %{tomcat_conf_oozie}.http/conf/ssl/server.xml
+
 %{usr_bin}/oozie-setup
 %{lib_oozie}/bin/oozie-setup.sh
 %{lib_oozie}/bin/oozie-sys.sh

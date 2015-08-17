@@ -37,6 +37,25 @@ set -e
 case "$1" in
     configure)
         chown -R oozie:oozie /var/lib/oozie /var/log/oozie
+
+        # https://jira.cloudera.com/browse/CDH-30420
+        for file in /etc/oozie/tomcat-conf.https/conf/server.xml \
+                    /etc/oozie/tomcat-conf.https/conf/ssl/ssl-server.xml \
+                    /etc/oozie/tomcat-conf.https/conf/ssl/server.xml \
+                    /etc/oozie/tomcat-conf.https.mr1/conf/server.xml \
+                    /etc/oozie/tomcat-conf.https.mr1/conf/ssl/ssl-server.xml \
+                    /etc/oozie/tomcat-conf.https.mr1/conf/ssl/server.xml \
+                    /etc/oozie/tomcat-conf.http.mr1/conf/server.xml \
+                    /etc/oozie/tomcat-conf.http.mr1/conf/ssl/ssl-server.xml \
+                    /etc/oozie/tomcat-conf.http.mr1/conf/ssl/server.xml \
+                    /etc/oozie/tomcat-conf.http/conf/server.xml \
+                    /etc/oozie/tomcat-conf.http/conf/ssl/ssl-server.xml \
+                    /etc/oozie/tomcat-conf.http/conf/ssl/server.xml 
+        do
+            chmod o-rwx $file
+            chown oozie:oozie $file
+        done
+
         update-rc.d oozie defaults >/dev/null || exit 1
 
         update-alternatives --install /etc/oozie/conf oozie-conf /etc/oozie/conf.dist 30

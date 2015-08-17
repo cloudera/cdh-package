@@ -174,12 +174,15 @@ fi
 %config(noreplace) %{config_solr}.dist
 %config(noreplace) %{tomcat_conf_solr}.*
 %config(noreplace) /etc/default/solr 
+%attr (0750,solr,solr) %{tomcat_conf_solr}.dist/conf/server.xml
+%attr (0750,solr,solr) %{tomcat_conf_solr}.https/conf/server.xml
 %{lib_solr}
 %{bin_solr}/solrctl
 %defattr(-,solr,solr,755)
 /var/lib/solr
 /var/run/solr
 /var/log/solr
+
 
 %files doc
 %defattr(-,root,root)

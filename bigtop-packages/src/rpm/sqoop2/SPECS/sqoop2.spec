@@ -186,6 +186,8 @@ fi
 %config(noreplace) /etc/sqoop2/tomcat-conf.dist
 %config(noreplace) /etc/sqoop2/tomcat-conf.mr1
 %config(noreplace) /etc/default/sqoop2-server
+%attr(0750,sqoop2,sqoop) /etc/sqoop2/tomcat-conf.dist/conf/server.xml
+%attr(0750,sqoop2,sqoop) /etc/sqoop2/tomcat-conf.mr1/conf/server.xml
 %{lib_sqoop}/webapps
 %{lib_sqoop}/bin/setenv.sh
 %{lib_sqoop}/bin/sqoop-sys.sh

@@ -910,6 +910,8 @@ fi
 %attr(0775,httpfs,httpfs) %{run_httpfs}
 %attr(0775,httpfs,httpfs) %{log_httpfs}
 %attr(0775,httpfs,httpfs) %{state_httpfs}
+%attr(0750,httpfs,httpfs) %{etc_httpfs}/tomcat-conf.https/conf/server.xml
+%attr(0750,httpfs,httpfs) %{etc_httpfs}/tomcat-conf.dist/conf/server.xml
 
 # Service file management RPMs
 %define service_macro() \

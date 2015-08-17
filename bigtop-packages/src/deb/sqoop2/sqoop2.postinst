@@ -16,6 +16,11 @@
 
 set -e
 
+chown sqoop2:sqoop /etc/sqoop2/tomcat-conf.dist/conf/server.xml
+chown sqoop2:sqoop /etc/sqoop2/tomcat-conf.mr1/conf/server.xml
+chmod o-rwx /etc/sqoop2/tomcat-conf.dist/conf/server.xml
+chmod o-rwx /etc/sqoop2/tomcat-conf.mr1/conf/server.xml
+
 update-alternatives --install /etc/sqoop2/conf sqoop2-conf /etc/sqoop2/conf.dist 30
 update-alternatives --install /etc/sqoop2/tomcat-conf sqoop2-tomcat-conf /etc/sqoop2/tomcat-conf.dist 30
 update-alternatives --install /etc/sqoop2/tomcat-conf sqoop2-tomcat-conf /etc/sqoop2/tomcat-conf.mr1 20

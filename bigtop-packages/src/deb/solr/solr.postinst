@@ -18,6 +18,11 @@ set -e
 
 case "$1" in
     configure)
+        
+        chmod o-rwx /etc/solr/tomcat-conf.dist/conf/server.xml
+        chmod o-rwx /etc/solr/tomcat-conf.https/conf/server.xml
+        chown solr:solr   /etc/solr/tomcat-conf.dist/conf/server.xml
+        chown solr:solr   /etc/solr/tomcat-conf.https/conf/server.xml
         # Install config alternatives
         update-alternatives --install /etc/solr/conf solr-conf /etc/solr/conf.dist 30
         update-alternatives --install /etc/solr/tomcat-conf solr-tomcat-conf /etc/solr/tomcat-conf.dist 30
