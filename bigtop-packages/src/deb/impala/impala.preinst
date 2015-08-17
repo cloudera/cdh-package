@@ -35,7 +35,7 @@ case "$1" in
         getent group impala >/dev/null || groupadd -r impala
         getent group hive >/dev/null || groupadd -r hive
         getent group hdfs >/dev/null || groupadd -r hdfs
-        getent passwd impala >/dev/null || /usr/sbin/useradd --comment "Impala" --shell /bin/bash -M -r -g impala -G hive,hdfs --home /var/lib/impala impala
+        getent passwd impala >/dev/null || /usr/sbin/useradd --comment "Impala" --shell /bin/bash -M -r -g impala -G hive --home /var/lib/impala impala
     ;;
 
     abort-upgrade)
