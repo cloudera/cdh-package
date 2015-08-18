@@ -68,7 +68,7 @@ Source7: packaging_functions.sh
 Source8: spark-history-server.svc
 Source9: spark.default
 Requires: bigtop-utils >= 0.7, hadoop-client
-Requires: avro-libs, parquet
+Requires: avro-libs, parquet, flume-ng
 Requires(preun): /sbin/service
 
 %global initd_dir %{_sysconfdir}/init.d
