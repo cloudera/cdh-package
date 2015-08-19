@@ -1,0 +1,206 @@
+#!/bin/bash
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Starts a Kudu Tablet Server
+#
+# chkconfig: @@CHKCONFIG@@
+# description: Kudu Tablet Server
+#
+### BEGIN INIT INFO
+# Provides:          kudu-tserver
+# Short-Description: Kudu Tablet Server
+# Default-Start:     @@DEFAULT_START@@
+# Default-Stop:      @@DEFAULT_STOP@@
+# Required-Start:    $syslog $remote_fs
+# Required-Stop:     $syslog $remote_fs
+# Should-Start:
+# Should-Stop:
+### END INIT INFO
+
+. /lib/lsb/init-functions
+. /etc/default/kudu-tserver
+
+RETVAL_SUCCESS=0
+
+STATUS_RUNNING=0
+STATUS_DEAD=1
+STATUS_DEAD_AND_LOCK=2
+STATUS_NOT_RUNNING=3
+STATUS_OTHER_ERROR=102
+
+
+ERROR_PROGRAM_NOT_INSTALLED=5
+ERROR_PROGRAM_NOT_CONFIGURED=6
+
+
+RETVAL=0
+SLEEP_TIME=5
+DAEMON="kudu-tserver"
+DESC="Kudu Tablet Server"
+EXEC_PATH="/usr/sbin/$DAEMON"
+TS_CLI_PATH="/usr/bin/kudu-ts-cli"
+SVC_USER="kudu"
+CONF_PATH="/etc/kudu/conf/tserver.gflagfile"
+PIDFILE="/var/run/kudu/$DAEMON-kudu.pid"
+LOCKDIR="/var/lock/subsys"
+LOCKFILE="$LOCKDIR/$DAEMON"
+
+# Print something and exit.
+kudu_die() {
+  echo $2
+  exit $1
+}
+
+# Check if the server is alive, looping for a little while.
+kudu_check() {
+  for i in $(seq 1 $SLEEP_TIME); do
+    $TS_CLI_PATH --server_address="$FLAGS_rpc_bind_addresses" status 1>/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      return $STATUS_RUNNING
+    fi
+    sleep 1
+  done
+  return $STATUS_DEAD
+}
+
+[ -n "$FLAGS_rpc_bind_addresses" ] || kudu_die $ERROR_PROGRAM_NOT_CONFIGURED \
+  "Missing FLAGS_rpc_bind_addresses environment variable"
+[ -n "$FLAGS_log_dir" ] || kudu_die $ERROR_PROGRAM_NOT_CONFIGURED \
+  "Missing FLAGS_log_dir environment variable"
+
+install -d -m 0755 -o kudu -g kudu /var/run/kudu 1>/dev/null 2>&1 || :
+[ -d "$LOCKDIR" ] || install -d -m 0755 $LOCKDIR 1>/dev/null 2>&1 || :
+
+start() {
+  [ -x $EXEC_PATH ] || kudu_die $ERROR_PROGRAM_NOT_INSTALLED \
+    "Could not find binary $EXEC_PATH"
+  [ -r $CONF_PATH ] || kudu_die $ERROR_PROGRAM_NOT_CONFIGURED \
+    "Could not find config path $CONF_PATH"
+
+  checkstatus >/dev/null 2>/dev/null
+  status=$?
+  if [ "$status" -eq "$STATUS_RUNNING" ]; then
+    log_success_msg "${DESC} is running"
+    exit 0
+  fi
+
+
+  /bin/su -s /bin/bash -c "/bin/bash -c 'cd ~ && echo \$\$ > ${PIDFILE} && exec ${EXEC_PATH} --flagfile=${CONF_PATH} > ${FLAGS_log_dir}/${DAEMON}.out 2>&1' &" $SVC_USER
+  RETVAL=$?
+
+  if [ $RETVAL -eq $STATUS_RUNNING ]; then
+    kudu_check
+    RETVAL=$?
+    if [ $RETVAL -eq $STATUS_RUNNING ]; then
+      touch $LOCKFILE
+      log_success_msg "Started ${DESC} (${DAEMON}): "
+      return $RETVAL
+    fi
+  fi
+  log_failure_msg "Failed to start ${DESC}. Return value: $RETVAL"
+
+  return $RETVAL
+}
+stop() {
+  killproc -p $PIDFILE $EXEC_PATH
+  RETVAL=$?
+
+  if [ $RETVAL -eq $RETVAL_SUCCESS ]; then
+    log_success_msg "Stopped ${DESC}: "
+    rm -f $LOCKFILE $PIDFILE
+  else
+    log_failure_msg "Failure to stop ${DESC}. Return value: $RETVAL"
+  fi
+
+  return $RETVAL
+}
+restart() {
+  stop
+  start
+}
+
+checkstatusofproc(){
+  pidofproc -p $PIDFILE $DAEMON > /dev/null
+}
+
+checkstatus(){
+  checkstatusofproc
+  status=$?
+
+  case "$status" in
+    $STATUS_RUNNING)
+      log_success_msg "${DESC} is running"
+      ;;
+    $STATUS_DEAD)
+      log_failure_msg "${DESC} is dead and pid file exists"
+      ;;
+    $STATUS_DEAD_AND_LOCK)
+      log_failure_msg "${DESC} is dead and lock file exists"
+      ;;
+    $STATUS_NOT_RUNNING)
+      log_failure_msg "${DESC} is not running"
+      ;;
+    *)
+      log_failure_msg "${DESC} status is unknown"
+      ;;
+  esac
+  return $status
+}
+
+condrestart(){
+  [ -e $LOCKFILE ] && restart || :
+}
+
+check_for_root() {
+  if [ $(id -ur) -ne 0 ]; then
+    echo 'Error: root user required'
+    echo
+    exit 1
+  fi
+}
+
+service() {
+  case "$1" in
+    start)
+      check_for_root
+      start
+      ;;
+    stop)
+      check_for_root
+      stop
+      ;;
+    status)
+      checkstatus
+      RETVAL=$?
+      ;;
+    restart)
+      check_for_root
+      restart
+      ;;
+    condrestart|try-restart)
+      check_for_root
+      condrestart
+      ;;
+    *)
+      echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart}"
+      exit 1
+  esac
+}
+
+service "$@"
+
+exit $RETVAL

@@ -1,1 +1,3 @@
 /etc/init.d/kudu-master
+/etc/default/kudu-master
+/etc/kudu/conf.dist/master.gflagfile

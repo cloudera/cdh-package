@@ -38,9 +38,8 @@ License: ASL 2.0
 Source0: kudu-%{kudu_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_kudu.sh
-Source3: init.d.tmpl
-Source4: kudu-master.svc
-Source5: kudu-tserver.svc
+Source3: kudu-master.init
+Source4: kudu-tserver.init
 Requires: cyrus-sasl-lib
 Requires: /usr/sbin/useradd, openssl
 Requires(post): %{alternatives_dep}
@@ -109,8 +108,14 @@ bash %{SOURCE2} \
 # Install init scripts
 init_source=$RPM_SOURCE_DIR
 init_target=$RPM_BUILD_ROOT/%{initd_dir}
-bash $init_source/init.d.tmpl $init_source/kudu-master.svc rpm $init_target/kudu-master
-bash $init_source/init.d.tmpl $init_source/kudu-tserver.svc rpm $init_target/kudu-tserver
+install -d -m 0755 $init_target
+install -m 0755 $init_source/kudu-master.init $init_target/kudu-master
+install -m 0755 $init_source/kudu-tserver.init $init_target/kudu-tserver
+sed -i -e 's/@@CHKCONFIG@@/345 92 8/' \
+    -e 's/@@DEFAULT_START@@/3 4 5/' \
+    -e 's/@@DEFAULT_STOP@@/0 1 2 6/' \
+    $init_target/kudu-master \
+    $init_target/kudu-tserver
 
 # Install security limits
 #%__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
@@ -144,8 +149,9 @@ fi
 %attr(0755,kudu,kudu) %{kudu_log}
 %attr(0755,kudu,kudu) %{kudu_run}
 %attr(0755,kudu,kudu) %{kudu_lib}
-%attr(0755,root,root) %config(noreplace) /etc/kudu/conf.dist
-%attr(0644,root,root) %config(noreplace) /etc/default/kudu
+# The %dir directive excludes files within conf.dist in the build tree from
+# leaking into this package.
+%attr(0755,root,root) %config(noreplace) %dir /etc/kudu/conf.dist
 #%config(noreplace) /etc/security/limits.d/kudu.conf
 
 %files client0
@@ -165,6 +171,8 @@ fi
 \
 %files %1 \
 %attr(0755,root,root)/%{initd_dir}/%2 \
+%attr(0644,root,root) %config(noreplace) /etc/kudu/conf.dist/%1.gflagfile \
+%attr(0644,root,root) %config(noreplace) /etc/default/%2 \
 \
 %post %1 \
 chkconfig --add %2 \

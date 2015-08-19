@@ -133,14 +133,45 @@ for executable in ${sbin_executables}; do
     cp ${BUILD_DIR}/build/fastdebug/${executable} ${LIB_DIR}/sbin-debug/
 done
 
-# now, create a defaults file
+# now, create the defaults files
 install -d -m 0755 ${ETC_DIR}/default
-cat > ${ETC_DIR}/default/kudu <<__EOT__
-KUDU_LOG_DIR=/var/log/kudu
-KUDU_MASTER_ARGS="-log_dir \${KUDU_LOG_DIR}"
-KUDU_TSERVER_ARGS="-log_dir \${KUDU_LOG_DIR}"
+
+cat > ${ETC_DIR}/default/kudu-master <<__EOT__
+export FLAGS_log_dir=/var/log/kudu
+export FLAGS_rpc_bind_addresses=0.0.0.0:7051
 __EOT__
-chmod 0644 ${ETC_DIR}/default/kudu
+chmod 0644 ${ETC_DIR}/default/kudu-master
+
+cat > ${ETC_DIR}/default/kudu-tserver <<__EOT__
+export FLAGS_log_dir=/var/log/kudu
+export FLAGS_rpc_bind_addresses=0.0.0.0:7050
+__EOT__
+chmod 0644 ${ETC_DIR}/default/kudu-tserver
+
+# and the gflagfiles
+install -d -m 0755 $CONF_DIR
+
+cat > ${CONF_DIR}/master.gflagfile <<__EOT__
+# Do not modify these two lines. If you wish to change these variables,
+# modify them in /etc/default/kudu-master.
+--fromenv=rpc_bind_addresses
+--fromenv=log_dir
+
+--fs_wal_dir=/var/lib/kudu/master
+--fs_data_dirs=/var/lib/kudu/master
+__EOT__
+chmod 0644 ${CONF_DIR}/master.gflagfile
+
+cat > ${CONF_DIR}/tserver.gflagfile <<__EOT__
+# Do not modify these two lines. If you wish to change these variables,
+# modify them in /etc/default/kudu-tserver.
+--fromenv=rpc_bind_addresses
+--fromenv=log_dir
+
+--fs_wal_dir=/var/lib/kudu/tserver
+--fs_data_dirs=/var/lib/kudu/tserver
+__EOT__
+chmod 0644 ${CONF_DIR}/tserver.gflagfile
 
 # create wrapper scripts in /usr/bin for user-facing executables
 install -d -m 0755 ${BIN_DIR}
@@ -168,8 +199,6 @@ ${DO_EXEC}\${KUDU_HOME}/sbin/$wrapper "\$@"
 __EOT__
   chmod 755 ${SBIN_DIR}/${wrapper}
 done
-
-install -d -m 0755 $CONF_DIR
 
 install -d -m 0755 ${PREFIX}/var/run/kudu
 install -d -m 0755 ${PREFIX}/var/log/kudu

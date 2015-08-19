@@ -31,8 +31,14 @@ override_dh_auto_build:
 
 override_dh_auto_install:
 	bash -x debian/install_kudu.sh --build-dir=${PWD} --prefix=${PWD}/debian/tmp --extra-dir=debian/
-	bash debian/init.d.tmpl debian/kudu-master.svc deb debian/tmp/etc/init.d/kudu-master
-	bash debian/init.d.tmpl debian/kudu-tserver.svc deb debian/tmp/etc/init.d/kudu-tserver
+	install -d -m 0755 debian/tmp/etc/init.d
+	install -m 0755 debian/kudu-master.init debian/tmp/etc/init.d/kudu-master
+	install -m 0755 debian/kudu-tserver.init debian/tmp/etc/init.d/kudu-tserver
+	sed -i -e 's/@@CHKCONFIG@@/2345 92 8/' \
+	  -e 's/@@DEFAULT_START@@/2 3 4 5/' \
+	  -e 's/@@DEFAULT_STOP@@/0 1 6/' \
+	  debian/tmp/etc/init.d/kudu-master \
+	  debian/tmp/etc/init.d/kudu-tserver
 	#mkdir -p debian/tmp/etc/security/limits.d
 	#cp debian/kudu.conf debian/tmp/etc/security/limits.d/
 
@@ -44,6 +50,14 @@ override_dh_auto_clean:
 
 override_dh_auto_configure:
 	echo "Skipping dh_auto_configure..."
+
+# Left to its own devices, debhelper will do the following on package.init files:
+# 1. Recopy them, overriding the 'sed' operation.
+# 2. Create postinst/prerm/postrm scripts that automatically call update-rc.d.
+#
+# We don't want either of these, so we skip dh_installinit.
+override_dh_installinit:
+	echo "Skipping dh_installinit..."
 
 .PHONY: override_dh_strip
 override_dh_strip:
