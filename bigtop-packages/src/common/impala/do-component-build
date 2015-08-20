@@ -22,12 +22,28 @@ export IMPALA_HOME=`pwd`
 export PIC_LIB_PATH=/opt/toolchain/impala_3rdparty-0.5
 export BOOST_ROOT=/opt/toolchain/boost-pic-1.55.0
 export DISABLE_CCACHE=1
-
+export IMPALA_TOOLCHAIN=$IMPALA_HOME/toolchain/build
 if [ -z "$GIT_REPO" ]; then
+    IMPALA_TOOLCHAIN=$IMPALA_HOME/toolchain/build
     . $IMPALA_HOME/bin/impala-config.sh
 
-    rm -f CMakeCache.txt
+    IMPALA_AUXTEST_HOME=Impala-auxiliary-tests
+    IMPALA_AUXTEST_BRANCH=origin/master
+
+    # Clone the client repo.
+    [ -e "$IMPALA_AUXTEST_HOME" ] && rm -rf $IMPALA_AUXTEST_HOME
+    (cd . && git clone git://github.mtv.cloudera.com/QE/Impala-auxiliary-tests.git)
+    (cd ./Impala-auxiliary-tests && git checkout ${IMPALA_AUXTEST_BRANCH})
+
+    echo ">>> Bootstrapping toolchain."
+    pushd $IMPALA_AUXTEST_HOME
+    $IMPALA_HOME/bin/impala-python jenkins/bootstrap_toolchain.py || { echo "toolchain bootstrap failed"; exit 1; }
+
+    cd $IMPALA_HOME
+    find $WORKSPACE -iname '*cmake*' -not -name CMakeLists.txt | grep -v -e cmake_module | grep -v -e thirdparty | xargs rm -Rf
     ./buildall.sh -noclean -skiptests -notests
+
+    find $WORKSPACE -iname '*cmake*' -not -name CMakeLists.txt | grep -v -e cmake_module | grep -v -e thirdparty | xargs rm -Rf
     ./bin/make_release.sh -notests -build_static_libs
 else
     rm -rf build impala-${FULL_VERSION}

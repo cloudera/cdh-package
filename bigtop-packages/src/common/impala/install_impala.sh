@@ -146,6 +146,10 @@ cp thirdparty/hadoop-*/lib/native/libhadoop.so* ${LIB_DIR}/lib
 cp -fr fe/target/dependency/* ${LIB_DIR}/lib/
 cp fe/target/impala-frontend-*-SNAPSHOT.jar ${LIB_DIR}/lib
 
+# Install Toolchain dependency to libstdc++ and libgcc
+find toolchain/build/ -type f -name "libstdc++*.so.*[^-gdb.py]" -exec cp {} ${LIB_DIR}/lib \;
+find toolchain/build/ -type f -name "libgcc*.so.*[^-gdb.py]" -exec cp {} ${LIB_DIR}/lib \;
+
 # Replace bundled libraries with symlinks to packaged dependencies
 export DEPENDENCY_DIR=${PREFIX}/usr/lib/impala/lib
 function symlink_lib() {
@@ -301,4 +305,3 @@ done
 # Cloudera specific
 install -d -m 0755 $LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $LIB_DIR/cloudera/
-
