@@ -195,4 +195,5 @@ internal_versionless_symlinks \
     ${PREFIX}/${LIB_DIR}/webapps/sqoop/WEB-INF/lib/connector-sdk*.jar
 
 # Create external symlinks
-external_versionless_symlinks 'sqoop' ${PREFIX}/${LIB_DIR}/webapps/sqoop/WEB-INF/lib
+external_versionless_symlinks 'sqoop' ${PREFIX}/${LIB_DIR}/webapps/sqoop/WEB-INF/lib \
+  ${PREFIX}/${LIB_DIR}/client-lib
