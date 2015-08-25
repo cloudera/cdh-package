@@ -16,6 +16,7 @@ done
 # strip_versions <basename of JAR>
 get_directory_for_jar() {
     case ${1} in
+        apache-parquet*) lib_dir='parquet' ;;
         avro*cassandra*) return;; # This is not included in our Avro distribution, but Mahout used to use it
         hadoop-client*) return;;
         hbase-client*-tests.jar) return;;
@@ -93,6 +94,8 @@ function check_for_package_dependency() {
         *) return;;
     esac
 
+    #Note : This may not work properly with apache-parquet since we are depositing both - the apache-parquet and parquet jars
+    #in the same directory /usr/lib/parquet.  
     metadata_files=$(find ../.. -name *.spec -o -name control)
     if ! cat ${metadata_files} | grep "^\(Depends\|Requires\).*\\b${pkg}\\b" > /dev/null; then
         echo "[SYMLINKING WARNING] Package may have broken symlink to ${pkg}"
