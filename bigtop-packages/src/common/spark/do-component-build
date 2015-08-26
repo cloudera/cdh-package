@@ -41,7 +41,7 @@ exec $PWD/build/mvn --force "\$@"
 EOF
   chmod 700 $MYMVN
 
-  ./make-distribution.sh  --mvn $MYMVN --skip-java-test -Dcdh.build=true $BUILD_OPTS
+  ./make-distribution.sh  --mvn $MYMVN --target $MAVEN_INST_DEPLOY --skip-java-test -Dcdh.build=true $BUILD_OPTS
   rm -f $MYMVN
 
   rm -rf build
