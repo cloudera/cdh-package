@@ -321,6 +321,38 @@ if [ -n "$SOLR_SECURITY_ALLOWED_PROXYUSERS" ] ; then
   IFS=${old_IFS}
 fi
 
+if [ -n "$SOLR_AUTHENTICATION_LDAP_PROVIDER_URL" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authentication.ldap.providerurl=${SOLR_AUTHENTICATION_LDAP_PROVIDER_URL}"
+fi
+
+if [ -n "$SOLR_AUTHENTICATION_LDAP_BASE_DN" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authentication.ldap.basedn=${SOLR_AUTHENTICATION_LDAP_BASE_DN}"
+fi
+
+if [ -n "$SOLR_AUTHENTICATION_LDAP_BIND_DOMAIN" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authentication.ldap.binddomain=${SOLR_AUTHENTICATION_LDAP_BIND_DOMAIN}"
+fi
+
+if [ -n "$SOLR_AUTHENTICATION_LDAP_ENABLE_START_TLS" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authentication.ldap.enablestarttls=${SOLR_AUTHENTICATION_LDAP_ENABLE_START_TLS}"
+fi
+
+if [ -n "$SOLR_AUTHENTICATION_HTTP_SCHEMES" ] ; then
+  CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authentication.multi-scheme-auth-handler.schemes=${SOLR_AUTHENTICATION_HTTP_SCHEMES}"
+
+  if [ -n "$SOLR_AUTHENTICATION_HTTP_DELEGATION_MGMT_SCHEMES" ] ; then
+    CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authentication.multi-scheme-auth-handler.delegation.schemes=${SOLR_AUTHENTICATION_HTTP_DELEGATION_MGMT_SCHEMES}"
+  fi
+
+  if [ -n "$SOLR_AUTHENTICATION_HTTP_BASIC_HANDLER" ] ; then
+    CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authentication.multi-scheme-auth-handler.schemes.basic.handler=${SOLR_AUTHENTICATION_HTTP_BASIC_HANDLER}"
+  fi
+
+  if [ -n "$SOLR_AUTHENTICATION_HTTP_NEGOTIATE_HANDLER" ] ; then
+    CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.authentication.multi-scheme-auth-handler.schemes.negotiate.handler=${SOLR_AUTHENTICATION_HTTP_NEGOTIATE_HANDLER}"
+  fi
+fi
+
 # FIXME: we need to set this because of the jetty-centric default solr.xml
 CATALINA_OPTS="${CATALINA_OPTS} -Dhost=$HOSTNAME -Djetty.port=$SOLR_PORT"
 
