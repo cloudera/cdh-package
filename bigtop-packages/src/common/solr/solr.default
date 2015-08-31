@@ -18,6 +18,21 @@ SOLR_LOG=/var/log/solr
 SOLR_ZK_ENSEMBLE=localhost:2181/solr
 SOLR_HDFS_HOME=hdfs://localhost:8020/solr
 SOLR_HDFS_CONFIG=/etc/hadoop/conf
+
+# Following properties are used to configure Solr with multiple authentication schemes e.g. kerberos & ldap etc.
+# SOLR_AUTHENTICATION_HTTP_SCHEMES=Negotiate,Basic
+# SOLR_AUTHENTICATION_HTTP_DELEGATION_MGMT_SCHEMES=Negotiate
+# SOLR_AUTHENTICATION_HTTP_BASIC_HANDLER=ldap
+# SOLR_AUTHENTICATION_HTTP_NEGOTIATE_HANDLER=kerberos
+
+# LDAP configuration parameters when LDAP is enabed
+# SOLR_AUTHENTICATION_LDAP_PROVIDER_URL=ldaps://www.example.com
+# Specify value for only one of SOLR_AUTHENTICATION_LDAP_BASE_DN or SOLR_AUTHENTICATION_LDAP_BIND_DOMAIN property.
+# SOLR_AUTHENTICATION_LDAP_BASE_DN=ou=Users,dc=example,dc=com
+# SOLR_AUTHENTICATION_LDAP_BIND_DOMAIN=
+# Use a provider Url starting with ldaps OR set SOLR_AUTHENTICATION_LDAP_ENABLE_START_TLS=true (requires LDAP server configuration)
+# SOLR_AUTHENTICATION_LDAP_ENABLE_START_TLS=false
+
 # SOLR_KERBEROS_ENABLED=true
 # SOLR_KERBEROS_KEYTAB=/etc/solr/conf/solr.keytab
 # SOLR_KERBEROS_PRINCIPAL=solr/localhost@LOCALHOST
