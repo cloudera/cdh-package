@@ -118,6 +118,36 @@ cp -fa cloudera/solrconfig.xml cloudera/solrconfig.xml.secure cloudera/schema.xm
 mkdir $PREFIX/$LIB_DIR/coreconfig-schemaless-template
 cp -fa cloudera/solrconfig.xml.schemaless cloudera/solrconfig.xml.schemaless.secure cloudera/schema.xml.schemaless  $PREFIX/$LIB_DIR/coreconfig-schemaless-template
 
+for DIRNAME in predefinedTemplate managedTemplate schemalessTemplate predefinedTemplateSecure managedTemplateSecure schemalessTemplateSecure
+do
+  cp -ra ${BUILD_DIR}/example/solr/collection1/conf $PREFIX/$LIB_DIR/$DIRNAME
+  cp -fa cloudera/configsetprops.json $PREFIX/$LIB_DIR/$DIRNAME
+done
+
+DIRNAME=predefinedTemplate
+cp -fa cloudera/solrconfig.xml $PREFIX/$LIB_DIR/$DIRNAME/solrconfig.xml
+cp -fa cloudera/schema.xml $PREFIX/$LIB_DIR/$DIRNAME/schema.xml
+
+DIRNAME=managedTemplate
+cp -fa cloudera/solrconfig.xml.managed $PREFIX/$LIB_DIR/$DIRNAME/solrconfig.xml
+cp -fa cloudera/schema.xml.managed $PREFIX/$LIB_DIR/$DIRNAME/schema.xml
+
+DIRNAME=schemalessTemplate
+cp -fa cloudera/solrconfig.xml.schemaless $PREFIX/$LIB_DIR/$DIRNAME/solrconfig.xml
+cp -fa cloudera/schema.xml.schemaless $PREFIX/$LIB_DIR/$DIRNAME/schema.xml
+
+DIRNAME=predefinedTemplateSecure
+cp -fa cloudera/solrconfig.xml.secure $PREFIX/$LIB_DIR/$DIRNAME/solrconfig.xml
+cp -fa cloudera/schema.xml $PREFIX/$LIB_DIR/$DIRNAME/schema.xml
+
+DIRNAME=managedTemplateSecure
+cp -fa cloudera/solrconfig.xml.managed.secure $PREFIX/$LIB_DIR/$DIRNAME/solrconfig.xml
+cp -fa cloudera/schema.xml.managed $PREFIX/$LIB_DIR/$DIRNAME/schema.xml
+
+DIRNAME=schemalessTemplateSecure
+cp -fa cloudera/solrconfig.xml.schemaless.secure $PREFIX/$LIB_DIR/$DIRNAME/solrconfig.xml
+cp -fa cloudera/schema.xml.schemaless $PREFIX/$LIB_DIR/$DIRNAME/schema.xml
+
 cp -ra cloudera/clusterconfig $PREFIX/$LIB_DIR/clusterconfig
 
 install -d -m 0755 $PREFIX/$LIB_DIR/contrib
