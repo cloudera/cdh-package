@@ -630,8 +630,6 @@ external_versionless_symlinks 'hadoop-httpfs' \
 external_versionless_symlinks 'hadoop-kms' \
     ${PREFIX}/usr/lib/hadoop-kms/webapps/kms/WEB-INF/lib
 
-# FIXME: CDH-17129 removes OpenStack support until it can be tested properly
-rm ${MAPREDUCE_DIR}/hadoop-openstack*.jar
-
 # For adding extra native libs required by libhadoop.so (e.g. newer version of libcrypto.so) at run time
 install -d -m 0755 ${PREFIX}/var/lib/hadoop/extra/native
+
