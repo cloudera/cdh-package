@@ -84,6 +84,7 @@ done
 #keytrustee-keyprovider* while the jar file is called keytrusteekp*
 
 LIB_DIR=${LIB_DIR:-$PREFIX/usr/share/keytrustee-keyprovider/lib}
+VAR_DIR=${VAR_DIR:-$PREFIX/var/lib/kms-keytrustee}
 
 TARBALL=`ls build/keytrustee-keyprovider-${FULL_VERSION}.tar.gz`
 DIRECTORY="keytrusteekp-${FULL_VERSION}"
@@ -95,6 +96,8 @@ mkdir -p build/${DIRECTORY}
 (cd build && tar xzf `basename ${TARBALL}` -C $DIRECTORY --strip 1)
 
 install -d -m 0755 ${LIB_DIR}
+install -d -m 0700 ${VAR_DIR}
+
 if [ ! -d build/$DIRECTORY ] ; then
     echo "Missing directory 'build/$DIRECTORY' - most likely cause of this error is that the keytrustee pom.xml or cdh5.mk needs to be updated" >&2
     echo "Current directory is `pwd`" >&2

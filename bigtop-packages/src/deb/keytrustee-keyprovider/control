@@ -15,4 +15,4 @@ Homepage: http://cloudera.com
 Package: keytrustee-keyprovider
 Architecture: amd64
 Description: Key Trustee Key Provider Package
-
+Depends:hadoop-kms, bigtop-utils (>= 0.7)

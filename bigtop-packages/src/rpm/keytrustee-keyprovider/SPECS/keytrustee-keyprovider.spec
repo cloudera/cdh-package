@@ -15,6 +15,7 @@
 
 # disable repacking jars
 %define __os_install_post %{nil}
+%define var_lib_kms /var/lib/kms-keytrustee
 
 
 Name: keytrustee-keyprovider
@@ -30,7 +31,7 @@ Source0: keytrustee-keyprovider-%{keytrustee_keyprovider_patched_version}.tar.gz
 Source1: do-component-build
 Source2: install_keytrustee-keyprovider.sh
 Source3: packaging_functions.sh
-Requires: bigtop-utils >= 0.7
+Requires: bigtop-utils >= 0.7,hadoop-kms
 
 
 %description 
@@ -60,10 +61,12 @@ env FULL_VERSION=%{keytrustee_keyprovider_patched_version} bash %{SOURCE2} \
 
 %pre %{nil}
 
+%preun %{nil}
+
 %post %{nil}
 
 %files
 /usr/share/keytrustee-keyprovider/cloudera
 /usr/share/keytrustee-keyprovider/lib
 /usr/share/keytrustee-keyprovider/README.md
-
+%attr(-,kms,kms) %var_lib_kms 
