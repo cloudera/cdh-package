@@ -37,6 +37,7 @@ case "$1" in
     configure)
         # tweak permissions
         chown -R hue:hue /var/log/hue /var/lib/hue
+        chmod 660 /var/lib/hue/desktop.db
 
         # Install config alternatives
         update-alternatives  --install /etc/hue/conf hue-conf /etc/hue/conf.empty 30
