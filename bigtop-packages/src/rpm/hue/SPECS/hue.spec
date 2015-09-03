@@ -252,6 +252,8 @@ if [ -e %{hue_dir}/desktop/desktop.db ]; then
   cp -a %{hue_dir}/desktop/desktop.db %{hue_dir}/desktop/desktop.db.rpmsave.$(date +'%Y%m%d.%H%M%S')
 fi
 
+chmod 660 /var/lib/hue/desktop.db
+
 %preun -n %{name}-common -p /bin/bash
 if [ "$1" = 0 ]; then
         %{alternatives_cmd} --remove hue-conf %{etc_hue}.empty || :
