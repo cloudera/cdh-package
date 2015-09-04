@@ -75,4 +75,5 @@ LIB_DIR=${LIB_DIR:-/usr/lib/spark-netlib}
 
 install -d -m 0755 $PREFIX/$LIB_DIR
 tar -C $PREFIX/$LIB_DIR --strip-components=1  -xvzf $BUILD_DIR/build/spark-netlib-${FULL_VERSION}.tar.gz
+mv $PREFIX/$LIB_DIR/lib/LICENSE.* $PREFIX/$LIB_DIR
 exit 0
