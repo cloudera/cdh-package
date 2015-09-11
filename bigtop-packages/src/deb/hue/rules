@@ -20,6 +20,14 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+#Needed so that we do not encounter 
+#ERROR ld.so object 'libfakeroot-sysv.so' from LD_PRELOAD cannot be preloaded
+#and
+#dpkg-shlibdeps: error: couldn't find library xxx  needed by yyy
+LIB_FAKEROOT=$(shell dirname `locate libfakeroot-sysv.so | head -1`)
+export ORACLE_HOME=/opt/toolchain/oracle_11g_instantclient
+export LD_LIBRARY_PATH:=$(LD_LIBRARY_PATH):$(LIB_FAKEROOT):$(ORACLE_HOME)
+
 # Implicit targets
 SHELL := /bin/bash
 
@@ -48,3 +56,12 @@ override_dh_installinit:
 
 override_dh_auto_test:
 	@echo Tests are disabled
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip
+
+#Added to avoid errors of form
+# dpkg-shlibdeps: error: no dependency information found for /opt/toolchain/oracle_11g_instantclient/libclntsh.so.11.1
+#which pop up when building the cx_oracle egg
+override_dh_shlibdeps:
+	dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info

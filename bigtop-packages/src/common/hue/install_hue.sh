@@ -97,6 +97,15 @@ VAR_DIR=${VAR_DIR:-/var/lib/hue}
 LOG_DIR=${LOG_DIR:-/var/log/hue}
 HADOOP_DIR=${HADOOP_DIR:-/usr/lib/hadoop/lib}
 
+#Needed to build the egg for cx_oracle
+if [ -z $ORACLE_HOME ] ; then
+    echo "Environment variable ORACLE_HOME not defined"
+    exit 1
+fi
+if [ ! -d $ORACLE_HOME ] ; then
+    echo "Directory $ORACLE_HOME ( environment variable ORACLE_HOME ) missing"
+    exit 1
+fi
 BUNDLED_BUILD_DIR=$PREFIX/$LIB_DIR/build
 
 # Install all the files 
