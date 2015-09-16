@@ -96,7 +96,7 @@ mkdir -p build/${DIRECTORY}
 (cd build && tar xzf `basename ${TARBALL}` -C $DIRECTORY --strip 1)
 
 install -d -m 0755 ${LIB_DIR}
-install -d -m 0700 ${VAR_DIR}
+install -d -m 0755 ${VAR_DIR}
 
 if [ ! -d build/$DIRECTORY ] ; then
     echo "Missing directory 'build/$DIRECTORY' - most likely cause of this error is that the keytrustee pom.xml or cdh5.mk needs to be updated" >&2
