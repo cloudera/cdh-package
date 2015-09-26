@@ -41,6 +41,10 @@ Source2: install_kudu.sh
 Source3: kudu-master.init
 Source4: kudu-tserver.init
 Requires: cyrus-sasl-lib
+Requires: cyrus-sasl-plain
+Requires: psutils
+Requires: lsb
+Requires: ntp
 Requires: /usr/sbin/useradd, openssl
 Requires(post): %{alternatives_dep}
 Requires(preun): %{alternatives_dep}
