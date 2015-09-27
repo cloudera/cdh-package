@@ -23,7 +23,7 @@ Homepage: http://www.cloudera.com/
 
 Package: kudu
 Architecture: any
-Depends: ${misc:Depends}, libsasl2-2, adduser, libssl0.9.8 | libssl1.0.0
+Depends: ${misc:Depends}, libsasl2-2, adduser, libssl0.9.8 | libssl1.0.0, ntp, ntpdate, lsb, psutils
 Description: Columnar storage engine for Hadoop
 
 Package: kudu-master
@@ -51,4 +51,3 @@ Architecture: any
 Section: debug
 Depends: ${misc:Depends}, kudu (= ${binary:Version}),
 Description: Debugging symbols for Kudu
-
