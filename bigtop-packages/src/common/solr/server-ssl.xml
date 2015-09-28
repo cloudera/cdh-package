@@ -66,7 +66,7 @@
          APR (HTTP/AJP) Connector: /docs/apr.html
          Define a non-SSL HTTP/1.1 Connector on port 8080
     -->
-    <!-- <Connector port="${solr.port}" protocol="HTTP/1.1" 
+    <!-- <Connector port="${solr.port}" backlog="4096" protocol="HTTP/1.1" 
                connectionTimeout="20000" 
                maxThreads="${solr.max.connector.thread}" 
                maxHttpHeaderSize="65536"
@@ -82,7 +82,7 @@
          This connector uses the JSSE configuration, when using APR, the 
          connector should be using the OpenSSL style configuration
          described in the APR documentation -->
-    <Connector port="${solr.port}" protocol="HTTP/1.1" SSLEnabled="true"
+    <Connector port="${solr.port}" backlog="4096" protocol="HTTP/1.1" SSLEnabled="true"
                connectionTimeout="20000" maxThreads="${solr.max.connector.thread}"
                maxHttpHeaderSize="65536" scheme="https" secure="true"
                keystoreFile="${solr.keystore.path}"
