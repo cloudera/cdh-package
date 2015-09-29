@@ -122,10 +122,12 @@ env FULL_VERSION=%{keytrustee_server_patched_version} bash %{SOURCE2} \
 
 %if 0%{?rhel} == 6
 /etc/init.d/keytrusteed
+/etc/init.d/keytrustee-db
 %endif
 
 %if 0%{?rhel} == 7
 /usr/lib/systemd/system/keytrusteed.service
+/usr/lib/systemd/system/keytrustee-db.service
 %endif
 
 %files -n keytrustee-client
