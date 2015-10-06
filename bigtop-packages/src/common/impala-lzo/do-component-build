@@ -19,20 +19,24 @@ if [ -z "$GIT_REPO" ]; then
         WORKSPACE=~/impala-lzo-repos
         DELETE_WORKSPACE=true
     fi
-    export IMPALA_HOME=$WORKSPACE/Impala
-    export HADOOP_LZO=$WORKSPACE/hadoop-lzo
+    export IMPALA_HOME=$IMPALA_LZO/Impala
+    export HADOOP_LZO=$IMPALA_LZO/hadoop-lzo
 
     if [ -n "$NATIVE_BUILD" ]; then
         mkdir -p $WORKSPACE
 
-        [ -e "$IMPALA_HOME" ] && rm -rf $IMPALA_HOME
-        (cd $WORKSPACE && git clone git://github.sf.cloudera.com/CDH/Impala.git)
-        (cd $IMPALA_HOME && git checkout ${IMPALA_LZO_IMPALA_REF})
-
-        [ -e "$HADOOP_LZO" ] && rm -rf $HADOOP_LZO
-        (cd $WORKSPACE && git clone git://github.sf.cloudera.com/CDH/hadoop-lzo.git)
-        (cd $HADOOP_LZO && git checkout ${IMPALA_LZO_HADOOP_LZO_REF})
-
+        if [ ! -e "$IMPALA_HOME" ]; then
+            export IMPALA_HOME=$WORKSPACE/Impala
+            (cd $WORKSPACE && git clone git://github.sf.cloudera.com/CDH/Impala.git)
+            (cd $IMPALA_HOME && git checkout ${IMPALA_LZO_IMPALA_REF})
+        fi
+        
+        if [ ! -e "$HADOOP_LZO" ]; then
+            export HADOOP_LZO=$WORKSPACE/hadoop-lzo
+            (cd $WORKSPACE && git clone git://github.sf.cloudera.com/CDH/hadoop-lzo.git)
+            (cd $HADOOP_LZO && git checkout ${IMPALA_LZO_HADOOP_LZO_REF})
+        fi
+        
         (cd $HADOOP_LZO && ant package)
 
         # FIXME: IMP-854
@@ -58,6 +62,27 @@ if [ -z "$GIT_REPO" ]; then
     mkdir -p build
     tar czf build/impala-lzo-${FULL_VERSION}.tar.gz impala-lzo-${FULL_VERSION}
 else
+    export IMPALA_HOME=Impala
+    export HADOOP_LZO=hadoop-lzo
+
+    export IMPALA_BRANCH=$(echo ${IMPALA_LZO_IMPALA_REF}|sed -e 's/origin\///')
+    [ -e "$IMPALA_HOME" ] && rm -rf $IMPALA_HOME
+    mkdir -p $IMPALA_HOME
+    [ -e "${IMPALA_BRANCH}.tar.gz" ] && rm -f ${IMPALA_BRANCH}.tar.gz
+    wget http://github.mtv.cloudera.com/CDH/Impala/archive/${IMPALA_BRANCH}.tar.gz
+    tar -xz --strip-components 1 -f ${IMPALA_BRANCH}.tar.gz -C ${IMPALA_HOME}
+    find ${IMPALA_HOME} -name .gitignore -exec rm -f {} \;
+    rm -f ${IMPALA_BRANCH}.tar.gz
+    
+    export HADOOP_LZO_BRANCH=$(echo ${IMPALA_LZO_HADOOP_LZO_REF}|sed -e 's/origin\///')
+    [ -e "$HADOOP_LZO" ] && rm -rf $HADOOP_LZO
+    mkdir -p $HADOOP_LZO
+    [ -e "${HADOOP_LZO_BRANCH}.tar.gz" ] && rm -f ${HADOOP_LZO_BRANCH}.tar.gz
+    wget http://github.mtv.cloudera.com/CDH/hadoop-lzo/archive/${HADOOP_LZO_BRANCH}.tar.gz
+    tar -xz --strip-components 1 -f ${HADOOP_LZO_BRANCH}.tar.gz -C ${HADOOP_LZO}
+    find ${HADOOP_LZO} -name .gitignore -exec rm -f {} \;
+    rm -f ${HADOOP_LZO_BRANCH}.tar.gz
+    
     git init
     git add .
     git commit -a -m "Temporary commit for tarball"
