@@ -130,8 +130,10 @@ for x in flume-* \
           cloudera/apply-patches \
           cloudera/build.properties \
           cloudera/patches \
+          cloudera/pre_commit_hook.sh \
+          cloudera/post_commit_hook.sh \
           lib/*.pom; do
-  rm -rf ${PREFIX}/$FLUME_DIR/$x 
+  rm -rf ${PREFIX}/$FLUME_DIR/$x
 done
 
 
