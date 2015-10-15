@@ -231,6 +231,9 @@ SOLR_PORT=${SOLR_PORT:-8983}
 SOLR_ADMIN_PORT=${SOLR_ADMIN_PORT:-8984}
 SOLR_MAX_CONNECTOR_THREAD=${SOLR_MAX_CONNECTOR_THREAD:-10000}
 SOLR_LOG=${SOLR_LOG:-/var/log/solr}
+SOLR_TOMCAT_BACKLOG=${SOLR_TOMCAT_BACKLOG:-4096}
+SOLR_TOMCAT_CONNECTION_TIMEOUT=${SOLR_TOMCAT_CONNECTION_TIMEOUT:-20000}
+SOLR_TOMCAT_KEEP_ALIVE_TIMEOUT=${SOLR_TOMCAT_KEEP_ALIVE_TIMEOUT:-20000}
 SOLR_HOME=${SOLR_HOME:-/var/lib/solr}
 SOLR_LOG4J_CONFIG=${SOLR_LOG4J_CONFIG:-/etc/solr/conf/log4j.properties}
 
@@ -361,6 +364,9 @@ export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.host=$HOSTNAME
                                         -Dlog4j.configuration=file://$SOLR_LOG4J_CONFIG
                                         -Dsolr.log=$SOLR_LOG
                                         -Dsolr.admin.port=$SOLR_ADMIN_PORT
+                                        -Dsolr.tomcat.backlog=$SOLR_TOMCAT_BACKLOG
+                                        -Dsolr.tomcat.connectionTimeout=$SOLR_TOMCAT_CONNECTION_TIMEOUT
+                                        -Dsolr.tomcat.keepAliveTimeout=$SOLR_TOMCAT_KEEP_ALIVE_TIMEOUT
                                         -Dsolr.max.connector.thread=$SOLR_MAX_CONNECTOR_THREAD
                                         -Dsolr.solr.home=$SOLR_HOME"
 
