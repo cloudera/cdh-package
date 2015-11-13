@@ -131,10 +131,6 @@ rm ${LIB_DIR}/sbin-debug/*.a
 install -d -m 0755 ${LIB_DIR}/bin
 # cp bin/* ${LIB_DIR}/bin
 
-# install llvm artifacts
-install -d -m 0755 ${LIB_DIR}/llvm-ir
-cp llvm-ir/* ${LIB_DIR}/llvm-ir
-
 # install web document root
 install -d -m 0755 ${LIB_DIR}/www
 cp -fr www/* ${LIB_DIR}/www/
