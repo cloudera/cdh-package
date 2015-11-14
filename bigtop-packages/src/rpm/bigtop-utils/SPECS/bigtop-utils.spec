@@ -17,6 +17,18 @@
 %define bin_dir /usr/bin
 %define plugins_dir /var/lib/bigtop
 
+# Disabling the following scripts from running:
+# symbol stripping - not relevant here.
+# jar repacking - to save time.
+# byte-compiling python code - not relevant here.
+# brp-compress - not relevant here.
+#              - This compresses man and info pages under
+#                 ./usr/man/man* ./usr/man/*/man* ./usr/info \
+#                 ./usr/share/man/man* ./usr/share/man/*/man* ./usr/share/info \
+#                 ./usr/kerberos/man ./usr/X11R6/man/man* ./usr/lib/perl5/man/man* \
+#                 ./usr/share/doc/*/man/man* ./usr/lib/*/man/man*
+%define __os_install_post %{nil}
+
 Name: bigtop-utils
 Version: %{bigtop_utils_version}
 Release: %{bigtop_utils_release}

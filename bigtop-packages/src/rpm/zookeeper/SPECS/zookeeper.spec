@@ -21,23 +21,19 @@
 %define svc_zookeeper %{name}-server
 %define man_dir %{_mandir}
 
+# Disabling the following scripts from running:
+# symbol stripping - not relevant here.
+# jar repacking - to save time.
+# byte-compiling python code - not relevant here.
+# brp-compress - not relevant here.
+#              - This compresses man and info pages under
+#                 ./usr/man/man* ./usr/man/*/man* ./usr/info \
+#                 ./usr/share/man/man* ./usr/share/man/*/man* ./usr/share/info \
+#                 ./usr/kerberos/man ./usr/X11R6/man/man* ./usr/lib/perl5/man/man* \
+#                 ./usr/share/doc/*/man/man* ./usr/lib/*/man/man*
+%define __os_install_post %{nil}
+
 %if  %{?suse_version:1}0
-
-# Only tested on openSUSE 11.4. le'ts update it for previous release when confirmed
-%if 0%{suse_version} > 1130
-%define suse_check \# Define an empty suse_check for compatibility with older sles
-%endif
-
-# SLES is more strict anc check all symlinks point to valid path
-# But we do point to a hadoop jar which is not there at build time
-# (but would be at install time).
-# Since our package build system does not handle dependencies,
-# these symlink checks are deactivated
-%define __os_install_post \
-    %{suse_check} ; \
-    /usr/lib/rpm/brp-compress ; \
-    %{nil}
-
 
 %define doc_zookeeper %{_docdir}/%{name}
 %define alternatives_cmd update-alternatives
