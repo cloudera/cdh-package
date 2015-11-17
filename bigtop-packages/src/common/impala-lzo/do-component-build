@@ -69,7 +69,7 @@ else
     [ -e "$IMPALA_HOME" ] && rm -rf $IMPALA_HOME
     mkdir -p $IMPALA_HOME
     [ -e "${IMPALA_BRANCH}.tar.gz" ] && rm -f ${IMPALA_BRANCH}.tar.gz
-    wget http://github.mtv.cloudera.com/CDH/Impala/archive/${IMPALA_BRANCH}.tar.gz
+    wget http://github.mtv.cloudera.com/CDH/Impala/archive/${IMPALA_BRANCH}.tar.gz -O ${IMPALA_BRANCH}.tar.gz
     tar -xz --strip-components 1 -f ${IMPALA_BRANCH}.tar.gz -C ${IMPALA_HOME}
     find ${IMPALA_HOME} -name .gitignore -exec rm -f {} \;
     rm -f ${IMPALA_BRANCH}.tar.gz
@@ -78,7 +78,7 @@ else
     [ -e "$HADOOP_LZO" ] && rm -rf $HADOOP_LZO
     mkdir -p $HADOOP_LZO
     [ -e "${HADOOP_LZO_BRANCH}.tar.gz" ] && rm -f ${HADOOP_LZO_BRANCH}.tar.gz
-    wget http://github.mtv.cloudera.com/CDH/hadoop-lzo/archive/${HADOOP_LZO_BRANCH}.tar.gz
+    wget http://github.mtv.cloudera.com/CDH/hadoop-lzo/archive/${HADOOP_LZO_BRANCH}.tar.gz -O ${HADOOP_LZO_BRANCH}.tar.gz
     tar -xz --strip-components 1 -f ${HADOOP_LZO_BRANCH}.tar.gz -C ${HADOOP_LZO}
     find ${HADOOP_LZO} -name .gitignore -exec rm -f {} \;
     rm -f ${HADOOP_LZO_BRANCH}.tar.gz
