@@ -1,5 +1,5 @@
 #Override the PARCEL_LIBDIR as needed when regenerating the conversions file
-PARCEL_LIBDIR=/root/sampleParcel/CDH-5.4.0-1.cdh5.5.0.p0.836/lib
+PARCEL_LIBDIR=/root/sampleParcel/CDH-5.4.0-1.cdh5.5.1.p0.836/lib
 
 MYDIR=$(shell pwd)
 

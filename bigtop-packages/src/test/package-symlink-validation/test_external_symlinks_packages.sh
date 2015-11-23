@@ -44,7 +44,7 @@ function get_all_dependencies() {
   match=${3}
   repotrack -u $1 -r cloudera-cdh5 | grep -i ${match} > ${temp_file}
 
-  # Convert a link like :http://repos.jenkins.cloudera.com/cdh5-static/redhat/6/x86_64/cdh/5/RPMS/noarch/avro-libs-1.7.6+cdh5.5.0+87-1.cdh5.5.0.p0.531.el6.noarch.rpm to avro-libs
+  # Convert a link like :http://repos.jenkins.cloudera.com/cdh5-static/redhat/6/x86_64/cdh/5/RPMS/noarch/avro-libs-1.7.6+cdh5.5.1+87-1.cdh5.5.1.p0.531.el6.noarch.rpm to avro-libs
   for line in `cat ${temp_file}`; do
     basename ${line} | cut -d'+' -f1 | sed -e 's/-[0-9]\+\.[0-9\.]\+\?[0-9]\+$//g' >> ${2}
   done

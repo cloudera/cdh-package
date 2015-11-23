@@ -44,7 +44,7 @@ Source4: sentry-site.xml
 Source5: sentry-store.svc
 Source6: packaging_functions.sh
 Source7: filter-requires.sh
-Requires: hadoop-hdfs, hadoop-mapreduce, zookeeper, hive-jdbc >= 1.1.0+cdh5.4.0, hive >= 1.1.0+cdh5.4.0, hadoop-client >= 2.6.0+cdh5.4.0, solr >= 4.10.3+cdh5.5.0
+Requires: hadoop-hdfs, hadoop-mapreduce, zookeeper, hive-jdbc >= 1.1.0+cdh5.4.0, hive >= 1.1.0+cdh5.4.0, hadoop-client >= 2.6.0+cdh5.4.0, solr >= 4.10.3+cdh5.5.1
 
 %define _use_internal_dependency_generator 0
 %define __find_requires %{SOURCE7} 'osgi'
