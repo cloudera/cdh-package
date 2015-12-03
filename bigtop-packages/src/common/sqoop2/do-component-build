@@ -35,7 +35,7 @@ if [ -z "$GIT_REPO" ]; then
     tar czf sqoop2-$FULL_VERSION.tar.gz sqoop2-$FULL_VERSION
     cd ../..
     
-    mkdir build
+    mkdir -p build
     mv dist/target/sqoop2-$FULL_VERSION.tar.gz build/
 else
     git add .

@@ -119,7 +119,7 @@ else
     #for impala
     rm -rf build keytrustee-server-${FULL_VERSION}
     ALL_FILES=`echo *`
-    mkdir build keytrustee-server-${FULL_VERSION}
+    mkdir -p build keytrustee-server-${FULL_VERSION}
     cp -r $ALL_FILES keytrustee-server-${FULL_VERSION}
     tar czf build/keytrustee-server-${FULL_VERSION}.tar.gz keytrustee-server-${FULL_VERSION}
 fi

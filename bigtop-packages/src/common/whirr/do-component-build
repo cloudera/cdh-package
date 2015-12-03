@@ -30,6 +30,6 @@ if [ -z "$GIT_REPO" ]; then
 else
     git add .
     git commit -a -m "Temporary commit for tarball"
-    mkdir build
+    mkdir -p build
     git archive --prefix=whirr-${FULL_VERSION}/ --format=tar HEAD |gzip > build/whirr-${FULL_VERSION}.tar.gz
 fi

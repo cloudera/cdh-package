@@ -35,7 +35,7 @@ else
     #for impala
     rm -rf build keytrustee-keyprovider-${FULL_VERSION}
     ALL_FILES=`echo *`
-    mkdir build keytrustee-keyprovider-${FULL_VERSION}
+    mkdir -p build keytrustee-keyprovider-${FULL_VERSION}
     cp -r $ALL_FILES keytrustee-keyprovider-${FULL_VERSION}
     tar czf build/keytrustee-keyprovider-${FULL_VERSION}.tar.gz keytrustee-keyprovider-${FULL_VERSION}
 fi
