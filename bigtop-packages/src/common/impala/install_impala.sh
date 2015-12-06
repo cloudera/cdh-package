@@ -147,8 +147,8 @@ cp -fr fe/target/dependency/* ${LIB_DIR}/lib/
 cp fe/target/impala-frontend-*-SNAPSHOT.jar ${LIB_DIR}/lib
 
 # Install Toolchain dependency to libstdc++ and libgcc
-find toolchain/build/ -type f -name "libstdc++*.so.*[^-gdb.py]" -exec cp {} ${LIB_DIR}/lib \;
-find toolchain/build/ -type f -name "libgcc*.so.*[^-gdb.py]" -exec cp {} ${LIB_DIR}/lib \;
+find toolchain/build/ -name "libstdc++*.so.*[^-gdb.py]" -exec cp -L {} ${LIB_DIR}/lib \;
+find toolchain/build/ -name "libgcc*.so.*[^-gdb.py]" -exec cp -L {} ${LIB_DIR}/lib \;
 
 # Replace bundled libraries with symlinks to packaged dependencies
 export DEPENDENCY_DIR=${PREFIX}/usr/lib/impala/lib
