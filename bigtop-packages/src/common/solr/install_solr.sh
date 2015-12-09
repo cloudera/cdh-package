@@ -217,10 +217,17 @@ die() {
   exit 1
 }
 
-# Preflight checks:
+# Preflight checks (required only during startup) :
 # 1. We are only supporting SolrCloud mode
-if [ -z "$SOLR_ZK_ENSEMBLE" ] ; then
+if ([ "$1" = "start" -o "$1" = "run" ]) && [ -z "$SOLR_ZK_ENSEMBLE" ] ; then
   die "Error: SOLR_ZK_ENSEMBLE is not set in /etc/default/solr"
+fi
+
+# If Solr is started using "run" command, then the pid file is not generated.
+# Hence if we can't find the file, we assume that it was started using run method.
+if [ "$1" == "stop" ] && [ ! -f "$CATALINA_PID" ]; then
+  echo "$CATALINA_PID file not found. Unsetting CATALINA_PID enviornment variable"
+  unset CATALINA_PID
 fi
 
 CATALINA_OPTS="${CATALINA_OPTS} -DzkHost=${SOLR_ZK_ENSEMBLE} -Dsolr.solrxml.location=zookeeper"
