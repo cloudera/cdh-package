@@ -372,6 +372,7 @@ CATALINA_OPTS="${CATALINA_OPTS} -Dhost=$SOLR_HOSTNAME -Djetty.port=$SOLR_PORT"
 
 export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.host=$SOLR_HOSTNAME
                                         -Dsolr.port=$SOLR_PORT
+                                        -DuseCachedStatsBetweenGetMBeanInfoCalls=true
                                         -Dlog4j.configuration=file://$SOLR_LOG4J_CONFIG
                                         -Dsolr.log=$SOLR_LOG
                                         -Dsolr.admin.port=$SOLR_ADMIN_PORT
