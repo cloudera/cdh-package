@@ -36,9 +36,12 @@ if [ -z "$GIT_REPO" ]; then
 # If DO_MAVEN_DEPLOY == deploy, run the generate-maven-artifacts target
 # For purposes of deploying to Maven, we skip the Sentry contrib package,
 # which introduces a thorny and hard to satisfy sentry dependency.
-    MAVEN_DEPLOY_OPTS="-Dcontrib-crawl.exclude=contrib/sentry-handlers/build.xml -Dmaven-deps.exclude='**/sentry-handlers/**'"
+# The bash array usage here (and de-reference using "${...[@]}") makes sure
+# that bash doesn't expand the **, while keeping the two -D's as separate
+# arguments to ant.
+    MAVEN_DEPLOY_OPTS=(-Dcontrib-crawl.exclude=contrib/sentry-handlers/build.xml -Dmaven-deps.exclude="**/sentry-handlers/**")
     if [ "${DO_MAVEN_DEPLOY}" == "deploy" ]; then
-        ant $BUILD_OPTS $MAVEN_DEPLOY_OPTS generate-maven-artifacts "$@"
+        ant $BUILD_OPTS "${MAVEN_DEPLOY_OPTS[@]}" generate-maven-artifacts "$@"
     fi
 
     if [ -z "${MAVEN_ONLY}" ]; then
