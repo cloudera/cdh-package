@@ -29,7 +29,7 @@ if [ -z "$GIT_REPO" ]; then
     
     JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
         MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
-        mvn clean -Pdist -Dhbase.api=1.0 -DskipTests $MAVEN_INST_DEPLOY $CDH_VERSIONS -Dmaven.repo.local=${HOME}/.m2/repository "$@"
+        mvn clean -Pdist -Dhbase.api=1.0 -DskipTests $MAVEN_INST_DEPLOY $CDH_VERSIONS -Dmaven.repo.local=${HOME}/.m2/repository${M2_REPO_SUFFIX} "$@"
     
 # Creating a fake tarball
     rm -rf build

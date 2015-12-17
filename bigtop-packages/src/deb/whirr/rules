@@ -33,7 +33,7 @@ override_dh_auto_build:
 	# Bruno could not find a way to add debian/ to RAT exclude list through cmd line
 	# or to unbind rat:check goal
 	# So he was redirecting its attention with a decoy
-	bash debian/do-component-build -Drat.basedir=$${PWD}/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository
+	bash debian/do-component-build -Drat.basedir=$${PWD}/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository${M2_REPO_SUFFIX}
 	mkdir -p debian/tmp
 	# NOTE: FIXME me right away
 	cp -r debian/whirr.1 .

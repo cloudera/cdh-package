@@ -25,7 +25,7 @@ if [ -z "$GIT_REPO" ]; then
 
     mvn clean source:jar javadoc:jar -Dmahout.skip.distribution=false \
         -Dhadoop.profile=23 -DskipTests \
-        $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository "$@"
+        $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository${M2_REPO_SUFFIX} "$@"
     
     mkdir -p build/mahout-${FULL_VERSION}
     for i in distribution/target/mahout*.tar.gz ; do

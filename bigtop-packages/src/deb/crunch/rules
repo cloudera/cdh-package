@@ -34,7 +34,7 @@ override_dh_auto_build:
 	# So I am redirecting its attention with a decoy
 	mkdir -p debian/tmp/bigtop-empty
 	env FULL_VERSION=${CRUNCH_PATCHED_VERSION} \
-		bash debian/do-component-build -Drat.basedir=$${PWD}/debian/tmp/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository
+		bash debian/do-component-build -Drat.basedir=$${PWD}/debian/tmp/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository${M2_REPO_SUFFIX}
 
 override_dh_auto_install:
 	bash -x debian/install_crunch.sh \

@@ -24,7 +24,7 @@
 	dh $@
 
 override_dh_auto_build:
-	env FULL_VERSION=${AVRO_PATCHED_VERSION} bash -x debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
+	env FULL_VERSION=${AVRO_PATCHED_VERSION} bash -x debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository${M2_REPO_SUFFIX}
 
 override_dh_auto_install:
 	env FULL_VERSION=${AVRO_PATCHED_VERSION} bash -x debian/install_avro.sh --build-dir=${PWD}/debian --prefix=${PWD}/debian/tmp --source-dir=${PWD}/debian

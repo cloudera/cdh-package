@@ -34,7 +34,7 @@ override_dh_auto_build:
 	# or to unbind rat:check goal
 	# So I am redirecting its attention with a decoy
 	FULL_VERSION=$(SEARCH_PATCHED_VERSION) bash -x debian/do-component-build \
-	   -Drat.basedir=$${PWD}/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository
+	   -Drat.basedir=$${PWD}/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository${M2_REPO_SUFFIX}
 
 override_dh_auto_install:
 	bash -x debian/install_search.sh \

@@ -22,7 +22,7 @@ if [ -z "$GIT_REPO" ]; then
     else
         MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
     fi
-    build_args="clean -DskipTests $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository"
+    build_args="clean -DskipTests $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository${M2_REPO_SUFFIX}"
 
     if [ -z "${MAVEN_ONLY}" ]; then
         build_args="${build_args} -Pnative source:jar site javadoc:aggregate assembly:single"
@@ -31,7 +31,7 @@ if [ -z "$GIT_REPO" ]; then
     set -ex
     JAVA_OPTS="-Xmx3G -XX:MaxPermSize=256m"
     # First do a local install so that goals that fail to look in the current reactor will see modules in the project (i.e. javadoc and site)
-    MAVEN_OPTS="$JAVA_OPTS" mvn -DskipTests -Dmaven.repo.local="${HOME}/.m2/repository" clean install
+    MAVEN_OPTS="$JAVA_OPTS" mvn -DskipTests -Dmaven.repo.local="${HOME}/.m2/repository${M2_REPO_SUFFIX}" clean install
 
     MAVEN_OPTS="$JAVA_OPTS" mvn $build_args "$@"
 

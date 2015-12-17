@@ -84,7 +84,7 @@ if [ -z "$GIT_REPO" ]; then
     rm -rf hadoop-mapreduce1-project/build
     
     (cd hadoop-mapreduce1-project ; ant \
-        -Dreactor.repo=file://$HOME/.m2/repository \
+        -Dreactor.repo=file://$HOME/.m2/repository${M2_REPO_SUFFIX} \
         -Djdiff.stable=0.20.1 \
         -Djdiff.build.dir=build/docs/jdiff-cloudera \
         -propertyfile build.properties -Drepo.maven.org=${IVY_MIRROR_PROP} -Dmvnrepo=${IVY_MIRROR_PROP} \
@@ -96,7 +96,7 @@ if [ -z "$GIT_REPO" ]; then
     mkdir -p hadoop-mapreduce1-project/build/hadoop-${MR1_VERSION}/docs/
     
     (cd hadoop-mapreduce1-project ; ant \
-        -Dreactor.repo=file://$HOME/.m2/repository \
+        -Dreactor.repo=file://$HOME/.m2/repository${M2_REPO_SUFFIX} \
         -Dforrest.home=$FORREST_HOME \
         -Dcompile.native=true -Dcompile.c++=true \
         -Dhadoop.conf.dir=/etc/hadoop/conf \

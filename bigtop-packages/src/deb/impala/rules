@@ -35,7 +35,7 @@ export LD_LIBRARY_PATH=$(LIB_FAKEROOT):$(LIB_JAVA):$(LIB_JSIG):$(LIB_JVM):$(LIB_
 	dh $@
 
 override_dh_auto_build:
-	bash -x debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
+	bash -x debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository${M2_REPO_SUFFIX}
 
 override_dh_auto_install:
 	bash -x debian/install_impala.sh --build-dir=${PWD}/debian --prefix=${PWD}/debian/tmp --native-lib-dir=lib --extra-dir=debian/

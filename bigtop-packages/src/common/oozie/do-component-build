@@ -93,7 +93,7 @@ if [ -z "$GIT_REPO" ]; then
     fi
 
 # We need to build twice: once to generate the MR1 sharelib, again to generate the YARN sharelib
-    MKDISTRO_OPTIONS="-DskipTests -Dnot.cdh.release.build=false ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository $@"
+    MKDISTRO_OPTIONS="-DskipTests -Dnot.cdh.release.build=false ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository${M2_REPO_SUFFIX} $@"
 
     JAVA_OPTS="-Xmx3g -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx3g -Xms256m -XX:MaxPermSize=256m" ${WORKDIR}/bin/mkdistro.sh $MKDISTRO_OPTIONS -Pmr1
     MKDISTRO_RESULT_MR1=$?
