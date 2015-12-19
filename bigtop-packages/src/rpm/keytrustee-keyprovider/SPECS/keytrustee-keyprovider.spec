@@ -66,6 +66,7 @@ env FULL_VERSION=%{keytrustee_keyprovider_patched_version} bash %{SOURCE2} \
 %post %{nil}
 
 %files
+%defattr(-,root,root)
 /usr/share/keytrustee-keyprovider/cloudera
 /usr/share/keytrustee-keyprovider/lib
 /usr/share/keytrustee-keyprovider/README.md
