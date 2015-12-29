@@ -14,3 +14,8 @@ Description: GPL compression libraries for Impala
  under a GPL license. GPL is not compatible with the Apache license.
  This package installs those libraries into Impala so they are usable.
 
+Package: impala-lzo-dbg
+Architecture: any
+Section: debug
+Depends: ${misc:Depends}, impala-lzo (= ${binary:Version}),
+Description: Debugging symbols for Impala-lzo

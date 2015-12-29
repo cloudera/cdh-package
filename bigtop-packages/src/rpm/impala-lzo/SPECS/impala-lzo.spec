@@ -1,3 +1,11 @@
+
+# This is needed to generate debuginfo packages.
+# This macro defaults to 1 in CentOS6.6 and RHEL7 which causes /usr/lib/rpm/find-debuginfo.sh
+# to error out:
+# *** ERROR: No build ID note found in /data/jenkins/workspace/generic-package-rhel64-6-0-impala
+#     /buildroot/usr/lib/impala/lib/libimpalalzo.so
+%undefine _missing_build_ids_terminate_build
+
 Name: impala-lzo
 Version: %{impala_lzo_version}
 Release: %{impala_lzo_release}
