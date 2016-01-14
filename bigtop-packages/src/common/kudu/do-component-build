@@ -28,8 +28,8 @@ if [ -z "$GIT_REPO" ]; then
     # side effect is a slower build.
     #
     # TODO: Convert to Cloudera Toolchain.
-    ./thirdparty/download-thirdparty.sh
-    ./thirdparty/build-thirdparty.sh
+    build-support/enable_devtoolset.sh ./thirdparty/download-thirdparty.sh
+    build-support/enable_devtoolset.sh ./thirdparty/build-thirdparty.sh
 
     # Force cmake to omit the call to build-if-necessary.sh.
     export NO_REBUILD_THIRDPARTY=1
@@ -49,7 +49,7 @@ if [ -z "$GIT_REPO" ]; then
     MAKE="make -j$(nproc)"
     for type in release fastdebug; do
       rm -rf CMakeCache.txt CMakeFiles/
-      ${CMAKE} -DCMAKE_BUILD_TYPE=${type} .
+      build-support/enable_devtoolset.sh ${CMAKE} -DCMAKE_BUILD_TYPE=${type} .
       ${MAKE}
       ${MAKE} install DESTDIR=`pwd`/client-${type}
     done
