@@ -28,12 +28,20 @@
 # So for now brp-repack-jars is being deactivated until this is fixed.
 # See BIGTOP-294
 %if  %{!?suse_version:1}0
+# Note: %{%dist} macro is not defined for CentOS5. When a Jenkins job is triggered, this macro is added
+# via build_rpm.sh in cdh4 git /ec2_build/bin.
+# Before running local builds on CentOS5, one would need to insert the macro by running: echo '%dist   .el5' >> ~/.rpmmacros
+
+%if "%{?dist}" == ".el5"
+%define debug_package %{nil}
+%else
 %define __os_install_post \
     /usr/lib/rpm/redhat/brp-compress ; \
     /usr/lib/rpm/redhat/brp-strip-static-archive %{__strip} ; \
     /usr/lib/rpm/redhat/brp-strip-comment-note %{__strip} %{__objdump} ; \
     /usr/lib/rpm/brp-python-bytecompile ; \
     %{nil}
+%endif
 %else
 %define __os_install_post \
     %{suse_check} ; \
@@ -137,12 +145,6 @@ Requires: %{name} = %{version}-%{release}
 %description catalog
 Impala Catalog server
 
-# use the debug_package macro if needed
-%if  %{!?suse_version:1}0
-# RedHat does this by default
-%else
-%debug_package
-%endif
 
 %prep
 %setup -n %{name}-%{impala_patched_version}
