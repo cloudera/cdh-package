@@ -120,8 +120,8 @@ bin_executables="cfile-dump \
 install -d -m 0755 ${LIB_DIR}/bin-release
 install -d -m 0755 ${LIB_DIR}/bin-debug
 for executable in ${bin_executables}; do
-    cp ${BUILD_DIR}/build/release/${executable} ${LIB_DIR}/bin-release/
-    cp ${BUILD_DIR}/build/fastdebug/${executable} ${LIB_DIR}/bin-debug/
+    cp ${BUILD_DIR}/build/release/latest/${executable} ${LIB_DIR}/bin-release/
+    cp ${BUILD_DIR}/build/fastdebug/latest/${executable} ${LIB_DIR}/bin-debug/
 done
 
 sbin_executables="kudu-master \
@@ -129,8 +129,8 @@ sbin_executables="kudu-master \
 install -d -m 0755 ${LIB_DIR}/sbin-release
 install -d -m 0755 ${LIB_DIR}/sbin-debug
 for executable in ${sbin_executables}; do
-    cp ${BUILD_DIR}/build/release/${executable} ${LIB_DIR}/sbin-release/
-    cp ${BUILD_DIR}/build/fastdebug/${executable} ${LIB_DIR}/sbin-debug/
+    cp ${BUILD_DIR}/build/release/latest/${executable} ${LIB_DIR}/sbin-release/
+    cp ${BUILD_DIR}/build/fastdebug/latest/${executable} ${LIB_DIR}/sbin-debug/
 done
 
 # now, create the defaults files
@@ -210,16 +210,16 @@ install -d -m 0755 ${PREFIX}/${SYSTEM_INCLUDE_DIR}
 
 # Copy in the client libraries and SONAME symlinks. The release file set is
 # copied in directly, while the debug set is placed in a subdirectory.
-for lib in `find ${BUILD_DIR}/client-release/usr/local/lib* -name \*.so\*`; do
+for lib in `find ${BUILD_DIR}/build/release/client/usr/local/lib* -name \*.so\*`; do
   cp -d $lib ${PREFIX}/${SYSTEM_LIB_DIR}
 done
-for lib in `find ${BUILD_DIR}/client-fastdebug/usr/local/lib* -name \*.so\*`; do
+for lib in `find ${BUILD_DIR}/build/fastdebug/client/usr/local/lib* -name \*.so\*`; do
   cp -d $lib ${PREFIX}/${SYSTEM_LIB_DIR}/debug
 done
 
 # Doesn't matter whether we use release or fastdebug here; we're not copying binaries.
-cp -r ${BUILD_DIR}/client-release/usr/local/include/* ${PREFIX}/${SYSTEM_INCLUDE_DIR}/
-cp -r ${BUILD_DIR}/client-release/usr/local/share ${PREFIX}/usr/share
+cp -r ${BUILD_DIR}/build/release/client/usr/local/include/* ${PREFIX}/${SYSTEM_INCLUDE_DIR}/
+cp -r ${BUILD_DIR}/build/release/client/usr/local/share ${PREFIX}/usr/share
 
 cp -r ${BUILD_DIR}/www ${LIB_DIR}/
 
