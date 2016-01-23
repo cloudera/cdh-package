@@ -22,6 +22,8 @@
 #%define doc_jsvc %{_docdir}/%{name}-%{bigtop_jsvc_version}
 #%endif
 
+
+
 # FIXME: brp-repack-jars uses unzip to expand jar files
 # Unfortunately aspectjtools-1.6.5.jar pulled by ivy contains some files and directories without any read permission
 # and make whole process to fail.
@@ -43,6 +45,11 @@
     %{nil}
 %endif
 %else
+# This macro is not defined for SLES 12. Define an empty macro.
+%if 0%{?suse_version} > 1130
+  # The definition cannot have an empty body and rpmbuild fails if defined as such.
+  %define suse_check \# Define an empty suse_check for compatibility with older sles
+%endif
 %define __os_install_post \
     %{suse_check} ; \
     /usr/lib/rpm/brp-compress ; \
@@ -145,6 +152,23 @@ Requires: %{name} = %{version}-%{release}
 %description catalog
 Impala Catalog server
 
+# use the debug_package macro if needed.
+# This macro expands to the following:
+#  %package debugsource
+#  Summary: Debug sources for package %{name}
+#  Group: Development/Debug
+#  AutoReqProv: 0
+#  %description debugsource
+#  This package provides debug sources for package %{name}.
+#  Debug sources are useful when developing applications that use this
+#  package or when debugging this package.
+#  %files debugsource -f debugsources.list
+#  %defattr(-,root,root)
+%if  %{!?suse_version:1}0
+# RedHat does this by default
+%else
+%debug_package
+%endif
 
 %prep
 %setup -n %{name}-%{impala_patched_version}
