@@ -28,7 +28,7 @@ if [ -z "$GIT_REPO" ]; then
     . $IMPALA_HOME/bin/impala-config.sh
 
     IMPALA_AUXTEST_HOME=Impala-auxiliary-tests
-    IMPALA_AUXTEST_BRANCH=origin/master
+    IMPALA_AUXTEST_BRANCH=origin/master_sles12
 
     # Clone the client repo.
     [ -e "$IMPALA_AUXTEST_HOME" ] && rm -rf $IMPALA_AUXTEST_HOME
