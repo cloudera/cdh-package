@@ -153,7 +153,7 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
 ########################################
 %build
 
-%if 0%{?rhel:%{rhel}} < 6
+%if 0%{?rhel:%{rhel}} < 6 && 0%{?suse_version} < 1130
 # Python 2.5+ is required, but RHEL 5's `python` is 2.4
 export SYS_PYTHON=`which python2.6`
 export SKIP_PYTHONDEV_CHECK=true
@@ -179,7 +179,7 @@ orig_init_file=$RPM_SOURCE_DIR/%{name}.init
 cp $orig_init_file $RPM_BUILD_ROOT/%{initd_dir}/hue
 
 # Remove references to the buildroot in the dist-info files
-%if 0%{?rhel:%{rhel}} < 6
+%if 0%{?rhel:%{rhel}} < 6 && 0%{?suse_version} < 1130
 export SYS_PYTHON=`which python2.6`
 %else
 export SYS_PYTHON=python
