@@ -25,21 +25,11 @@ export DISABLE_CCACHE=1
 export IMPALA_TOOLCHAIN=$IMPALA_HOME/toolchain/build
 if [ -z "$GIT_REPO" ]; then
     IMPALA_TOOLCHAIN=$IMPALA_HOME/toolchain/build
-    . $IMPALA_HOME/bin/impala-config.sh
-
-    IMPALA_AUXTEST_HOME=Impala-auxiliary-tests
-    IMPALA_AUXTEST_BRANCH=origin/master_sles12
-
-    # Clone the client repo.
-    [ -e "$IMPALA_AUXTEST_HOME" ] && rm -rf $IMPALA_AUXTEST_HOME
-    (cd . && git clone git://github.mtv.cloudera.com/QE/Impala-auxiliary-tests.git)
-    (cd ./Impala-auxiliary-tests && git checkout ${IMPALA_AUXTEST_BRANCH})
-
-    echo ">>> Bootstrapping toolchain."
-    pushd $IMPALA_AUXTEST_HOME
-    $IMPALA_HOME/bin/impala-python jenkins/bootstrap_toolchain.py || { echo "toolchain bootstrap failed"; exit 1; }
-
     cd $IMPALA_HOME
+    . bin/impala-config.sh
+    # Download the latest dependency versions if needed.
+    bin/bootstrap_toolchain.py || { echo "toolchain bootstrap failed"; exit 1; }
+
     find $WORKSPACE -iname '*cmake*' -not -name CMakeLists.txt | grep -v -e cmake_module | grep -v -e thirdparty | xargs rm -Rf
     ./buildall.sh -noclean -skiptests -notests
 
