@@ -120,8 +120,8 @@ bin_executables="cfile-dump \
 install -d -m 0755 ${LIB_DIR}/bin-release
 install -d -m 0755 ${LIB_DIR}/bin-debug
 for executable in ${bin_executables}; do
-    cp ${BUILD_DIR}/build/release/latest/${executable} ${LIB_DIR}/bin-release/
-    cp ${BUILD_DIR}/build/fastdebug/latest/${executable} ${LIB_DIR}/bin-debug/
+    cp ${BUILD_DIR}/build/release/bin/${executable} ${LIB_DIR}/bin-release/
+    cp ${BUILD_DIR}/build/fastdebug/bin/${executable} ${LIB_DIR}/bin-debug/
 done
 
 sbin_executables="kudu-master \
@@ -129,8 +129,8 @@ sbin_executables="kudu-master \
 install -d -m 0755 ${LIB_DIR}/sbin-release
 install -d -m 0755 ${LIB_DIR}/sbin-debug
 for executable in ${sbin_executables}; do
-    cp ${BUILD_DIR}/build/release/latest/${executable} ${LIB_DIR}/sbin-release/
-    cp ${BUILD_DIR}/build/fastdebug/latest/${executable} ${LIB_DIR}/sbin-debug/
+    cp ${BUILD_DIR}/build/release/bin/${executable} ${LIB_DIR}/sbin-release/
+    cp ${BUILD_DIR}/build/fastdebug/bin/${executable} ${LIB_DIR}/sbin-debug/
 done
 
 # now, create the defaults files
