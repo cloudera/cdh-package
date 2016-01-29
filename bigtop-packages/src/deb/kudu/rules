@@ -30,7 +30,13 @@ override_dh_auto_build:
 	bash -x debian/do-component-build
 
 override_dh_auto_install:
-	bash -x debian/install_kudu.sh --build-dir=${PWD} --prefix=${PWD}/debian/tmp --extra-dir=debian/
+	# Specifying --prefix is enough; install_kudu.sh will place files in
+	# various subdirectories of --prefix. They are then referenced by
+	# package.install or package.docs files.
+	bash -x debian/install_kudu.sh \
+	  --build-dir=${PWD} \
+	  --prefix=${PWD}/debian/tmp \
+	  --extra-dir=debian/
 	install -d -m 0755 debian/tmp/etc/init.d
 	install -m 0755 debian/kudu-master.init debian/tmp/etc/init.d/kudu-master
 	install -m 0755 debian/kudu-tserver.init debian/tmp/etc/init.d/kudu-tserver

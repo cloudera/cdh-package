@@ -16,6 +16,7 @@
 %define kudu_log /var/log/kudu
 %define kudu_run /var/run/kudu
 %define kudu_lib /var/lib/kudu
+%define kudu_doc %{_docdir}/%{name}-%{version}
 
 %if  %{!?suse_version:1}0
   %define initd_dir %{_sysconfdir}/rc.d/init.d
@@ -107,7 +108,8 @@ bash %{SOURCE2} \
           --prefix=$RPM_BUILD_ROOT \
           --system-include-dir=%{_includedir} \
           --system-lib-dir=%{_libdir} \
-          --extra-dir=$RPM_SOURCE_DIR
+          --extra-dir=$RPM_SOURCE_DIR \
+          --doc-dir=%{kudu_doc}
 
 # Install init scripts
 init_source=$RPM_SOURCE_DIR
@@ -156,6 +158,7 @@ fi
 # The %dir directive excludes files within conf.dist in the build tree from
 # leaking into this package.
 %attr(0755,root,root) %config(noreplace) %dir /etc/kudu/conf.dist
+%doc %{kudu_doc}
 #%config(noreplace) /etc/security/limits.d/kudu.conf
 
 %files client0
