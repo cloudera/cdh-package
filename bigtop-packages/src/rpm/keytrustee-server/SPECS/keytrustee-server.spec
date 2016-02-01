@@ -56,19 +56,9 @@ Requires: cyrus-sasl-plain, gnutls-utils, python-crypto, openssh-clients, postfi
 %endif
 
 %description  
-KeyTrustee trusted deposit and retrieval suite. The KeyTrustee client
-software is used on physical or virtual server or desktop systems
+KeyTrustee trusted deposit and retrieval suite. A KeyTrustee client
+compatible SW is used on physical or virtual server or desktop systems
 to register, get, and put secret information to an KeyTrustee server.
-
-%package -n keytrustee-client
-Requires: python-magic, python-keytrustee = %{version}
-Summary: Client component of the KeyTrustee deposit and retrieval suite
-
-%description -n keytrustee-client
-Client component of the KeyTrustee trusted deposit and retrieval suite
-The KeyTrustee client software is used on physical or virtual server or
-desktop systems to register, get, and put secret information to an
-KeyTrustee server.
 
 
 %package -n python-keytrustee
@@ -76,7 +66,7 @@ Summary: Code shared between the client and server.
 Requires: pytz, python-argparse, python-pycurl, python-requests
 
 %description -n python-keytrustee
-Common code required to run the client and the server in keytrustee
+KeyTrustee server libraries
 
 %define debug_package %{nil}
 
@@ -119,6 +109,9 @@ env FULL_VERSION=%{keytrustee_server_patched_version} bash %{SOURCE2} \
 /usr/lib/keytrustee-server/*
 /usr/bin/keytrustee-orgtool
 /usr/bin/keytrustee-server
+/usr/share/man/man1/*
+/usr/share/man/man8/*
+/usr/share/keytrustee/LICENSE
 
 %if 0%{?rhel} == 6
 /etc/init.d/keytrusteed
@@ -129,13 +122,6 @@ env FULL_VERSION=%{keytrustee_server_patched_version} bash %{SOURCE2} \
 /usr/lib/systemd/system/keytrusteed.service
 /usr/lib/systemd/system/keytrustee-db.service
 %endif
-
-%files -n keytrustee-client
-%defattr(-,root,root)
-%{_bindir}/keytrustee
-/usr/share/keytrustee/LICENSE
-/usr/share/man/man1/*
-/usr/share/man/man8/*
 
 %pre
 groupadd -r keytrustee || :
