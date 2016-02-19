@@ -116,15 +116,15 @@ install -d -m 0755 ${LIB_DIR}
 # install daemons
 install -d -m 0755 ${LIB_DIR}/sbin-retail
 cp be/build/release/service/* ${LIB_DIR}/sbin-retail
-cp be/build/release/statestore/statestored ${LIB_DIR}/sbin-retail/statestored
-cp be/build/release/catalog/catalogd ${LIB_DIR}/sbin-retail/catalogd
+ln -s impalad ${LIB_DIR}/sbin-retail/statestored
+ln -s impalad ${LIB_DIR}/sbin-retail/catalogd
 rm ${LIB_DIR}/sbin-retail/*.a
 
 # install debug bits
 install -d -m 0755 ${LIB_DIR}/sbin-debug
 cp be/build/debug/service/* ${LIB_DIR}/sbin-debug
-cp be/build/debug/statestore/statestored ${LIB_DIR}/sbin-debug/statestored
-cp be/build/debug/catalog/catalogd ${LIB_DIR}/sbin-debug/catalogd
+ln -s impalad ${LIB_DIR}/sbin-debug/statestored
+ln -s impalad ${LIB_DIR}/sbin-debug/catalogd
 rm ${LIB_DIR}/sbin-debug/*.a
 
 # install scripts
