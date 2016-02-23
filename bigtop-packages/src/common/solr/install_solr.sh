@@ -178,6 +178,7 @@ install -d -m 0755 ${HTTP_DIRECTORY}/conf
 cp $DISTRO_DIR/web.xml ${HTTP_DIRECTORY}/conf
 cp $DISTRO_DIR/server.xml ${HTTP_DIRECTORY}/conf
 cp $DISTRO_DIR/logging.properties ${HTTP_DIRECTORY}/conf
+cp $DISTRO_DIR/catalina.properties ${HTTP_DIRECTORY}/conf
 install -d -m 0755 ${HTTP_DIRECTORY}/WEB-INF
 mv $PREFIX/$LIB_DIR/webapps/solr/WEB-INF/*.xml ${HTTP_DIRECTORY}/WEB-INF/ || :
 
@@ -247,6 +248,21 @@ export CATALINA_OUT=${SOLR_LOG:-/var/log/solr}/solr.out
 die() {
   echo "$@" >&2
   exit 1
+}
+
+tomcat_set_prop() {
+  if [ -z "${CATALINA_PROPERTIES}" ]; then
+    if [ ! -e "${CATALINA_BASE}" ]; then
+      echo "Can't find Catalina Base ${CATALINA_BASE}"
+      exit 1
+    fi
+    CATALINA_PROPERTIES="${CATALINA_BASE}/conf/catalina.properties"
+    if [ ! -e "${CATALINA_PROPERTIES}" ]; then
+      echo "Error: can't find ${CATALINA_PROPERTIES}"
+      exit 1
+    fi
+  fi
+  echo "$@" >> "${CATALINA_PROPERTIES}"
 }
 
 # Preflight checks (required only during startup) :
@@ -383,10 +399,10 @@ export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.host=$SOLR_HOSTNAME
                                         -Dsolr.solr.home=$SOLR_HOME"
 
 if [ -n "${SOLR_KEYSTORE_PATH}" ]; then
-  export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.keystore.path=${SOLR_KEYSTORE_PATH}"
+  tomcat_set_prop "solr.keystore.path=${SOLR_KEYSTORE_PATH}"
 fi
 if [ -n "${SOLR_KEYSTORE_PASSWORD}" ]; then
-  export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.keystore.password=${SOLR_KEYSTORE_PASSWORD}"
+  tomcat_set_prop "solr.keystore.password=${SOLR_KEYSTORE_PASSWORD}"
 fi
 if [ -n "${SOLR_TRUSTSTORE_PATH}" ]; then
   CATALINA_OPTS="${CATALINA_OPTS} -Djavax.net.ssl.trustStore=${SOLR_TRUSTSTORE_PATH}"
