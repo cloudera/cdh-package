@@ -61,6 +61,7 @@ Source7: solr-server.init
 Source8: tomcat-deployment.sh
 Source9: packaging_functions.sh
 Source10: server-ssl.xml
+Source11: catalina.properties
 Requires: curl
 Requires: bigtop-utils >= 0.7, bigtop-tomcat
 Requires: hadoop, hadoop-hdfs, sentry >= 1.3.0+cdh5.1.0, zookeeper
