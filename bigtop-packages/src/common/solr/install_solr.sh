@@ -379,14 +379,10 @@ if [ -n "$SOLR_AUTHENTICATION_HTTP_SCHEMES" ] ; then
   fi
 fi
 
-if [ -z "$SOLR_HOSTNAME" ]; then
-  SOLR_HOSTNAME=$(hostname -f)
-fi
-
 # FIXME: we need to set this because of the jetty-centric default solr.xml
-CATALINA_OPTS="${CATALINA_OPTS} -Dhost=$SOLR_HOSTNAME -Djetty.port=$SOLR_PORT"
+CATALINA_OPTS="${CATALINA_OPTS} -Dhost=$HOSTNAME -Djetty.port=$SOLR_PORT"
 
-export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.host=$SOLR_HOSTNAME
+export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.host=$HOSTNAME
                                         -Dsolr.port=$SOLR_PORT
                                         -Dlog4j.configuration=file://$SOLR_LOG4J_CONFIG
                                         -Dsolr.log=$SOLR_LOG
