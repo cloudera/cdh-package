@@ -164,7 +164,14 @@ install -d -m 0755 $PREFIX/$LIB_DIR/webapps/solr
 (cd $PREFIX/$LIB_DIR/webapps/solr ; jar xf ../../*.war)
 
 cp ${BUILD_DIR}/example/lib/ext/*.jar $PREFIX/$LIB_DIR/webapps/solr/WEB-INF/lib/
-cp ${BUILD_DIR}/contrib/sentry-handlers/lib/*.jar $PREFIX/$LIB_DIR/webapps/solr/WEB-INF/lib/
+
+
+# CDH-38106: extra location checking that should eventually be removed
+if [ -e ${BUILD_DIR}/contrib/sentry-handlers/lib/ ]; then
+  cp ${BUILD_DIR}/contrib/sentry-handlers/lib/*.jar $PREFIX/$LIB_DIR/webapps/solr/WEB-INF/lib/
+else
+  cp ${BUILD_DIR}/contrib/depends-sentry-libs/lib/*.jar $PREFIX/$LIB_DIR/webapps/solr/WEB-INF/lib/
+fi
 
 install -d -m 0755 $PREFIX/$LIB_DIR/webapps/ROOT
 cat > $PREFIX/$LIB_DIR/webapps/ROOT/index.html <<__EOT__
