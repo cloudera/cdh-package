@@ -47,15 +47,30 @@ if [ -z "$GIT_REPO" ]; then
     fi
         
 # Build artifacts
+# Setting CAULDRON_FAST_PARTIAL_BUILD allows us to quickly build just the maven
+# artifacts needed by many targets that depend on hadoop. This speeds up local
+# build. However, to build everything in hadoop, this script has to be invoked
+# again, with this variable unset.
+    if [ -n "${CAULDRON_FAST_PARTIAL_BUILD}" ]; then
+      echo "CAULDRON_FAST_PARTIAL_BUILD is set; will skip generating javadocs"
+      MAVEN_SKIP_JAVADOC="-Dmaven.javadoc.skip=true"
+    else
+      MAVEN_SKIP_JAVADOC=""
+    fi
     MAVEN_SKIP_TESTS="-DskipTests -DskipTest -DskipITs"
     JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
         MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
         mvn $BUNDLE_SNAPPY \
         -Pdist -Pnative -Pfuse -Psrc -Dtar -Drequire.fuse=true \
-        ${MAVEN_SSL_FLAGS} ${MAVEN_SKIP_TESTS} \
+        ${MAVEN_SSL_FLAGS} ${MAVEN_SKIP_TESTS} ${MAVEN_SKIP_JAVADOC} \
         $MAVEN_INST_DEPLOY \
         "$@" 
 
+    if [ -n "${CAULDRON_FAST_PARTIAL_BUILD}" ]; then
+      echo "CAULDRON_FAST_PARTIAL_BUILD is set; skippig the rest of the build"
+      exit 0
+    fi
+  
     if [ -z "${MAVEN_ONLY}" ]; then
         JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn site site:stage ${MAVEN_SKIP_TESTS} $@
         
