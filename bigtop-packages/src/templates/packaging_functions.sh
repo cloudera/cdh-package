@@ -44,6 +44,8 @@ get_directory_for_jar() {
         hive*) lib_dir='hive/lib';;
         sentry-provider-db-*-sh.jar) lib_dir='sentry/lib/impala';;
         sentry*) lib_dir='sentry/lib';;
+        # solr-sentry-handlers sentry module should be renamed, see CDH-38074
+        solr-sentry*) lib_dir='sentry/lib';;
         solr*) lib_dir='solr';;
         lucene*) lib_dir='solr/webapps/solr/WEB-INF/lib';;
         kite*) lib_dir='kite';;
