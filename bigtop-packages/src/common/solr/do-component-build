@@ -24,11 +24,19 @@ if [ -z "$GIT_REPO" ]; then
             -Divy_install_path=${HOME}/.ant/lib -lib ${HOME}/.ant/lib  \
             -Dreactor.repo=file://${HOME}/.m2/repository${M2_REPO_SUFFIX}"
 
-# FIXME: this needs to be fixed at the product level
+# Setting CAULDRON_NO_CLEAN allows us to run this script twice without incurring
+# the overhead of building from clean on the second invocation. First we build
+# only the subset of the code needed to deploy maven artifacts (see MAVEN_ONLY
+# below), and on the next invocation - everything else.
+if [ -n "${CAULDRON_NO_CLEAN}" ]; then
+    echo "CAULDRON_NO_CLEAN is set; not performing ant bootstrap and clean operations"
+else
+    # FIXME: this needs to be fixed at the product level
     ant $BUILD_OPTS ivy-bootstrap
     mkdir -p solr/test-framework/lib || :
 
     ant $BUILD_OPTS clean
+fi
 
 # Build source package
     (cd solr ; ant $BUILD_OPTS package-local-src-tgz "$@")
@@ -39,7 +47,7 @@ if [ -z "$GIT_REPO" ]; then
 # The bash array usage here (and de-reference using "${...[@]}") makes sure
 # that bash doesn't expand the **, while keeping the two -D's as separate
 # arguments to ant.
-    MAVEN_DEPLOY_OPTS=(-Dcontrib-crawl.exclude=contrib/sentry-handlers/build.xml -Dmaven-deps.exclude="**/sentry-handlers/**")
+    MAVEN_DEPLOY_OPTS=(-Dcontrib-crawl.exclude=contrib/depends-sentry-libs/build.xml -Dmaven-deps.exclude="**/depends-sentry-libs/**")
     if [ "${DO_MAVEN_DEPLOY}" == "deploy" ]; then
         ant $BUILD_OPTS "${MAVEN_DEPLOY_OPTS[@]}" generate-maven-artifacts "$@"
     fi
