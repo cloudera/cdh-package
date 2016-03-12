@@ -135,7 +135,7 @@ install -d -m 0755 ${PREFIX}/var/run/sentry
 install -d -m 0755 $LIB_DIR/cloudera
 cp cloudera/cdh_version.properties $LIB_DIR/cloudera/
 
-internal_versionless_symlinks ${LIB_DIR}/lib/sentry*.jar
+internal_versionless_symlinks ${LIB_DIR}/lib/sentry*.jar ${LIB_DIR}/lib/solr-sentry*.jar
 
 # Shaded jar added for impala to consume with Sentry 1.5.0
 internal_versionless_symlinks ${LIB_DIR}/lib/impala/sentry*.jar
