@@ -159,6 +159,20 @@ function internal_versionless_symlinks() {
     done
 }
 
+# Creates a single symlink between one component and another.
+function single_external_versionless_symlink() {
+    old_jar="${1}"
+    base_jar=`basename $old_jar`;
+    new_jar=`strip_versions $base_jar`
+    # dir must be looked up using the versioned JAR!
+    new_dir=`get_directory_for_jar ${base_jar}`
+    if [ -z "${new_dir}" ]; then return; fi
+    check_for_package_dependency ${new_dir}
+    rm $old_jar && ln -fs ${new_dir}/${new_jar} `dirname $old_jar`/
+    #Adding diagnostic message to help testing changes
+    print_linkinfo external ${new_dir}/${new_jar} ${old_jar}
+}
+
 # Creates symlinks between one component and another, dependent component (e.g. /usr/lib/hadoop/avro.jar -> /usr/lib/avro/avro.jar)
 # Assumes that internal versionless symlinks already exist in the dependency
 # external_versionless_symlinks <prefix (or quoted list of prefixed) to exclude> <directories to scan for JARs>
@@ -178,14 +192,7 @@ function external_versionless_symlinks() {
                 # Leave JARs from the specified component alone (parquet format is an exception in parquet)
                 if [[ "${base_jar}" =~ ^${prefix} ]]; then continue 2; fi
             done
-            new_jar=`strip_versions $base_jar`
-            # dir must be looked up using the versioned JAR!
-            new_dir=`get_directory_for_jar ${base_jar}`
-            if [ -z "${new_dir}" ]; then continue; fi
-            check_for_package_dependency ${new_dir}
-            rm $old_jar && ln -fs ${new_dir}/${new_jar} $dir/
-            #Adding diagnostic message to help testing changes
-            print_linkinfo external ${new_dir}/${new_jar} ${old_jar}
+            single_external_versionless_symlink $old_jar
         done
     done
 }
