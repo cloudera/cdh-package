@@ -166,12 +166,8 @@ install -d -m 0755 $PREFIX/$LIB_DIR/webapps/solr
 cp ${BUILD_DIR}/example/lib/ext/*.jar $PREFIX/$LIB_DIR/webapps/solr/WEB-INF/lib/
 
 
-# CDH-38106: extra location checking that should eventually be removed
-if [ -e ${BUILD_DIR}/contrib/sentry-handlers/lib/ ]; then
-  cp ${BUILD_DIR}/contrib/sentry-handlers/lib/*.jar $PREFIX/$LIB_DIR/webapps/solr/WEB-INF/lib/
-else
-  cp ${BUILD_DIR}/contrib/depends-sentry-libs/lib/*.jar $PREFIX/$LIB_DIR/webapps/solr/WEB-INF/lib/
-fi
+cp ${BUILD_DIR}/contrib/depends-sentry-libs/lib/*.jar $PREFIX/$LIB_DIR/webapps/solr/WEB-INF/lib/
+SOLR_SENTRY_JAR=`ls $PREFIX/$LIB_DIR/webapps/solr/WEB-INF/lib/solr-sentry-handlers*.jar`
 
 install -d -m 0755 $PREFIX/$LIB_DIR/webapps/ROOT
 cat > $PREFIX/$LIB_DIR/webapps/ROOT/index.html <<__EOT__
@@ -482,3 +478,6 @@ external_versionless_symlinks 'search solr lucene' \
     ${PREFIX}/${LIB_DIR}/lib/solrj-lib \
     ${PREFIX}/${LIB_DIR}/webapps/solr/WEB-INF/lib
 
+# Above does not handle solr-sentry-handlers, which despite its name,
+# is a sentry jar
+single_external_versionless_symlink $SOLR_SENTRY_JAR
