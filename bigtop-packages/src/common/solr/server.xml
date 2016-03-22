@@ -69,7 +69,10 @@
     <Connector port="${solr.port}" backlog="${solr.tomcat.backlog}" protocol="HTTP/1.1" 
                connectionTimeout="${solr.tomcat.connectionTimeout}" 
                keepAliveTimeout="${solr.tomcat.keepAliveTimeout}"
-               maxThreads="${solr.max.connector.thread}" 
+               maxKeepAliveRequests="${solr.tomcat.maxKeepAliveRequests}"
+               connectionLinger="${solr.tomcat.connectionLinger}"
+               bufferSize="${solr.tomcat.bufferSize}
+               maxThreads="${solr.max.connector.thread}"
                maxHttpHeaderSize="65536"
                redirectPort="8443" />
     <!-- A "Connector" using the shared thread pool-->
