@@ -240,8 +240,11 @@ SOLR_ADMIN_PORT=${SOLR_ADMIN_PORT:-8984}
 SOLR_MAX_CONNECTOR_THREAD=${SOLR_MAX_CONNECTOR_THREAD:-10000}
 SOLR_LOG=${SOLR_LOG:-/var/log/solr}
 SOLR_TOMCAT_BACKLOG=${SOLR_TOMCAT_BACKLOG:-4096}
-SOLR_TOMCAT_CONNECTION_TIMEOUT=${SOLR_TOMCAT_CONNECTION_TIMEOUT:-20000}
-SOLR_TOMCAT_KEEP_ALIVE_TIMEOUT=${SOLR_TOMCAT_KEEP_ALIVE_TIMEOUT:-20000}
+SOLR_TOMCAT_CONNECTION_TIMEOUT=${SOLR_TOMCAT_CONNECTION_TIMEOUT:-180000}
+SOLR_TOMCAT_KEEP_ALIVE_TIMEOUT=${SOLR_TOMCAT_KEEP_ALIVE_TIMEOUT:-600000}
+SOLR_TOMCAT_MAX_KEEP_ALIVE_REQUESTS=${SOLR_TOMCAT_MAX_KEEP_ALIVE_REQUESTS:--1}
+SOLR_TOMCAT_CONNECTION_LINGER=${SOLR_TOMCAT_CONNECTION_LINGER:-300}
+SOLR_TOMCAT_BUFFER_SIZE={SOLR_TOMCAT_BUFFER_SIZE:-131072}
 SOLR_HOME=${SOLR_HOME:-/var/lib/solr}
 SOLR_LOG4J_CONFIG=${SOLR_LOG4J_CONFIG:-/etc/solr/conf/log4j.properties}
 
@@ -402,7 +405,10 @@ export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.host=$SOLR_HOSTNAME
                                         -Dsolr.tomcat.backlog=$SOLR_TOMCAT_BACKLOG
                                         -Dsolr.tomcat.connectionTimeout=$SOLR_TOMCAT_CONNECTION_TIMEOUT
                                         -Dsolr.tomcat.keepAliveTimeout=$SOLR_TOMCAT_KEEP_ALIVE_TIMEOUT
+                                        -Dsolr.tomcat.maxKeepAliveRequests=$SOLR_TOMCAT_MAX_KEEP_ALIVE_REQUESTS
                                         -Dsolr.max.connector.thread=$SOLR_MAX_CONNECTOR_THREAD
+                                        -Dsolr.tomcat.connectionLinger=$SOLR_TOMCAT_CONNECTION_LINGER
+                                        -Dsolr.tomcat.bufferSize=$SOLR_TOMCAT_BUFFER_SIZE
                                         -Dsolr.solr.home=$SOLR_HOME"
 
 if [ -n "${SOLR_KEYSTORE_PATH}" ]; then
