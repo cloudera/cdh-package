@@ -142,9 +142,13 @@ cp thirdparty/hadoop-*/lib/native/libhadoop.so* ${LIB_DIR}/lib
 cp -fr fe/target/dependency/* ${LIB_DIR}/lib/
 cp fe/target/impala-frontend-*-SNAPSHOT.jar ${LIB_DIR}/lib
 
-# Install Toolchain dependency to libstdc++ and libgcc
+# Install required 3rd-party dependencies provided by the toolchain. Only libstdc++,
+# libgcc, and the Kudu client should be needed. Everything else is statically linked.
 find toolchain/build/ -name "libstdc++*.so.*[^-gdb.py]" -exec cp -L {} ${LIB_DIR}/lib \;
 find toolchain/build/ -name "libgcc*.so.*[^-gdb.py]" -exec cp -L {} ${LIB_DIR}/lib \;
+# Don't pick up the debug version of the client. It's in a "debug" folder.
+find toolchain/build/ -name "libkudu_client.so.*" -not -path "*debug*"  \
+    -exec cp -L {} ${LIB_DIR}/lib \;
 
 # Replace bundled libraries with symlinks to packaged dependencies
 export DEPENDENCY_DIR=${PREFIX}/usr/lib/impala/lib
