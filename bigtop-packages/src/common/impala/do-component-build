@@ -16,6 +16,14 @@
 
 set -ex
 
+function clean_cmake_files {
+  find $WORKSPACE -iname '*cmake*' -not -name CMakeLists.txt \
+      | grep -v -e cmake_module \
+      | grep -v -e thirdparty \
+      | grep -v -e toolchain/build \
+      | xargs rm -Rf
+}
+
 export LLVM_HOME=/opt/toolchain/llvm-3.3
 export PATH=$LLVM_HOME/bin:$PATH
 export IMPALA_HOME=`pwd`
@@ -30,10 +38,13 @@ if [ -z "$GIT_REPO" ]; then
     # Download the latest dependency versions if needed.
     bin/bootstrap_toolchain.py || { echo "toolchain bootstrap failed"; exit 1; }
 
-    find $WORKSPACE -iname '*cmake*' -not -name CMakeLists.txt | grep -v -e cmake_module | grep -v -e thirdparty | xargs rm -Rf
-    ./buildall.sh -noclean -skiptests -notests
+    # Don't run $IMPALA_HOME/bin/clean.sh because that uses git commands and this isn't
+    # a git repo.
+    clean_cmake_files
+    ./buildall.sh -noclean -notests   # Debug build.
 
-    find $WORKSPACE -iname '*cmake*' -not -name CMakeLists.txt | grep -v -e cmake_module | grep -v -e thirdparty | xargs rm -Rf
+    # Don't clean non-cmake artifacts, the debug binaries will be packaged.
+    clean_cmake_files
     ./bin/make_release.sh -notests -build_static_libs
 else
     rm -rf build impala-${FULL_VERSION}
