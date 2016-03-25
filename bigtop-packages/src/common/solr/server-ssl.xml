@@ -88,7 +88,7 @@
                keepAliveTimeout="${solr.tomcat.keepAliveTimeout}"
                maxKeepAliveRequests="${solr.tomcat.maxKeepAliveRequests}"
                connectionLinger="${solr.tomcat.connectionLinger}"
-               bufferSize="${solr.tomcat.bufferSize}
+               bufferSize="${solr.tomcat.bufferSize}"
                maxThreads="${solr.max.connector.thread}"
                maxHttpHeaderSize="65536" scheme="https" secure="true"
                keystoreFile="${solr.keystore.path}"
