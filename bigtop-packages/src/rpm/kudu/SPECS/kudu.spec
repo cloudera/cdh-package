@@ -43,7 +43,6 @@ Source3: kudu-master.init
 Source4: kudu-tserver.init
 Requires: cyrus-sasl-lib
 Requires: cyrus-sasl-plain
-Requires: psutils
 Requires: lsb
 Requires: ntp
 Requires: /usr/sbin/useradd, openssl
