@@ -14,25 +14,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -ex
+set -e
+trap 'echo Error in $0 at line $LINENO: $(cd "'$PWD'" && awk "NR == $LINENO" $0)' ERR
+
+export IMPALA_HOME=`pwd`
+export DISABLE_CCACHE=1
+export IMPALA_TOOLCHAIN=$IMPALA_HOME/toolchain
 
 function clean_cmake_files {
   find $WORKSPACE -iname '*cmake*' -not -name CMakeLists.txt \
       | grep -v -e cmake_module \
       | grep -v -e thirdparty \
-      | grep -v -e toolchain/build \
+      | grep -v -e toolchain \
       | xargs rm -Rf
 }
 
-export LLVM_HOME=/opt/toolchain/llvm-3.3
-export PATH=$LLVM_HOME/bin:$PATH
-export IMPALA_HOME=`pwd`
-export PIC_LIB_PATH=/opt/toolchain/impala_3rdparty-0.5
-export BOOST_ROOT=/opt/toolchain/boost-pic-1.55.0
-export DISABLE_CCACHE=1
-export IMPALA_TOOLCHAIN=$IMPALA_HOME/toolchain/build
 if [ -z "$GIT_REPO" ]; then
-    IMPALA_TOOLCHAIN=$IMPALA_HOME/toolchain/build
     cd $IMPALA_HOME
     . bin/impala-config.sh
     # Download the latest dependency versions if needed.

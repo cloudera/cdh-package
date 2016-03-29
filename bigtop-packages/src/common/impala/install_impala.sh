@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -ex
+set -e
+trap 'echo Error in $0 at line $LINENO: $(cd "'$PWD'" && awk "NR == $LINENO" $0)' ERR
 
 usage() {
   echo "
@@ -144,10 +145,11 @@ cp fe/target/impala-frontend-*-SNAPSHOT.jar ${LIB_DIR}/lib
 
 # Install required 3rd-party dependencies provided by the toolchain. Only libstdc++,
 # libgcc, and the Kudu client should be needed. Everything else is statically linked.
-find toolchain/build/ -name "libstdc++*.so.*[^-gdb.py]" -exec cp -L {} ${LIB_DIR}/lib \;
-find toolchain/build/ -name "libgcc*.so.*[^-gdb.py]" -exec cp -L {} ${LIB_DIR}/lib \;
+IMPALA_TOOLCHAIN=toolchain
+find $IMPALA_TOOLCHAIN -name "libstdc++*.so.*[^-gdb.py]" -exec cp -L {} ${LIB_DIR}/lib \;
+find $IMPALA_TOOLCHAIN -name "libgcc*.so.*[^-gdb.py]" -exec cp -L {} ${LIB_DIR}/lib \;
 # Don't pick up the debug version of the client. It's in a "debug" folder.
-find toolchain/build/ -name "libkudu_client.so.*" -not -path "*debug*"  \
+find $IMPALA_TOOLCHAIN -name "libkudu_client.so.*" -not -path "*debug*"  \
     -exec cp -L {} ${LIB_DIR}/lib \;
 
 # Replace bundled libraries with symlinks to packaged dependencies
