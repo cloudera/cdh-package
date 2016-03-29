@@ -22,7 +22,7 @@ if [ -z "$GIT_REPO" ]; then
     else
         MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
     fi
-    JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -DskipTests clean $MAVEN_INST_DEPLOY -Pjavadoc site assembly:assembly "$@" 
+    JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -DskipTests $MAVEN_INST_DEPLOY -Pjavadoc site assembly:assembly "$@" 
 
     mkdir build
     cp target/*.tar.gz build

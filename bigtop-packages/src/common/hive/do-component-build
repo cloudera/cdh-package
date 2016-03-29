@@ -32,8 +32,8 @@ if [ -z "$GIT_REPO" ]; then
     else
         MAVEN_ARGS="-Denforcer.skip=true"
     fi
-    
-    mvn clean $MAVEN_INST_DEPLOY -DskipTests ${MAVEN_ARGS} -Phadoop-2 -fae "$@"
+
+    mvn $MAVEN_INST_DEPLOY -DskipTests ${MAVEN_ARGS} -Phadoop-2 -fae "$@"
 
     if [ -z "${MAVEN_ONLY}" ]; then
         (cd packaging; mvn package -Pdist)

@@ -17,7 +17,7 @@
 set -ex
 
 if [ -z "$GIT_REPO" ]; then
-    mvn -f maven/pom.xml clean install "$@"
+    mvn -f maven/pom.xml install "$@"
 
     MAVEN_OPTIONS=$DO_MAVEN_DEPLOY make apps docs
     # Workaround for https://issues.cloudera.org/browse/HUE-1603

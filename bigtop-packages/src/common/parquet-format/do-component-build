@@ -27,7 +27,7 @@ if [ -z "$GIT_REPO" ]; then
     export PATH=${THRIFT_HOME}/bin:${PATH}
 
     make
-    mvn clean source:jar-no-fork javadoc:jar $MAVEN_INST_DEPLOY -DskipTests
+    mvn source:jar-no-fork javadoc:jar $MAVEN_INST_DEPLOY -DskipTests
 
     rm -rf build parquet-format-${FULL_VERSION}
     ALL_FILES=`echo *`
