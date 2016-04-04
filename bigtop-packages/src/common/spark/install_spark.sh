@@ -175,7 +175,7 @@ cp ${SOURCE_DIR}/spark.default ${PREFIX}/etc/default/spark
 
 # Copy in the wrappers
 install -d -m 0755 $PREFIX/$BIN_DIR
-for wrap in sbin/spark-executor bin/spark-shell bin/spark-submit; do
+for wrap in bin/spark-shell bin/spark-submit; do
   cat > $PREFIX/$BIN_DIR/`basename $wrap` <<EOF
 #!/bin/bash
 

@@ -1,6 +1,5 @@
 /etc/spark
 /etc/default/spark
-/usr/bin/spark-executor
 /usr/bin/spark-shell
 /usr/bin/spark-submit
 /var/lib/spark/
