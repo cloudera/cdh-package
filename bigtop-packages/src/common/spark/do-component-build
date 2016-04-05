@@ -38,11 +38,11 @@ if [ -z "$GIT_REPO" ]; then
 #!/bin/sh
 export ZINC_OPTS="-Dzinc.dir=$PWD/target/zinc -Xmx2g -XX:MaxPermSize=512M -XX:ReservedCodeCacheSize=512m"
 export APACHE_MIRROR=http://archive-primary.cloudera.com/tarballs/apache
-exec $PWD/build/mvn --force "\$@"
+exec $PWD/build/mvn --force "\$@" $CAULDRON_MAVEN_EXTRA_ARGS
 EOF
   chmod 700 $MYMVN
 
-  ./make-distribution.sh  --mvn $MYMVN --target $MAVEN_INST_DEPLOY --skip-java-test -Dcdh.build=true $BUILD_OPTS
+  ./make-distribution.sh  --mvn $MYMVN --target $MAVEN_INST_DEPLOY --skip-java-test -Dcdh.build=true $CAULDRON_MAVEN_EXTRA_ARGS $BUILD_OPTS
   rm -f $MYMVN
 
   rm -rf build

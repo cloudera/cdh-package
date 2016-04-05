@@ -31,10 +31,10 @@ if [ -z "$GIT_REPO" ]; then
 # Change to cloudera/maven directory, and install
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository
         cd cloudera/maven-packaging
-        mvn -Dnot.cdh.release.build=false -Dmaven.repo.local=${HOME}/.m2/repository${M2_REPO_SUFFIX} install $DO_MAVEN_DEPLOY
+        mvn $CAULDRON_MAVEN_EXTRA_ARGS -Dnot.cdh.release.build=false -Dmaven.repo.local=${HOME}/.m2/repository${M2_REPO_SUFFIX} install $DO_MAVEN_DEPLOY
     fi
 else
-    mvn -f cloudera-pom.xml process-resources
+    mvn $CAULDRON_MAVEN_EXTRA_ARGS -f cloudera-pom.xml process-resources
     git add .
     git commit -a -m "Temporary commit for tarball"
     mkdir -p build

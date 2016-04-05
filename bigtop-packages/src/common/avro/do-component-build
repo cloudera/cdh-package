@@ -24,7 +24,7 @@ if [ -z "$GIT_REPO" ]; then
     fi
     
     export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -XX:PermSize=1024m -XX:MaxPermSize=1024m"
-    mvn -N $MAVEN_INST_DEPLOY
+    mvn $CAULDRON_MAVEN_EXTRA_ARGS -N $MAVEN_INST_DEPLOY
 
     # This is here to make sure that we ignore any errors due to the circular dependency with Hadoop when
     # we are doing a maven-only build for version updating.
@@ -34,14 +34,14 @@ if [ -z "$GIT_REPO" ]; then
 
     # Build Java libraries
     (cd lang/java;
-        mvn package -DskipTests -Dhadoop.version=2 $NEVER_FAIL $@;
+        mvn $CAULDRON_MAVEN_EXTRA_ARGS package -DskipTests -Dhadoop.version=2 $NEVER_FAIL $@;
         rm -rf mapred/target/classes/;
-        mvn -Dhadoop.version=2 -P dist package compile -DskipTests -DskipITs -Davro.version=$VERSION $NEVER_FAIL $MAVEN_INST_DEPLOY $@
-        mvn javadoc:aggregate )
+        mvn $CAULDRON_MAVEN_EXTRA_ARGS -Dhadoop.version=2 -P dist package compile -DskipTests -DskipITs -Davro.version=$VERSION $NEVER_FAIL $MAVEN_INST_DEPLOY $@
+        mvn $CAULDRON_MAVEN_EXTRA_ARGS javadoc:aggregate )
 
     if [ -z "${MAVEN_ONLY}" ]; then
         (cd lang/java/trevni/doc; mvn site $@)
-        mvn -N -P copy-artifacts antrun:run $@
+        mvn $CAULDRON_MAVEN_EXTRA_ARGS -N -P copy-artifacts antrun:run $@
         (cd doc; ant -Dforrest.home=${FORREST_HOME};)
         
     # Some Avro docs get placed in folders with special characters in the name

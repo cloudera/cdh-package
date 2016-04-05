@@ -73,7 +73,7 @@ fi
 # cd cloudera/maven-packaging
 # mvn -Dnot.cdh.release.build=false install -Dmaven.repo.local=${HOME}/.m2/repository $DO_MAVEN_DEPLOY
 else
-    mvn -f cloudera-pom.xml process-resources
+    mvn $CAULDRON_MAVEN_EXTRA_ARGS -f cloudera-pom.xml process-resources
     git add .
     git commit -a -m "Temporary commit for tarball"
     mkdir -p build

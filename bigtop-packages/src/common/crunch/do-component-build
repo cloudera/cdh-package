@@ -27,7 +27,7 @@ if [ -z "$GIT_REPO" ]; then
         SITE_GOAL="site:site"
     fi
     
-    mvn -DskipTests -Dcrunch.platform=2           \
+    mvn $CAULDRON_MAVEN_EXTRA_ARGS -DskipTests -Dcrunch.platform=2           \
     -Dslf4j.version=1.6.1                     \
     -Papache-release ${SITE_GOAL} source:jar-no-fork javadoc:jar $MAVEN_INST_DEPLOY -fae "$@"
 

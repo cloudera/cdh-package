@@ -86,15 +86,16 @@ if [ -z "$GIT_REPO" ]; then
     echo "Stage 1: building Hadoop maven site"
 
     if [ -z "${MAVEN_ONLY}" ]; then
-        JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn site site:stage ${MAVEN_SKIP_TESTS} $@
 
+        JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn $CAULDRON_MAVEN_EXTRA_ARGS site site:stage ${MAVEN_SKIP_TESTS} $@
 # Copy generated docs
         mkdir -p build/hadoop-${FULL_VERSION}/share/doc/
         cp -r target/staging/hadoop-project/* build/hadoop-${FULL_VERSION}/share/doc/
 
 # Rebuild and now mvn deploy the tarball - note the '-pl hadoop-dist' - if we chdir into hadoop-dist and build, it fails.
-        JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn -pl hadoop-dist -Pdist -Psrc -Dtar ${MAVEN_SKIP_TESTS} -Dmaven.javadoc.skip=true -Dmaven.deploy.skip=false $MAVEN_INST_DEPLOY "$@"
 
+        JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn $CAULDRON_MAVEN_EXTRA_ARGS -pl hadoop-dist -Pdist -Psrc -Dtar ${MAVEN_SKIP_TESTS} -Dmaven.javadoc.skip=true -Dmaven.deploy.skip=false $MAVEN_INST_DEPLOY "$@"
+        
         (cd build/hadoop-${FULL_VERSION} ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${FULL_VERSION}.tar.gz)
 # (cd build/hadoop-${FULL_VERSION}/src ; tar --strip-components=1 -xzvf  ../../../hadoop-dist/target/hadoop-${FULL_VERSION}.tar.gz)
         (cd build/hadoop-${FULL_VERSION} ; cp -r ../../cloudera .)
@@ -140,12 +141,12 @@ if [ -z "$GIT_REPO" ]; then
     if [ -n "$DO_MAVEN_DEPLOY" ]; then
 # Change to cloudera/maven directory, and install
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository
-        (cd hadoop-mapreduce1-project/cloudera/maven-packaging ; mvn -Dnot.cdh.release.build=false $DO_MAVEN_DEPLOY)
+        (cd hadoop-mapreduce1-project/cloudera/maven-packaging ; mvn $CAULDRON_MAVEN_EXTRA_ARGS -Dnot.cdh.release.build=false $DO_MAVEN_DEPLOY)
     fi
 
     if [ -z "${MAVEN_ONLY}" ]; then
 # Create a manifest for the hadoop-0.20-client
-        (cd hadoop-mapreduce1-project/cloudera/maven-packaging/hadoop-client ; mvn assembly:single)
+        (cd hadoop-mapreduce1-project/cloudera/maven-packaging/hadoop-client ; mvn $CAULDRON_MAVEN_EXTRA_ARGS assembly:single)
         (cd hadoop-mapreduce1-project/cloudera/maven-packaging/hadoop-client/target/hadoop-client*/client ; ls) > hadoop-mapreduce1-project/build/hadoop-mr1/hadoop-client.list
 
 # Move MR1 bits into the final destination

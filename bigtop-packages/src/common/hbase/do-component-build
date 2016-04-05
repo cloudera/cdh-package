@@ -31,9 +31,9 @@ if [ -z "$GIT_REPO" ]; then
     set -ex
     JAVA_OPTS="-Xmx3G -XX:MaxPermSize=256m"
     # First do a local install so that goals that fail to look in the current reactor will see modules in the project (i.e. javadoc and site)
-    MAVEN_OPTS="$JAVA_OPTS" mvn -DskipTests -Dmaven.repo.local="${HOME}/.m2/repository${M2_REPO_SUFFIX}" install
+    MAVEN_OPTS="$JAVA_OPTS" mvn $CAULDRON_MAVEN_EXTRA_ARGS -DskipTests -Dmaven.repo.local="${HOME}/.m2/repository${M2_REPO_SUFFIX}" install
 
-    MAVEN_OPTS="$JAVA_OPTS" mvn $build_args "$@"
+    MAVEN_OPTS="$JAVA_OPTS" mvn $CAULDRON_MAVEN_EXTRA_ARGS $build_args "$@"
 
     if [ -z "${MAVEN_ONLY}" ]; then
         mkdir -p build

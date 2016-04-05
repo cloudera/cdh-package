@@ -28,7 +28,7 @@ if [ -z "$GIT_REPO" ]; then
     THRIFT_HOME=/opt/toolchain/thrift-0.9.0
     export PATH=${THRIFT_HOME}/bin:${PATH}
 
-    MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn source:jar-no-fork javadoc:jar $MAVEN_INST_DEPLOY -Dprotoc.executable=${PROTOC_CDH5_PATH} -DskipTests  -Dthrift7.executable=/opt/toolchain/thrift-0.7.0/bin/thrift
+    MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn $CAULDRON_MAVEN_EXTRA_ARGS source:jar-no-fork javadoc:jar $MAVEN_INST_DEPLOY -Dprotoc.executable=${PROTOC_CDH5_PATH} -DskipTests  -Dthrift7.executable=/opt/toolchain/thrift-0.7.0/bin/thrift
 
     rm -rf build parquet18-${FULL_VERSION}
     ALL_FILES=`echo *`

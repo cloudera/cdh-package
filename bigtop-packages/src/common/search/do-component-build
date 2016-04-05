@@ -23,7 +23,7 @@ if [ -z "$GIT_REPO" ]; then
         MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
     fi
 
-    mvn -DskipTests $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository${M2_REPO_SUFFIX} -fae "$@"
+    mvn $CAULDRON_MAVEN_EXTRA_ARGS -DskipTests $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository${M2_REPO_SUFFIX} -fae "$@"
 
     rm -rf build
     mkdir build
