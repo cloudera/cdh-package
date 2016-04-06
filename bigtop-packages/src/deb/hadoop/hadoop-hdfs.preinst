@@ -40,7 +40,7 @@ case "$1" in
                 --group \
                 --home /var/lib/hadoop-hdfs \
                 --gecos "Hadoop HDFS" \
-                --shell /bin/bash \
+                --shell /sbin/nologin \
                 hdfs >/dev/null 2>/dev/null || :
             usermod --append --groups hadoop hdfs || :
         fi

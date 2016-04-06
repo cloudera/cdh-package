@@ -39,7 +39,7 @@ case "$1" in
                 --group \
                 --home /var/lib/hadoop-mapreduce \
                 --gecos "Hadoop MapReduce" \
-                --shell /bin/bash \
+                --shell /sbin/nologin \
                 mapred >/dev/null 2>/dev/null || :
             usermod --append --groups hadoop mapred || :
         fi

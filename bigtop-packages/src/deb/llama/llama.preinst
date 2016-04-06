@@ -20,7 +20,7 @@ set -e
 case "$1" in
     install|upgrade)
         getent group llama >/dev/null || groupadd -r llama
-        getent passwd llama > /dev/null || useradd -c "Llama" -s /bin/bash -g llama -d /var/lib/llama llama 2> /dev/null || :
+        getent passwd llama > /dev/null || useradd -c "Llama" -s /sbin/nologin -g llama -d /var/lib/llama llama 2> /dev/null || :
     ;;
     abort-upgrade)
     ;;
