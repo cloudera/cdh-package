@@ -91,7 +91,7 @@ This package provides documentation for Llama
 
 %pre
 getent group llama >/dev/null || groupadd -r llama
-getent passwd llama > /dev/null || useradd -c "Llama" -s /sbin/nologin -g llama -d %{state_llama} llama 2> /dev/null || :
+getent passwd llama > /dev/null || useradd -c "Llama" -s /bin/bash -g llama -d %{state_llama} llama 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{etc_llama}/conf llama-conf %{etc_llama}/conf.dist 30

@@ -38,7 +38,7 @@ case "$1" in
                 --group \
                 --home /var/lib/hadoop-httpfs \
                 --gecos "Hadoop HTTPFS" \
-                --shell /sbin/nologin \
+                --shell /bin/bash \
                 httpfs >/dev/null 2>/dev/null || :
         fi
     ;;
