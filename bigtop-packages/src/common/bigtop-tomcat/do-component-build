@@ -32,9 +32,12 @@ if [ -z "$GIT_REPO" ]; then
     
     rm -rf dl
     mkdir dl
-    ant -Dbase.path=dl clean download -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar -Dnsis.loc=http://archive.cloudera.com/tarballs/nsis-2.46.zip
-    ant -Dbase.path=dl -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
-    ant -Dbase.path=dl -Dskip.installer=true -f dist.xml dist-static package-tgz -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
+    # ant -Dbase.path=dl clean download -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar -Dnsis.loc=http://archive.cloudera.com/tarballs/nsis-2.46.zip
+    ant -v -Dbase-apache.loc.1=http://mirror.infra.cloudera.com/apache/ -Dbase-apache.loc.2=http://mirror.infra.cloudera.com/apache/ -Dbase.path=dl clean download -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar -Dnsis.loc=http://archive.cloudera.com/tarballs/nsis-2.46.zip
+    #ant -Dbase.path=dl -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
+    ant -v -Dbase-apache.loc.1=http://mirror.infra.cloudera.com/apache/ -Dbase-apache.loc.2=http://mirror.infra.cloudera.com/apache/ -Dbase.path=dl -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
+    #ant -Dbase.path=dl -Dskip.installer=true -f dist.xml dist-static package-tgz -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
+    ant -v -Dbase-apache.loc.1=http://mirror.infra.cloudera.com/apache/ -Dbase-apache.loc.2=http://mirror.infra.cloudera.com/apache/ -Dbase.path=dl -Dskip.installer=true -f dist.xml dist-static package-tgz -Djdt.loc.1=http://archive.cloudera.com/tarballs/ecj-3.7.jar
     
     tar -C build --strip-components=1 -xzf output/release/v*/bin/apache-tomcat-*[0-9].tar.gz
     
