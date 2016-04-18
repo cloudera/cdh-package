@@ -3,73 +3,69 @@
 set -ex
 
 export IMPALA_LZO_IMPALA_REF=origin/cdh5-trunk-promoted
-export IMPALA_LZO_HADOOP_LZO_REF=origin/cdh5-0.4.15
 export DISABLE_CCACHE=1
 
 if [ -z "$GIT_REPO" ]; then
-    export LLVM_HOME=$TOOLCHAIN_HOME/llvm-3.3
-    export PATH=$LLVM_HOME/bin:$PATH
-    export BOOST_ROOT=/opt/toolchain/boost-pic-1.55.0
-    export PIC_LIB_PATH=/opt/toolchain/impala_3rdparty-0.5
-    
-    export IMPALA_LZO=`pwd`
-    if [ -z "${WORKSPACE}" ]; then
-        WORKSPACE=~/impala-lzo-repos
-        DELETE_WORKSPACE=true
-    fi
-    export IMPALA_HOME=$IMPALA_LZO/Impala
-    export HADOOP_LZO=$IMPALA_LZO/hadoop-lzo
-
     if [ -n "$NATIVE_BUILD" ]; then
-        mkdir -p $WORKSPACE
+        if [ $CAULDRON_BUILD ]; then
+            # do-component-build is invoked two times, the 2nd time when GIT_REPO is undefined and NATIVE_BUILD
+            # is. During the second pass PACKAGE_VERSION is not defined however. We need assume the impala version
+            # is the same as the impala-lzo version, which should hold true in a CAULDRON build
+            PACKAGE_VERSION=$(pwd | sed 's/.*impala-lzo-\(.*\)/\1/')
+            if [ -z "${DEB_BUILD_ARCH}" ]; then
+                PACK_TYPE=rpm
+            else
+                PACK_TYPE=deb
+            fi
 
-        if [ ! -e "$IMPALA_HOME" ]; then
-            export IMPALA_HOME=$WORKSPACE/Impala
-            (cd $WORKSPACE && git clone git://github.sf.cloudera.com/CDH/Impala.git)
-            (cd $IMPALA_HOME && git checkout ${IMPALA_LZO_IMPALA_REF})
-        fi
-        
-        if [ ! -e "$HADOOP_LZO" ]; then
-            export HADOOP_LZO=$WORKSPACE/hadoop-lzo
-            (cd $WORKSPACE && git clone git://github.sf.cloudera.com/CDH/hadoop-lzo.git)
-            (cd $HADOOP_LZO && git checkout ${IMPALA_LZO_HADOOP_LZO_REF})
-        fi
-        
-        (cd $HADOOP_LZO && ant package)
+            # copy the impala files since they are write protected, and gen_build_version.py requires 
+            # read write access
+            cp -r  ~/artifacts/local-impala-${PACK_TYPE}/output/cdh5/impala/impala-${PACKAGE_VERSION} impala
+            ./build.sh `pwd`/impala `pwd`/impala/toolchain
+        else
+            export LLVM_HOME=$TOOLCHAIN_HOME/llvm-3.3
+            export IMPALA_LZO=`pwd`
 
-        # FIXME: IMP-854
-        if cat /etc/issue | grep '\(Ubuntu\|Debian\)'; then
-            SNAPPY_PREAMBLE='build_preamble $IMPALA_HOME/thirdparty/snappy-${IMPALA_SNAPPY_VERSION} Snappy'
-            REG_EXP="s#${SNAPPY_PREAMBLE}#${SNAPPY_PREAMBLE}\n./autogen.sh#"
-            (cd $IMPALA_HOME && sed -i -e "$REG_EXP" bin/build_thirdparty.sh)
+            export IMPALA_HOME=$IMPALA_LZO/Impala
+            export HADOOP_LZO=$IMPALA_LZO/hadoop-lzo
+
+            if [ -z "${WORKSPACE}" ]; then
+                WORKSPACE=~/impala-lzo-repos
+                DELETE_WORKSPACE=true
+            fi
+
+            mkdir -p $WORKSPACE
+
+            if [ ! -e "$IMPALA_HOME" ]; then
+                export IMPALA_HOME=$WORKSPACE/Impala
+                (cd $WORKSPACE && git clone git://github.sf.cloudera.com/CDH/Impala.git)
+                (cd $IMPALA_HOME && git checkout ${IMPALA_LZO_IMPALA_REF})
+            fi
+
+            # FIXME: IMP-854
+            if cat /etc/issue | grep '\(Ubuntu\|Debian\)'; then
+                SNAPPY_PREAMBLE='build_preamble $IMPALA_HOME/thirdparty/snappy-${IMPALA_SNAPPY_VERSION} Snappy'
+                REG_EXP="s#${SNAPPY_PREAMBLE}#${SNAPPY_PREAMBLE}\n./autogen.sh#"
+                (cd $IMPALA_HOME && sed -i -e "$REG_EXP" bin/build_thirdparty.sh)
+            fi
+
+            (cd $IMPALA_HOME && \
+                . bin/impala-config.sh && \
+                ./buildall.sh -noclean -notests -skiptests)
+
+            if [ -n "${DELETE_WORKSPACE}" ]; then
+                rm -r ${WORKSPACE}
+            fi
         fi
 
-        (cd $IMPALA_HOME && \
-            . bin/impala-config.sh && \
-            ./buildall.sh -noclean -notests -skiptests)
-
-        if [ -n "${DELETE_WORKSPACE}" ]; then
-            rm -r ${WORKSPACE}
-        fi
     fi
-
-    rm -rf impala-lzo-${FULL_VERSION}
-    ALL_FILES=`echo *`
-    mkdir -p impala-lzo-${FULL_VERSION}
-    cp -r $ALL_FILES impala-lzo-${FULL_VERSION}/
-    mkdir -p build
-    tar czf build/impala-lzo-${FULL_VERSION}.tar.gz impala-lzo-${FULL_VERSION}
-else
-    export IMPALA_HOME=Impala
-    export HADOOP_LZO=hadoop-lzo
-
+else # GIT_REPO is set, this infers that it is the first invocation tarball the files to build
     if [ ${CAULDRON_BUILD} ]; then
-        # this is a temporary fix that links the impala and hadoop folders, no need to download
-        # arbitrarily old code
-        mkdir -p ${IMPALA_HOME} ${HADOOP_LZO}
-        cp -r ${GIT_REPO}/../impala/* ${IMPALA_HOME}
-        cp -r ${GIT_REPO}/../hadoop-lzo/* ${HADOOP_LZO}
+        echo CAULDRON_BUILD do nothing during the 1st invocation
     else
+        export IMPALA_HOME=Impala
+        export HADOOP_LZO=hadoop-lzo
+
         export IMPALA_BRANCH=$(echo ${IMPALA_LZO_IMPALA_REF}|sed -e 's/origin\///')
         [ -e "$IMPALA_HOME" ] && rm -rf $IMPALA_HOME
         mkdir -p $IMPALA_HOME
@@ -79,12 +75,13 @@ else
         find ${IMPALA_HOME} -name .gitignore -exec rm -f {} \;
         rm -f ${IMPALA_BRANCH}.tar.gz
 
+        export IMPALA_LZO_HADOOP_LZO_REF=origin/cdh5-0.4.15
         export HADOOP_LZO_BRANCH=$(echo ${IMPALA_LZO_HADOOP_LZO_REF}|sed -e 's/origin\///')
         [ -e "$HADOOP_LZO" ] && rm -rf $HADOOP_LZO
         mkdir -p $HADOOP_LZO
         [ -e "${HADOOP_LZO_BRANCH}.tar.gz" ] && rm -f ${HADOOP_LZO_BRANCH}.tar.gz
         wget http://github.mtv.cloudera.com/CDH/hadoop-lzo/archive/${HADOOP_LZO_BRANCH}.tar.gz \
-            -O ${HADOOP_LZO_BRANCH}.tar.gz
+        -O ${HADOOP_LZO_BRANCH}.tar.gz
         tar -xz --strip-components 1 -f ${HADOOP_LZO_BRANCH}.tar.gz -C ${HADOOP_LZO}
         find ${HADOOP_LZO} -name .gitignore -exec rm -f {} \;
         rm -f ${HADOOP_LZO_BRANCH}.tar.gz
@@ -96,4 +93,3 @@ else
     mkdir -p build
     git archive --prefix=impala-lzo-${FULL_VERSION}/ --format=tar HEAD |gzip > build/impala-lzo-${FULL_VERSION}.tar.gz
 fi
-
