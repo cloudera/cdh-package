@@ -38,7 +38,20 @@ if [ -z "$GIT_REPO" ]; then
     # Don't run $IMPALA_HOME/bin/clean.sh because that uses git commands and this isn't
     # a git repo.
     clean_cmake_files
-    ./buildall.sh -noclean -notests   # Debug build.
+
+    # Setting CAULDRON_IMPALA_PARTIAL_BUILD_0=true makes the buildall.sh script, that's
+    # called below, just build the Impala Frontend, which is Java-only and fast.
+    CAULDRON_BUILD_FLAG=""
+    if [ -n "${CAULDRON_IMPALA_PARTIAL_BUILD_0}" ]; then
+      CAULDRON_BUILD_FLAG="-fe_only"
+    fi
+
+    ./buildall.sh -noclean -notests ${CAULDRON_BUILD_FLAG}   # Debug build.
+
+    if [ -n "${CAULDRON_IMPALA_PARTIAL_BUILD_0}" ]; then
+      echo "CAULDRON_IMPALA_PARTIAL_BUILD_0 is set - skipping the rest of build"
+      exit 0
+    fi
 
     # Don't clean non-cmake artifacts, the debug binaries will be packaged.
     clean_cmake_files

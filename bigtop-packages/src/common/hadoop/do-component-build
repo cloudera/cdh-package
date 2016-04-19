@@ -26,7 +26,7 @@ if [ -z "$GIT_REPO" ]; then
         MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
     fi
 
-# FIXME: this needs to go away once we start using an actuall source tarball
+# FIXME: this needs to go away once we start using an actual source tarball
     [ -f pom.xml ] || cd src
 
     if [ ! -d build/hadoop-${FULL_VERSION}/src ]; then
@@ -58,6 +58,12 @@ if [ -z "$GIT_REPO" ]; then
     else
       echo "Stage 0: building Hadoop maven artifacts"
 
+      if [ -z "${CAULDRON_NO_NATIVE_BUILD}" ]; then
+        P_NATIVE="-Pnative"
+      else
+        P_NATIVE=""
+      fi
+
 # Build artifacts
       if [ -n "${CAULDRON_HADOOP_PARTIAL_BUILD_0}" ]; then
         echo "CAULDRON_HADOOP_PARTIAL_BUILD_0 is set; will skip generating javadocs and building MR1"
@@ -71,8 +77,8 @@ if [ -z "$GIT_REPO" ]; then
       MAVEN_SKIP_TESTS="-DskipTests -DskipTest -DskipITs"
       JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
           MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" \
-          mvn $BUNDLE_SNAPPY \
-          -Pdist -Pnative -Pfuse -Psrc -Dtar -Drequire.fuse=true \
+          mvn $BUNDLE_SNAPPY $P_NATIVE \
+          -Pdist -Pfuse -Psrc -Dtar -Drequire.fuse=true \
           ${MAVEN_SSL_FLAGS} ${MAVEN_SKIP_TESTS} ${MAVEN_SKIP_JAVADOC} \
           $MAVEN_INST_DEPLOY \
           "$@"
