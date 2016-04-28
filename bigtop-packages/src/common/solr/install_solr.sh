@@ -159,6 +159,7 @@ cp $DISTRO_DIR/solr.default $PREFIX/$DEFAULT_DIR/solr
 
 install -d -m 0755 $PREFIX/${CONF_DIR}.dist
 cp -ra ${BUILD_DIR}/example/solr/* $PREFIX/${CONF_DIR}.dist
+cp -fa ${BUILD_DIR}/example/scripts/cloud-scripts/log4j.properties $PREFIX/${CONF_DIR}.dist
 
 install -d -m 0755 $PREFIX/$LIB_DIR/webapps/solr
 (cd $PREFIX/$LIB_DIR/webapps/solr ; jar xf ../../*.war)
