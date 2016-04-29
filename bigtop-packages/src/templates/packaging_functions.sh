@@ -108,7 +108,6 @@ function check_for_package_dependency() {
 # This function is known to behave incorrectly when using BSD versions of sed and grep instead of GNU
 # strip_versions <file name>
 function strip_versions() {
-
     original="${1}"
     if echo "${original}" | grep 'hive-shims-0.23' > /dev/null; then
         # 0.23 is significant (i.e. hive-shims-0.23 and hive-shims must be distinct)
@@ -122,11 +121,14 @@ function strip_versions() {
     modified=`echo ${modified} | sed -e 's/-SNAPSHOT//g'`
     modified=`echo ${modified} | sed -r -e 's/-beta-[0-9]+//g'`
     # Next we remove all CDH versions and similar "profile" versions
-    modified=`echo ${modified} | sed -r -e 's/-(cdh|hbase|hadoop)[0-9]+(\.[0-9]+)+//g'`
+    # This clears "cdh6.x", but not "hadoop2"; single-digit versions
+    # are ignored because of things like "trevni-avro-hadoop2.jar"
+    modified=`echo ${modified} | sed -r -e 's/-(cdh|hbase|hadoop)[0-9]+(\.[0-9]+|\.x)+//g'`
     # Compound versions (e.g. in Oozie) confuse things (has happened in Spark too)
     modified=`echo ${modified} | sed -e 's/\.oozie//g'`
     # Penultimately, remove all component versions and timestamps - this may remove trailing hyphens that previous expressions rely on
-    modified=`echo ${modified} | sed -r -e 's/(-|_)[0-9]+\.[-0-9\.]+?[0-9]//g'`
+    # This also clears ".x" versions like "6.x"
+    modified=`echo ${modified} | sed -r -e 's/(-|_)[0-9]+\.[-0-9\.]+?[0-9x]//g'`
     # Finally, make sure the filename ends with '.jar' - previous expressions have to risk remove the period
     modified=`echo ${modified} | sed -r -e 's/([^.])jar$/\1.jar/'`
     if "${hive_shims_mr1_exception}" == 'true'; then

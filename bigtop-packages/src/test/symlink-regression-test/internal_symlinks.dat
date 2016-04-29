@@ -268,3 +268,4 @@
 ./hadoop-0.20-mapreduce/hadoop-core-mr1.jar|hadoop-core-2.6.0-mr1-cdh5.4.0-SNAPSHOT.jar
 ./zookeeper/zookeeper.jar|zookeeper-3.4.5-cdh5.4.0-SNAPSHOT.jar
 ./zookeeper/lib/slf4j-log4j12.jar|slf4j-log4j12-1.7.5.jar
+./spark/lib/spark-assembly.jar|spark-assembly_2.10-1.6.0-cdh6.x-SNAPSHOT.jar
