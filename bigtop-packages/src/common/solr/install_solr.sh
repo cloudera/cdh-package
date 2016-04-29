@@ -461,6 +461,7 @@ cat > $PREFIX/$BIN_DIR/solrctl <<EOF
 
 export SOLR_HOME=${SOLR_HOME:-/usr/lib/solr/}
 export SOLR_DEFAULTS=${SOLR_DEFAULTS:-/etc/default/solr}
+export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop/}
 
 exec $INSTALLED_LIB_DIR/bin/solrctl.sh "\$@"
 
