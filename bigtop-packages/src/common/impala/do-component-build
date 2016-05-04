@@ -22,7 +22,7 @@ export DISABLE_CCACHE=1
 export IMPALA_TOOLCHAIN=$IMPALA_HOME/toolchain
 
 function clean_cmake_files {
-  find $WORKSPACE -iname '*cmake*' -not -name CMakeLists.txt \
+  find . -iname '*cmake*' -not -name CMakeLists.txt \
       | grep -v -e cmake_module \
       | grep -v -e thirdparty \
       | grep -v -e toolchain \
