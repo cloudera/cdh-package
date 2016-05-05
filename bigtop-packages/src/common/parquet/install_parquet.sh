@@ -110,7 +110,7 @@ chmod 755 $wrapper
 # move everything into the LIB_DIR/lib folder created above
 install -d -m 0755 $PREFIX/$HADOOP_HOME
 
-versions='s#-[0-9.]\+-cdh[0-9\-\.]*[0-9]\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
+versions='s#-[0-9.]\+-cdh[0-9\-\.]*[0-9x]\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
 for jar in `find $BUILD_DIR -name parquet*.jar | grep -v 'sources.jar' | grep -v 'javadoc.jar' | grep -v 'tests.jar' | grep -v 'original-parquet'`; do
     # copy the jar if it isn't already in LIB_DIR/lib
     [ -f "${PREFIX}/${LIB_DIR}/lib/`basename ${jar}`" ] || cp $jar $PREFIX/$LIB_DIR/lib/
