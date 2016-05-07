@@ -24,9 +24,18 @@ if [ -z "$GIT_REPO" ]; then
     else
         TAR_TARGET="jar bin-jar test-jar"
     fi
-    
-    ant -propertyfile cloudera/build.properties ${TAR_TARGET} -Dversion=${FULL_VERSION} -Drepo.maven.org=${IVY_MIRROR_PROP} -Divy.home=${HOME}/.ivy2  "$@"
-    
+
+    if [ -n "${CAULDRON_BUILD}" ]; then
+      IVYSETTINGS_OVERRIDE="-Divysettings.xml=${CAULDRON_TOP_DIR}/ivysettings.xml"
+    else
+      IVYSETTINGS_OVERRIDE=""
+    fi
+
+    ant -propertyfile cloudera/build.properties ${TAR_TARGET} -Dversion=${FULL_VERSION} \
+      -Drepo.maven.org=${IVY_MIRROR_PROP} -Divy.home=${HOME}/.ivy2 \
+      ${IVYSETTINGS_OVERRIDE} \
+      "$@"
+
     if [ -n "$DO_MAVEN_DEPLOY" ]; then
 # Change to cloudera/maven directory, and install
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository
