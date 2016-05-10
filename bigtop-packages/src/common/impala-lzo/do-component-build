@@ -20,7 +20,7 @@ if [ -z "$GIT_REPO" ]; then
 
             # copy the impala files since they are write protected, and gen_build_version.py requires 
             # read write access
-            cp -r  ${CAULDRON_ARTIFACTS}/local-impala-${PACK_TYPE}/output/cdh5/impala/impala-${PACKAGE_VERSION} impala
+            cp -r  ${CAULDRON_ARTIFACTS}/local-impala-${PACK_TYPE}/output/cdh*/impala/impala-${PACKAGE_VERSION} impala
             ./build.sh `pwd`/impala `pwd`/impala/toolchain
         else
             export LLVM_HOME=$TOOLCHAIN_HOME/llvm-3.3
