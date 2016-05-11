@@ -23,17 +23,23 @@ if [ -z "$GIT_REPO" ]; then
         echo installed. 1>&2
         exit 1
     fi
-    
+
+    if [ -n "${CAULDRON_BUILD}" ]; then
+      IVYSETTINGS_OVERRIDE="-Divysettings.xml=${CAULDRON_TOP_DIR}/ivysettings.xml"
+    else
+      IVYSETTINGS_OVERRIDE=""
+    fi
+
     BUILD_OPTS="-Djavac.version=1.6 -Dforrest.home=${FORREST_HOME}  -Dhadoopversion=23   \
             -Dreactor.repo=file://${HOME}/.m2/repository${M2_REPO_SUFFIX} -Divy.home=${HOME}/.ivy2 -Dmvnrepo=$IVY_MIRROR_PROP \
-            -propertyfile cloudera/build.properties"
-    
+            -propertyfile cloudera/build.properties ${IVYSETTINGS_OVERRIDE}"
+
 # FIXME: BIGTOP-894. Please get rid of the line below when Bigtop integrates a version of Pig that includes the fix for PIG-3262
     export LC_ALL=en_US.UTF-8
-    
+
     rm -f test/org/apache/pig/test/TestHBaseStorage.java
     sed -i.orig -e 's#</modules>#<module organisation="org.apache.hadoop" name=".*" resolver="internal"/>\n</modules>#' ivy/ivysettings.xml
-    
+
     ant $BUILD_OPTS clean jar jar-withouthadoop "$@"
     for build_file in contrib/piggybank/java/build.xml ; do
         ant $BUILD_OPTS -buildfile $build_file clean jar "$@"

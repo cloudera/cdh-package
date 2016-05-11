@@ -17,10 +17,17 @@
 set -ex
 
 if [ -z "$GIT_REPO" ]; then
-    ant release "$@"
-    
+
+    if [ -n "${CAULDRON_BUILD}" ]; then
+      IVYSETTINGS_OVERRIDE="-Divy.settings.file=${CAULDRON_TOP_DIR}/ivysettings.xml"
+    else
+      IVYSETTINGS_OVERRIDE=""
+    fi
+
+    ant ${IVYSETTINGS_OVERRIDE} release "$@"
+
     mkdir -p build
-    
+
     mv dist/*.tar.gz build/datafu-$FULL_VERSION.tar.gz
 
     # Get rid of cobertura directory from the tarball
