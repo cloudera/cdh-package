@@ -53,8 +53,6 @@
 
 %endif
 
-
-
 Name: zookeeper
 Version: %{zookeeper_version}
 Release: %{zookeeper_release}
@@ -73,7 +71,11 @@ Source6: zoo.cfg
 Source7: zookeeper.default
 Source8: packaging_functions.sh
 BuildRequires: ant, autoconf, automake, cppunit-devel
+%if %{?suse_version:1}0
+Requires(pre): coreutils, pwdutils, /usr/sbin/groupadd, /usr/sbin/useradd
+%else
 Requires(pre): coreutils, shadow-utils, /usr/sbin/groupadd, /usr/sbin/useradd
+%endif
 Requires(post): %{alternatives_dep}
 Requires(preun): %{alternatives_dep}
 Requires: bigtop-utils >= 0.7
