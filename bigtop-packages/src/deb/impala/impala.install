@@ -3,6 +3,7 @@
 /usr/bin/statestored
 /usr/bin/impalad
 /usr/bin/catalogd
+/usr/bin/impala-collect-minidumps
 /var/log/impala
 /var/run/impala
 /var/lib/impala

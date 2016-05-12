@@ -130,6 +130,7 @@ rm ${LIB_DIR}/sbin-debug/*.a
 
 # install scripts
 install -d -m 0755 ${LIB_DIR}/bin
+cp bin/collect_minidumps.py ${LIB_DIR}/bin
 # cp bin/* ${LIB_DIR}/bin
 
 # install web document root
@@ -278,8 +279,17 @@ fi
 
 ${DO_EXEC}\${IMPALA_BIN}/$wrapper "\$@"
 __EOT__
+  export IMPALA_BIN=\${IMPALA_BIN:-/usr/lib/impala/sbin}
   chmod 755 ${BIN_DIR} ${BIN_DIR}/${wrapper}
 done
+
+# install the minidump collection script
+cat > ${BIN_DIR}/impala-collect-minidumps <<__EOT__
+#!/bin/bash
+export LIB_DIR=\${LIB_DIR:-/usr/lib}
+${DO_EXEC}\${LIB_DIR}/impala/bin/collect_minidumps.py "\$@"
+__EOT__
+chmod 755 ${BIN_DIR} ${BIN_DIR}/impala-collect-minidumps
 
 install -d -m 0755 $CONF_DIR
 
