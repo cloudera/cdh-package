@@ -202,17 +202,26 @@ BuildRequires: openssl
 BuildRequires: krb5-devel
 BuildRequires: gmp-devel
 Group: Applications/Engineering
-Requires: cyrus-sasl-gssapi, libxml2, libxslt, zlib, sqlite, gmp
+Requires: cyrus-sasl-gssapi, libxml2, libxslt, zlib, sqlite
+
 # The only reason we need the following is because we also have AutoProv: no
 Conflicts: cloudera-desktop, hue-about, hue-filebrowser, hue-help, hue-jobbrowser, hue-jobsub, hue-metastore, hue-oozie, hue-proxy, hue-shell, hue-useradmin
 Provides: config(%{name}-common) = %{version}
 
 %if %{?suse_version:1}0
 BuildRequires: sqlite3-devel, openldap2-devel, libmysqlclient-devel, libopenssl-devel, python-devel, python-setuptools
-Requires: insserv, python-xml, python, libmysqlclient_r15
+Requires: insserv, python-xml, python
+# SLES 11 version: 1110
+# SLES 12 version: 1315
+# OpenSUSE has multiple releases in the range 11.x-13.x, and 11.4 (1140) has libgmp10 package available.
+%if 0%{suse_version} > 1130
+Requires: libgmp10
+%else
+Requires: gmp, libmysqlclient_r15
+%endif
 %else
 BuildRequires: /sbin/runuser, sqlite-devel, openldap-devel, mysql-devel, openssl-devel
-Requires: /lib/lsb/init-functions
+Requires: /lib/lsb/init-functions, gmp
 %if 0%{?rhel:%{rhel}} < 6
 # Python 2.5+ is required, but RHEL 5's `python` is 2.4
 BuildRequires: python26-devel, python26-distribute
