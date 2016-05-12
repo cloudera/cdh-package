@@ -101,7 +101,7 @@ if [ -z "$GIT_REPO" ]; then
 # Rebuild and now mvn deploy the tarball - note the '-pl hadoop-dist' - if we chdir into hadoop-dist and build, it fails.
 
         JAVA_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m" mvn $CAULDRON_MAVEN_EXTRA_ARGS -pl hadoop-dist -Pdist -Psrc -Dtar ${MAVEN_SKIP_TESTS} -Dmaven.javadoc.skip=true -Dmaven.deploy.skip=false $MAVEN_INST_DEPLOY "$@"
-        
+
         (cd build/hadoop-${FULL_VERSION} ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${FULL_VERSION}.tar.gz)
 # (cd build/hadoop-${FULL_VERSION}/src ; tar --strip-components=1 -xzvf  ../../../hadoop-dist/target/hadoop-${FULL_VERSION}.tar.gz)
         (cd build/hadoop-${FULL_VERSION} ; cp -r ../../cloudera .)
@@ -116,8 +116,14 @@ if [ -z "$GIT_REPO" ]; then
     echo "Stage 2: building MR1"
 
 # Build MR1
+    if [ -n "${CAULDRON_BUILD}" ]; then
+      IVYSETTINGS_OVERRIDE="-Divysettings.xml=${CAULDRON_TOP_DIR}/ivysettings.xml"
+    else
+      IVYSETTINGS_OVERRIDE=""
+    fi
+
     IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
-    IVY_EXTRA_ARGS="-Dmvnrepo=$IVY_MIRROR_PROP -Drepo.maven.org=$IVY_MIRROR_PROP"
+    IVY_EXTRA_ARGS="-Dmvnrepo=$IVY_MIRROR_PROP -Drepo.maven.org=$IVY_MIRROR_PROP ${IVYSETTINGS_OVERRIDE}"
 # Copy them into the main build directory to be included in the tarball
     rm -rf hadoop-mapreduce1-project/build
 
