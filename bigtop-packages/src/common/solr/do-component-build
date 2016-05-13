@@ -17,12 +17,19 @@
 set -ex
 IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
 
+if [ -n "${CAULDRON_BUILD}" ]; then
+  IVYSETTINGS_OVERRIDE="-Divysettings.xml=${CAULDRON_TOP_DIR}/ivysettings.xml"
+else
+  IVYSETTINGS_OVERRIDE=""
+fi
+
 if [ -z "$GIT_REPO" ]; then
     BUILD_OPTS="-Dversion=${FULL_VERSION}                                  \
             -Dslf4j.binding=slf4j-log4j12 -Dexclude.from.war=nothing   \
             -Divy.home=${HOME}/.ivy2 -Drepo.maven.org=$IVY_MIRROR_PROP \
             -Divy_install_path=${HOME}/.ant/lib -lib ${HOME}/.ant/lib  \
-            -Dreactor.repo=file://${HOME}/.m2/repository${M2_REPO_SUFFIX}"
+            -Dreactor.repo=file://${HOME}/.m2/repository${M2_REPO_SUFFIX} \
+            ${IVYSETTINGS_OVERRIDE}"
 
 # Setting CAULDRON_NO_CLEAN allows us to run this script twice without incurring
 # the overhead of building from clean on the second invocation. First we build
@@ -55,7 +62,7 @@ fi
     if [ -z "${MAVEN_ONLY}" ]; then
 # Build Solr package (and if we didn't do generate-maven-artifacts, it'll build everything else it needs
         (cd solr ; ant $BUILD_OPTS create-package "$@")
-        
+
 # Putting the build artifact in place
         rm -rf build
         mkdir build
