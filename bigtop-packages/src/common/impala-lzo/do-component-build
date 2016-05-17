@@ -2,7 +2,7 @@
 
 set -ex
 
-export IMPALA_LZO_IMPALA_REF=origin/cdh5-trunk-promoted
+export IMPALA_LZO_IMPALA_REF=origin/cdh5_5.8.x
 export DISABLE_CCACHE=1
 
 if [ -z "$GIT_REPO" ]; then
