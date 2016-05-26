@@ -22,7 +22,7 @@ if [ -z "$GIT_REPO" ]; then
     else
         MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
     fi
-    build_args="-DskipTests $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository${M2_REPO_SUFFIX}"
+    build_args="-Prelease -DskipTests $MAVEN_INST_DEPLOY -Dmaven.repo.local=${HOME}/.m2/repository${M2_REPO_SUFFIX}"
 
     if [ -z "${MAVEN_ONLY}" ]; then
         build_args="${build_args} -Pnative source:jar site javadoc:aggregate assembly:single"
