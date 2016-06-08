@@ -715,6 +715,7 @@ done
 getent group hadoop >/dev/null || groupadd -r hadoop
 
 %pre hdfs
+getent group hadoop >/dev/null || groupadd -r hadoop
 getent group hdfs >/dev/null   || groupadd -r hdfs
 getent passwd hdfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HDFS" --shell /bin/bash -M -r -g hdfs -G hadoop --home %{state_hdfs} hdfs
 
@@ -727,14 +728,17 @@ getent group kms >/dev/null   || groupadd -r kms
 getent passwd kms >/dev/null || /usr/sbin/useradd --comment "Hadoop KMS" --shell /bin/bash -M -r -g kms -G kms --home %{state_kms} kms
 
 %pre yarn
+getent group hadoop >/dev/null || groupadd -r hadoop
 getent group yarn >/dev/null   || groupadd -r yarn
 getent passwd yarn >/dev/null || /usr/sbin/useradd --comment "Hadoop Yarn" --shell /bin/bash -M -r -g yarn -G hadoop --home %{state_yarn} yarn
 
 %pre mapreduce
+getent group hadoop >/dev/null || groupadd -r hadoop
 getent group mapred >/dev/null   || groupadd -r mapred
 getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapred -G hadoop --home %{state_mapreduce} mapred
 
 %pre 0.20-mapreduce
+getent group hadoop >/dev/null || groupadd -r hadoop
 getent group mapred >/dev/null || groupadd -r mapred
 getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapred -G hadoop --home %{lib_hadoop} mapred
 
