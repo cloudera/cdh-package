@@ -16,10 +16,6 @@
 
 set -ex
 
-# This Boost deployment is special: even the static archives were compiled
-# with -fPIC. That makes it necessary for the client build
-export BOOST_ROOT=${BOOST_ROOT:-/opt/toolchain/boost-pic-1.55.0}
-
 if [ -z "$GIT_REPO" ]; then
     # We're building.
 
