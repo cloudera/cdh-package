@@ -92,7 +92,7 @@ getent group sentry >/dev/null || groupadd -r sentry
 getent passwd sentry >/dev/null || useradd -c "Sentry" -s /sbin/nologin -g sentry -r -d %{var_lib_sentry} sentry 2> /dev/null || :
 
 %post
-%{alternatives_cmd} --install /etc/sentry/conf senty-conf /etc/sentry/conf.dist 30
+%{alternatives_cmd} --install /etc/sentry/conf sentry-conf /etc/sentry/conf.dist 30
 
 %preun
 if [ "$1" = 0 ]; then
