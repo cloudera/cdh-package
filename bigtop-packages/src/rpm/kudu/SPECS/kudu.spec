@@ -116,9 +116,12 @@ init_target=$RPM_BUILD_ROOT/%{initd_dir}
 install -d -m 0755 $init_target
 install -m 0755 $init_source/kudu-master.init $init_target/kudu-master
 install -m 0755 $init_source/kudu-tserver.init $init_target/kudu-tserver
-sed -i -e 's/@@CHKCONFIG@@/345 92 8/' \
+sed -i'' \
+    -e 's/@@SEQ_NUMBERS@@/92 8/' \
+    -e 's/@@CHKCONFIG_LEVELS@@/345/' \
     -e 's/@@DEFAULT_START@@/3 4 5/' \
     -e 's/@@DEFAULT_STOP@@/0 1 2 6/' \
+    -e 's/@@NTP_SERVICE@@/ntpd/' \
     $init_target/kudu-master \
     $init_target/kudu-tserver
 

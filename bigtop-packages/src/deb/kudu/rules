@@ -23,6 +23,13 @@ export DH_VERBOSE=1
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
+EMPTY :=
+SPACE := $(EMPTY) $(EMPTY)
+DEFAULT_START := 2 3 4 5
+DEFAULT_STOP := 0 1 6
+CHKCONFIG_LEVELS := $(subst $(SPACE),,$(DEFAULT_START))
+SEQ_NUMBERS := 92 8
+
 %:
 	dh $@
 
@@ -40,9 +47,12 @@ override_dh_auto_install:
 	install -d -m 0755 debian/tmp/etc/init.d
 	install -m 0755 debian/kudu-master.init debian/tmp/etc/init.d/kudu-master
 	install -m 0755 debian/kudu-tserver.init debian/tmp/etc/init.d/kudu-tserver
-	sed -i -e 's/@@CHKCONFIG@@/2345 92 8/' \
-	  -e 's/@@DEFAULT_START@@/2 3 4 5/' \
-	  -e 's/@@DEFAULT_STOP@@/0 1 6/' \
+	sed -i'' \
+	  -e 's/@@SEQ_NUMBERS@@/$(SEQ_NUMBERS)/' \
+	  -e 's/@@CHKCONFIG_LEVELS@@/$(CHKCONFIG_LEVELS)/' \
+	  -e 's/@@DEFAULT_START@@/$(DEFAULT_START)/' \
+	  -e 's/@@DEFAULT_STOP@@/$(DEFAULT_STOP)/' \
+	  -e 's/@@NTP_SERVICE@@/ntp/' \
 	  debian/tmp/etc/init.d/kudu-master \
 	  debian/tmp/etc/init.d/kudu-tserver
 	#mkdir -p debian/tmp/etc/security/limits.d
@@ -57,13 +67,8 @@ override_dh_auto_clean:
 override_dh_auto_configure:
 	echo "Skipping dh_auto_configure..."
 
-# Left to its own devices, debhelper will do the following on package.init files:
-# 1. Recopy them, overriding the 'sed' operation.
-# 2. Create postinst/prerm/postrm scripts that automatically call update-rc.d.
-#
-# We don't want either of these, so we skip dh_installinit.
 override_dh_installinit:
-	echo "Skipping dh_installinit..."
+	dh_installinit --onlyscripts --restart-after-upgrade --update-rcd-params="defaults $(SEQ_NUMBERS)"
 
 .PHONY: override_dh_strip
 override_dh_strip:

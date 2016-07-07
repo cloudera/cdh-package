@@ -17,18 +17,31 @@
 #
 # Starts a Kudu Tablet Server
 #
-# chkconfig: @@CHKCONFIG@@
+# chkconfig: @@CHKCONFIG_LEVELS@@ @@SEQ_NUMBERS@@
 # description: Kudu Tablet Server
+#
+# Notes on service/facility dependencies:
+#   -- Kudu server components require local file systems
+#      to be mounted during start and stop to have access to config, data
+#      and log files (which are usually placed at local filesystems).
+#   -- If remote filesystems (NFS, etc.) are present, some related data
+#      might reside there, so $remote_fs is also in the dependencies.
+#   -- Kudu is a distributed system and usually deployed at multiple machines,
+#      so $network is in the dependencies for start and stop.
+#   -- Kudu server components use precision timing provided by hardware clock,
+#      so $time is in the dependencies for start.
+#   -- Kudu assumes time is synchronized between participating machines,
+#      so @@NTP_SERVICE@@ service required for the start phase.
 #
 ### BEGIN INIT INFO
 # Provides:          kudu-tserver
 # Short-Description: Kudu Tablet Server
 # Default-Start:     @@DEFAULT_START@@
 # Default-Stop:      @@DEFAULT_STOP@@
-# Required-Start:    $syslog $remote_fs
-# Required-Stop:     $syslog $remote_fs
-# Should-Start:
-# Should-Stop:
+# Required-Start:    $time $local_fs $network @@NTP_SERVICE@@
+# Required-Stop:     $local_fs $network
+# Should-Start:      $remote_fs
+# Should-Stop:       $remote_fs
 ### END INIT INFO
 
 . /lib/lsb/init-functions
