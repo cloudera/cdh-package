@@ -139,19 +139,24 @@ cp -fr www/* ${LIB_DIR}/www/
 
 # install dependencies
 install -d -m 0755 ${LIB_DIR}/lib
-cp thirdparty/hadoop-*/lib/native/libhdfs.so* ${LIB_DIR}/lib
-cp thirdparty/hadoop-*/lib/native/libhadoop.so* ${LIB_DIR}/lib
 cp -fr fe/target/dependency/* ${LIB_DIR}/lib/
 cp fe/target/impala-frontend-*-SNAPSHOT.jar ${LIB_DIR}/lib
 
 # Install required 3rd-party dependencies provided by the toolchain. Only libstdc++,
-# libgcc, and the Kudu client should be needed. Everything else is statically linked.
+# libgcc, and the Kudu client, should be needed. Everything else is statically linked.
 IMPALA_TOOLCHAIN=toolchain
-find $IMPALA_TOOLCHAIN -name "libstdc++*.so.*[^-gdb.py]" -exec cp -L {} ${LIB_DIR}/lib \;
-find $IMPALA_TOOLCHAIN -name "libgcc*.so.*[^-gdb.py]" -exec cp -L {} ${LIB_DIR}/lib \;
+find $IMPALA_TOOLCHAIN -name "libstdc++*.so.*" -and -not -name "*-gdb.py" -exec cp -L {} ${LIB_DIR}/lib \;
+find $IMPALA_TOOLCHAIN -name "libgcc*.so.*" -and -not -name "*-gdb.py" -exec cp -L {} ${LIB_DIR}/lib \;
 # Don't pick up the debug version of the client. It's in a "debug" folder.
 find $IMPALA_TOOLCHAIN -name "libkudu_client.so.*" -not -path "*debug*"  \
     -exec cp -L {} ${LIB_DIR}/lib \;
+if [ -d thirdparty ]; then
+  cp thirdparty/hadoop-*/lib/native/libhdfs.so* ${LIB_DIR}/lib
+  cp thirdparty/hadoop-*/lib/native/libhadoop.so* ${LIB_DIR}/lib
+else
+  find $IMPALA_TOOLCHAIN -name "libhdfs.so*" -and -not -name "*-gdb.py" -exec cp -L {} ${LIB_DIR}/lib \;
+  find $IMPALA_TOOLCHAIN -name "libhadoop.so*" -and -not -name "*-gdb.py" -exec cp -L {} ${LIB_DIR}/lib \;
+fi
 
 # Replace bundled libraries with symlinks to packaged dependencies
 export DEPENDENCY_DIR=${PREFIX}/usr/lib/impala/lib
@@ -307,7 +312,12 @@ install -d -m 0755 ${PREFIX}/${SYSTEM_LIB_DIR}
 cp be/build/release/udf/libImpalaUdf.a ${PREFIX}/${SYSTEM_LIB_DIR}/libImpalaUdf-retail.a
 cp be/build/debug/udf/libImpalaUdf.a ${PREFIX}/${SYSTEM_LIB_DIR}/libImpalaUdf-debug.a
 
-NOTICES=`find thirdparty -name 'LICENSE*' -o -name 'NOTICE*' | grep -v llama | grep -v hive | grep -v hbase |  grep -v hadoop`
+if [ -d thirdparty ]; then
+  NOTICES_SOURCE=thirdparty
+else
+  NOTICES_SOURCE=${IMPALA_TOOLCHAIN}
+fi
+NOTICES=`find ${NOTICES_SOURCE} -name 'LICENSE*' -o -name 'NOTICE*' | grep -v llama | grep -v hive | grep -v hbase |  grep -v hadoop`
 for notice in ${NOTICES}; do
     dir=`dirname ${LIB_DIR}/${notice}`
     install -d -m 0755 ${dir}

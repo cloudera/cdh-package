@@ -42,13 +42,6 @@ if [ -z "$GIT_REPO" ]; then
                 (cd $IMPALA_HOME && git checkout ${IMPALA_LZO_IMPALA_REF})
             fi
 
-            # FIXME: IMP-854
-            if cat /etc/issue | grep '\(Ubuntu\|Debian\)'; then
-                SNAPPY_PREAMBLE='build_preamble $IMPALA_HOME/thirdparty/snappy-${IMPALA_SNAPPY_VERSION} Snappy'
-                REG_EXP="s#${SNAPPY_PREAMBLE}#${SNAPPY_PREAMBLE}\n./autogen.sh#"
-                (cd $IMPALA_HOME && sed -i -e "$REG_EXP" bin/build_thirdparty.sh)
-            fi
-
             (cd $IMPALA_HOME && \
                 . bin/impala-config.sh && \
                 ./buildall.sh -noclean -notests -skiptests)

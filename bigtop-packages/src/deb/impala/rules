@@ -28,7 +28,9 @@ LIB_FAKEROOT=$(shell dirname `locate libfakeroot-sysv.so | head -1`)
 LIB_JAVA=$(shell dirname `find $(JAVA_HOME) -name libjava.so | head -1`)
 LIB_JSIG=$(shell dirname `find $(JAVA_HOME) -name libjsig.so | head -1`)
 LIB_JVM=$(shell  dirname `find $(JAVA_HOME) -name libjvm.so  | head -1`)
-LIB_HDFS=$(shell dirname `find $(shell pwd)/thirdparty -name libhdfs.so | head -1`)
+# Search for libhdfs.so in the entire repository. It should be in either toolchain or
+# thirdparty directory.
+LIB_HDFS=$(shell dirname `find $(shell pwd) -name libhdfs.so | head -1`)
 LIB_KUDU_CLIENT=$(shell dirname `find $(shell pwd)/toolchain libkudu_client.so | grep -v debug | head - 1`)
 export LD_LIBRARY_PATH=$(LIB_FAKEROOT):$(LIB_JAVA):$(LIB_JSIG):$(LIB_JVM):$(LIB_HDFS):$(LIB_KUDU_CLIENT)
 

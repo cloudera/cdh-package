@@ -1,5 +1,4 @@
 /usr/lib/impala
-/usr/lib/impala/thirdparty
 /usr/bin/statestored
 /usr/bin/impalad
 /usr/bin/catalogd

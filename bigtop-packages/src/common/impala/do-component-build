@@ -32,8 +32,6 @@ function clean_cmake_files {
 if [ -z "$GIT_REPO" ]; then
     cd $IMPALA_HOME
     . bin/impala-config.sh
-    # Download the latest dependency versions if needed.
-    bin/bootstrap_toolchain.py || { echo "toolchain bootstrap failed"; exit 1; }
 
     # Don't run $IMPALA_HOME/bin/clean.sh because that uses git commands and this isn't
     # a git repo.
