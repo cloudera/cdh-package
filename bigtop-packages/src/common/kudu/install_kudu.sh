@@ -229,7 +229,6 @@ cp cloudera/cdh_version.properties ${LIB_DIR}/cloudera/
 
 # Copy the license files, folding the thirdparty licenses into the main file.
 install -d -m 0755 ${PREFIX}/${DOC_DIR}
-cp ${BUILD_DIR}/DISCLAIMER ${PREFIX}/${DOC_DIR}
 cp ${BUILD_DIR}/NOTICE.txt ${PREFIX}/${DOC_DIR}
 cp ${BUILD_DIR}/LICENSE.txt ${PREFIX}/${DOC_DIR}
 echo >> ${PREFIX}/${DOC_DIR}/LICENSE.txt
