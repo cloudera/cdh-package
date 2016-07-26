@@ -120,7 +120,7 @@ HADOOP_YARN_HOME=${HADOOP_YARN_HOME:-/usr/lib/hadoop-yarn}
 HADOOP_YARN_LIB=$PREFIX/$HADOOP_YARN_HOME/lib
 FLUME_HOME=${FLUME_HOME:-/usr/lib/flume-ng}
 HIVE_HOME=${HIVE_HOME:-/usr/lib/hive}
-PARQUET_HOME=${PARQUET_HOME:-/usr/lib/paquet}
+PARQUET_HOME=${PARQUET_HOME:-/usr/lib/parquet}
 AVRO_HOME=${AVRO_HOME:-/usr/lib/avro}
 
 install -d -m 0755 $PREFIX/$LIB_DIR
