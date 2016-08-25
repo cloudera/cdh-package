@@ -114,7 +114,6 @@ bin_executables="cfile-dump \
                  kudu-admin \
                  kudu-fs_dump \
                  kudu-fs_list \
-                 kudu-ksck \
                  kudu-ts-cli \
                  log-dump"
 install -d -m 0755 ${LIB_DIR}/bin-release
