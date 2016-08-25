@@ -21,11 +21,9 @@
 %if  %{!?suse_version:1}0
   %define initd_dir %{_sysconfdir}/rc.d/init.d
   %define alternatives_cmd alternatives
-  %define alternatives_dep chkconfig
 %else
   %define initd_dir %{_sysconfdir}/rc.d
   %define alternatives_cmd update-alternatives
-  %define alternatives_dep chkconfig
 %endif
 
 Name: kudu
@@ -41,13 +39,12 @@ Source1: do-component-build
 Source2: install_kudu.sh
 Source3: kudu-master.init
 Source4: kudu-tserver.init
-Requires: cyrus-sasl-lib
 Requires: cyrus-sasl-plain
 Requires: lsb
 Requires: ntp
 Requires: /usr/sbin/useradd, openssl
-Requires(post): %{alternatives_dep}
-Requires(preun): %{alternatives_dep}
+Requires(post): /sbin/chkconfig
+Requires(preun): /sbin/chkconfig
 
 %description
 Columnar storage engine for Hadoop
@@ -71,7 +68,7 @@ Kudu Tablet Server service
 %package client0
 Summary: Kudu client library
 Group: Development/Libraries
-Requires: cyrus-sasl-lib
+Requires: cyrus-sasl-plain
 
 %description client0
 Kudu client library
