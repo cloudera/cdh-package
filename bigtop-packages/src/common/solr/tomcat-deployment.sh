@@ -20,6 +20,7 @@
 TOMCAT_CONF=${TOMCAT_CONF:-`readlink -e /etc/solr/tomcat-conf`}
 TOMCAT_DEPLOYMENT=${TOMCAT_DEPLOYMENT:-/var/lib/solr/tomcat-deployment}
 SOLR_HOME=${SOLR_HOME:-/usr/lib/solr}
+SOLR_SVC_ADDR=${SOLR_HOSTNAME:-$(hostname -f)}
 
 function copy_and_resolve() {
     source_dir=${1}
@@ -63,5 +64,5 @@ PROTOCOL='http'
 if [ "${SOLR_SSL_ENABLED}" == 'true' ]; then
     PROTOCOL='https'
 fi
-echo "export WATCHDOG_MONITOR_URL=${PROTOCOL}://127.0.0.1:${SOLR_PORT}/solr" > ${TOMCAT_DEPLOYMENT}/conf/watchdog.properties
+echo "export WATCHDOG_MONITOR_URL=${PROTOCOL}://${SOLR_SVC_ADDR}:${SOLR_PORT}/solr" > ${TOMCAT_DEPLOYMENT}/conf/watchdog.properties
 
