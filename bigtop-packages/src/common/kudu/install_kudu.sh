@@ -113,8 +113,7 @@ bin_executables="kudu \
                  kudu-admin \
                  kudu-fs_dump \
                  kudu-fs_list \
-                 kudu-ts-cli \
-                 log-dump"
+                 kudu-ts-cli"
 install -d -m 0755 ${LIB_DIR}/bin-release
 install -d -m 0755 ${LIB_DIR}/bin-debug
 for executable in ${bin_executables}; do
