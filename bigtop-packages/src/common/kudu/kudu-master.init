@@ -65,7 +65,7 @@ SLEEP_TIME=5
 DAEMON="kudu-master"
 DESC="Kudu Master Server"
 EXEC_PATH="/usr/sbin/$DAEMON"
-TS_CLI_PATH="/usr/bin/kudu-ts-cli"
+KUDU_CLI_PATH="/usr/bin/kudu"
 SVC_USER="kudu"
 CONF_PATH="/etc/kudu/conf/master.gflagfile"
 PIDFILE="/var/run/kudu/$DAEMON-kudu.pid"
@@ -81,7 +81,7 @@ kudu_die() {
 # Check if the server is alive, looping for a little while.
 kudu_check() {
   for i in $(seq 1 $SLEEP_TIME); do
-    $TS_CLI_PATH --server_address="$FLAGS_rpc_bind_addresses" status 1>/dev/null 2>&1
+    $KUDU_CLI_PATH tserver status "$FLAGS_rpc_bind_addresses" 1>/dev/null 2>&1
     if [ $? -eq 0 ]; then
       return $STATUS_RUNNING
     fi
