@@ -109,10 +109,7 @@ SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 
 install -d -m 0755 ${LIB_DIR}
 
-bin_executables="kudu \
-                 kudu-fs_dump \
-                 kudu-fs_list \
-                 kudu-ts-cli"
+bin_executables="kudu"
 install -d -m 0755 ${LIB_DIR}/bin-release
 install -d -m 0755 ${LIB_DIR}/bin-debug
 for executable in ${bin_executables}; do
