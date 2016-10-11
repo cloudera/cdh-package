@@ -41,7 +41,11 @@ case "$1" in
                   --gecos "Hue daemon" \
                   $USER >/dev/null
         fi
-
+        # Deleting old static files as part of the installation.
+        echo "Deleting old static files from hue_root_dir/build/static"
+        if [ -d "/usr/lib/hue/build/static" ];then
+                rm -rf /usr/lib/hue/build/static
+        fi
         # In upgrade, make a copy of the database, if it's there.
         if [ "$1" == "upgrade" ] ; then
                 echo "... stopping any running Hue"

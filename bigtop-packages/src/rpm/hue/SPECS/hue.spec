@@ -93,7 +93,7 @@ AutoReqProv: no
 %define jobsub_app_dir %{hue_dir}/apps/jobsub
 %define proxy_app_dir %{hue_dir}/apps/proxy
 %define useradmin_app_dir %{hue_dir}/apps/useradmin
-%define etc_hue /etc/hue/conf 
+%define etc_hue /etc/hue/conf
 %define impala_app_dir %{hue_dir}/apps/impala
 %define hbase_app_dir %{hue_dir}/apps/hbase
 %define sqoop_app_dir %{hue_dir}/apps/sqoop
@@ -159,7 +159,7 @@ export SYS_PYTHON=`which python2.6`
 export SKIP_PYTHONDEV_CHECK=true
 %endif
 
-env FULL_VERSION=%{hue_patched_version} bash -x %{SOURCE3}  
+env FULL_VERSION=%{hue_patched_version} bash -x %{SOURCE3}
 
 ########################################
 # Install
@@ -247,6 +247,12 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
 %pre -n %{name}-common -p /bin/bash
 getent group %{username} 2>/dev/null >/dev/null || /usr/sbin/groupadd -r %{username}
 getent passwd %{username} 2>&1 > /dev/null || /usr/sbin/useradd -c "Hue" -s /sbin/nologin -g %{username} -r -d %{hue_dir} %{username} 2> /dev/null || :
+# Deleting old static files as part of the installation.
+echo "Deleting old static files from hue_root_dir/build/static"
+if [ -d "%{hue_dir}/build/static" ] ; then
+   echo "Deleting the existing static Directory"
+   rm -rf %{hue_dir}/build/static
+fi
 
 ########################################
 # Postinstall
@@ -289,7 +295,7 @@ fi
 
 %files -n %{name}-common
 %defattr(-,root,root)
-%attr(0755,root,root) %config(noreplace) %{etc_hue}.empty 
+%attr(0755,root,root) %config(noreplace) %{etc_hue}.empty
 %dir %{hue_dir}
 %{hue_dir}/desktop
 %{hue_dir}/ext
@@ -356,7 +362,7 @@ This package provides the service scripts for Hue server.
 
 # Install and start init scripts
 
-%post -n %{name}-server 
+%post -n %{name}-server
 /sbin/chkconfig --add hue
 
 # Documentation
@@ -374,14 +380,14 @@ This package provides the installation manual, user guide, SDK documentation, an
 # Pre-uninstall
 ########################################
 
-%preun  -n %{name}-server 
-if [ $1 = 0 ] ; then 
-        service %{name} stop > /dev/null 2>&1 
-        chkconfig --del %{name} 
-fi 
+%preun  -n %{name}-server
+if [ $1 = 0 ] ; then
+        service %{name} stop > /dev/null 2>&1
+        chkconfig --del %{name}
+fi
 %postun  -n %{name}-server
-if [ $1 -ge 1 ]; then 
-        service %{name} condrestart >/dev/null 2>&1 
+if [ $1 -ge 1 ]; then
+        service %{name} condrestart >/dev/null 2>&1
 fi
 
 #### PLUGINS ######
