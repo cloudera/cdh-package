@@ -41,6 +41,7 @@ get_directory_for_jar() {
         hbase*) lib_dir='hbase';;
         hive-hcatalog*) lib_dir='hive-hcatalog/share/hcatalog';;
         hive-webhcat-java-client*) lib_dir='hive-hcatalog/share/webhcat/java-client';;
+        hive-exec*core*) lib_dir='hive/auxlib';;
         hive*) lib_dir='hive/lib';;
         sentry-provider-db-*-sh.jar) lib_dir='sentry/lib/impala';;
         sentry*) lib_dir='sentry/lib';;

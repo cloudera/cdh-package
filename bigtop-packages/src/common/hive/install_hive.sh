@@ -260,6 +260,7 @@ echo "cloudera.pkg.name=hive-hcatalog" >> $HCATALOG_DIR/cloudera/cdh_version.pro
 
 internal_versionless_symlinks \
     ${HIVE_DIR}/lib/hive-*.jar \
+    ${HIVE_DIR}/auxlib/hive-*.jar \
     ${HCATALOG_DIR}/share/webhcat/java-client/*.jar \
     ${HCATALOG_DIR}/share/webhcat/svr/lib/hive-webhcat-* \
     ${HCATALOG_DIR}/share/hcatalog/*.jar \
