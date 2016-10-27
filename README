@@ -93,6 +93,34 @@ on iTest visit the iTest page
 
         cd test/suites/package/ && mvn clean verify -Dcdh.repo.file.url.CentOS=XXX  -D'org.apache.maven-failsafe-plugin.testInclude=**/TestPackagesReadiness.*'
 
+## Submiting a review
+
+This repo was merged with cdh6.x. All patches that are also intended for cdh6, must be applied into the cdh-package subdir in cdh.git. To do so, you can use the following commands:
+
+    $ git clone http://github.mtv.cloudera.com/CDH/cdh.git
+    $ git clone http://github.mtv.cloudera.com/CDH/cdh-package.git
+    $ cd cdh-package
+    cdh-package $ git checkout -b feature-branch
+    # work work work
+    cdh-package $ git commit
+    $ cd ../cdh
+    # Notice we're now in the cdh repo
+    cdh $ git remote add cdhpkg ../cdh-package
+    cdh $ git fetch cdhpkg
+    cdh $ git merge  -s subtree --squash -v cdhpkg/feature-branch
+    cdh $ git commit # Adjust your commit message here
+
+Patches are always welcome! The `cdh.git` repo uses ReviewBoard.  Send us reviews with `rbt`:
+
+    $ virtualenv ~/env
+    New python executable in env/bin/python
+    Installing setuptools, pip, wheel...done.
+    $ ~/env/bin/easy_install RBTools
+    Searching for RBTools
+    Reading https://pypi.python.org/simple/RBTools/
+    ...
+    $ ~/env/bin/rbt post --repository cdh --server https://review.infra.cloudera.com --target-groups pack-eng --target-people chelin,hector_acosta,misha,mostrows,myoder,yonik HEAD
+
 ##  Contact us!
 
 You can get in touch with us on the Bigtop mailing lists (http://bigtop.apache.org/mail-lists.html).
