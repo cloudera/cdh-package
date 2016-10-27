@@ -11,3 +11,4 @@ usr/lib/hive/cloudera/
 usr/lib/hive/cloudera/cdh_version.properties
 usr/lib/hive/LICENSE
 usr/lib/hive/NOTICE
+usr/lib/hive/auxlib
