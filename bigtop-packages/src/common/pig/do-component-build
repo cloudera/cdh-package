@@ -44,11 +44,11 @@ if [ -z "$GIT_REPO" ]; then
     for build_file in contrib/piggybank/java/build.xml ; do
         ant $BUILD_OPTS -buildfile $build_file clean jar "$@"
     done
-    
+
 # Additional JARs needed for Avro integration
     IVY_LIB=build/ivy/lib/Pig
     mkdir -p contrib/piggybank/java/lib/
-    
+
     for jar_file in avro-* jackson-core-asl-* jackson-mapper-asl-* json-simple-* snappy-java-* ; do
 	cp $IVY_LIB/$jar_file.jar contrib/piggybank/java/lib/
     done
@@ -56,13 +56,26 @@ if [ -z "$GIT_REPO" ]; then
     if [ -z "${MAVEN_ONLY}" ]; then
         TAR_TARGET="tar"
     fi
-    
+
 # Build pig tar and pigunit..
     ant $BUILD_OPTS ${TAR_TARGET} pigunit-jar smoketests-jar "$@"
-    
+
+# Remove GPL licensed library which is required for Pigmix data generation only
+    pushd build
+    tarfile=`ls pig-*.tar.gz`
+    mkdir tempUntar
+    tar -xzvf $tarfile -C tempUntar
+    pushd tempUntar/pig-*/test/perf/pigmix/lib
+    rm -f sdsuLibJKD12.jar
+    echo "For licensing reasons sdsuLibJKD12.jar has been removed from here. You can download this separately from e.g. https://talend-update.talend.com/nexus/content/repositories/libraries/org/talend/libraries/sdsuLibJKD12" > NOTICE
+    popd
+    cd tempUntar
+    tar -czvf ../$tarfile pig-*
+    popd
+
 # Clean up after piggybank.
     rm -rf contrib/piggybank/java/build
-    
+
     if [ -n "$DO_MAVEN_DEPLOY" ]; then
 # Change to cloudera/maven directory, and install
 # (and if called from CDH nightly build, deploy) artifacts into Maven repository
