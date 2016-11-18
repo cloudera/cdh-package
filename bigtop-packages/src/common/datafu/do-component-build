@@ -44,8 +44,10 @@ if [ -z "$GIT_REPO" ]; then
     if [ $dir_to_tar != "./datafu-$FULL_VERSION" ] ; then
        mv $dir_to_tar datafu-$FULL_VERSION
     fi
-    rm -rf datafu-$FULL_VERSION.tar.gz; 
-    rm -rf datafu-$FULL_VERSION/cobertura; 
+    rm -rf datafu-$FULL_VERSION.tar.gz;
+    rm -f datafu-$FULL_VERSION/licenses/autojar-LICENSE.txt;
+    rm -f datafu-$FULL_VERSION/tools/autojar.jar;
+    rm -rf datafu-$FULL_VERSION/cobertura;
     tar -czvf datafu-$FULL_VERSION.tar.gz datafu-$FULL_VERSION
     popd
 
