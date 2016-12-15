@@ -238,17 +238,18 @@ for x in contrib/vaidya contrib/thriftfs contrib/hod contrib/failmon contrib/dat
   rm -rf ${MAPREDUCE_MR1_DIR}/$x 
 done
 
-# Updating the client list to include aws jars and its dependencies.
-for jar in hadoop-aws-[0-9]*.jar aws-java-sdk*.jar; do
+# Updating the client list to include aws, azure jars and their dependencies.
+for jar in hadoop-aws-[0-9]*.jar aws-java-sdk*.jar hadoop-azure-datalake*.jar azure-data-lake-store-sdk*.jar; do
         (cd ${MAPREDUCE_DIR} && ls $jar) >> ${BUILD_DIR}/hadoop-client.list
         (cd ${MAPREDUCE_DIR} && ls $jar) >> ${BUILD_DIR}/hadoop-mr1-client.list
 done
 
-# Now, move over hadoop-aws*.jar and its dependencies over from hadoop-mapreduce dir
-mv ${MAPREDUCE_DIR}/hadoop-aws-[0-9]*.jar ${HADOOP_DIR}/
+# Now, move over hadoop-aws*.jar, hadoop-azure-datalake and the dependencies over from hadoop-mapreduce dir
+mv ${MAPREDUCE_DIR}/hadoop-aws-[0-9]*.jar ${MAPREDUCE_DIR}/hadoop-azure-datalake*.jar ${HADOOP_DIR}/
 
 install -d -m 0755 ${HADOOP_DIR}/lib
 mv ${MAPREDUCE_DIR}/aws-java-sdk*.jar ${HADOOP_DIR}/lib
+mv ${MAPREDUCE_DIR}/azure-data-lake-store-sdk*.jar ${HADOOP_DIR}/lib
 
 # Remove the convenience symlink so we can copy the stuff over
 rm ${MAPREDUCE_MR1_DIR}/bin

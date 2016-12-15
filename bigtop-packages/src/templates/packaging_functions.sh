@@ -25,6 +25,7 @@ get_directory_for_jar() {
         parquet*) lib_dir='parquet';;
         zookeeper*) lib_dir='zookeeper';;
         hadoop-aws*) lib_dir='hadoop/client';;
+        hadoop-azure*) lib_dir='hadoop/client';;
         hadoop-yarn*) lib_dir='hadoop-yarn';;
         hadoop-hdfs*) lib_dir='hadoop-hdfs';;
         hadoop-archives*) lib_dir='hadoop-mapreduce';;
