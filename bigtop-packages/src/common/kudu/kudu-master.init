@@ -65,10 +65,11 @@ SLEEP_TIME=5
 DAEMON="kudu-master"
 DESC="Kudu Master Server"
 EXEC_PATH="/usr/sbin/$DAEMON"
-KUDU_CLI_PATH="/usr/bin/kudu"
 SVC_USER="kudu"
 CONF_PATH="/etc/kudu/conf/master.gflagfile"
-PIDFILE="/var/run/kudu/$DAEMON-kudu.pid"
+RUNDIR="/var/run/kudu"
+PIDFILE="$RUNDIR/$DAEMON-kudu.pid"
+INFOFILE="$RUNDIR/$DAEMON-kudu.json"
 LOCKDIR="/var/lock/subsys"
 LOCKFILE="$LOCKDIR/$DAEMON"
 
@@ -81,8 +82,7 @@ kudu_die() {
 # Check if the server is alive, looping for a little while.
 kudu_check() {
   for i in $(seq 1 $SLEEP_TIME); do
-    $KUDU_CLI_PATH tserver status "$FLAGS_rpc_bind_addresses" 1>/dev/null 2>&1
-    if [ $? -eq 0 ]; then
+    if [ -f $INFOFILE ]; then
       return $STATUS_RUNNING
     fi
     sleep 1
@@ -111,8 +111,8 @@ start() {
     exit 0
   fi
 
-
-  /bin/su -s /bin/bash -c "/bin/bash -c 'cd ~ && echo \$\$ > ${PIDFILE} && exec ${EXEC_PATH} --flagfile=${CONF_PATH} > ${FLAGS_log_dir}/${DAEMON}.out 2>&1' &" $SVC_USER
+  rm -f $INFOFILE
+  /bin/su -s /bin/bash -c "/bin/bash -c 'cd ~ && echo \$\$ > ${PIDFILE} && exec ${EXEC_PATH} --server_dump_info_path=$INFOFILE --flagfile=${CONF_PATH} > ${FLAGS_log_dir}/${DAEMON}.out 2>&1' &" $SVC_USER
   RETVAL=$?
 
   if [ $RETVAL -eq $STATUS_RUNNING ]; then
@@ -134,7 +134,7 @@ stop() {
 
   if [ $RETVAL -eq $RETVAL_SUCCESS ]; then
     log_success_msg "Stopped ${DESC}: "
-    rm -f $LOCKFILE $PIDFILE
+    rm -f $LOCKFILE $PIDFILE $INFOFILE
   else
     log_failure_msg "Failure to stop ${DESC}. Return value: $RETVAL"
   fi
