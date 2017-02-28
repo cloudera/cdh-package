@@ -191,6 +191,8 @@ fi
 %{lib_flume}/NOTICE
 %{lib_flume}/LICENSE
 
+%exclude %{lib_flume}/cloudera/excludes.txt
+
 %config(noreplace) %{etc_flume}.empty/*
 %{etc_flume}.dist
 %attr(0755,root,root) %{bin_flume}/flume-ng
