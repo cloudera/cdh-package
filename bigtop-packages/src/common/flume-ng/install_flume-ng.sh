@@ -131,6 +131,7 @@ for x in flume-* \
           cloudera/build.properties \
           cloudera/patches \
           cloudera/pre_commit_hook.sh \
+          cloudera/excludes.txt \
           cloudera/post_commit_hook.sh \
           lib/*.pom; do
   rm -rf ${PREFIX}/$FLUME_DIR/$x
