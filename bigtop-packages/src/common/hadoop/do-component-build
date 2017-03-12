@@ -36,8 +36,13 @@ if [ -z "$GIT_REPO" ]; then
     fi
 
     if [ -z "$BUNDLE_SNAPPY" ] ; then
-        [ -f /usr/lib/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib -Drequire.snappy=true"
-        [ -f /usr/lib64/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib64 -Drequire.snappy=true"
+        BUNDLE_SNAPPY="-Dbundle.snappy=true -Drequire.snappy=true"
+        for f in /usr/lib /usr/lib64 /usr/lib/x86_64-linux-gnu; do
+            if [ -f $f/libsnappy.so ]; then
+                BUNDLE_SNAPPY="${BUNDLE_SNAPPY} -Dsnappy.lib=$f"
+                break
+            fi
+        done
     fi
 
     if [ -z "${DO_MAVEN_DEPLOY}" ]; then
