@@ -23,6 +23,16 @@ usage: $0 <options>
      --build-dir=DIR             path to Kudu build directory
      --prefix=PREFIX             path to install into
      --extra-dir=DIR             path to extra packaging files
+
+  Optional options:
+     --bin-dir=DIR               path to install bins [/usr/bin]
+     --lib-dir=DIR               path to install libraries [/usr/lib/kudu]
+     --sbin-dir=DIR              path to install system bins [/usr/sbin]
+     --doc-dir=DIR               path to install docs [/usr/share/doc/kudu]
+     --man-dir=DIR               path to install manpages [/usr/man]
+     --conf-dir=DIR              path to install default configuration [/etc/kudu/conf.dist]
+     --system-include-dir=DIR    path to install system include files [/usr/include]
+     --system-lib-dir=DIR        path to install system libraries [/usr/lib]
   "
   exit 1
 }
@@ -32,6 +42,7 @@ OPTS=$(getopt \
   -o '' \
   -l 'prefix:' \
   -l 'build-dir:' \
+  -l 'lib-dir:' \
   -l 'bin-dir:' \
   -l 'sbin-dir:' \
   -l 'doc-dir:' \
@@ -54,6 +65,9 @@ while true ; do
         ;;
         --build-dir)
         BUILD_DIR=$2 ; shift 2
+        ;;
+        --lib-dir)
+        LIB_DIR=$2 ; shift 2
         ;;
         --bin-dir)
         BIN_DIR=$2 ; shift 2
@@ -109,6 +123,7 @@ SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 
 install -d -m 0755 ${LIB_DIR}
 
+# install the executables
 bin_executables="kudu"
 install -d -m 0755 ${LIB_DIR}/bin-release
 install -d -m 0755 ${LIB_DIR}/bin-debug
@@ -124,6 +139,23 @@ install -d -m 0755 ${LIB_DIR}/sbin-debug
 for executable in ${sbin_executables}; do
     cp ${BUILD_DIR}/build/release/bin/${executable} ${LIB_DIR}/sbin-release/
     cp ${BUILD_DIR}/build/fastdebug/bin/${executable} ${LIB_DIR}/sbin-debug/
+done
+
+# install all the jars except original-, sources, tests, javadocs, and with-dependencies jars
+cp ${BUILD_DIR}/java/target/*.jar ${LIB_DIR}
+cp ${BUILD_DIR}/java/*/target/*.jar ${LIB_DIR}
+rm -f ${LIB_DIR}/original-*.jar
+rm -f ${LIB_DIR}/*-tests.jar
+rm -f ${LIB_DIR}/*-sources.jar
+rm -f ${LIB_DIR}/*-javadoc.jar
+rm -f ${LIB_DIR}/*-with-dependencies.jar
+
+# then create the versionless symlinks for the jars that remain
+# matches, e.g. -1.4.0-cdh5.12.0 or -1.3.1-cdh5.11.3-SNAPSHOT or -1.5.0-cdh5.13.x-beta-3
+versions='s#-[0-9.]\+-cdh[0-9\-\.]*[0-9x]\(-beta-[0-9]\+\)\?\(-SNAPSHOT\)\?##'
+for jar in `find $LIB_DIR -name *.jar`; do
+    versionless=`echo \`basename ${jar}\` | sed -e ${versions}`
+    ln -fs `basename ${jar}` "${LIB_DIR}/${versionless}"
 done
 
 # now, create the defaults files
