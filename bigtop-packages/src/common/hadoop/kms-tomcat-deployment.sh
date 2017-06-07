@@ -59,11 +59,11 @@ chmod -R 755 ${TOMCAT_DEPLOYMENT}
 
 export CATALINA_BASE=${TOMCAT_DEPLOYMENT}
 
-# check if the ssl file is present and set the URL to monitor accordingly
-if [ -f ${TOMCAT_DEPLOYMENT}/conf/ssl-server.xml.conf ]; then
-  echo "export WATCHDOG_MONITOR_URL=https://localhost:16000/kms" > ${TOMCAT_DEPLOYMENT}/conf/watchdog.properties
+# Set the URL to monitor based on whether SSL is enabled
+if [ "${SSL_ENABLED}" = "true" ]; then
+  echo "export WATCHDOG_MONITOR_URL=https://localhost:${KMS_HTTP_PORT}/kms" > ${TOMCAT_DEPLOYMENT}/conf/watchdog.properties
 else
-  echo "export WATCHDOG_MONITOR_URL=http://localhost:16000/kms" > ${TOMCAT_DEPLOYMENT}/conf/watchdog.properties
+  echo "export WATCHDOG_MONITOR_URL=http://localhost:${KMS_HTTP_PORT}/kms" > ${TOMCAT_DEPLOYMENT}/conf/watchdog.properties
 fi
 
 
