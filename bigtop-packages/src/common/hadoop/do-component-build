@@ -37,7 +37,7 @@ if [ -z "$GIT_REPO" ]; then
 
     if [ -z "$BUNDLE_SNAPPY" ] ; then
         BUNDLE_SNAPPY="-Dbundle.snappy=true -Drequire.snappy=true"
-        for f in /usr/lib /usr/lib64 /usr/lib/x86_64-linux-gnu; do
+        for f in /usr/lib/x86_64-linux-gnu /usr/lib64 /usr/lib; do
             if [ -f $f/libsnappy.so ]; then
                 BUNDLE_SNAPPY="${BUNDLE_SNAPPY} -Dsnappy.lib=$f"
                 break
