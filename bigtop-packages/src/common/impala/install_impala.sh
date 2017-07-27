@@ -143,19 +143,38 @@ cp -fr fe/target/dependency/* ${LIB_DIR}/lib/
 cp fe/target/impala-frontend-*-SNAPSHOT.jar ${LIB_DIR}/lib
 
 # Install required 3rd-party dependencies provided by the toolchain. Only libstdc++,
-# libgcc, and the Kudu client, should be needed. Everything else is statically linked.
+# libgcc, the Kudu client and libssl should be needed. Everything else is statically linked.
 IMPALA_TOOLCHAIN=toolchain
-find $IMPALA_TOOLCHAIN -name "libstdc++*.so.*" -and -not -name "*-gdb.py" -exec cp -L {} ${LIB_DIR}/lib \;
-find $IMPALA_TOOLCHAIN -name "libgcc*.so.*" -and -not -name "*-gdb.py" -exec cp -L {} ${LIB_DIR}/lib \;
+find ${IMPALA_TOOLCHAIN} -name "libstdc++*.so.*" -and -not -name "*-gdb.py" -exec cp -L {} ${LIB_DIR}/lib \;
+find ${IMPALA_TOOLCHAIN} -name "libgcc*.so.*" -and -not -name "*-gdb.py" -exec cp -L {} ${LIB_DIR}/lib \;
 # Don't pick up the debug version of the client. It's in a "debug" folder.
-find $IMPALA_TOOLCHAIN -name "libkudu_client.so.*" -not -path "*debug*"  \
-    -exec cp -L {} ${LIB_DIR}/lib \;
+find ${IMPALA_TOOLCHAIN} -name "libkudu_client.so.*" -not -path "*debug*" -exec cp -L {} ${LIB_DIR}/lib \;
+
+# Include libssl.so and libcrypto.so as part of the package which may be used on
+# legacy platforms which don't have OpenSSL 1.0.0 installed by default. We include
+# them even on platforms which have OpenSSL 1.0.0 in case the user wants to override
+# the behavior at runtime with env variable USE_PACKAGE_OPENSSL.
+mkdir ${LIB_DIR}/lib/openssl
+find ${IMPALA_TOOLCHAIN} -name "libssl.so*" -exec cp -L {} ${LIB_DIR}/lib/openssl \;
+find ${IMPALA_TOOLCHAIN} -name "libcrypto.so*" -exec cp -L {} ${LIB_DIR}/lib/openssl \;
+
+# Impala builds against libssl.so and libcrypto.so in the toolchain if the platform doesn't have
+# OpenSSL 1.0.0. The env variable USE_PACKAGE_OPENSSL determines at run time whether to add OpenSSL
+# library in the package to LD_LIBRARY_PATH. This code below determines USE_PACKAGE_OPENSSL_DEFAULT
+# at build time, and it will be forwarded into the impalad shell script wrapper. In practice,
+# USE_PACKAGE_OPENSSL_DEFAULT will be 0 except for RH5 and SLES11.
+USE_PACKAGE_OPENSSL_DEFAULT="0"
+read OPENSSL_MAJ_VER OPENSSL_MIN_VER OPENSSL_PATCH_VER <<< `openssl version |  sed -r 's/^OpenSSL ([0-9]+)\.([0-9]+)\.([0-9a-z]+).*/\1 \2 \3/'`
+if [[ ${OPENSSL_MAJ_VER} = "0" ]]; then
+    export USE_PACKAGE_OPENSSL_DEFAULT="1"
+fi
+
 if [ -d thirdparty ]; then
   cp thirdparty/hadoop-*/lib/native/libhdfs.so* ${LIB_DIR}/lib
   cp thirdparty/hadoop-*/lib/native/libhadoop.so* ${LIB_DIR}/lib
 else
-  find $IMPALA_TOOLCHAIN -name "libhdfs.so*" -and -not -name "*-gdb.py" -exec cp -L {} ${LIB_DIR}/lib \;
-  find $IMPALA_TOOLCHAIN -name "libhadoop.so*" -and -not -name "*-gdb.py" -exec cp -L {} ${LIB_DIR}/lib \;
+  find ${IMPALA_TOOLCHAIN} -name "libhdfs.so*" -and -not -name "*-gdb.py" -exec cp -L {} ${LIB_DIR}/lib \;
+  find ${IMPALA_TOOLCHAIN} -name "libhadoop.so*" -and -not -name "*-gdb.py" -exec cp -L {} ${LIB_DIR}/lib \;
 fi
 
 # Replace bundled libraries with symlinks to packaged dependencies
@@ -266,6 +285,14 @@ for library in libjvm.so libjsig.so libjava.so; do
     fi
 done
 export LD_LIBRARY_PATH="\${IMPALA_HOME}/lib:\${IMPALA_BIN}:\${LD_LIBRARY_PATH}"
+
+# USE_PACKAGE_OPENSSL can be overridden by the user in CM.
+if [ -z "\${USE_PACKAGE_OPENSSL}" ]; then
+    export USE_PACKAGE_OPENSSL="${USE_PACKAGE_OPENSSL_DEFAULT}"
+fi
+if [ \${USE_PACKAGE_OPENSSL} = "1" ]; then
+    export LD_LIBRARY_PATH="\${IMPALA_HOME}/lib/openssl:\${LD_LIBRARY_PATH}"
+fi
 
 export CLASSPATH="$THRIFT_DEPS:$IMPALA_DEPS:\${CLASSPATH}"
 export CLASSPATH="\${IMPALA_CONF_DIR}:\${HADOOP_CONF_DIR}:\${HIVE_CONF_DIR}:\${HBASE_CONF_DIR}:\${CLASSPATH}"
