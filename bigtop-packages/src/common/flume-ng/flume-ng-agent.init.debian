@@ -100,9 +100,7 @@ stop() {
       kill -0 ${FLUME_PID} &>/dev/null || break
       sleep 1
     done
-    if [ ! kill -0 ${FLUME_PID} &>/dev/null ]; then
-      kill -KILL ${FLUME_PID} &>/dev/null
-    fi
+    kill -KILL ${FLUME_PID} &>/dev/null
   fi
 
   RETVAL=$?
