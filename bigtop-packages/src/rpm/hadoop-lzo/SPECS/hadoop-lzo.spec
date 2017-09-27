@@ -1,4 +1,5 @@
 %define hadoop_home /usr/lib/hadoop
+%define _use_internal_dependency_generator 0
 
 Name: hadoop-lzo
 Version: %{hadoop_lzo_version}
@@ -14,7 +15,7 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: gpl-3.0.txt
 BuildRequires: gcc, gcc-c++, lzo-devel, jpackage-utils
-Requires: jpackage-utils, lzo
+Requires: jpackage-utils, lzo, rtld(GNU_HASH)
 
 %description
 Hadoop-LZO is a project to bring splittable LZO compression to Hadoop. LZO is an ideal compression format for Hadoop due to its combination of speed and compression size. However, LZO files are not natively splittable, meaning the parallelism that is the core of Hadoop is gone. This project re-enables that parallelism with LZO compressed files, and also comes with standard utilities (input/output streams, etc) for working with LZO files.
