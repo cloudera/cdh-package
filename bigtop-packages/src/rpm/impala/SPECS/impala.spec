@@ -50,6 +50,11 @@
 
 %undefine _missing_build_ids_terminate_build
 
+# DWZ symbol compression complicates opening core files and resolving minidumps
+# RH7 enabled "dwz", a "DWARF optimizer and duplication removal utility". We
+# disable it to avoid the issue.
+%global _find_debuginfo_dwz_opts %{nil}
+
 %define impala_log /var/log/impala
 %define impala_run /var/run/impala
 %define impala_lib /var/lib/impala
