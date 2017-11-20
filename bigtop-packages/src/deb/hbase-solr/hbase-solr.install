@@ -2,3 +2,4 @@
 /usr/lib/hbase-solr
 /var
 /usr/bin/hbase-indexer
+/usr/bin/hbase-indexer-sentry

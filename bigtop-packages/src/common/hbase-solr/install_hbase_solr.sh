@@ -156,6 +156,16 @@ exec ${LIB_DIR}/bin/hbase-indexer "\$@"
 __EOT__
 chmod 755 $PREFIX/${BIN_DIR}/hbase-indexer
 
+cat > $PREFIX/${BIN_DIR}/hbase-indexer-sentry <<__EOT__
+#!/bin/bash
+
+# Autodetect JAVA_HOME if not defined
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
+
+exec ${LIB_DIR}/cloudera/hbase-indexer-sentry "\$@"
+__EOT__
+chmod 755 $PREFIX/${BIN_DIR}/hbase-indexer-sentry
+
 # Initialize a few /var locations
 install -d -m 0755 $PREFIX/var/{run,log,lib}/hbase-solr
 

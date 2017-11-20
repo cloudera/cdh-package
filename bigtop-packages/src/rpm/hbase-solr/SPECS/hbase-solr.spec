@@ -153,6 +153,7 @@ fi
 %config(noreplace) %{config_solr}.dist
 %{lib_solr}
 %{bin_solr}/hbase-indexer
+%{bin_solr}/hbase-indexer-sentry
 %defattr(-,%{user_solr},%{user_solr},755)
 /var/run/hbase-solr
 /var/log/hbase-solr
