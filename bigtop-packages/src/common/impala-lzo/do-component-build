@@ -2,7 +2,7 @@
 
 set -ex
 
-export IMPALA_LZO_IMPALA_REF=origin/cdh5-trunk-promoted
+export IMPALA_LZO_IMPALA_REF=origin/cdh5-2.11.0_5.14.0
 export DISABLE_CCACHE=1
 
 if [ -z "$GIT_REPO" ]; then
@@ -68,7 +68,7 @@ else # GIT_REPO is set, this infers that it is the first invocation tarball the 
         find ${IMPALA_HOME} -name .gitignore -exec rm -f {} \;
         rm -f ${IMPALA_BRANCH}.tar.gz
 
-        export IMPALA_LZO_HADOOP_LZO_REF=origin/cdh5-0.4.15_5.14.x
+        export IMPALA_LZO_HADOOP_LZO_REF=origin/cdh5-0.4.15_5.14.0
         export HADOOP_LZO_BRANCH=$(echo ${IMPALA_LZO_HADOOP_LZO_REF}|sed -e 's/origin\///')
         [ -e "$HADOOP_LZO" ] && rm -rf $HADOOP_LZO
         mkdir -p $HADOOP_LZO
