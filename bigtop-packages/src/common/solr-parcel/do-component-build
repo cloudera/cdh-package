@@ -280,7 +280,7 @@ __EOT__
 ) > build/meta/solr_env.sh
 
 # solr_alternatives.sh
-BINARIES="solrctl hbase-indexer"
+BINARIES="solrctl hbase-indexer hbase-indexer-sentry"
 
 CONFDIRS="solr"
 # Some services are 'special' and use conf.empty instead of conf.dist
