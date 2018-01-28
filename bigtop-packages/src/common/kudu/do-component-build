@@ -40,7 +40,14 @@ if [ -z "$GIT_REPO" ]; then
     CMAKE="${CMAKE} -DNO_TESTS=1"
 
     # Provide the git hash collected earlier.
-    CMAKE="${CMAKE} -DKUDU_GIT_HASH=$(cat kudu_git_hash)"
+    if [ -f kudu_git_hash ];then
+        KUDU_GIT_HASH=$(cat kudu_git_hash)
+    else
+       if [ -n "$WORKSPACE" ];then
+           KUDU_GIT_HASH=$(cat "$WORKSPACE/kudu_git_hash")
+       fi
+    fi
+    CMAKE="${CMAKE} -DKUDU_GIT_HASH=$KUDU_GIT_HASH"
 
     # Set parallelism level based on the number of CPUs.
     MAKE="make -j$(nproc)"
