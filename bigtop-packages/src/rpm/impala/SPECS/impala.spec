@@ -94,7 +94,7 @@ Source8: catalogd.svc
 Source9: packaging_functions.sh
 Requires: bigtop-utils >= 0.7, /usr/sbin/useradd, /usr/sbin/usermod, openssl
 Requires: hadoop, hadoop-hdfs, hadoop-yarn, hadoop-mapreduce, hbase, hive >= 0.12.0+cdh5.1.0, zookeeper, hadoop-libhdfs, avro-libs, parquet, sentry >= 1.3.0+cdh5.1.0
-Requires: avro-libs, parquet, sentry
+Requires: avro-libs, parquet, sentry, cyrus-sasl-plain
 
 # Sles12 is version 1315, not 1200 or 12
 # However we chose 1310 since that is definitely higher than sles11
