@@ -29,11 +29,16 @@
 # and make whole process to fail.
 # So for now brp-repack-jars is being deactivated until this is fixed.
 # See BIGTOP-294
+
+# CDH-64038: Impalad does not come up because of sigkill; this was
+# caused by brp-strip-comment-note invoking strip on executables linked
+# by the gold linker, which can cause the executable to become corrupt on Centos 6.
+# Just skip brp-strip-comment-note (which wasn't doing anything useful anyway)
+
 %if  %{!?suse_version:1}0
 %define __os_install_post \
     /usr/lib/rpm/redhat/brp-compress ; \
     /usr/lib/rpm/redhat/brp-strip-static-archive %{__strip} ; \
-    /usr/lib/rpm/redhat/brp-strip-comment-note %{__strip} %{__objdump} ; \
     /usr/lib/rpm/brp-python-bytecompile ; \
     %{nil}
 %else
