@@ -16,6 +16,13 @@
 
 set -ex
 
+# Adding local PyPi URL
+f=~/.pydistutils.cfg
+url='https://pypi.infra.cloudera.com/api/pypi/pypi-public/simple/'
+echo "[easy_install]" >> "$f"
+echo "index_url=$url" >> "$f"
+export PYPI_MIRROR="$url"
+
 if [ -z "$GIT_REPO" ]; then
     mvn $CAULDRON_MAVEN_EXTRA_ARGS -f maven/pom.xml install "$@"
 

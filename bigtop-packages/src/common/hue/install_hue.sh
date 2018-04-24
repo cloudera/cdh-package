@@ -97,6 +97,13 @@ VAR_DIR=${VAR_DIR:-/var/lib/hue}
 LOG_DIR=${LOG_DIR:-/var/log/hue}
 HADOOP_DIR=${HADOOP_DIR:-/usr/lib/hadoop/lib}
 
+# Adding local PyPi URL
+f=~/.pydistutils.cfg
+url='https://pypi.infra.cloudera.com/api/pypi/pypi-public/simple/'
+echo "[easy_install]" >> "$f"
+echo "index_url=$url" >> "$f"
+export PYPI_MIRROR="$url"
+
 #Needed to build the egg for cx_oracle
 if [ -z $ORACLE_HOME ] ; then
     echo "Environment variable ORACLE_HOME not defined"
