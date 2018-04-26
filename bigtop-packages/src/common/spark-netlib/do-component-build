@@ -17,7 +17,7 @@
 set -ex
 
 JAR_VERSION=1.1
-BASE_URL=http://search.maven.org/remotecontent?filepath=com/github/fommil
+BASE_URL="${IVY_MIRROR_PROP:-http://search.maven.org/remotecontent?filepath=}com/github/fommil"
 
 if [ -z "$GIT_REPO" ]; then
 
