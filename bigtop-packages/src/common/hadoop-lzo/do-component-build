@@ -1,6 +1,7 @@
 #!/bin/bash
 
 if [ -z "$GIT_REPO" ]; then
+    export ANT_OPTS="-Dhttps.protocols=TLSv1.2 -Dhttps.cipherSuites=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256"
     ant -DskipTests=on -DskipExamples=on -DskipFetch=on -DskipEmbeddable=on \
         -Dversion=${FULL_VERSION} jar compile-native package
 
