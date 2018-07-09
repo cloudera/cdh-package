@@ -131,6 +131,8 @@ if [ -z "$GIT_REPO" ]; then
     IVY_EXTRA_ARGS="-Dmvnrepo=$IVY_MIRROR_PROP -Drepo.maven.org=$IVY_MIRROR_PROP ${IVYSETTINGS_OVERRIDE}"
 # Copy them into the main build directory to be included in the tarball
     rm -rf hadoop-mapreduce1-project/build
+    
+    export ANT_OPTS="-Dhttps.protocols=TLSv1.2 -Dhttps.cipherSuites=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256"
 
     (cd hadoop-mapreduce1-project ; ant \
         -Dreactor.repo=file://$HOME/.m2/repository${M2_REPO_SUFFIX} \
@@ -143,7 +145,7 @@ if [ -z "$GIT_REPO" ]; then
     MR1_VERSION=`grep '^version' hadoop-mapreduce1-project/build.properties | cut -f2 -d=`
 
     mkdir -p hadoop-mapreduce1-project/build/hadoop-${MR1_VERSION}/docs/
-
+ 
     (cd hadoop-mapreduce1-project ; ant \
         -Dreactor.repo=file://$HOME/.m2/repository${M2_REPO_SUFFIX} \
         -Dforrest.home=$FORREST_HOME \
