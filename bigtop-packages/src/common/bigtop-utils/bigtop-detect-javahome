@@ -60,6 +60,8 @@ JAVA8_HOME_CANDIDATES=(
 OPENJAVA8_HOME_CANDIDATES=(
     '/usr/lib/jvm/java-1.8.0-openjdk'
     '/usr/lib/jvm/java-8-openjdk'
+    '/usr/lib64/jvm/java-1.8.0-openjdk'
+    '/usr/lib64/jvm/java-8-openjdk'
 )
 
 MISCJAVA_HOME_CANDIDATES=(
