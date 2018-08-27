@@ -130,7 +130,7 @@ rm ${LIB_DIR}/sbin-debug/*.a
 
 # install scripts
 install -d -m 0755 ${LIB_DIR}/bin
-cp bin/collect_minidumps.py ${LIB_DIR}/bin
+cp bin/collect_minidumps.py bin/diagnostics/*.py bin/diagnostics/*.sh  ${LIB_DIR}/bin
 # cp bin/* ${LIB_DIR}/bin
 
 # install web document root
@@ -322,6 +322,14 @@ export LIB_DIR=\${LIB_DIR:-/usr/lib}
 ${DO_EXEC}\${LIB_DIR}/impala/bin/collect_minidumps.py "\$@"
 __EOT__
 chmod 755 ${BIN_DIR} ${BIN_DIR}/impala-collect-minidumps
+
+# Install collect_diagnostics.py
+cat > ${BIN_DIR}/impala-collect-diagnostics <<__EOT__
+#!/bin/bash
+export LIB_DIR=\${LIB_DIR:-/usr/lib}
+${DO_EXEC}\${LIB_DIR}/impala/bin/collect_diagnostics.py "\$@"
+__EOT__
+chmod 755 ${BIN_DIR} ${BIN_DIR}/impala-collect-diagnostics
 
 install -d -m 0755 $CONF_DIR
 

@@ -3,6 +3,7 @@
 /usr/bin/impalad
 /usr/bin/catalogd
 /usr/bin/impala-collect-minidumps
+/usr/bin/impala-collect-diagnostics
 /var/log/impala
 /var/run/impala
 /var/lib/impala

@@ -259,6 +259,7 @@ fi
 /usr/bin/impalad
 /usr/bin/catalogd
 /usr/bin/impala-collect-minidumps
+/usr/bin/impala-collect-diagnostics
 %attr(0755,impala,impala) %{impala_log}
 %attr(0755,impala,impala) %{impala_run}
 %attr(0755,impala,impala) %{impala_lib}
