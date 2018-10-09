@@ -141,6 +141,10 @@
             unpackWARs="true" autoDeploy="true"
             xmlValidation="false" xmlNamespaceAware="false">
 
+        <Context path="/solr"
+                 mapperContextRootRedirectEnabled="true"
+                 mapperDirectoryRedirectEnabled="true" />
+
         <!-- SingleSignOn valve, share authentication between web applications
              Documentation at: /docs/config/valve.html -->
         <!--
