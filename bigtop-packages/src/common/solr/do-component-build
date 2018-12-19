@@ -23,13 +23,17 @@ else
   IVYSETTINGS_OVERRIDE=""
 fi
 
+export ANT_OPTS="-Dhttps.protocols=TLSv1.2 -Dhttps.cipherSuites=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256"
+
 if [ -z "$GIT_REPO" ]; then
     BUILD_OPTS="-Dversion=${FULL_VERSION}                                  \
             -Dslf4j.binding=slf4j-log4j12 -Dexclude.from.war=nothing   \
             -Divy.home=${HOME}/.ivy2 -Drepo.maven.org=$IVY_MIRROR_PROP \
             -Divy_install_path=${HOME}/.ant/lib -lib ${HOME}/.ant/lib  \
             -Dreactor.repo=file://${HOME}/.m2/repository${M2_REPO_SUFFIX} \
-            ${IVYSETTINGS_OVERRIDE}"
+            ${IVYSETTINGS_OVERRIDE} \
+            -Dsnapshots.cloudera.com=http://maven.jenkins.cloudera.com:8081/artifactory/cloudera-mirrors \
+            -Dreleases.cloudera.com=http://maven.jenkins.cloudera.com:8081/artifactory/cloudera-mirrors"
 
 # Setting CAULDRON_NO_CLEAN allows us to run this script twice without incurring
 # the overhead of building from clean on the second invocation. First we build
