@@ -37,7 +37,7 @@ if [ -z "$GIT_REPO" ]; then
   cat >$MYMVN <<EOF
 #!/bin/sh
 export ZINC_OPTS="-Dzinc.dir=$PWD/target/zinc -Xmx2g -XX:MaxPermSize=512M -XX:ReservedCodeCacheSize=512m"
-export APACHE_MIRROR=http://archive-primary.cloudera.com/tarballs/apache
+export APACHE_MIRROR=http://mirror.infra.cloudera.com/apache
 exec $PWD/build/mvn --force "\$@" $CAULDRON_MAVEN_EXTRA_ARGS
 EOF
   chmod 700 $MYMVN
