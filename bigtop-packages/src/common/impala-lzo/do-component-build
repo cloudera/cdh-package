@@ -21,7 +21,7 @@ if [ -z "$GIT_REPO" ]; then
             # copy the impala files since they are write protected, and gen_build_version.py requires 
             # read write access
             cp -r  ${CAULDRON_ARTIFACTS}/local-impala-${PACK_TYPE}/output/cdh*/impala/impala-${PACKAGE_VERSION} impala
-            ./build.sh `pwd`/impala `pwd`/impala/toolchain
+            ./build.sh RELEASE `pwd`/impala `pwd`/impala/toolchain
         else
             export LLVM_HOME=$TOOLCHAIN_HOME/llvm-3.3
             export IMPALA_LZO=`pwd`
@@ -38,13 +38,13 @@ if [ -z "$GIT_REPO" ]; then
 
             if [ ! -e "$IMPALA_HOME" ]; then
                 export IMPALA_HOME=$WORKSPACE/Impala
-                (cd $WORKSPACE && git clone git://github.sf.cloudera.com/CDH/Impala.git)
+                (cd $WORKSPACE && git clone git://github.infra.cloudera.com/CDH/Impala.git)
                 (cd $IMPALA_HOME && git checkout ${IMPALA_LZO_IMPALA_REF})
             fi
 
             (cd $IMPALA_HOME && \
                 . bin/impala-config.sh && \
-                ./buildall.sh -noclean -notests -skiptests)
+                ./buildall.sh -release -noclean -notests -skiptests)
 
             if [ -n "${DELETE_WORKSPACE}" ]; then
                 rm -r ${WORKSPACE}
@@ -63,7 +63,7 @@ else # GIT_REPO is set, this infers that it is the first invocation tarball the 
         [ -e "$IMPALA_HOME" ] && rm -rf $IMPALA_HOME
         mkdir -p $IMPALA_HOME
         [ -e "${IMPALA_BRANCH}.tar.gz" ] && rm -f ${IMPALA_BRANCH}.tar.gz
-        wget http://github.mtv.cloudera.com/CDH/Impala/archive/${IMPALA_BRANCH}.tar.gz -O ${IMPALA_BRANCH}.tar.gz
+        wget -nv https://github.infra.cloudera.com/CDH/Impala/archive/${IMPALA_BRANCH}.tar.gz -O ${IMPALA_BRANCH}.tar.gz
         tar -xz --strip-components 1 -f ${IMPALA_BRANCH}.tar.gz -C ${IMPALA_HOME}
         find ${IMPALA_HOME} -name .gitignore -exec rm -f {} \;
         rm -f ${IMPALA_BRANCH}.tar.gz
@@ -73,7 +73,7 @@ else # GIT_REPO is set, this infers that it is the first invocation tarball the 
         [ -e "$HADOOP_LZO" ] && rm -rf $HADOOP_LZO
         mkdir -p $HADOOP_LZO
         [ -e "${HADOOP_LZO_BRANCH}.tar.gz" ] && rm -f ${HADOOP_LZO_BRANCH}.tar.gz
-        wget http://github.mtv.cloudera.com/CDH/hadoop-lzo/archive/${HADOOP_LZO_BRANCH}.tar.gz \
+        wget -nv https://github.infra.cloudera.com/CDH/hadoop-lzo/archive/${HADOOP_LZO_BRANCH}.tar.gz \
         -O ${HADOOP_LZO_BRANCH}.tar.gz
         tar -xz --strip-components 1 -f ${HADOOP_LZO_BRANCH}.tar.gz -C ${HADOOP_LZO}
         find ${HADOOP_LZO} -name .gitignore -exec rm -f {} \;
