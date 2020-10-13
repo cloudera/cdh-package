@@ -44,7 +44,7 @@
   </modules>
 
   <properties>
-    <junit.version>4.8.2</junit.version>
+    <junit.version>4.13.1</junit.version>
     <itest-common.version>0.3.0-hadoop23-incubating-SNAPSHOT</itest-common.version>
     <hadoop.version>0.20.205.0</hadoop.version>
     <pig.version>0.9.1</pig.version>
