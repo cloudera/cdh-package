@@ -39,7 +39,7 @@
     -->
     <itest-conf.version>0.3.0-hadoop23-incubating-SNAPSHOT</itest-conf.version>
     <itest-common.version>0.3.0-hadoop23-incubating-SNAPSHOT</itest-common.version>
-    <hadoop.version>0.20.205.0</hadoop.version>
+    <hadoop.version>3.2.3</hadoop.version>
     <hadoop-smoke.version>0.3.0-hadoop23-incubating-SNAPSHOT</hadoop-smoke.version>
     <flume-smoke.version>0.3.0-hadoop23-incubating-SNAPSHOT</flume-smoke.version>
     <hbase-smoke.version>0.3.0-hadoop23-incubating-SNAPSHOT</hbase-smoke.version>
